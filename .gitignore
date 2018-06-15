@@ -1,0 +1,11 @@
+# General purpose .gitignore for project eanufwpp
+
+# Build directory
+build/
+
+# Documentation
+doc/
+
+# IDEA Workspace
+.idea/
+*.iml
