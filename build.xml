@@ -1,0 +1,22 @@
+<project name="example" default="all" basedir=".">
+	<property name="srcdir" location="src" />
+	<property name="builddir" location="build" />
+	<property name="docdir" location="doc" />
+	<property name="classpath" location="FlowerWarsPP-Display.jar:FlowerWarsPP-Tester.jar" />
+
+	<target name="init" depends="clean">
+		<mkdir dir="${builddir}" />
+		<mkdir dir="${docdir}" />
+	</target>
+	<target name="compile" depends="init">
+		<javac srcdir="${srcdir}" classpath="${classpath}" destdir="${builddir}" debug="true" includeantruntime="false"/>
+	</target>
+	<target name="clean">
+		<delete dir="${builddir}" />
+		<delete dir="${docdir}" />
+	</target>
+	<target name="javadoc">
+		<javadoc sourcepath="${srcdir}" classpath="${classpath}" destdir="${docdir}" charset="utf-8" />
+	</target>
+	<target name="all" depends="compile, javadoc" />
+</project>
