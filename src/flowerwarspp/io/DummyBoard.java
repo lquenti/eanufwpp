@@ -12,6 +12,13 @@ import java.util.Collection;
 /* FIXME: Get rid of DummyBoard */
 public class DummyBoard implements Board
 {
+	private int size = -1;
+
+	public DummyBoard(int size)
+	{
+		this.size = size;
+	}
+
 	@Override
 	public void make(Move move) throws IllegalStateException
 	{
@@ -21,17 +28,17 @@ public class DummyBoard implements Board
 	@Override
 	public Viewer viewer()
 	{
-		throw new UnsupportedOperationException();
+		return new BoardViewer(this);
 	}
 
 	public PlayerColor getTurn()
 	{
-		throw new UnsupportedOperationException();
+		return PlayerColor.Red;
 	}
 
 	public int getSize()
 	{
-		throw new UnsupportedOperationException();
+		return this.size;
 	}
 
 	public Status getStatus()
