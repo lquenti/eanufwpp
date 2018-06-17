@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * A {@link Viewer} implementation, providing very basic access
- * to the underlying Board, without actually allowing access to
- * their underlying data structures.
+ * Eine {@link Viewer}-Implementation, welche die Akquise von
+ * Informationen über das Spiel ermöglicht. Dabei wird der Zugriff
+ * auf die darunterliegende Datenstruktur verwehrt.
  *
  * @author Fabian Winter
  */
@@ -16,14 +16,17 @@ import java.util.Collection;
 public class BoardViewer implements Viewer
 {
 	/**
-	 * A reference to the {@link Board} that should be viewable
-	 * through this {@link Viewer}.
+	 * Eine Referenz auf das {@link Board} welches durch diesen
+	 * {@link Viewer} beobachtet werden soll.
 	 */
 	private DummyBoard board = null;
 
 	/**
-	 * A dummy constructor, only taking {@link DummyBoard}s.
+	 * Ein Dummy-Constructor, der nur {@link DummyBoard} animmt.
+
 	 * @param board
+	 * Das {@link Board} das durch diesen {@link Viewer} beobachtet
+	 * werden soll.
 	 */
 	public BoardViewer(DummyBoard board)
 	{
@@ -33,11 +36,11 @@ public class BoardViewer implements Viewer
 	/* TODO: Implement getTurn in BoardViewer */
 
 	/**
-	 * A getter for whose turn it is right now.
+	 * Ein Getter für wer gerade an der Reihe ist.
 	 *
 	 * @return
-	 * The {@link PlayerColor} associated with the {@link Player} who
-	 * is currently allowed to make a turn.
+	 * Die {@link PlayerColor}, die mit dem {@link Player} assoziiert ist
+	 * der derzeit an der Reihe ist.
 	 */
 	@Override
 	public PlayerColor getTurn()
@@ -48,13 +51,13 @@ public class BoardViewer implements Viewer
 	/* TODO: Implement getSize in BoardViewer */
 
 	/**
-	 * A getter for the size of the {@link Board} in units.
+	 * Ein Getter für die Länge des {@link Board}s in Einheiten.
 	 *
 	 * @return
-	 * The size of the {@link Board} in units.
-	 * The size is the count of triangles that have one of their
-	 * three edges as part of the edge of the triangle that makes
-	 * up the board.
+	 * Die Länge des {@link Board}s in Einheiten.
+	 * Die Größe ist die Anzahl an Dreiecken, von denen eine Seite
+	 * auf der Seite des Spielbretts liegt, deren Länge betrachtet
+	 * werden soll.
 	 */
 	@Override
 	public int getSize()
@@ -63,6 +66,13 @@ public class BoardViewer implements Viewer
 	}
 
 	/* TODO: Implement getStatus in BoardViewer */
+
+	/**
+	 * Ein Getter für den {@link Status} des Spiels.
+	 *
+	 * @return
+	 * Der aktuelle {@link Status} des Spiels.
+	 */
 	@Override
 	public Status getStatus()
 	{
@@ -71,14 +81,16 @@ public class BoardViewer implements Viewer
 
 	/* TODO: Implement getFlowers in BoardViewer */
 	/**
-	 * Get the set of {@link Flower}s that are on the board for a player.
+	 * Ein Getter für die Menge von {@link Flower}s die ein {@link Player}
+	 * auf dem Spielbrett hat.
 	 *
 	 * @param colour
-	 * The colour of the {@link Player} whose {@link Flower}s should be gotten.
+	 * Die Farbe des {@link Player}s, dessen {@link Flower}s zurückgegeben
+	 * werden sollen.
 	 *
 	 * @return
-	 * A {@link Collection}&lt;{@link Flower}&gt; containing the flowers
-	 * for the respective player.
+	 * Eine {@link Collection}&lt;{@link Flower}&gt; die alle Blumen
+	 * für den Spieler enthält.
 	 */
 	@Override
 	public Collection<Flower> getFlowers(PlayerColor colour)
@@ -89,14 +101,16 @@ public class BoardViewer implements Viewer
 
 	/* TODO: Implement getDitches in BoardViewer */
 	/**
-	 * Get the set of {@link Ditch}es that are on the board for a player.
+	 * Ein Getter für die Menge von {@link Ditch}es die auf dem Brett
+	 * von einem Spieler gesetzt wurden.
 	 *
 	 * @param colour
-	 * The colour of the {@link Player} whose {@link Ditch}es should be gotten.
+	 * Die Farbe des {@link Player}s, dessen {@link Ditch}es zurückgegeben
+	 * werden sollen.
 	 *
 	 * @return
-	 * A {@link Collection}&lt;{@link Ditch}&gt; containing the ditches
-	 * that were laid out by the specified player.
+	 * Eine {@link Collection}&lt;{@link Ditch}&gt; die alle Gräben
+	 * für den Spieler enthält.
 	 */
 	@Override
 	public Collection<Ditch> getDitches(PlayerColor colour)
@@ -108,10 +122,12 @@ public class BoardViewer implements Viewer
 	/* TODO: Implement getPossibleMoves in BoardViewer */
 
 	/**
-	 * Get a {@link Collection} of {@link Move}s that are currently possible.
+	 * Getter für eine {@link Collection} von {@link Move}s, welche derzeit
+	 * möglich sind.
 	 *
 	 * @return
-	 * A {@link Collection}&lt;{@link Move}&gt; of currently possible moves.
+	 * Eine {@link Collection}&lt;{@link Move}&gt;
+	 * derzeit möglicher {@link Move}s
 	 */
 	@Override
 	public Collection<Move> getPossibleMoves()
@@ -121,17 +137,17 @@ public class BoardViewer implements Viewer
 	}
 
 	/* TODO: Implement getPoints in BoardViewer */
-
 	/**
-	 * A getter for the amount of points of a specified {@link PlayerColor}.
+	 * Ein Getter für die Anzahl von Punkten eines bestimmten
+	 * {@link Player}s, spezifiziert durch die {@link PlayerColor}.
 	 *
 	 * @param playerColour
-	 * The {@link PlayerColor} of the {@link Player}
-	 * whose points should be returned.
+	 * Die {link PlayerColor} des {@link Player}s, dessen
+	 * Punktzahl zurückgegeben werden soll.
 	 *
 	 * @return
-	 * The amount of points the {@link Player} associated with the
-	 * {@link PlayerColor} currently has.
+	 * Die Anzahl an Punkten des {@link Player}s der mit der
+	 * {@link PlayerColor} assoziiert ist.
 	 */
 	@Override
 	public int getPoints(PlayerColor playerColour)
