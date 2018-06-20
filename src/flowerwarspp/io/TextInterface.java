@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-public class MoveRequestable implements Requestable {
+public class TextInterface implements Requestable {
 	private static final String moveRequestPrompt = "Zug eingeben: ";
 	private static final String moveFormatError = "Zug konnte nicht gelesen werden.";
 
