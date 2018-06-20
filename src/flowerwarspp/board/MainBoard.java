@@ -60,16 +60,8 @@ public class MainBoard implements Board {
             // TODO
             return;
         } else if (moveType == MoveType.Flower) {
-            if (move.getFirstFlower() == null || move.getSecondFlower() == null) {
-                // Since we are not allowed to throw NullPointerExceptions
-                throw new IllegalStateException("At least one Flower is not existing");
-            }
             turnWasValid = flowerTurn(move.getFirstFlower(), move.getSecondFlower());
         } else if (moveType == MoveType.Ditch) {
-            if (move.getDitch() == null) {
-                // Since we are not allowed to throw NullPointerExceptions
-                throw new IllegalStateException("Ditch is not existing");
-            }
             turnWasValid = ditchTurn(move.getDitch());
         } else {
             turnWasValid = false;
