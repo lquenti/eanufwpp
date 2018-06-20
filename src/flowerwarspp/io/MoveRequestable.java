@@ -8,28 +8,28 @@ import java.nio.charset.StandardCharsets;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-public class MoveRequestable implements Requestable
-{
-	private static final String moveRequestPrompt =
-			"Please enter a move.";
-	private static final String noMoveEnteredError =
-			"No line was found.";
+public class MoveRequestable implements Requestable {
+	private static final String moveRequestPrompt = "Zug eingeben: ";
+	private static final String moveFormatError = "Zug konnte nicht gelesen werden.";
 
-	// TODO: Find out what a "sensible reaction" means for the MoveFormatEx.
+	/**
+	 * Liest einen Spielzug von der Standardeingabe ein. Der Nutzer wird solange aufgefordert,
+	 * einen Zug einzugeben, bis er einen gültigen Zug eingibt.
+	 * @return Der eingelesene Zug
+	 */
 	@Override
-	public Move request() throws Exception
-	{
-		try (Scanner inputScanner = new Scanner(System.in,
-												StandardCharsets.UTF_8.name()))
-		{
-			System.out.println(moveRequestPrompt);
-			String moveString = inputScanner.nextLine();
-			Move parsedMove = Move.parseMove(moveString);
-			return parsedMove;
+	public Move request() {
+		Scanner inputScanner = new Scanner(System.in, StandardCharsets.UTF_8.name());
+		Move result = null;
+		while (result == null) {
+			try {
+				System.out.print(moveRequestPrompt);
+				result = Move.parseMove(inputScanner.nextLine());
+			} catch (NoSuchElementException | MoveFormatException e) {
+				System.out.println(moveFormatError);
+			}
 		}
-		catch (NoSuchElementException | MoveFormatException e)
-		{
-			return null;
-		}
+		inputScanner.close();
+		return result;
 	}
 }
