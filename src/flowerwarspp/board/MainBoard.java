@@ -3,7 +3,6 @@ package flowerwarspp.board;
 import flowerwarspp.io.BoardViewer;
 import flowerwarspp.preset.*;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 /*
@@ -18,13 +17,32 @@ TODO: eigenen besseren Floweralgo benutzen
  */
 public class MainBoard implements Board {
 	/**
-	 * Menge der existierenden Blumen als HashSet
+	 * Menge der vom roten Spieler gesetzen Blumen
 	 */
-	private HashSet<Flower> fBoard = new HashSet<>();
+	private HashSet<Flower> redFlowers = new HashSet<>();
 	/**
-	 * Menge der existierenden Graeben als HashSet
+	 * Menge der vom blauen Spieler gesetzen Blumen
 	 */
-	private HashSet<Ditch> dBoard;
+	private HashSet<Flower> blueFlowers = new HashSet<>();
+
+	/**
+	 * Menge der vom roten Spieler gesetzen Gräben
+	 */
+	private HashSet<Ditch> redDitches = new HashSet<>();
+	/**
+	 * Menge der vom blauen Spieler gesetzen Gräben
+	 */
+	private HashSet<Ditch> blueDitches = new HashSet<>();
+
+	/**
+	 * Menge der legalen Züge, die der rote Spieler machen kann.
+	 */
+	private HashSet<Move> redLegalMoves = new HashSet<>();
+	/**
+	 * Menge der legalen Züge, die der blaue Spieler machen kann.
+	 */
+	private HashSet<Move> blueLegalMoves = new HashSet<>();
+
 	/**
 	 * Groesse des Boards
 	 */
@@ -38,6 +56,35 @@ public class MainBoard implements Board {
 	 */
 	public MainBoard(final int size) {
 		this.size = (size < 3) ? 3 : ((size > 30) ? 30 : size);
+
+		Flower[] flowers = new Flower[this.size * this.size];
+		int insertPosition = 0;
+		for (int i = 1; i <= this.size; i++) {
+			for (int j = 1; j <= this.size - (i-1); j++) {
+				flowers[insertPosition] = (new Flower(
+					new Position(i, j),
+					new Position(i+1, j),
+					new Position(i, j+1)
+				));
+				insertPosition++;
+
+				if (i + j <= this.size) {
+					flowers[insertPosition] = (new Flower(
+						new Position(i+1, j+1),
+						new Position(i+1, j),
+						new Position(i, j+1)
+					));
+					insertPosition++;
+				}
+			}
+		}
+		for (int i = 0; i < flowers.length; i++) {
+			for (int j = i+1; j < flowers.length; j++) {
+				Move move = new Move(flowers[i], flowers[j]);
+				redLegalMoves.add(move);
+				blueLegalMoves.add(move);
+			}
+		}
 	}
 
 	/**
@@ -75,26 +122,7 @@ public class MainBoard implements Board {
 
 	// TODO: CHECK IF POSITION INSIDE SIZE
 	private boolean flowerTurn(final Flower first, final Flower second) throws IllegalStateException {
-		// If first move its always legal
-		if (fBoard.size() == 0) {
-			fBoard.add(first);
-			fBoard.add(second);
-			return true;
-		}
-		// contains check since it will make validation way faster and just has O(1)
-		if (fBoard.contains(first) || fBoard.contains(second)) {
-			throw new IllegalStateException("Flower already existing!");
-		}
-
-		// Temporary add
-		fBoard.add(first);
-		fBoard.add(second);
-
-		// TODO: Sorting
-		// clean up
-		fBoard.remove(first);
-		fBoard.remove(second);
-		return false;
+		return true;
 	}
 
 	private boolean ditchTurn(final Ditch ditch) {
@@ -109,6 +137,6 @@ public class MainBoard implements Board {
 	 */
 	@Override
 	public Viewer viewer() {
-		return new BoardViewer(this);
+		return null;
 	}
 }
