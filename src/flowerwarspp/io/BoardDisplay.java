@@ -1,6 +1,7 @@
 package flowerwarspp.io;
 
 import flowerwarspp.preset.Move;
+import flowerwarspp.preset.PlayerColor;
 import flowerwarspp.preset.Status;
 import flowerwarspp.preset.Viewer;
 
@@ -19,6 +20,12 @@ public class BoardDisplay extends JPanel {
 	        5.0F,
 	        BasicStroke.CAP_ROUND,
 	        BasicStroke.JOIN_ROUND);
+
+	/**
+	 * Legt fest, wie groß das Spielbrett in Relation zum Fenster sein soll.
+	 * TODO: Dies sollte auch abhängig von der absoluten Größe des Frames sein.
+	 */
+	private static final int componentSizePercentage = 90;
 
 	private Viewer boardViewer = null;
 	private Collection<Triangle> mapTriangles = new ArrayList<>();
@@ -56,8 +63,9 @@ public class BoardDisplay extends JPanel {
 			graphics2D.setStroke(BoardDisplay.stroke);
 		}
 
-		if (this.boardViewer != null)
+		if (this.boardViewer != null) {
 			this.mapTriangles.forEach(g::drawPolygon);
+		}
 	}
 
 	/**
@@ -65,13 +73,17 @@ public class BoardDisplay extends JPanel {
 	 */
 	public void updateSize() {
 		Dimension newSize = new Dimension(
-		        this.getParent().getWidth() * 6 / 10,
-		        this.getParent().getHeight() * 6 / 10);
+		        this.getParent().getWidth() * componentSizePercentage / 100,
+		        this.getParent().getHeight() * componentSizePercentage / 100);
 		this.setSize(newSize);
 		this.setPreferredSize(newSize);
 		this.resizeDisplay();
 	}
 
+	/**
+	 * Handhabt eventuelle Größenänderungen des Displays und
+	 * skaliert das gezeichnete Spielfeld dementsprechend.
+	 */
 	public void resizeDisplay() {
 		this.mapTriangles.clear();
 
@@ -95,19 +107,23 @@ public class BoardDisplay extends JPanel {
 		this.mapTriangles.add(topTriangle);
 
 		Triangle currentCentralTriangle = topTriangle;
-		int maxTriangleCount = (this.boardViewer.getSize() / 2);
+		int maxTriangleCount = this.boardViewer.getSize();
 
 		// TODO: Make the maths work out here.
 		for (int triangles = 1; triangles < maxTriangleCount; triangles++) {
-			propagateRow(currentCentralTriangle, triangles);
-
 			flipped = !flipped;
 			Point newTopPosition = currentCentralTriangle.getTopEdge();
-			newTopPosition.y += currentCentralTriangle.getHeight();
+			if (flipped)
+				newTopPosition.y += 2 * currentCentralTriangle.getHeight();
+
 			currentCentralTriangle = new Triangle(newTopPosition.x,
 			        newTopPosition.y,
 			        currentCentralTriangle.getSize(),
 			        flipped);
+
+			this.mapTriangles.add(currentCentralTriangle);
+
+			propagateRow(currentCentralTriangle, triangles, flipped);
 		}
 	}
 
@@ -121,36 +137,52 @@ public class BoardDisplay extends JPanel {
 	 * @param count
 	 * 		Die Anzahl an Dreiecken in jede Richtung. Die Gesamtzahl der Dreiecken in der Reihe
 	 * 		entspricht dann (2*count)+1.
+	 * @param flipped
+	 * 		Ob das erste Dreieck schon auf dem Kopf steht.
 	 */
-	private void propagateRow(Triangle centralTriangle, int count) {
-		Triangle lastTriangle = centralTriangle;
-		boolean flipped = true;
+	private void propagateRow(Triangle centralTriangle, int count, boolean flipped) {
 		// Propagate the row to the left
-		for (int x = 0; x < count; x++) {
-			flipped = !flipped;
+		putTriangles(centralTriangle, count, true, flipped);
+		putTriangles(centralTriangle, count, false, flipped);
+	}
 
-			Point topEdge = lastTriangle.getLeftEdge();
+	/**
+	 * Erstellt Dreiecke und fügt sie dem Display hinzu.
+	 *
+	 * @param centralTriangle
+	 * 		Eine Referenz auf das {@link Triangle}, das in der Mitte liegt.
+	 * 		Die anderen {@link Triangle}s werden um dieses Dreieck herum gelegt.
+	 *
+	 * @param count
+	 * 		Die Anzahl an Dreiecken, die auf jede Seite des zentralen Dreiecks gelegt
+	 *		sollen.
+	 *
+	 * @param left
+	 * 		Ob die Dreiecke auf die linke Seite gelegt werden sollen.
+	 *
+	 * @param flipped
+	 * 		Ob das zentrale Dreieck auf dem Kopf steht.
+	 */
+	private void putTriangles(Triangle centralTriangle, int count, boolean left, boolean flipped)
+	{
+		boolean flipCurrent = !flipped;
+
+		Triangle lastTriangle = centralTriangle;
+		for (int x = 0; x < count; x++)
+		{
+			Point topEdge = null;
+			if (left)
+				topEdge = lastTriangle.getLeftEdge();
+			else
+				topEdge = lastTriangle.getRightEdge();
+
 			lastTriangle = new Triangle(topEdge.x,
 			        topEdge.y,
-			        lastTriangle.getSize(),
-			        flipped);
+			        centralTriangle.getSize(),
+					flipCurrent);
 
 			this.mapTriangles.add(lastTriangle);
-		}
-
-		flipped = !flipped;
-		lastTriangle = centralTriangle;
-
-		for (int x = 0; x < count; x++) {
-			flipped = !flipped;
-
-			Point topEdge = lastTriangle.getRightEdge();
-			lastTriangle = new Triangle(topEdge.x,
-			        topEdge.y,
-			        lastTriangle.getSize(),
-			        flipped);
-
-			this.mapTriangles.add(lastTriangle);
+			flipCurrent = !flipCurrent;
 		}
 	}
 }

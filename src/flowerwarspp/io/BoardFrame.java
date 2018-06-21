@@ -9,7 +9,7 @@ import javax.swing.border.BevelBorder;
 
 public class BoardFrame extends JFrame implements Requestable {
 	public static void main(String[] args) throws Exception {
-		DummyBoard dummyBoard = new DummyBoard(6);
+		DummyBoard dummyBoard = new DummyBoard(30);
 		BoardFrame boardFrame = new BoardFrame();
 		boardFrame.setVisible(true);
 		boardFrame.addMouseListener((MouseClickListener) e ->

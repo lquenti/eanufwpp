@@ -141,10 +141,10 @@ public class Triangle extends Polygon implements Cloneable {
 	 */
 	public Triangle cloneTriangle() {
 		Triangle clone = new Triangle(
-				this.edge1.x, this.edge1.y,
-				this.edge2.x, this.edge2.y,
-				this.edge3.x, this.edge3.y,
-				this.getSize());
+		        this.edge1.x, this.edge1.y,
+		        this.edge2.x, this.edge2.y,
+		        this.edge3.x, this.edge3.y,
+		        this.getSize());
 		return clone;
 	}
 
