@@ -3,14 +3,16 @@ package flowerwarspp.io;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 
-public interface ComponentResizeListener extends ComponentListener
-{
+public interface ComponentResizeListener extends ComponentListener {
 	@Override
-	default void componentShown(ComponentEvent e) {}
+	default void componentShown(ComponentEvent e) {
+	}
 
 	@Override
-	default void componentMoved(ComponentEvent e) {}
+	default void componentMoved(ComponentEvent e) {
+	}
 
 	@Override
-	default void componentHidden(ComponentEvent e) {}
+	default void componentHidden(ComponentEvent e) {
+	}
 }
