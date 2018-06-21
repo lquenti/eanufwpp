@@ -3,11 +3,31 @@ package flowerwarspp.board;
 import flowerwarspp.io.BoardViewer;
 import flowerwarspp.preset.*;
 
+import java.util.EnumMap;
 import java.util.HashSet;
 
 /*
 TODO: eigenen besseren Floweralgo benutzen
 */
+
+/**
+ * Verwaltungsklasse, die Daten über die gemachten und noch möglichen Züge
+ * eines Spielers Speichert
+ */
+class PlayerData {
+	/**
+	 * Die Blumen, die der Spieler gesetzt hat.
+	 */
+	HashSet<Flower> flowers = new HashSet<>();
+	/**
+	 * Die Gräben, die der Spieler gesetzt hat.
+	 */
+	HashSet<Ditch> ditches = new HashSet<>();
+	/**
+	 * Die legalen Züge, die der Spieler noch machen kann.
+	 */
+	HashSet<Move> legalMoves = new HashSet<>();
+}
 
 /**
  * Boardimplementation. Implementiert Board und somit auch Viewable
@@ -17,36 +37,25 @@ TODO: eigenen besseren Floweralgo benutzen
  */
 public class MainBoard implements Board {
 	/**
-	 * Menge der vom roten Spieler gesetzen Blumen
-	 */
-	private HashSet<Flower> redFlowers = new HashSet<>();
-	/**
-	 * Menge der vom blauen Spieler gesetzen Blumen
-	 */
-	private HashSet<Flower> blueFlowers = new HashSet<>();
-
-	/**
-	 * Menge der vom roten Spieler gesetzen Gräben
-	 */
-	private HashSet<Ditch> redDitches = new HashSet<>();
-	/**
-	 * Menge der vom blauen Spieler gesetzen Gräben
-	 */
-	private HashSet<Ditch> blueDitches = new HashSet<>();
-
-	/**
-	 * Menge der legalen Züge, die der rote Spieler machen kann.
-	 */
-	private HashSet<Move> redLegalMoves = new HashSet<>();
-	/**
-	 * Menge der legalen Züge, die der blaue Spieler machen kann.
-	 */
-	private HashSet<Move> blueLegalMoves = new HashSet<>();
-
-	/**
 	 * Groesse des Boards
 	 */
 	private final int size;
+
+	/**
+	 * Der Spieler, der aktuell am Zug ist.
+	 */
+	private PlayerColor currentPlayer = PlayerColor.Red;
+
+	/**
+	 * Der Aktuelle Status des Spielbretts.
+	 */
+	private Status currentStatus = Status.Ok;
+
+	/**
+	 * Daten über die Spieler.
+	 */
+	private EnumMap<PlayerColor, PlayerData> playerData = new EnumMap<>(PlayerColor.class);
+
 
 	/**
 	 * Konstruktor. Befuellt Board einer variablen Groesse zwischen [3;30].
@@ -56,6 +65,9 @@ public class MainBoard implements Board {
 	 */
 	public MainBoard(final int size) {
 		this.size = (size < 3) ? 3 : ((size > 30) ? 30 : size);
+
+		playerData.put(PlayerColor.Red, new PlayerData());
+		playerData.put(PlayerColor.Blue, new PlayerData());
 
 		Flower[] flowers = new Flower[this.size * this.size];
 		int insertPosition = 0;
@@ -81,8 +93,8 @@ public class MainBoard implements Board {
 		for (int i = 0; i < flowers.length; i++) {
 			for (int j = i+1; j < flowers.length; j++) {
 				Move move = new Move(flowers[i], flowers[j]);
-				redLegalMoves.add(move);
-				blueLegalMoves.add(move);
+				playerData.get(PlayerColor.Red).legalMoves.add(move);
+				playerData.get(PlayerColor.Blue).legalMoves.add(move);
 			}
 		}
 	}
