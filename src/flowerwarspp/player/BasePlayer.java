@@ -36,14 +36,10 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
      */
     private PlayerFunction cycleState;
 
-    /* TODO: Integration with the GUI. For now we'll stick to StdIn for reading in the move. */
-
     /**
-     * Fordert einen Zug an, nach den Vorgaben der Interface-Methode {@link Player#request()}. Diese Methode ist
-     * <code>abstract</code> weil jede Implementation des Spielers dieses Anfordern eines Zuges eigenstaending
-     * implementiert.
-     *
-     * @return Den vom Spieler geforderte Zug
+     * Methode zum Anfordern eines Zugs.
+     * 
+     * @return Der vom Spieler geforderte Zug
      * @throws Exception       Falls der Spieler nicht in der Lage war, einen Zug zu liefern oder falls diese Methode
      *                         zum falschen Zeitpunkt innerhalb des Zyklus aufgerufen worden ist
      * @throws RemoteException Falls ein Fehler waehrend der Netzwerk-Kommunikation aufgetreten ist
