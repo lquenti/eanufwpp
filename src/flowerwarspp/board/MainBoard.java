@@ -149,6 +149,68 @@ public class MainBoard implements Board {
 	 */
 	@Override
 	public Viewer viewer() {
-		return null;
+		return new MainBoardViewer();
+	}
+
+	/**
+	 * Ein Viewer auf das MainBoard.
+	 */
+	private class MainBoardViewer implements Viewer {
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public HashSet<Ditch> getDitches(PlayerColor color) {
+			return new HashSet<>(playerData.get(color).ditches);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public HashSet<Flower> getFlowers(PlayerColor color) {
+			return new HashSet<>(playerData.get(color).flowers);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public int getPoints(PlayerColor color) {
+			// TODO!
+			return 0;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public HashSet<Move> getPossibleMoves() {
+			return new HashSet<>(playerData.get(currentPlayer).legalMoves);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public int getSize() {
+			return size;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public Status getStatus() {
+			return currentStatus;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public PlayerColor getTurn() {
+			return currentPlayer;
+		}
 	}
 }
