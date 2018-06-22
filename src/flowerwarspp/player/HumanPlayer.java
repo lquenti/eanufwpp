@@ -11,6 +11,10 @@ public class HumanPlayer extends BasePlayer {
 	 */
 	private Requestable input;
 
+	public HumanPlayer(Requestable input) {
+		this.input = input;
+	}
+
 	/**
 	 * {@inheritDoc} Der Spieler wird aufgefordert, seinen Zug einzugeben und der eingegebene
 	 * Zug wird zurückgeliefert.
