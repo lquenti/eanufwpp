@@ -16,18 +16,18 @@ TODO: eigenen besseren Floweralgo benutzen
  * eines Spielers Speichert
  */
 class PlayerData {
-    /**
-     * Die Blumen, die der Spieler gesetzt hat.
-     */
-    HashSet<Flower> flowers = new HashSet<>();
-    /**
-     * Die Gräben, die der Spieler gesetzt hat.
-     */
-    HashSet<Ditch> ditches = new HashSet<>();
-    /**
-     * Die legalen Züge, die der Spieler noch machen kann.
-     */
-    HashSet<Move> legalMoves = new HashSet<>();
+	/**
+	 * Die Blumen, die der Spieler gesetzt hat.
+	 */
+	HashSet<Flower> flowers = new HashSet<>();
+	/**
+	 * Die Gräben, die der Spieler gesetzt hat.
+	 */
+	HashSet<Ditch> ditches = new HashSet<>();
+	/**
+	 * Die legalen Züge, die der Spieler noch machen kann.
+	 */
+	HashSet<Move> legalMoves = new HashSet<>();
 }
 
 /**
@@ -36,15 +36,15 @@ class PlayerData {
  * @version 0.1
  */
 public class MainBoard implements Board {
-    /**
-     * Groesse des Boards
-     */
-    private final int size;
+	/**
+	 * Groesse des Boards
+	 */
+	private final int size;
 
-    /**
-     * Der Spieler, der aktuell am Zug ist.
-     */
-    private PlayerColor currentPlayer = PlayerColor.Red;
+	/**
+	 * Der Spieler, der aktuell am Zug ist.
+	 */
+	private PlayerColor currentPlayer = PlayerColor.Red;
 
     /**
      * Der Spieler, welcher aktuell nicht am Zug ist
@@ -56,10 +56,10 @@ public class MainBoard implements Board {
      */
     private Status currentStatus = Status.Ok;
 
-    /**
-     * Daten über die Spieler.
-     */
-    private EnumMap<PlayerColor, PlayerData> playerData = new EnumMap<>(PlayerColor.class);
+	/**
+	 * Daten über die Spieler.
+	 */
+	private EnumMap<PlayerColor, PlayerData> playerData = new EnumMap<>(PlayerColor.class);
 
 
     /**
@@ -71,38 +71,39 @@ public class MainBoard implements Board {
     public MainBoard(final int size) {
         this.size = (size < 3) ? 3 : ((size > 30) ? 30 : size);
 
-        playerData.put(PlayerColor.Red, new PlayerData());
-        playerData.put(PlayerColor.Blue, new PlayerData());
+		playerData.put(PlayerColor.Red, new PlayerData());
+		playerData.put(PlayerColor.Blue, new PlayerData());
 
-        Flower[] flowers = new Flower[this.size * this.size];
-        int insertPosition = 0;
-        for (int i = 1; i <= this.size; i++) {
-            for (int j = 1; j <= this.size - (i - 1); j++) {
-                flowers[insertPosition] = (new Flower(
-                        new Position(i, j),
-                        new Position(i + 1, j),
-                        new Position(i, j + 1)
-                ));
-                insertPosition++;
+		Flower[] flowers = new Flower[this.size * this.size];
+		int insertPosition = 0;
+		for (int i = 1; i <= this.size; i++) {
+			for (int j = 1; j <= this.size - (i - 1); j++) {
+				flowers[insertPosition] = (new Flower(
+					new Position(i, j),
+					new Position(i + 1, j),
+					new Position(i, j + 1)
+				));
+				insertPosition++;
 
-                if (i + j <= this.size) {
-                    flowers[insertPosition] = (new Flower(
-                            new Position(i + 1, j + 1),
-                            new Position(i + 1, j),
-                            new Position(i, j + 1)
-                    ));
-                    insertPosition++;
-                }
-            }
-        }
-        for (int i = 0; i < flowers.length; i++) {
-            for (int j = i + 1; j < flowers.length; j++) {
-                Move move = new Move(flowers[i], flowers[j]);
-                playerData.get(PlayerColor.Red).legalMoves.add(move);
-                playerData.get(PlayerColor.Blue).legalMoves.add(move);
-            }
-        }
-    }
+				if (i + j <= this.size) {
+					flowers[insertPosition] = (new Flower(
+						new Position(i + 1, j + 1),
+						new Position(i + 1, j),
+						new Position(i, j + 1)
+					));
+					insertPosition++;
+				}
+			}
+		}
+		for (int i = 0; i < flowers.length; i++) {
+			for (int j = i + 1; j < flowers.length; j++) {
+				Move move = new Move(flowers[i], flowers[j]);
+				playerData.get(PlayerColor.Red).legalMoves.add(move);
+				playerData.get(PlayerColor.Blue).legalMoves.add(move);
+			}
+		}
+		updateValidMoves();
+	}
 
     /**
      * {@inheritDoc}
@@ -175,75 +176,75 @@ public class MainBoard implements Board {
 
     }
 
-    /**
-     * Gibt den dazugehoerigen Viewer der Klasse BoardViewer zurueck.
-     *
-     * @return den dazugehoerigen Viewer
-     */
-    @Override
-    public Viewer viewer() {
-        return new MainBoardViewer();
-    }
+	/**
+	 * Gibt den dazugehoerigen Viewer der Klasse BoardViewer zurueck.
+	 *
+	 * @return den dazugehoerigen Viewer
+	 */
+	@Override
+	public Viewer viewer() {
+		return new MainBoardViewer();
+	}
 
-    /**
-     * Ein Viewer auf das MainBoard.
-     */
-    private class MainBoardViewer implements Viewer {
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public HashSet<Ditch> getDitches(PlayerColor color) {
-            return new HashSet<>(playerData.get(color).ditches);
-        }
+	/**
+	 * Ein Viewer auf das MainBoard.
+	 */
+	private class MainBoardViewer implements Viewer {
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public HashSet<Ditch> getDitches(PlayerColor color) {
+			return new HashSet<>(playerData.get(color).ditches);
+		}
 
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public HashSet<Flower> getFlowers(PlayerColor color) {
-            return new HashSet<>(playerData.get(color).flowers);
-        }
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public HashSet<Flower> getFlowers(PlayerColor color) {
+			return new HashSet<>(playerData.get(color).flowers);
+		}
 
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public int getPoints(PlayerColor color) {
-            // TODO!
-            return 0;
-        }
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public int getPoints(PlayerColor color) {
+			// TODO!
+			return 0;
+		}
 
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public HashSet<Move> getPossibleMoves() {
-            return new HashSet<>(playerData.get(currentPlayer).legalMoves);
-        }
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public HashSet<Move> getPossibleMoves() {
+			return new HashSet<>(playerData.get(currentPlayer).legalMoves);
+		}
 
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public int getSize() {
-            return size;
-        }
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public int getSize() {
+			return size;
+		}
 
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public Status getStatus() {
-            return currentStatus;
-        }
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public Status getStatus() {
+			return currentStatus;
+		}
 
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public PlayerColor getTurn() {
-            return currentPlayer;
-        }
-    }
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public PlayerColor getTurn() {
+			return currentPlayer;
+		}
+	}
 }
