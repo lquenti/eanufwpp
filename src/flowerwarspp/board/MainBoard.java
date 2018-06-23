@@ -5,6 +5,7 @@ import flowerwarspp.preset.*;
 
 import java.util.EnumMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 
 /*
 TODO: eigenen besseren Floweralgo benutzen
@@ -46,6 +47,11 @@ public class MainBoard implements Board {
     private PlayerColor currentPlayer = PlayerColor.Red;
 
     /**
+     * Der Spieler, welcher aktuell nicht am Zug ist
+     */
+    private PlayerColor oppositePlayer = PlayerColor.Blue; // Sonst macht man es x mal redundant beim checken
+
+    /**
      * Der Aktuelle Status des Spielbretts.
      */
     private Status currentStatus = Status.Ok;
@@ -54,8 +60,6 @@ public class MainBoard implements Board {
      * Daten über die Spieler.
      */
     private EnumMap<PlayerColor, PlayerData> playerData = new EnumMap<>(PlayerColor.class);
-
-    private MainBoardViewer viewer = new MainBoardViewer();
 
 
     /**
@@ -98,7 +102,6 @@ public class MainBoard implements Board {
                 playerData.get(PlayerColor.Blue).legalMoves.add(move);
             }
         }
-        updateValidMoves();
     }
 
     /**
@@ -110,17 +113,17 @@ public class MainBoard implements Board {
      */
     @Override
     public void make(final Move move) throws IllegalStateException {
-        if (!viewer.getPossibleMoves().contains(move)) {
+        if (!playerData.get(currentPlayer).legalMoves.contains(move)) {
             throw new IllegalStateException("Illegaler Zug");
         }
         // Ist es best practise nicht null zu checken weil es literally unmoeglich ist?
+        // (Falls es nicht so ist Kommentar einfach removen)
         switch (move.getType()) {
             case Ditch:
                 playerData.get(currentPlayer).ditches.add(move.getDitch());
+                updateValidMoves(move.getDitch());
             case Flower:
-                HashSet<Flower> temp = playerData.get(currentPlayer).flowers;
-                temp.add(move.getFirstFlower());
-                temp.add(move.getSecondFlower());
+                updateValidMoves(new Flower[]{move.getFirstFlower(), move.getSecondFlower()});
             case End:
                 // TODO
                 return;
@@ -128,11 +131,47 @@ public class MainBoard implements Board {
                 // TODO
                 return;
         }
-
-        updateValidMoves();
+        currentPlayer = oppositePlayer;
+        oppositePlayer = (currentPlayer == PlayerColor.Red) ? PlayerColor.Blue : PlayerColor.Red;
     }
 
-    void updateValidMoves() {
+    private void updateValidMoves(Flower[] fs) {
+        /*
+        Was aktuell gemacht wird: (als Referenz zum erweitern (Kommentar kommt bei Abgabe raus))
+            - Gaertencheck
+            - Exkludieren von Gaertenabstaenden
+            - Moves fuer andere Farbe exkludieren
+            - Grabenerstellung:
+                - Gegnerische Graeben entfernen falls geblockt durch eigene Blume
+                - Graben erlauben falls direkte Verbindung UND kein existierender Graben teilt (kann das der Fall sein nach Ditchchecks?)
+         */
+        // TODO: Ist es noetig zu checken ob Flower in valider Spielfeldrange ist?
+        // Idee: Gaerten einzeln speichern um Laufzeit zu verbessern da man nur Aussenbereiche testen muss und diese immutable sind
+        for (Flower f : fs) {
+            // Gesetzte Flowern als valider Zug fuer andere exkludieren
+            for (Flower oppositeF : playerData.get(oppositePlayer).flowers) {
+                Move move = new Move(f, oppositeF);
+                playerData.get(oppositePlayer).legalMoves.remove(move);
+            }
+
+            //if (flowerBedSize() == 4) {
+
+            //}
+        }
+    }
+
+    private int flowerBedSize(Flower f) {
+    	// TODO
+        return 42;
+    }
+
+    private void updateValidMoves(Ditch d) {
+        /*
+        Was aktuell gemacht wird:
+            - Ueber und unter Graben Flower entvalidieren
+            - Andere Graebenmoeglichkeiten entvalidieren falls diese sich eine Position teilen
+         */
+        // Blumen entvalidieren
 
     }
 
