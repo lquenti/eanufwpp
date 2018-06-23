@@ -46,15 +46,15 @@ public class MainBoard implements Board {
 	 */
 	private PlayerColor currentPlayer = PlayerColor.Red;
 
-    /**
-     * Der Spieler, welcher aktuell nicht am Zug ist
-     */
-    private PlayerColor oppositePlayer = PlayerColor.Blue; // Sonst macht man es x mal redundant beim checken
+	/**
+	 * Der Spieler, welcher aktuell nicht am Zug ist
+	 */
+	private PlayerColor oppositePlayer = PlayerColor.Blue; // Sonst macht man es x mal redundant beim checken
 
-    /**
-     * Der Aktuelle Status des Spielbretts.
-     */
-    private Status currentStatus = Status.Ok;
+	/**
+	 * Der Aktuelle Status des Spielbretts.
+	 */
+	private Status currentStatus = Status.Ok;
 
 	/**
 	 * Daten über die Spieler.
@@ -62,14 +62,14 @@ public class MainBoard implements Board {
 	private EnumMap<PlayerColor, PlayerData> playerData = new EnumMap<>(PlayerColor.class);
 
 
-    /**
-     * Konstruktor. Befuellt Board einer variablen Groesse zwischen [3;30].
-     * Falls Wert invalide wird dieser dem naechsten Element des Intervalls angepasst.
-     *
-     * @param size Groesse des Boardes.
-     */
-    public MainBoard(final int size) {
-        this.size = (size < 3) ? 3 : ((size > 30) ? 30 : size);
+	/**
+	 * Konstruktor. Befuellt Board einer variablen Groesse zwischen [3;30].
+	 * Falls Wert invalide wird dieser dem naechsten Element des Intervalls angepasst.
+	 *
+	 * @param size Groesse des Boardes.
+	 */
+	public MainBoard(final int size) {
+		this.size = (size < 3) ? 3 : ((size > 30) ? 30 : size);
 
 		playerData.put(PlayerColor.Red, new PlayerData());
 		playerData.put(PlayerColor.Blue, new PlayerData());
@@ -79,17 +79,17 @@ public class MainBoard implements Board {
 		for (int i = 1; i <= this.size; i++) {
 			for (int j = 1; j <= this.size - (i - 1); j++) {
 				flowers[insertPosition] = (new Flower(
-					new Position(i, j),
-					new Position(i + 1, j),
-					new Position(i, j + 1)
+						new Position(i, j),
+						new Position(i + 1, j),
+						new Position(i, j + 1)
 				));
 				insertPosition++;
 
 				if (i + j <= this.size) {
 					flowers[insertPosition] = (new Flower(
-						new Position(i + 1, j + 1),
-						new Position(i + 1, j),
-						new Position(i, j + 1)
+							new Position(i + 1, j + 1),
+							new Position(i + 1, j),
+							new Position(i, j + 1)
 					));
 					insertPosition++;
 				}
@@ -105,38 +105,38 @@ public class MainBoard implements Board {
 		updateValidMoves();
 	}
 
-    /**
-     * {@inheritDoc}
-     * Verifiziert Zug und fuehrt diesen dann aus.
-     *
-     * @param move auszufuehrender Zug
-     * @throws IllegalStateException Wenn Zug nicht valide ist.
-     */
-    @Override
-    public void make(final Move move) throws IllegalStateException {
-        if (!playerData.get(currentPlayer).legalMoves.contains(move)) {
-            throw new IllegalStateException("Illegaler Zug");
-        }
-        // Ist es best practise nicht null zu checken weil es literally unmoeglich ist?
-        // (Falls es nicht so ist Kommentar einfach removen)
-        switch (move.getType()) {
-            case Ditch:
-                playerData.get(currentPlayer).ditches.add(move.getDitch());
-                updateValidMoves(move.getDitch());
-            case Flower:
-                updateValidMoves(new Flower[]{move.getFirstFlower(), move.getSecondFlower()});
-            case End:
-                // TODO
-                return;
-            case Surrender:
-                // TODO
-                return;
-        }
-        currentPlayer = oppositePlayer;
-        oppositePlayer = (currentPlayer == PlayerColor.Red) ? PlayerColor.Blue : PlayerColor.Red;
-    }
+	/**
+	 * {@inheritDoc}
+	 * Verifiziert Zug und fuehrt diesen dann aus.
+	 *
+	 * @param move auszufuehrender Zug
+	 * @throws IllegalStateException Wenn Zug nicht valide ist.
+	 */
+	@Override
+	public void make(final Move move) throws IllegalStateException {
+		if (!playerData.get(currentPlayer).legalMoves.contains(move)) {
+			throw new IllegalStateException("Illegaler Zug");
+		}
+		// Ist es best practise nicht null zu checken weil es literally unmoeglich ist?
+		// (Falls es nicht so ist Kommentar einfach removen)
+		switch (move.getType()) {
+			case Ditch:
+				playerData.get(currentPlayer).ditches.add(move.getDitch());
+				updateValidMoves(move.getDitch());
+			case Flower:
+				updateValidMoves(new Flower[]{move.getFirstFlower(), move.getSecondFlower()});
+			case End:
+				// TODO
+				return;
+			case Surrender:
+				// TODO
+				return;
+		}
+		currentPlayer = oppositePlayer;
+		oppositePlayer = (currentPlayer == PlayerColor.Red) ? PlayerColor.Blue : PlayerColor.Red;
+	}
 
-    private void updateValidMoves(Flower[] fs) {
+	private void updateValidMoves(Flower[] fs) {
         /*
         Was aktuell gemacht wird: (als Referenz zum erweitern (Kommentar kommt bei Abgabe raus))
             - Gaertencheck
@@ -146,35 +146,35 @@ public class MainBoard implements Board {
                 - Gegnerische Graeben entfernen falls geblockt durch eigene Blume
                 - Graben erlauben falls direkte Verbindung UND kein existierender Graben teilt (kann das der Fall sein nach Ditchchecks?)
          */
-        // TODO: Ist es noetig zu checken ob Flower in valider Spielfeldrange ist?
-        // Idee: Gaerten einzeln speichern um Laufzeit zu verbessern da man nur Aussenbereiche testen muss und diese immutable sind
-        for (Flower f : fs) {
-            // Gesetzte Flowern als valider Zug fuer andere exkludieren
-            for (Flower oppositeF : playerData.get(oppositePlayer).flowers) {
-                Move move = new Move(f, oppositeF);
-                playerData.get(oppositePlayer).legalMoves.remove(move);
-            }
+		// TODO: Ist es noetig zu checken ob Flower in valider Spielfeldrange ist?
+		// Idee: Gaerten einzeln speichern um Laufzeit zu verbessern da man nur Aussenbereiche testen muss und diese immutable sind
+		for (Flower f : fs) {
+			// Gesetzte Flowern als valider Zug fuer andere exkludieren
+			for (Flower oppositeF : playerData.get(oppositePlayer).flowers) {
+				Move move = new Move(f, oppositeF);
+				playerData.get(oppositePlayer).legalMoves.remove(move);
+			}
 
-            //if (flowerBedSize() == 4) {
+			//if (flowerBedSize() == 4) {
 
-            //}
-        }
-    }
+			//}
+		}
+	}
 
-    private int flowerBedSize(Flower f) {
-    	// TODO
-        return 42;
-    }
+	private int flowerBedSize(Flower f) {
+		// TODO
+		return 42;
+	}
 
-    private void updateValidMoves(Ditch d) {
+	private void updateValidMoves(Ditch d) {
         /*
         Was aktuell gemacht wird:
             - Ueber und unter Graben Flower entvalidieren
             - Andere Graebenmoeglichkeiten entvalidieren falls diese sich eine Position teilen
          */
-        // Blumen entvalidieren
+		// Blumen entvalidieren
 
-    }
+	}
 
 	/**
 	 * Gibt den dazugehoerigen Viewer der Klasse BoardViewer zurueck.
