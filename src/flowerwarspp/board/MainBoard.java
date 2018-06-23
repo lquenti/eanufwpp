@@ -102,7 +102,6 @@ public class MainBoard implements Board {
 				playerData.get(PlayerColor.Blue).legalMoves.add(move);
 			}
 		}
-		updateValidMoves();
 	}
 
 	/**
