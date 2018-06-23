@@ -16,7 +16,7 @@
 		<delete dir="${docdir}" />
 	</target>
 	<target name="javadoc">
-		<javadoc sourcepath="${srcdir}" classpath="${classpath}" destdir="${docdir}" charset="utf-8" />
+		<javadoc sourcepath="${srcdir}" classpath="${classpath}" destdir="${docdir}" charset="utf-8" private="yes" />
 	</target>
 	<target name="all" depends="compile, javadoc" />
 </project>
