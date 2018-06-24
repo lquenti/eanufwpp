@@ -2,13 +2,7 @@ package flowerwarspp.board;
 
 import flowerwarspp.preset.*;
 
-import java.util.EnumMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-
-/*
-TODO: eigenen besseren Floweralgo benutzen
-*/
+import java.util.*;
 
 /**
  * Verwaltungsklasse, die Daten über die gemachten und noch möglichen Züge
@@ -121,8 +115,10 @@ public class MainBoard implements Board {
 			case Ditch:
 				playerData.get(currentPlayer).ditches.add(move.getDitch());
 				updateValidMoves(move.getDitch());
+				break;
 			case Flower:
 				updateValidMoves(new Flower[]{move.getFirstFlower(), move.getSecondFlower()});
+				break;
 			case End:
 				// TODO
 				return;
@@ -134,6 +130,7 @@ public class MainBoard implements Board {
 		oppositePlayer = (currentPlayer == PlayerColor.Red) ? PlayerColor.Blue : PlayerColor.Red;
 	}
 
+	// TODO: Am Ende Exception rausnehmen
 	private void updateValidMoves(Flower[] fs) {
         /*
         Was aktuell gemacht wird: (als Referenz zum erweitern (Kommentar kommt bei Abgabe raus))
@@ -146,36 +143,133 @@ public class MainBoard implements Board {
          */
 		// TODO: Ist es noetig zu checken ob Flower in valider Spielfeldrange ist?
 		// Idee: Gaerten einzeln speichern um Laufzeit zu verbessern da man nur Aussenbereiche testen muss und diese immutable sind
-		for (Flower f : fs) {
+		for (Flower f : fs) { // TODO: Extern redandant function
 			// Gesetzte Flowern als valider Zug fuer andere exkludieren
 			for (Flower oppositeF : playerData.get(oppositePlayer).flowers) {
 				Move move = new Move(f, oppositeF);
 				playerData.get(oppositePlayer).legalMoves.remove(move);
 			}
 
-			//if (flowerBedSize() == 4) {
+			// Gartencheck
+			int bedsize = bedSize(f);
+			if (bedsize == 4) {
+				for (Flower invalid : getAllNeighbours(f)) {
+				}
 
-			//}
+			} else if (bedsize > 4) { // TODO: In Productive entfernen
+				System.out.println("DEBUG MESSAGE: BEDSIZEALGO BROKEN");
+			}
+
+			// finally
+			playerData.get(currentPlayer).flowers.add(f);
 		}
 	}
 
-	private int flowerBedSize(Flower f) {
-		// TODO
-		return 42;
+	private int bedSize(Flower f) {
+		int ret = 1;
+		ArrayList<Flower> fs = getDirectNeighbours(f);
+		for (Flower var : fs) {
+			if (playerData.get(currentPlayer).flowers.contains(var)) {
+				ret += bedSize(var);
+			}
+		}
+		return ret;
 	}
 
+	private ArrayList<Flower> getDirectNeighbours(Flower f) {
+		ArrayList<Flower> ret = new ArrayList<>();
+		// Da wir keinen positions Array haben und Vererbung der Flowerklasse wohl overkill waere
+		Position[] nodes = new Position[]{f.getFirst(), f.getSecond(), f.getThird()};
+		Flower temp;
+		int n = 2;
+		Position third;
+		for (int i = 0; i < nodes.length - 2; i++) {
+			Position thirdPos;
+			if (nodes[i].getRow() == nodes[(i + 1) % n].getRow()) {
+				Position above = new Position(nodes[i % n].getColumn(), nodes[(i + 1) % n].getRow() + 1);
+				third = (nodes[(i + 2) % n] == above) ? new Position(nodes[(i + 1) % n].getColumn(), nodes[(i + 1) % n].getRow() - 1) : above;
+			} else {
+				Position left = new Position(nodes[(i + 1) % n].getColumn() - 1, nodes[(i + 1) % n].getRow());
+				third = (nodes[(i + 2) % n] == left) ? new Position(nodes[i % n].getColumn() + 1, nodes[i % n].getRow()) : left;
+			}
+			ret.add(new Flower(nodes[i % n], nodes[(i + 1) % n], third));
+		}
+		return ret;
+	}
+
+	private ArrayList<Flower> getAllNeighbours(Flower f) {
+		ArrayList<Flower> ret = new ArrayList<>();
+
+		return ret;
+	}
+
+	// TODO: IDEE, Array aus {column, row} und dann einfach Ein if
 	private void updateValidMoves(Ditch d) {
         /*
         Was aktuell gemacht wird:
             - Ueber und unter Graben Flower entvalidieren
             - Andere Graebenmoeglichkeiten entvalidieren falls diese sich eine Position teilen
          */
-		// Blumen entvalidieren
 
+        // Ueber und unter Graben Flower entvalidieren
+		Flower[] invalids = new Flower[2];
+		if (d.getFirst().getRow() == d.getSecond().getRow()) { // Horizontal
+			invalids[0] = new Flower(
+					d.getFirst(),
+					d.getSecond(),
+					new Position(d.getFirst().getColumn(), d.getFirst().getRow()+1)
+			);
+			invalids[1] = new Flower(
+					d.getFirst(),
+					d.getSecond(),
+					new Position(d.getSecond().getColumn(), d.getSecond().getRow()-1)
+			);
+		} else { // Vertikal
+			invalids[0] = new Flower(
+					d.getFirst(),
+					d.getSecond(),
+					new Position(d.getSecond().getColumn()-1, d.getSecond().getRow())
+			);
+			invalids[1] = new Flower(
+					d.getFirst(),
+					d.getSecond(),
+					new Position(d.getFirst().getColumn()+1, d.getSecond().getRow())
+			);
+		}
+		for (Flower f : invalids) { // TODO: Extern redundant function
+			for (Flower newInvalid : playerData.get(currentPlayer).flowers) {
+				Move move = new Move(f, newInvalid);
+				playerData.get(currentPlayer).legalMoves.remove(move);
+			}
+		}
+
+		// Andere Grabenmoeglichkeiten entvalidieren falls diese sich eine Position teilen
+		Ditch[] invalidD = new Ditch[4];
+		if (d.getFirst().getRow() == d.getSecond().getRow()) { // Horizontal
+			Position above = new Position(d.getFirst().getColumn(), d.getFirst().getRow()+1);
+			Position below = new Position(d.getSecond().getColumn(), d.getSecond().getRow()-1);
+			invalidD[0] = new Ditch(d.getFirst(), above);
+			invalidD[1] = new Ditch(d.getSecond(), above);
+			invalidD[2] = new Ditch(d.getFirst(), below);
+			invalidD[3] = new Ditch(d.getSecond(), below);
+		} else { // Vertikal
+			Position left = new Position(d.getSecond().getColumn()-1, d.getSecond().getRow());
+			Position right = new Position(d.getFirst().getColumn()+1, d.getFirst().getRow());
+			invalidD[0] = new Ditch(d.getFirst(), left);
+			invalidD[1] = new Ditch(d.getSecond(), left);
+			invalidD[2] = new Ditch(d.getFirst(), right);
+			invalidD[3] = new Ditch(d.getSecond(), right);
+		}
+		for (Ditch var : invalidD) {
+			// Egal ob das drin ist oder nicht
+			playerData.get(currentPlayer).legalMoves.remove(new Move(var));
+		}
+		// und zuletzt
+		playerData.get(currentPlayer).ditches.add(d);
 	}
 
 	/**
-	 * Gibt den dazugehoerigen Viewer der Klasse {@link MainBoardViewer} zurueck.
+	 * Gibt den dazugehoerigen Viewer der Klasse BoardViewer zurueck.
 	 *
 	 * @return den dazugehoerigen Viewer
 	 */
