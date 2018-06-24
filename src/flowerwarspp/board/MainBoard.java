@@ -141,7 +141,7 @@ public class MainBoard implements Board {
          */
 		// TODO: Ist es noetig zu checken ob Flower in valider Spielfeldrange ist?
 		// Idee: Gaerten einzeln speichern um Laufzeit zu verbessern da man nur Aussenbereiche testen muss und diese immutable sind
-		for (Flower f : fs) {
+		for (Flower f : fs) { // TODO: Extern redandant function
 			// Gesetzte Flowern als valider Zug fuer andere exkludieren
 			for (Flower oppositeF : playerData.get(oppositePlayer).flowers) {
 				Move move = new Move(f, oppositeF);
@@ -180,7 +180,7 @@ public class MainBoard implements Board {
 		Position third;
 		for (int i = 0; i < nodes.length - 2; i++) {
 			Position thirdPos;
-			if (nodes[i].getColumn() == nodes[(i + 1) % n].getColumn()) {
+			if (nodes[i].getRow() == nodes[(i + 1) % n].getRow()) {
 				Position above = new Position(nodes[i % n].getColumn(), nodes[(i + 1) % n].getRow() + 1);
 				third = (nodes[(i + 2) % n] == above) ? new Position(nodes[(i + 1) % n].getColumn(), nodes[(i + 1) % n].getRow() - 1) : above;
 			} else {
@@ -198,12 +198,67 @@ public class MainBoard implements Board {
 		return ret;
 	}
 
+	// TODO: IDEE, Array aus {column, row} und dann einfach Ein if
 	private void updateValidMoves(Ditch d) {
         /*
         Was aktuell gemacht wird:
             - Ueber und unter Graben Flower entvalidieren
             - Andere Graebenmoeglichkeiten entvalidieren falls diese sich eine Position teilen
          */
+
+        // Ueber und unter Graben Flower entvalidieren
+		Flower[] invalids = new Flower[2];
+		if (d.getFirst().getRow() == d.getSecond().getRow()) { // Horizontal
+			invalids[0] = new Flower(
+					d.getFirst(),
+					d.getSecond(),
+					new Position(d.getFirst().getColumn(), d.getFirst().getRow()+1)
+			);
+			invalids[1] = new Flower(
+					d.getFirst(),
+					d.getSecond(),
+					new Position(d.getSecond().getColumn(), d.getSecond().getRow()-1)
+			);
+		} else { // Vertikal
+			invalids[0] = new Flower(
+					d.getFirst(),
+					d.getSecond(),
+					new Position(d.getSecond().getColumn()-1, d.getSecond().getRow())
+			);
+			invalids[1] = new Flower(
+					d.getFirst(),
+					d.getSecond(),
+					new Position(d.getFirst().getColumn()+1, d.getSecond().getRow())
+			);
+		}
+		for (Flower f : invalids) { // TODO: Extern redundant function
+			for (Flower newInvalid : playerData.get(currentPlayer).flowers) {
+				Move move = new Move(f, newInvalid);
+				playerData.get(currentPlayer).legalMoves.remove(move);
+			}
+		}
+
+		// Andere Grabenmoeglichkeiten entvalidieren falls diese sich eine Position teilen
+		Ditch[] invalidD = new Ditch[4];
+		if (d.getFirst().getRow() == d.getSecond().getRow()) { // Horizontal
+			Position above = new Position(d.getFirst().getColumn(), d.getFirst().getRow()+1);
+			Position below = new Position(d.getSecond().getColumn(), d.getSecond().getRow()-1);
+			invalidD[0] = new Ditch(d.getFirst(), above);
+			invalidD[1] = new Ditch(d.getSecond(), above);
+			invalidD[2] = new Ditch(d.getFirst(), below);
+			invalidD[3] = new Ditch(d.getSecond(), below);
+		} else { // Vertikal
+			Position left = new Position(d.getSecond().getColumn()-1, d.getSecond().getRow());
+			Position right = new Position(d.getFirst().getColumn()+1, d.getFirst().getRow());
+			invalidD[0] = new Ditch(d.getFirst(), left);
+			invalidD[1] = new Ditch(d.getSecond(), left);
+			invalidD[2] = new Ditch(d.getFirst(), right);
+			invalidD[3] = new Ditch(d.getSecond(), right);
+		}
+		for (Ditch var : invalidD) {
+			// Egal ob das drin ist oder nicht
+			playerData.get(currentPlayer).legalMoves.remove(new Move(var));
+		}
 	}
 
 	/**
