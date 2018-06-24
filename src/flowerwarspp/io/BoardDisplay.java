@@ -1,14 +1,13 @@
 package flowerwarspp.io;
 
-import flowerwarspp.preset.Move;
-import flowerwarspp.preset.PlayerColor;
-import flowerwarspp.preset.Status;
-import flowerwarspp.preset.Viewer;
+import flowerwarspp.preset.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class BoardDisplay extends JPanel {
 	/**
@@ -20,6 +19,10 @@ public class BoardDisplay extends JPanel {
 	        5.0F,
 	        BasicStroke.CAP_ROUND,
 	        BasicStroke.JOIN_ROUND);
+
+	private static final Color triangleColour = Color.BLACK;
+	private static final Color redColour = Color.RED;
+	private static final Color blueColour = Color.CYAN;
 
 	/**
 	 * Legt fest, wie groß das Spielbrett in Relation zum Fenster sein soll.
@@ -55,6 +58,23 @@ public class BoardDisplay extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
+		if (this.boardViewer == null)
+			return;
+
+		g.setColor(BoardDisplay.redColour);
+		for (Flower f : this.boardViewer.getFlowers(PlayerColor.Red))
+		{
+			Collection<Triangle> triangles = this.mapTriangles.stream()
+			    .filter(f.getFirst()::equals)
+			    .collect(Collectors.toList());
+
+			triangles.stream()
+			    .findFirst()
+			    .ifPresent(g::fillPolygon);
+		}
+		System.out.println("\n\n\n");
+
+		g.setColor(triangleColour);
 		// Sets the stroke width if g is a Graphics2D object.
 		// I reckon this is basically always the case, but it shouldn't
 		// fall apart if it's not.
@@ -63,18 +83,17 @@ public class BoardDisplay extends JPanel {
 			graphics2D.setStroke(BoardDisplay.stroke);
 		}
 
-		if (this.boardViewer != null) {
-			this.mapTriangles.forEach(g::drawPolygon);
-		}
+		this.mapTriangles.forEach(g::drawPolygon);
 	}
 
 	/**
-	 * Setzt die Größe dieses Elements auf 60% der Größe des Elternelements.
+	 * Setzt die Größe dieses Elements auf
+	 * einen festgelegten Anteil der Größe des Elternelements.
 	 */
 	public void updateSize() {
 		Dimension newSize = new Dimension(
-		        this.getParent().getWidth() * componentSizePercentage / 100,
-		        this.getParent().getHeight() * componentSizePercentage / 100);
+		    this.getParent().getWidth() * componentSizePercentage / 100,
+		    this.getParent().getHeight() * componentSizePercentage / 100);
 		this.setSize(newSize);
 		this.setPreferredSize(newSize);
 		this.resizeDisplay();
@@ -87,9 +106,8 @@ public class BoardDisplay extends JPanel {
 	public void resizeDisplay() {
 		this.mapTriangles.clear();
 
-		Dimension size = this.getSize();
-		int minimumSize = (size.width < size.height) ?
-		        size.width : size.height;
+		Dimension displaySize = this.getSize();
+		int minimumSize = Math.min(displaySize.width, displaySize.height);
 
 		/*
 		 * If one side is 0px wide, skip to the end.
@@ -98,32 +116,59 @@ public class BoardDisplay extends JPanel {
 		if ((minimumSize == 0) || (this.boardViewer == null))
 			return;
 
-		boolean flipped = false;
+		// The triangles may not be larger than a fraction percentage of the shortest side.
 		int triangleHeight = minimumSize / (this.boardViewer.getSize() + 1);
-		Triangle topTriangle = new Triangle(size.width / 2,
-		        10,
-		        triangleHeight,
-		        flipped);
+
+		// Create the triangle at the very top of the board.
+		// It has the coordinates (1, board size + 1)
+		Triangle topTriangle = new Triangle(
+		    displaySize.width / 2, 10,
+		    1, (this.boardViewer.getSize() + 1),
+		    triangleHeight,
+		    false);
 		this.mapTriangles.add(topTriangle);
 
+		recalculateTriangles(topTriangle);
+	}
+
+	// This should be called "reticulate splines", really.
+	/**
+	 * Berechne die Dreiecke der graphischen Oberfläche neu.
+	 *
+	 * @param topTriangle
+	 * Das oberste Dreieck des Zeichenbretts.
+	 */
+	private void recalculateTriangles(Triangle topTriangle) {
 		Triangle currentCentralTriangle = topTriangle;
 		int maxTriangleCount = this.boardViewer.getSize();
 
-		// TODO: Make the maths work out here.
+		// NOTE: At the very beginning, the top triangle is as per
+		// definition always not flipped, so the one directly below
+		// it has to be.
+		boolean flipped = true;
+
+		// Lay out the triangles in a row, toggling the flipped-ness of them.
 		for (int triangles = 1; triangles < maxTriangleCount; triangles++) {
-			flipped = !flipped;
+			// The triangle is as big as the one below it, so their tops
+			// needs to be at the same x-coordinate.
 			Point newTopPosition = currentCentralTriangle.getTopEdge();
 			if (flipped)
 				newTopPosition.y += 2 * currentCentralTriangle.getHeight();
 
-			currentCentralTriangle = new Triangle(newTopPosition.x,
-			        newTopPosition.y,
-			        currentCentralTriangle.getSize(),
-			        flipped);
+			// The new triangle is also going to be the centre of the row.
+			// How very convenient.
+			// Also these constructors are getting out of hand.
+			currentCentralTriangle = new Triangle(
+			    newTopPosition.x, newTopPosition.y,
+			    currentCentralTriangle.getTopBoardPosition().getColumn() + 1,
+			    currentCentralTriangle.getTopBoardPosition().getRow() - 2,
+			    currentCentralTriangle.getSize(),
+			    flipped);
 
 			this.mapTriangles.add(currentCentralTriangle);
 
 			propagateRow(currentCentralTriangle, triangles, flipped);
+			flipped = !flipped;
 		}
 	}
 
@@ -171,15 +216,21 @@ public class BoardDisplay extends JPanel {
 		for (int x = 0; x < count; x++)
 		{
 			Point topEdge = null;
-			if (left)
+			int col = -1, row = -1;
+			if (left) {
 				topEdge = lastTriangle.getLeftEdge();
-			else
+				col = lastTriangle.getLeftBoardPosition().getColumn();
+				row = lastTriangle.getLeftBoardPosition().getRow();
+			} else {
 				topEdge = lastTriangle.getRightEdge();
+				col = lastTriangle.getRightBoardPosition().getColumn();
+				row = lastTriangle.getRightBoardPosition().getRow();
+			}
 
-			lastTriangle = new Triangle(topEdge.x,
-			        topEdge.y,
-			        centralTriangle.getSize(),
-					flipCurrent);
+			lastTriangle = new Triangle(topEdge.x, topEdge.y,
+			    col, row,
+			    centralTriangle.getSize(),
+			    flipCurrent);
 
 			this.mapTriangles.add(lastTriangle);
 			flipCurrent = !flipCurrent;

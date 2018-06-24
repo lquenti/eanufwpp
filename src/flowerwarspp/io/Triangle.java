@@ -1,5 +1,7 @@
 package flowerwarspp.io;
 
+import flowerwarspp.preset.Position;
+
 import java.awt.*;
 
 public class Triangle extends Polygon implements Cloneable {
@@ -8,6 +10,10 @@ public class Triangle extends Polygon implements Cloneable {
 	 * Dreiecks verwendet.
 	 */
 	private static final double squareRootThree = Math.sqrt(3.0);
+
+	private Position triangleEdge1 = null;
+	private Position triangleEdge2 = null;
+	private Position triangleEdge3 = null;
 
 	private Point edge1 = null;
 	private Point edge2 = null;
@@ -30,8 +36,24 @@ public class Triangle extends Polygon implements Cloneable {
 	 * 		X-Koordinate des dritten Vertex.
 	 * @param y3
 	 * 		Y-Koordinate des dritten Vertex.
+	 * @param tx1
+	 * 		X-Koordinate der ersten {@link Position} auf dem Brett.
+	 * @param ty1
+	 * 		X-Koordinate der ersten {@link Position} auf dem Brett.
+	 * @param tx2
+	 * 		X-Koordinate der zweiten {@link Position} auf dem Brett.
+	 * @param ty2
+	 * 		X-Koordinate der zweiten {@link Position} auf dem Brett.
+	 * @param tx3
+	 * 		X-Koordinate der dritten {@link Position} auf dem Brett.
+	 * @param ty3
+	 * 		X-Koordinate der dritten {@link Position} auf dem Brett.
+	 * @param size
+	 * 		Die Länge der Seiten des Dreiecks.
 	 */
-	private Triangle(int x1, int y1, int x2, int y2, int x3, int y3, int size) {
+	private Triangle(int x1, int y1, int x2, int y2, int x3, int y3,
+		             int tx1, int ty1, int tx2, int ty2, int tx3, int ty3,
+		             int size) {
 		this.addPoint(x1, y1);
 		this.addPoint(x2, y2);
 		this.addPoint(x3, y3);
@@ -40,6 +62,9 @@ public class Triangle extends Polygon implements Cloneable {
 		this.edge1 = new Point(x1, y1);
 		this.edge2 = new Point(x2, y2);
 		this.edge3 = new Point(x3, y3);
+		this.triangleEdge1 = new Position(tx1, ty1);
+		this.triangleEdge2 = new Position(tx2, ty2);
+		this.triangleEdge3 = new Position(tx3, ty3);
 		this.size = size;
 	}
 
@@ -52,6 +77,10 @@ public class Triangle extends Polygon implements Cloneable {
 	 * @param y1
 	 * 		Die y-Koordinate der Spitze, d.h. der oberen, mittleren Ecke (bzw. der unteren, mittleren
 	 * 		Ecke, falls das Dreieck auf dem Kopf steht).
+	 * @param tx1
+	 * 		Die x-Koordinate der {@link Position} der Spitze dieses Dreiecks.
+	 * @param ty1
+	 * 		Die y-Koordinate der {@link Position} der Spitze dieses Dreiecks.
 	 * @param size
 	 * 		Der Abstand der anderen Ecken zur Spitze in Pixel. Der Abstand ist die Länge der
 	 * 		Hypothenuse des halben äquilateralen Dreiecks.
@@ -59,7 +88,9 @@ public class Triangle extends Polygon implements Cloneable {
 	 * 		<code>true</code> bedeutet, dass das Dreieck auf dem Kopf steht. <code>false></code>
 	 * 		bedeutet, dass die Spitze nach oben zeigt ("normales Dreieck", wie Δ)
 	 */
-	public Triangle(int x1, int y1, int size, boolean flipped) {
+	public Triangle(int x1, int y1,
+		            int tx1, int ty1,
+		            int size, boolean flipped) {
 		int sign = (flipped) ? -1 : 1;
 		int xDistance = (size / 2);
 		int yDistance = sign * ((int) (xDistance * squareRootThree));
@@ -78,6 +109,19 @@ public class Triangle extends Polygon implements Cloneable {
 		this.edge1 = new Point(x1, y1);
 		this.edge2 = new Point(x2, y2);
 		this.edge3 = new Point(x3, y3);
+		try {
+			this.triangleEdge1 = new Position(tx1, ty1);
+			if (flipped) {
+				this.triangleEdge2 = new Position(tx1 - 1, ty1 + 1);
+				this.triangleEdge3 = new Position(tx1, ty1 + 1);
+			} else {
+				this.triangleEdge2 = new Position(tx1, ty1 - 1);
+				this.triangleEdge3 = new Position(tx1 + 1, ty1 - 1);
+			}
+		} catch (Exception e)
+		{
+			System.out.println(triangleEdge1);
+		}
 		this.size = size;
 	}
 
@@ -115,6 +159,39 @@ public class Triangle extends Polygon implements Cloneable {
 	}
 
 	/**
+	 * Getter für die Position die die Spitze dieses Dreiecks auf dem Brett hat.
+	 *
+	 * @return
+	 * Die Spielbrettposition der Spitze dieses Dreiecks.
+	 */
+	public Position getTopBoardPosition()
+	{
+		return new Position(this.triangleEdge1.getColumn(), this.triangleEdge1.getRow());
+	}
+
+	/**
+	 * Getter für die Position die die linke Ecke dieses Dreiecks auf dem Brett hat.
+	 *
+	 * @return
+	 * Die Spielbrettposition der linken Ecke dieses Dreiecks.
+	 */
+	public Position getLeftBoardPosition()
+	{
+		return new Position(this.triangleEdge3.getColumn(), this.triangleEdge3.getRow());
+	}
+
+	/**
+	 * Getter für die Position die die rechte Ecke dieses Dreiecks auf dem Brett hat.
+	 *
+	 * @return
+	 * Die Spielbrettposition der rechten Ecke dieses Dreiecks.
+	 */
+	public Position getRightBoardPosition()
+	{
+		return new Position(this.triangleEdge2.getColumn(), this.triangleEdge2.getRow());
+	}
+
+	/**
 	 * Getter für die Größe des Dreiecks, die verwendet wurde, um das Dreieck zu konstruieren (d.h.
 	 * die Länge aller Seiten).
 	 *
@@ -144,7 +221,11 @@ public class Triangle extends Polygon implements Cloneable {
 		        this.edge1.x, this.edge1.y,
 		        this.edge2.x, this.edge2.y,
 		        this.edge3.x, this.edge3.y,
+		        this.triangleEdge1.getRow(), triangleEdge1.getColumn(),
+		        this.triangleEdge2.getRow(), triangleEdge2.getColumn(),
+		        this.triangleEdge3.getRow(), triangleEdge3.getColumn(),
 		        this.getSize());
+
 		return clone;
 	}
 

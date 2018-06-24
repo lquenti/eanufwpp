@@ -5,7 +5,10 @@ import flowerwarspp.preset.*;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -36,7 +39,7 @@ public class BoardFrame extends JFrame implements Requestable {
 		this.boardDisplay.updateSize();
 
 		this.boardDisplay.addMouseListener((MouseClickListener) e -> {
-			this.setBoard(mainBoard);
+			this.setBoard(this.mainBoard);
 			System.out.println("Hallo");
 		});
 
@@ -49,10 +52,11 @@ public class BoardFrame extends JFrame implements Requestable {
 			Random random = new Random();
 			int idx = random.nextInt(moves.size());
 			int i = 0;
+			Move move = null;
 			for (Move m : moves) {
 				if (i == idx) {
 					System.out.println(m.getType());
-					this.mainBoard.make(m);
+					move = m;
 					break;
 				}
 
