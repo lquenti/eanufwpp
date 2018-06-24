@@ -1,15 +1,8 @@
 package flowerwarspp.board;
 
-import flowerwarspp.io.BoardViewer;
 import flowerwarspp.preset.*;
 
-import java.util.EnumMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-
-/*
-TODO: eigenen besseren Floweralgo benutzen
-*/
+import java.util.*;
 
 /**
  * Verwaltungsklasse, die Daten über die gemachten und noch möglichen Züge
@@ -135,6 +128,7 @@ public class MainBoard implements Board {
 		oppositePlayer = (currentPlayer == PlayerColor.Red) ? PlayerColor.Blue : PlayerColor.Red;
 	}
 
+	// TODO: Am Ende Exception rausnehmen
 	private void updateValidMoves(Flower[] fs) {
         /*
         Was aktuell gemacht wird: (als Referenz zum erweitern (Kommentar kommt bei Abgabe raus))
@@ -154,15 +148,54 @@ public class MainBoard implements Board {
 				playerData.get(oppositePlayer).legalMoves.remove(move);
 			}
 
-			//if (flowerBedSize() == 4) {
+			// Gartencheck
+			int bedsize = bedSize(f);
+			if (bedsize == 4) {
+				for (Flower invalid : getAllNeighbours(f)) {
+				}
 
-			//}
+			} else if (bedsize > 4) { // TODO: In Productive entfernen
+				System.out.println("DEBUG MESSAGE: BEDSIZEALGO BROKEN");
+			}
 		}
 	}
 
-	private int flowerBedSize(Flower f) {
-		// TODO
-		return 42;
+	private int bedSize(Flower f) {
+		int ret = 1;
+		ArrayList<Flower> fs = getDirectNeighbours(f);
+		for (Flower var : fs) {
+			if (playerData.get(currentPlayer).flowers.contains(var)) {
+				ret += bedSize(var);
+			}
+		}
+		return ret;
+	}
+
+	private ArrayList<Flower> getDirectNeighbours(Flower f) {
+		ArrayList<Flower> ret = new ArrayList<>();
+		// Da wir keinen positions Array haben und Vererbung der Flowerklasse wohl overkill waere
+		Position[] nodes = new Position[]{f.getFirst(), f.getSecond(), f.getThird()};
+		Flower temp;
+		int n = 2;
+		Position third;
+		for (int i = 0; i < nodes.length - 2; i++) {
+			Position thirdPos;
+			if (nodes[i].getColumn() == nodes[(i + 1) % n].getColumn()) {
+				Position above = new Position(nodes[i % n].getColumn(), nodes[(i + 1) % n].getRow() + 1);
+				third = (nodes[(i + 2) % n] == above) ? new Position(nodes[(i + 1) % n].getColumn(), nodes[(i + 1) % n].getRow() - 1) : above;
+			} else {
+				Position left = new Position(nodes[(i + 1) % n].getColumn() - 1, nodes[(i + 1) % n].getRow());
+				third = (nodes[(i + 2) % n] == left) ? new Position(nodes[i % n].getColumn() + 1, nodes[i % n].getRow()) : left;
+			}
+			ret.add(new Flower(nodes[i % n], nodes[(i + 1) % n], third));
+		}
+		return ret;
+	}
+
+	private ArrayList<Flower> getAllNeighbours(Flower f) {
+		ArrayList<Flower> ret = new ArrayList<>();
+
+		return ret;
 	}
 
 	private void updateValidMoves(Ditch d) {
@@ -171,8 +204,6 @@ public class MainBoard implements Board {
             - Ueber und unter Graben Flower entvalidieren
             - Andere Graebenmoeglichkeiten entvalidieren falls diese sich eine Position teilen
          */
-		// Blumen entvalidieren
-
 	}
 
 	/**
