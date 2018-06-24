@@ -115,8 +115,10 @@ public class MainBoard implements Board {
 			case Ditch:
 				playerData.get(currentPlayer).ditches.add(move.getDitch());
 				updateValidMoves(move.getDitch());
+				break;
 			case Flower:
 				updateValidMoves(new Flower[]{move.getFirstFlower(), move.getSecondFlower()});
+				break;
 			case End:
 				// TODO
 				return;
