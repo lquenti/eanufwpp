@@ -261,6 +261,8 @@ public class MainBoard implements Board {
 			// Egal ob das drin ist oder nicht
 			playerData.get(currentPlayer).legalMoves.remove(new Move(var));
 		}
+		// und zuletzt
+		playerData.get(currentPlayer).ditches.add(d);
 	}
 
 	/**
