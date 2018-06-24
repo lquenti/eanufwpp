@@ -159,6 +159,9 @@ public class MainBoard implements Board {
 			} else if (bedsize > 4) { // TODO: In Productive entfernen
 				System.out.println("DEBUG MESSAGE: BEDSIZEALGO BROKEN");
 			}
+
+			// finally
+			playerData.get(currentPlayer).flowers.add(f);
 		}
 	}
 
