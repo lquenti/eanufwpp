@@ -54,6 +54,10 @@ public class MainBoard implements Board {
 	 */
 	private EnumMap<PlayerColor, PlayerData> playerData = new EnumMap<>(PlayerColor.class);
 
+	/**
+	 * Liste mit allen möglichen Blumen.
+	 */
+	private final HashSet<Flower> allFlowers;
 
 	/**
 	 * Konstruktor. Befuellt Board einer variablen Groesse zwischen [3;30].
@@ -67,11 +71,11 @@ public class MainBoard implements Board {
 		playerData.put(PlayerColor.Red, new PlayerData());
 		playerData.put(PlayerColor.Blue, new PlayerData());
 
-		Flower[] flowers = new Flower[this.size * this.size];
+		Flower[] allFlowersArray = new Flower[this.size * this.size];
 		int insertPosition = 0;
 		for (int i = 1; i <= this.size; i++) {
 			for (int j = 1; j <= this.size - (i - 1); j++) {
-				flowers[insertPosition] = (new Flower(
+				allFlowersArray[insertPosition] = (new Flower(
 						new Position(i, j),
 						new Position(i + 1, j),
 						new Position(i, j + 1)
@@ -79,7 +83,7 @@ public class MainBoard implements Board {
 				insertPosition++;
 
 				if (i + j <= this.size) {
-					flowers[insertPosition] = (new Flower(
+					allFlowersArray[insertPosition] = (new Flower(
 							new Position(i + 1, j + 1),
 							new Position(i + 1, j),
 							new Position(i, j + 1)
@@ -88,9 +92,13 @@ public class MainBoard implements Board {
 				}
 			}
 		}
-		for (int i = 0; i < flowers.length; i++) {
-			for (int j = i + 1; j < flowers.length; j++) {
-				Move move = new Move(flowers[i], flowers[j]);
+		// Aktuelle Laufzeit: n^2/2+n
+		// TODO: Geht das irgendwie schöner?
+		allFlowers = new HashSet<>(this.size * this.size);
+		for (int i = 0; i < allFlowersArray.length; i++) {
+			allFlowers.add(allFlowersArray[i]);
+			for (int j = i + 1; j < allFlowersArray.length; j++) {
+				Move move = new Move(allFlowersArray[i], allFlowersArray[j]);
 				playerData.get(PlayerColor.Red).legalMoves.add(move);
 				playerData.get(PlayerColor.Blue).legalMoves.add(move);
 			}
@@ -167,7 +175,7 @@ public class MainBoard implements Board {
 
 	private int bedSize(Flower f) {
 		int ret = 1;
-		ArrayList<Flower> fs = getDirectNeighbours(f);
+		HashSet<Flower> fs = getDirectNeighbours(f);
 		for (Flower var : fs) {
 			if (playerData.get(currentPlayer).flowers.contains(var)) {
 				ret += bedSize(var);
@@ -176,23 +184,18 @@ public class MainBoard implements Board {
 		return ret;
 	}
 
-	private ArrayList<Flower> getDirectNeighbours(Flower f) {
-		ArrayList<Flower> ret = new ArrayList<>();
-		// Da wir keinen positions Array haben und Vererbung der Flowerklasse wohl overkill waere
+	private HashSet<Flower> getDirectNeighbours(Flower f) {
+		HashSet<Flower> ret = new HashSet<>();
 		Position[] nodes = new Position[]{f.getFirst(), f.getSecond(), f.getThird()};
-		Flower temp;
-		int n = 2;
-		Position third;
-		for (int i = 0; i < nodes.length - 2; i++) {
-			Position thirdPos;
-			if (nodes[i].getRow() == nodes[(i + 1) % n].getRow()) {
-				Position above = new Position(nodes[i % n].getColumn(), nodes[(i + 1) % n].getRow() + 1);
-				third = (nodes[(i + 2) % n] == above) ? new Position(nodes[(i + 1) % n].getColumn(), nodes[(i + 1) % n].getRow() - 1) : above;
-			} else {
-				Position left = new Position(nodes[(i + 1) % n].getColumn() - 1, nodes[(i + 1) % n].getRow());
-				third = (nodes[(i + 2) % n] == left) ? new Position(nodes[i % n].getColumn() + 1, nodes[i % n].getRow()) : left;
+		for (int i = 0; i < nodes.length; i++) {
+			Position third = new Position(
+					nodes[(i + 1) % 3].getColumn() - nodes[(i + 2) % 3].getColumn() + nodes[i % 3].getColumn(),
+					nodes[(i + 1) % 3].getRow() - nodes[(i + 2) % 3].getRow() + nodes[i % 3].getRow()
+			);
+			Flower neighbour = new Flower(nodes[i % 3], nodes[(i + 1) % 3], third);
+			if (allFlowers.contains(neighbour)) {
+				ret.add(neighbour);
 			}
-			ret.add(new Flower(nodes[i % n], nodes[(i + 1) % n], third));
 		}
 		return ret;
 	}
@@ -211,29 +214,29 @@ public class MainBoard implements Board {
             - Andere Graebenmoeglichkeiten entvalidieren falls diese sich eine Position teilen
          */
 
-        // Ueber und unter Graben Flower entvalidieren
+		// Ueber und unter Graben Flower entvalidieren
 		Flower[] invalids = new Flower[2];
 		if (d.getFirst().getRow() == d.getSecond().getRow()) { // Horizontal
 			invalids[0] = new Flower(
 					d.getFirst(),
 					d.getSecond(),
-					new Position(d.getFirst().getColumn(), d.getFirst().getRow()+1)
+					new Position(d.getFirst().getColumn(), d.getFirst().getRow() + 1)
 			);
 			invalids[1] = new Flower(
 					d.getFirst(),
 					d.getSecond(),
-					new Position(d.getSecond().getColumn(), d.getSecond().getRow()-1)
+					new Position(d.getSecond().getColumn(), d.getSecond().getRow() - 1)
 			);
 		} else { // Vertikal
 			invalids[0] = new Flower(
 					d.getFirst(),
 					d.getSecond(),
-					new Position(d.getSecond().getColumn()-1, d.getSecond().getRow())
+					new Position(d.getSecond().getColumn() - 1, d.getSecond().getRow())
 			);
 			invalids[1] = new Flower(
 					d.getFirst(),
 					d.getSecond(),
-					new Position(d.getFirst().getColumn()+1, d.getSecond().getRow())
+					new Position(d.getFirst().getColumn() + 1, d.getSecond().getRow())
 			);
 		}
 		for (Flower f : invalids) { // TODO: Extern redundant function
@@ -246,15 +249,15 @@ public class MainBoard implements Board {
 		// Andere Grabenmoeglichkeiten entvalidieren falls diese sich eine Position teilen
 		Ditch[] invalidD = new Ditch[4];
 		if (d.getFirst().getRow() == d.getSecond().getRow()) { // Horizontal
-			Position above = new Position(d.getFirst().getColumn(), d.getFirst().getRow()+1);
-			Position below = new Position(d.getSecond().getColumn(), d.getSecond().getRow()-1);
+			Position above = new Position(d.getFirst().getColumn(), d.getFirst().getRow() + 1);
+			Position below = new Position(d.getSecond().getColumn(), d.getSecond().getRow() - 1);
 			invalidD[0] = new Ditch(d.getFirst(), above);
 			invalidD[1] = new Ditch(d.getSecond(), above);
 			invalidD[2] = new Ditch(d.getFirst(), below);
 			invalidD[3] = new Ditch(d.getSecond(), below);
 		} else { // Vertikal
-			Position left = new Position(d.getSecond().getColumn()-1, d.getSecond().getRow());
-			Position right = new Position(d.getFirst().getColumn()+1, d.getFirst().getRow());
+			Position left = new Position(d.getSecond().getColumn() - 1, d.getSecond().getRow());
+			Position right = new Position(d.getFirst().getColumn() + 1, d.getFirst().getRow());
 			invalidD[0] = new Ditch(d.getFirst(), left);
 			invalidD[1] = new Ditch(d.getSecond(), left);
 			invalidD[2] = new Ditch(d.getFirst(), right);
