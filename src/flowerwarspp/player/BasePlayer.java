@@ -84,7 +84,25 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
      * @throws RemoteException Falls ein Fehler waehrend der Netzwerk-Kommunikation aufgetreten ist
      */
     @Override
-    public abstract Move request() throws Exception, RemoteException;
+    public Move request() throws Exception, RemoteException {
+        // State validation
+        if ( this.getCycleState() == PlayerFunction.NULL ) throw new Exception(exception_NoInit);
+        if ( this.getCycleState() != PlayerFunction.REQUEST ) throw new Exception(exception_CycleRequest);
+
+        Move move = requestMove();
+
+        // We just assume the move is valid, might need to check later on
+        // For now we just make the move as returned by requestMove
+        this.board.make(move);
+
+        // Update state
+        this.cycleState = PlayerFunction.CONFIRM;
+
+        return move;
+    }
+
+    protected abstract Move requestMove() throws Exception, RemoteException;
+
 
     /* TODO: All the things need doing. */
 

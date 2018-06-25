@@ -12,8 +12,6 @@ public class SimpleAI extends BasePlayer {
     private static final String exception_NoMove =
             "Die einfache KI konnte keinen Zug auswaehlen.";
 
-    public static final PlayerType playerType = PlayerType.SIMPLE_AI;
-
     /**
      * Fordert einen Zug an, nach den Vorgaben der Interface-Methode {@link Player#request()}. Diese Methode bedient
      * sich einer einfachen Strategie zur Bewertung und anschliessend zur Auswahl eines Zuges.
@@ -24,11 +22,7 @@ public class SimpleAI extends BasePlayer {
      * @throws RemoteException Falls ein Fehler waehrend der Netzwerk-Kommunikation aufgetreten ist
      */
     // TODO: Implement the actual weighted algorithm
-    @Override
-    public Move request() throws Exception, RemoteException {
-        // State validation
-        if ( this.getCycleState() == PlayerFunction.NULL ) throw new Exception(exception_NoInit);
-        if ( this.getCycleState() != PlayerFunction.REQUEST ) throw new Exception(exception_CycleRequest);
+    protected Move requestMove() throws Exception, RemoteException {
 
         for ( Move move :
                 this.getPossibleMoves() ) {
@@ -37,13 +31,6 @@ public class SimpleAI extends BasePlayer {
             // TODO: Check if the neighbouring fields have plants for both flowers
         }
 
-        // Update state
-        this.cycleState = PlayerFunction.CONFIRM;
-
         return null;
-    }
-
-    public PlayerType getPlayerType() {
-        return playerType;
     }
 }
