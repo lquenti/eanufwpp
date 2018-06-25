@@ -57,7 +57,7 @@ public class MainBoard implements Board {
 	/**
 	 * Liste mit allen möglichen Blumen.
 	 */
-	final private Flower[] allFlowers;
+	private final HashSet<Flower> allFlowers;
 
 	/**
 	 * Konstruktor. Befuellt Board einer variablen Groesse zwischen [3;30].
@@ -71,11 +71,11 @@ public class MainBoard implements Board {
 		playerData.put(PlayerColor.Red, new PlayerData());
 		playerData.put(PlayerColor.Blue, new PlayerData());
 
-		allFlowers = new Flower[this.size * this.size];
+		Flower[] allFlowersArray = new Flower[this.size * this.size];
 		int insertPosition = 0;
 		for (int i = 1; i <= this.size; i++) {
 			for (int j = 1; j <= this.size - (i - 1); j++) {
-				allFlowers[insertPosition] = (new Flower(
+				allFlowersArray[insertPosition] = (new Flower(
 						new Position(i, j),
 						new Position(i + 1, j),
 						new Position(i, j + 1)
@@ -83,7 +83,7 @@ public class MainBoard implements Board {
 				insertPosition++;
 
 				if (i + j <= this.size) {
-					allFlowers[insertPosition] = (new Flower(
+					allFlowersArray[insertPosition] = (new Flower(
 							new Position(i + 1, j + 1),
 							new Position(i + 1, j),
 							new Position(i, j + 1)
@@ -92,9 +92,13 @@ public class MainBoard implements Board {
 				}
 			}
 		}
-		for (int i = 0; i < allFlowers.length; i++) {
-			for (int j = i + 1; j < allFlowers.length; j++) {
-				Move move = new Move(allFlowers[i], allFlowers[j]);
+		// Aktuelle Laufzeit: n^2/2+n
+		// TODO: Geht das irgendwie schöner?
+		allFlowers = new HashSet<>(this.size * this.size);
+		for (int i = 0; i < allFlowersArray.length; i++) {
+			allFlowers.add(allFlowersArray[i]);
+			for (int j = i + 1; j < allFlowersArray.length; j++) {
+				Move move = new Move(allFlowersArray[i], allFlowersArray[j]);
 				playerData.get(PlayerColor.Red).legalMoves.add(move);
 				playerData.get(PlayerColor.Blue).legalMoves.add(move);
 			}
@@ -182,20 +186,16 @@ public class MainBoard implements Board {
 
 	private HashSet<Flower> getDirectNeighbours(Flower f) {
 		HashSet<Flower> ret = new HashSet<>();
-		// Da wir keinen positions Array haben und Vererbung der Flowerklasse wohl overkill waere
 		Position[] nodes = new Position[]{f.getFirst(), f.getSecond(), f.getThird()};
-		int n = 2;
-		Position third;
-		for (int i = 0; i < nodes.length - 2; i++) {
-			Position thirdPos;
-			if (nodes[i].getRow() == nodes[(i + 1) % n].getRow()) {
-				Position above = new Position(nodes[i % n].getColumn(), nodes[(i + 1) % n].getRow() + 1);
-				third = (nodes[(i + 2) % n] == above) ? new Position(nodes[(i + 1) % n].getColumn(), nodes[(i + 1) % n].getRow() - 1) : above;
-			} else {
-				Position left = new Position(nodes[(i + 1) % n].getColumn() - 1, nodes[(i + 1) % n].getRow());
-				third = (nodes[(i + 2) % n] == left) ? new Position(nodes[i % n].getColumn() + 1, nodes[i % n].getRow()) : left;
+		for (int i = 0; i < nodes.length; i++) {
+			Position third = new Position(
+					nodes[(i + 1) % 3].getColumn() - nodes[(i + 2) % 3].getColumn() + nodes[i % 3].getColumn(),
+					nodes[(i + 1) % 3].getRow() - nodes[(i + 2) % 3].getRow() + nodes[i % 3].getRow()
+			);
+			Flower neighbour = new Flower(nodes[i % 3], nodes[(i + 1) % 3], third);
+			if (allFlowers.contains(neighbour)) {
+				ret.add(neighbour);
 			}
-			ret.add(new Flower(nodes[i % n], nodes[(i + 1) % n], third));
 		}
 		return ret;
 	}
