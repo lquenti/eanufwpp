@@ -189,8 +189,8 @@ public class MainBoard implements Board {
 		Position[] nodes = new Position[]{f.getFirst(), f.getSecond(), f.getThird()};
 		for (int i = 0; i < nodes.length; i++) {
 			Position third = new Position(
-					nodes[(i + 1) % 3].getColumn() - nodes[(i + 2) % 3].getColumn() + nodes[i % 3].getColumn(),
-					nodes[(i + 1) % 3].getRow() - nodes[(i + 2) % 3].getRow() + nodes[i % 3].getRow()
+				nodes[i%3].getColumn() + nodes[(i+1)%3].getColumn() - nodes[(i+2)%3].getColumn(),
+				nodes[i%3].getRow() + nodes[(i+1)%3].getRow() - nodes[(i+2)%3].getRow()
 			);
 			Flower neighbour = new Flower(nodes[i % 3], nodes[(i + 1) % 3], third);
 			if (allFlowers.contains(neighbour)) {
