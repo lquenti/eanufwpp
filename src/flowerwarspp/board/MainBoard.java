@@ -183,8 +183,8 @@ public class MainBoard implements Board {
 
 	private HashSet<Flower> getDirectNeighbours(Flower f) {
 		HashSet<Flower> ret = new HashSet<>();
-		Position[] nodes = new Position[]{f.getFirst(), f.getSecond(), f.getThird()};
-		for (int i = 0; i < nodes.length; i++) {
+		Position[] nodes = {f.getFirst(), f.getSecond(), f.getThird()};
+		for (int i = 0; i < 3; i++) {
 			Position third = new Position(
 				nodes[i%3].getColumn() + nodes[(i+1)%3].getColumn() - nodes[(i+2)%3].getColumn(),
 				nodes[i%3].getRow() + nodes[(i+1)%3].getRow() - nodes[(i+2)%3].getRow()
@@ -197,9 +197,25 @@ public class MainBoard implements Board {
 		return ret;
 	}
 
-	private ArrayList<Flower> getAllNeighbours(Flower f) {
-		ArrayList<Flower> ret = new ArrayList<>();
-
+	private HashSet<Flower> getAllNeighbours(Flower f) {
+		HashSet<Flower> ret = getDirectNeighbours(f);
+		// Über die Positionen iterieren, die das Dreieck umgeben.
+		Position[] nodes = {f.getFirst(), f.getSecond(), f.getThird()};
+		Position last = new Position(
+			nodes[2].getColumn() + nodes[0].getColumn() - nodes[1].getColumn(),
+			nodes[2].getRow() + nodes[0].getRow() - nodes[1].getRow()
+		);
+		for (int i = 0; i < 9; i++) {
+			Position third = new Position(
+				nodes[i/3].getColumn() + nodes[(i+1)/3%3].getColumn() - nodes[((i+2)/3+1)%3].getColumn(),
+				nodes[i/3].getRow() + nodes[(i+1)/3%3].getRow() - nodes[((i+2)/3+1)%3].getRow()
+			);
+			Flower neighbour = new Flower(nodes[i/3], last, third);
+			if (isOnBoard(neighbour)) {
+				ret.add(neighbour);
+			}
+			last = third;
+		}
 		return ret;
 	}
 
