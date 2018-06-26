@@ -57,7 +57,7 @@ public class MainBoard implements Board {
 	/**
 	 * Liste mit allen möglichen Blumen.
 	 */
-	private final HashSet<Flower> allFlowers;
+	private final Flower[] allFlowers;
 
 	/**
 	 * Konstruktor. Befuellt Board einer variablen Groesse zwischen [3;30].
@@ -71,11 +71,11 @@ public class MainBoard implements Board {
 		playerData.put(PlayerColor.Red, new PlayerData());
 		playerData.put(PlayerColor.Blue, new PlayerData());
 
-		Flower[] allFlowersArray = new Flower[this.size * this.size];
+		allFlowers = new Flower[this.size * this.size];
 		int insertPosition = 0;
 		for (int i = 1; i <= this.size; i++) {
 			for (int j = 1; j <= this.size - (i - 1); j++) {
-				allFlowersArray[insertPosition] = (new Flower(
+				allFlowers[insertPosition] = (new Flower(
 						new Position(i, j),
 						new Position(i + 1, j),
 						new Position(i, j + 1)
@@ -83,7 +83,7 @@ public class MainBoard implements Board {
 				insertPosition++;
 
 				if (i + j <= this.size) {
-					allFlowersArray[insertPosition] = (new Flower(
+					allFlowers[insertPosition] = (new Flower(
 							new Position(i + 1, j + 1),
 							new Position(i + 1, j),
 							new Position(i, j + 1)
@@ -92,13 +92,10 @@ public class MainBoard implements Board {
 				}
 			}
 		}
-		// Aktuelle Laufzeit: n^2/2+n
-		// TODO: Geht das irgendwie schöner?
-		allFlowers = new HashSet<>(this.size * this.size);
-		for (int i = 0; i < allFlowersArray.length; i++) {
-			allFlowers.add(allFlowersArray[i]);
-			for (int j = i + 1; j < allFlowersArray.length; j++) {
-				Move move = new Move(allFlowersArray[i], allFlowersArray[j]);
+
+		for (int i = 0; i < allFlowers.length; i++) {
+			for (int j = i + 1; j < allFlowers.length; j++) {
+				Move move = new Move(allFlowers[i], allFlowers[j]);
 				playerData.get(PlayerColor.Red).legalMoves.add(move);
 				playerData.get(PlayerColor.Blue).legalMoves.add(move);
 			}
@@ -193,7 +190,7 @@ public class MainBoard implements Board {
 				nodes[i%3].getRow() + nodes[(i+1)%3].getRow() - nodes[(i+2)%3].getRow()
 			);
 			Flower neighbour = new Flower(nodes[i % 3], nodes[(i + 1) % 3], third);
-			if (allFlowers.contains(neighbour)) {
+			if (isOnBoard(neighbour)) {
 				ret.add(neighbour);
 			}
 		}
