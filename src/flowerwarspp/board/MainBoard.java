@@ -271,6 +271,22 @@ public class MainBoard implements Board {
 		playerData.get(currentPlayer).ditches.add(d);
 	}
 
+	/*
+	 * Prüft, ob eine Position sich auf diesem Board befindet.
+	 * @return ob die Position auf dem Board ist
+	 */
+	private boolean isOnBoard(Position position) {
+		return position != null && position.getColumn() + position.getRow() < size + 3;
+	}
+
+	/*
+	 * Prüft, ob eine Flower sich auf diesem Board befindet.
+	 * @return ob die Flower auf dem Board ist
+	 */
+	private boolean isOnBoard(Flower flower) {
+		return flower != null && isOnBoard(flower.getThird());
+	}
+
 	/**
 	 * Gibt den dazugehoerigen Viewer der Klasse BoardViewer zurueck.
 	 *
