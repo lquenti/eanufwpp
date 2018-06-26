@@ -156,7 +156,7 @@ public class MainBoard implements Board {
 			}
 
 			// Gartencheck
-			int bedsize = bedSize(f);
+			int bedsize = getFlowerBed(f).size();
 			if (bedsize == 4) {
 				for (Flower invalid : getAllNeighbours(f)) {
 				}
@@ -170,15 +170,36 @@ public class MainBoard implements Board {
 		}
 	}
 
-	private int bedSize(Flower f) {
-		int ret = 1;
-		HashSet<Flower> fs = getDirectNeighbours(f);
-		for (Flower var : fs) {
-			if (playerData.get(currentPlayer).flowers.contains(var)) {
-				ret += bedSize(var);
+	private PlayerColor getFlowerColor(Flower f) {
+		for (Map.Entry<PlayerColor, PlayerData> entry: playerData.entrySet()) {
+			if (entry.getValue().flowers.contains(f)) {
+				return entry.getKey();
 			}
 		}
-		return ret;
+		return null;
+	}
+
+	private HashSet<Flower> getFlowerBed(Flower f) {
+		PlayerColor flowerColor = getFlowerColor(f);
+		if (flowerColor == null) {
+			return null;
+		}
+
+		HashSet<Flower> result = new HashSet<>();
+		Stack<Flower> toVisit = new Stack<>();
+		toVisit.add(f);
+
+		while (!toVisit.empty()) {
+			Flower visiting = toVisit.pop();
+			for (Flower neighbour : getDirectNeighbours(visiting)) {
+				if (!result.contains(neighbour) && playerData.get(flowerColor).flowers.contains(neighbour)) {
+					toVisit.add(neighbour);
+				}
+				result.add(visiting);
+			}
+		}
+
+		return result;
 	}
 
 	private HashSet<Flower> getDirectNeighbours(Flower f) {
