@@ -179,13 +179,13 @@ public class MainBoard implements Board {
 		return null;
 	}
 
-	private HashSet<Flower> getFlowerBed(Flower f) {
+	private LinkedList<Flower> getFlowerBed(Flower f) {
 		PlayerColor flowerColor = getFlowerColor(f);
 		if (flowerColor == null) {
 			return null;
 		}
 
-		HashSet<Flower> result = new HashSet<>();
+		LinkedList<Flower> result = new LinkedList<>();
 		Stack<Flower> toVisit = new Stack<>();
 		toVisit.add(f);
 
@@ -202,8 +202,8 @@ public class MainBoard implements Board {
 		return result;
 	}
 
-	private HashSet<Flower> getDirectNeighbours(Flower f) {
-		HashSet<Flower> ret = new HashSet<>();
+	private LinkedList<Flower> getDirectNeighbours(Flower f) {
+		LinkedList<Flower> result = new LinkedList<>();
 		Position[] nodes = {f.getFirst(), f.getSecond(), f.getThird()};
 		for (int i = 0; i < 3; i++) {
 			Position third = new Position(
@@ -212,14 +212,14 @@ public class MainBoard implements Board {
 			);
 			Flower neighbour = new Flower(nodes[i % 3], nodes[(i + 1) % 3], third);
 			if (isOnBoard(neighbour)) {
-				ret.add(neighbour);
+				result.add(neighbour);
 			}
 		}
-		return ret;
+		return result;
 	}
 
-	private HashSet<Flower> getAllNeighbours(Flower f) {
-		HashSet<Flower> ret = getDirectNeighbours(f);
+	private LinkedList<Flower> getAllNeighbours(Flower f) {
+		LinkedList<Flower> result = getDirectNeighbours(f);
 		// Über die Positionen iterieren, die das Dreieck umgeben.
 		Position[] nodes = {f.getFirst(), f.getSecond(), f.getThird()};
 		Position last = new Position(
@@ -233,11 +233,11 @@ public class MainBoard implements Board {
 			);
 			Flower neighbour = new Flower(nodes[i/3], last, third);
 			if (isOnBoard(neighbour)) {
-				ret.add(neighbour);
+				result.add(neighbour);
 			}
 			last = third;
 		}
-		return ret;
+		return result;
 	}
 
 	// TODO: IDEE, Array aus {column, row} und dann einfach Ein if
