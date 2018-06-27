@@ -126,8 +126,11 @@ public class MainBoard implements Board {
 	 */
 	@Override
 	public void make(final Move move) throws IllegalStateException {
+		if (currentStatus != Status.Ok) {
+			throw new IllegalStateException("Das Spielbrett kann keine Züge mehr annehmen!");
+		}
 		if (!playerData.get(currentPlayer).legalMoves.contains(move)) {
-			throw new IllegalStateException("Illegaler Zug");
+			currentStatus = Status.Illegal;
 		}
 		// Ist es best practise nicht null zu checken weil es literally unmoeglich ist?
 		// (Falls es nicht so ist Kommentar einfach removen)
