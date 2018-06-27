@@ -443,5 +443,10 @@ public class MainBoard implements Board {
 		public PlayerColor getTurn() {
 			return currentPlayer;
 		}
+		
+		// TODO: REFACTOR
+		public LinkedList<Flower> getDirectNeighboursTemp(Flower f) {
+			return getDirectNeighbours(f);
+		}
 	}
 }
