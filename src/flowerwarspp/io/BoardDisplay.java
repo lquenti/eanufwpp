@@ -70,14 +70,13 @@ public class BoardDisplay extends JPanel {
 			    .ifPresent(g::fillPolygon);
 		}
 		g.setColor(BoardDisplay.blueColour);
-		for (Flower f : this.boardViewer.getFlowers(PlayerColor.Red))
+		for (Flower f : this.boardViewer.getFlowers(PlayerColor.Blue))
 		{
 			this.mapTriangles.stream()
 					.filter(t -> f.getFirst().equals(t.getTopBoardPosition()))
 					.findFirst()
 					.ifPresent(g::fillPolygon);
 		}
-		System.out.println("\n\n\n");
 
 		g.setColor(triangleColour);
 		// Sets the stroke width if g is a Graphics2D object.
@@ -85,10 +84,10 @@ public class BoardDisplay extends JPanel {
 		// fall apart if it's not.
 		if (g instanceof Graphics2D) {
 			Graphics2D graphics2D = ((Graphics2D) g);
-			graphics2D.setStroke(BoardDisplay.stroke);
+//			graphics2D.setStroke(BoardDisplay.stroke);
 		}
 
-		this.mapTriangles.forEach(g::drawPolygon);
+		this.mapTriangles.forEach(t -> t.drawTriangle(g));
 	}
 
 	/**
@@ -143,7 +142,7 @@ public class BoardDisplay extends JPanel {
 	 * Das oberste Dreieck des Zeichenbretts.
 	 */
 	private void recalculateTriangles(Triangle topTriangle) {
-		int maximumRowCount = (this.boardViewer.getSize() - 1) * 2;
+		int maximumRowCount = (this.boardViewer.getSize() * 2) - 1;
 		Triangle currentTriangle = topTriangle;
 
 		for (int triangles = 2; triangles < maximumRowCount; triangles += 2) {

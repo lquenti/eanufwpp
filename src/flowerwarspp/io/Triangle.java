@@ -233,4 +233,11 @@ public class Triangle extends Polygon implements Cloneable {
 	public Object clone() {
 		return this.cloneTriangle();
 	}
+
+	public void drawTriangle(Graphics graphics)
+	{
+		graphics.drawPolygon(this);
+		String text = this.triangleEdge2.getColumn() + ", " + this.triangleEdge2.getRow();
+		graphics.drawString(text, this.edge3.x, this.edge3.y);
+	}
 }
