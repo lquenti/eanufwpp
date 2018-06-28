@@ -13,8 +13,9 @@ public class TextInterface implements Requestable {
 	private static final String moveFormatError = "Zug konnte nicht gelesen werden.";
 
 	/**
-	 * Liest einen Spielzug von der Standardeingabe ein. Der Nutzer wird solange aufgefordert,
-	 * einen Zug einzugeben, bis er einen gültigen Zug eingibt.
+	 * Liest einen Spielzug von der Standardeingabe ein. Der Nutzer wird solange aufgefordert, einen
+	 * Zug einzugeben, bis er einen gültigen Zug eingibt.
+	 *
 	 * @return Der eingelesene Zug
 	 */
 	@Override
