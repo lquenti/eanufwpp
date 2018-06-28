@@ -12,7 +12,7 @@ import java.util.Random;
  * Implementiert die abstrakte Klasse {@link BasePlayer} mit einer zufallsbasierten KI, welche zufaellig einen der zur
  * Verfuegung stehenden Zuege auswaehlt und auf Anfrage ausgibt.
  *
- * @author Mokka
+ * @author Michael Merse
  */
 public class RandomAI extends BasePlayer {
 
@@ -43,11 +43,7 @@ public class RandomAI extends BasePlayer {
         // TODO: For now just return any random move. More checks might be necessary depending on our needs.
         Move randomMove;
 
-        try {
-            randomMove = getRandomPossibleMove();
-        } catch ( Exception e ) {
-            throw e;
-        }
+        randomMove = getRandomPossibleMove();
 
         return randomMove;
     }

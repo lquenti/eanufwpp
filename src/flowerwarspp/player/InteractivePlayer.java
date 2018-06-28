@@ -10,7 +10,7 @@ import java.rmi.RemoteException;
  * Implementiert die abstrakte Klasse {@link BasePlayer} mit einem interaktiven Spieler. Ueber ein Objekt einer Klasse,
  * welche das Interface {@link Requestable} implementiert, wird ein Zug von einem interaktiven Spieler angefordert.
  *
- * @author Mokka
+ * @author Michael Merse
  */
 public class InteractivePlayer extends BasePlayer {
 
@@ -20,6 +20,13 @@ public class InteractivePlayer extends BasePlayer {
      */
     private static final String exception_NoMove =
             "Es konnte kein Zug vom interaktiven Spieler angefordert werden.";
+
+    /**
+     * Eine vordefinierte Nachricht einer {@link Exception}, welche geworfen wird, wenn der interaktive Spieler einen
+     * nicht validen Zug angegeben hat.
+     */
+    private static final String exception_InvalidMove =
+            "Der vom Spieler uebergegebene Zug ist nicht valide.";
 
     /**
      * Wird genutzt, um Spielzuege vom Spieler anzufordern.
@@ -53,6 +60,9 @@ public class InteractivePlayer extends BasePlayer {
         Move playerMove = input.request();
 
         if ( playerMove == null ) throw new Exception(exception_NoMove);
+
+        // Make sure the move is actually valid (i.e. it's in the list of possible moves)
+        if ( ! this.boardViewer.getPossibleMoves().contains(playerMove) ) throw new Exception(exception_InvalidMove);
 
         return playerMove;
     }

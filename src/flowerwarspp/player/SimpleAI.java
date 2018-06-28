@@ -10,7 +10,7 @@ import java.util.LinkedList;
  * Implementiert die abstrakte Klasse {@link BasePlayer} mit einer simplen KI. Diese KI bedient sich einer limitierten
  * Bewertungsstrategie zur Auswahl eines Zuges und gibt diesen auf Anforderung zurueck.
  *
- * @author Mokka
+ * @author Michael Merse
  */
 public class SimpleAI extends BasePlayer {
 
@@ -46,6 +46,7 @@ public class SimpleAI extends BasePlayer {
 
             // Obtain the direct neighbours of both flowers.
             // INFO: Checking if these flowers have been planted or no sounds sane. Have to clarify course of actions here...
+            // FIXME: Actually enable us to access the neighbours.
             LinkedList<Flower> firstFlowerNeighbors = ( (MainBoard) board ).getDirectNeighbours(move.getFirstFlower());
             LinkedList<Flower> secondFlowerNeighbors = ( (MainBoard) board ).getDirectNeighbours(move.getSecondFlower());
 

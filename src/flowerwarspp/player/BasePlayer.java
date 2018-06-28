@@ -11,7 +11,7 @@ import java.rmi.RemoteException;
  * #requestMove()}. Diese Methode fordert einen Zug vom jeweiligen Spieler an, und leitet diesen Zug an die Methode
  * {@link #request()} weiter.
  *
- * @author Mokka
+ * @author Michael Merse
  */
 abstract class BasePlayer implements flowerwarspp.preset.Player {
 
