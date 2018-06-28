@@ -109,18 +109,13 @@ public class Triangle extends Polygon implements Cloneable {
 		this.edge1 = new Point(x1, y1);
 		this.edge2 = new Point(x2, y2);
 		this.edge3 = new Point(x3, y3);
-		try {
-			this.triangleEdge1 = new Position(tx1, ty1);
-			if (flipped) {
-				this.triangleEdge2 = new Position(tx1 - 1, ty1 + 1);
-				this.triangleEdge3 = new Position(tx1, ty1 + 1);
-			} else {
-				this.triangleEdge2 = new Position(tx1, ty1 - 1);
-				this.triangleEdge3 = new Position(tx1 + 1, ty1 - 1);
-			}
-		} catch (Exception e)
-		{
-			System.out.println(triangleEdge1);
+		this.triangleEdge1 = new Position(tx1, ty1);
+		if (flipped) {
+			this.triangleEdge2 = new Position(tx1 - 1, ty1 + 1);
+			this.triangleEdge3 = new Position(tx1, ty1 + 1);
+		} else {
+			this.triangleEdge2 = new Position(tx1, ty1 - 1);
+			this.triangleEdge3 = new Position(tx1 + 1, ty1 - 1);
 		}
 		this.size = size;
 	}

@@ -56,7 +56,42 @@ public class BoardFrame extends JFrame implements Requestable {
 			for (Move m : moves) {
 				if (i == idx) {
 					System.out.println(m.getType());
-					move = m;
+
+					try {
+						Class mainBoardClass = MainBoard.class;
+						Field playerDataField = mainBoardClass.getDeclaredField("playerData");
+						playerDataField.setAccessible(true);
+						Object playerData = playerDataField.get(this.mainBoard);
+
+						Class playerDataClass = playerData.getClass();
+						Method getMethod = playerDataClass.getDeclaredMethod("get", Object.class);
+						getMethod.setAccessible(true);
+						Object currentPlayerData = getMethod.invoke(playerData, this.viewer.getTurn());
+						Class currentPlayerDataClass = currentPlayerData.getClass();
+
+						Field flowersField = currentPlayerDataClass.getDeclaredField("flowers");
+						flowersField.setAccessible(true);
+						HashSet<Flower> flowers = (HashSet<Flower>) flowersField.get(currentPlayerData);
+						flowers.add(m.getFirstFlower());
+						flowers.add(m.getSecondFlower());
+
+						Field currentPlayerField = mainBoardClass.getDeclaredField("currentPlayer");
+						Field oppositePlayerField = mainBoardClass.getDeclaredField("oppositePlayer");
+						currentPlayerField.setAccessible(true);
+						oppositePlayerField.setAccessible(true);
+						if (this.viewer.getTurn() == PlayerColor.Red) {
+							currentPlayerField.set(this.mainBoard, PlayerColor.Blue);
+							oppositePlayerField.set(this.mainBoard, PlayerColor.Red);
+						}
+						else {
+							currentPlayerField.set(this.mainBoard, PlayerColor.Red);
+							oppositePlayerField.set(this.mainBoard, PlayerColor.Blue);
+						}
+					} catch (ReflectiveOperationException ex) {
+						ex.printStackTrace();
+						System.out.println("reflection rip");
+					}
+
 					break;
 				}
 

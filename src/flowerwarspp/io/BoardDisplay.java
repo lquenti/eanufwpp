@@ -64,13 +64,18 @@ public class BoardDisplay extends JPanel {
 		g.setColor(BoardDisplay.redColour);
 		for (Flower f : this.boardViewer.getFlowers(PlayerColor.Red))
 		{
-			Collection<Triangle> triangles = this.mapTriangles.stream()
-			    .filter(f.getFirst()::equals)
-			    .collect(Collectors.toList());
-
-			triangles.stream()
+			this.mapTriangles.stream()
+			    .filter(t -> f.getFirst().equals(t.getTopBoardPosition()))
 			    .findFirst()
 			    .ifPresent(g::fillPolygon);
+		}
+		g.setColor(BoardDisplay.blueColour);
+		for (Flower f : this.boardViewer.getFlowers(PlayerColor.Red))
+		{
+			this.mapTriangles.stream()
+					.filter(t -> f.getFirst().equals(t.getTopBoardPosition()))
+					.findFirst()
+					.ifPresent(g::fillPolygon);
 		}
 		System.out.println("\n\n\n");
 
@@ -131,7 +136,6 @@ public class BoardDisplay extends JPanel {
 		recalculateTriangles(topTriangle);
 	}
 
-	// This should be called "reticulate splines", really.
 	/**
 	 * Berechne die Dreiecke der graphischen Oberfläche neu.
 	 *
@@ -139,36 +143,19 @@ public class BoardDisplay extends JPanel {
 	 * Das oberste Dreieck des Zeichenbretts.
 	 */
 	private void recalculateTriangles(Triangle topTriangle) {
-		Triangle currentCentralTriangle = topTriangle;
-		int maxTriangleCount = this.boardViewer.getSize();
+		int maximumRowCount = (this.boardViewer.getSize() - 1) * 2;
+		Triangle currentTriangle = topTriangle;
 
-		// NOTE: At the very beginning, the top triangle is as per
-		// definition always not flipped, so the one directly below
-		// it has to be.
-		boolean flipped = true;
+		for (int triangles = 2; triangles < maximumRowCount; triangles += 2) {
+			currentTriangle = new Triangle(
+			    currentTriangle.getLeftEdge().x,
+			    currentTriangle.getLeftEdge().y,
+			    currentTriangle.getLeftBoardPosition().getColumn() - 1,
+			    currentTriangle.getLeftBoardPosition().getRow(),
+			    topTriangle.getSize(), false);
 
-		// Lay out the triangles in a row, toggling the flipped-ness of them.
-		for (int triangles = 1; triangles < maxTriangleCount; triangles++) {
-			// The triangle is as big as the one below it, so their tops
-			// needs to be at the same x-coordinate.
-			Point newTopPosition = currentCentralTriangle.getTopEdge();
-			if (flipped)
-				newTopPosition.y += 2 * currentCentralTriangle.getHeight();
-
-			// The new triangle is also going to be the centre of the row.
-			// How very convenient.
-			// Also these constructors are getting out of hand.
-			currentCentralTriangle = new Triangle(
-			    newTopPosition.x, newTopPosition.y,
-			    currentCentralTriangle.getTopBoardPosition().getColumn() + 1,
-			    currentCentralTriangle.getTopBoardPosition().getRow() - 2,
-			    currentCentralTriangle.getSize(),
-			    flipped);
-
-			this.mapTriangles.add(currentCentralTriangle);
-
-			propagateRow(currentCentralTriangle, triangles, flipped);
-			flipped = !flipped;
+			this.mapTriangles.add(currentTriangle);
+			fillRow(currentTriangle, triangles);
 		}
 	}
 
@@ -176,64 +163,29 @@ public class BoardDisplay extends JPanel {
 	 * Fülle eine Reihe mit Dreiecken. Es wird die Annahme getroffen, dass das erste Dreieck auf dem
 	 * Kopf steht (das erste Dreieck unter dem obersten Dreieck).
 	 *
-	 * @param centralTriangle
-	 * 		Referenz auf das Dreieck das in der Mitte liegt. Da jede Reihe eine ungerade Anzahl an
-	 * 		Dreiecken hat, liegt dieses Dreieck immer genau in der Mitte.
-	 * @param count
-	 * 		Die Anzahl an Dreiecken in jede Richtung. Die Gesamtzahl der Dreiecken in der Reihe
-	 * 		entspricht dann (2*count)+1.
-	 * @param flipped
-	 * 		Ob das erste Dreieck schon auf dem Kopf steht.
+	 * @param leftTriangle
+	 * 		Referenz auf das Dreieck ganz links.
+	 * 		Die Reihe wird nach rechts aufgefüllt mit einer Anzahl an Dreiecken,
+	 * @param triangleCount
+	 * 		Die Anzahl an Dreiecken, die in der Reihe aufgefüllt werden müssen.
 	 */
-	private void propagateRow(Triangle centralTriangle, int count, boolean flipped) {
-		// Propagate the row to the left
-		putTriangles(centralTriangle, count, true, flipped);
-		putTriangles(centralTriangle, count, false, flipped);
-	}
+	private void fillRow(Triangle leftTriangle, int triangleCount) {
+		Position newTopPosition = leftTriangle.getRightBoardPosition();
+		Point newTopPoint = leftTriangle.getRightEdge();
 
-	/**
-	 * Erstellt Dreiecke und fügt sie dem Display hinzu.
-	 *
-	 * @param centralTriangle
-	 * 		Eine Referenz auf das {@link Triangle}, das in der Mitte liegt.
-	 * 		Die anderen {@link Triangle}s werden um dieses Dreieck herum gelegt.
-	 *
-	 * @param count
-	 * 		Die Anzahl an Dreiecken, die auf jede Seite des zentralen Dreiecks gelegt
-	 *		sollen.
-	 *
-	 * @param left
-	 * 		Ob die Dreiecke auf die linke Seite gelegt werden sollen.
-	 *
-	 * @param flipped
-	 * 		Ob das zentrale Dreieck auf dem Kopf steht.
-	 */
-	private void putTriangles(Triangle centralTriangle, int count, boolean left, boolean flipped)
-	{
-		boolean flipCurrent = !flipped;
-
-		Triangle lastTriangle = centralTriangle;
-		for (int x = 0; x < count; x++)
+		boolean flipped = true;
+		for (int i = 0; i < triangleCount; i++)
 		{
-			Point topEdge = null;
-			int col = -1, row = -1;
-			if (left) {
-				topEdge = lastTriangle.getLeftEdge();
-				col = lastTriangle.getLeftBoardPosition().getColumn();
-				row = lastTriangle.getLeftBoardPosition().getRow();
-			} else {
-				topEdge = lastTriangle.getRightEdge();
-				col = lastTriangle.getRightBoardPosition().getColumn();
-				row = lastTriangle.getRightBoardPosition().getRow();
-			}
+			Triangle newTriangle = new Triangle(
+			    newTopPoint.x, newTopPoint.y,
+			    newTopPosition.getColumn() + 1, newTopPosition.getRow(),
+			    leftTriangle.getSize(),
+			    flipped);
 
-			lastTriangle = new Triangle(topEdge.x, topEdge.y,
-			    col, row,
-			    centralTriangle.getSize(),
-			    flipCurrent);
-
-			this.mapTriangles.add(lastTriangle);
-			flipCurrent = !flipCurrent;
+			this.mapTriangles.add(newTriangle);
+			flipped = !flipped;
+			newTopPosition = newTriangle.getRightBoardPosition();
+			newTopPoint = newTriangle.getRightEdge();
 		}
 	}
 }
