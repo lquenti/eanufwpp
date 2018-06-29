@@ -3,6 +3,7 @@ package flowerwarspp.board;
 import flowerwarspp.preset.*;
 
 import java.util.*;
+import java.util.concurrent.Flow;
 
 /**
  * Verwaltungsklasse, die Daten über die gemachten und noch möglichen Züge
@@ -132,8 +133,6 @@ public class MainBoard implements Board {
 		if (!playerData.get(currentPlayer).legalMoves.contains(move)) {
 			currentStatus = Status.Illegal;
 		}
-		// Ist es best practise nicht null zu checken weil es literally unmoeglich ist?
-		// (Falls es nicht so ist Kommentar einfach removen)
 		switch (move.getType()) {
 			case Ditch:
 				playerData.get(currentPlayer).ditches.add(move.getDitch());
@@ -156,19 +155,17 @@ public class MainBoard implements Board {
 	}
 
 	// TODO: Am Ende Exception rausnehmen
-	private void updateValidMoves(Flower[] fs) {
 	private void updateValidMoves(final Flower[] fs) {
         /*
         Was aktuell gemacht wird: (als Referenz zum erweitern (Kommentar kommt bei Abgabe raus))
-            - Gaertencheck
+            - Gaertencheck (done)
             - Exkludieren von Gaertenabstaenden
-            - Moves fuer andere Farbe exkludieren
+            - Moves fuer andere Farbe exkludieren (done)
             - Grabenerstellung:
                 - Gegnerische Graeben entfernen falls geblockt durch eigene Blume
                 - Graben erlauben falls direkte Verbindung UND kein existierender Graben teilt (kann das der Fall sein nach Ditchchecks?)
          */
 		// TODO: Ist es noetig zu checken ob Flower in valider Spielfeldrange ist?
-		// Idee: Gaerten einzeln speichern um Laufzeit zu verbessern da man nur Aussenbereiche testen muss und diese immutable sind
 		for (Flower f : fs) {
 			// Gesetzte Flowers für alle verbieten
 			for (PlayerData player : playerData.values()) {
@@ -177,43 +174,27 @@ public class MainBoard implements Board {
 
 			// Gartencheck
 			Collection<Flower> bed = getFlowerBed(f);
-
-			if (bed.size() == 4) {
-				for (Flower bedFlower : bed) {
-					for (Flower newIllegalFlower : getAllNeighbors(bedFlower)) {
-						playerData.get(currentPlayer).banFlower(newIllegalFlower);
+			switch (bed.size()) {
+				case 4:
+					for (Flower bedFlower : bed) {
+						for (Flower newIllegalFlower : getAllNeighbors(bedFlower)) {
+							playerData.get(currentPlayer).banFlower(newIllegalFlower);
+						}
 					}
-				}
-			}
+					break;
+				case 3:
 
-			// Ein Zug, der zwei Blumen an dieses Beet anlegt und die Größe auf 5 erhöht,
-			// ist verboten.
-			if (bed.size() == 3) {
-				Collection<Flower> bedNeighbors = getBedDirectNeighbors(bed);
-				for (Iterator<Flower> it = bedNeighbors.iterator(); it.hasNext(); ) {
-					Flower neighbor = it.next();
-					it.remove();
-
-					// Züge, die zwei Blumen irgendwo an dieses Beet anlegen, sind verboten.
-					for (Flower secondNeighbor : bedNeighbors) {
-						playerData.get(currentPlayer).legalFlowers.remove(
-							new Move(neighbor, secondNeighbor)
-						);
-					}
-
-					// Züge, die zwei zusammenhängende Blumen an dieses Beet anlegen, sind verboten.
-					for (Flower neighborOfNeighbor : getDirectNeighbors(neighbor)) {
-						playerData.get(currentPlayer).legalMoves.remove(
-							new Move(neighbor, neighborOfNeighbor)
-						);
-					}
-				}
+					break;
+				case 2:
+					break;
+				case 1:
+					break;
 			}
 		}
 	}
 
 	private PlayerColor getFlowerColor(final Flower f) {
-		for (Map.Entry<PlayerColor, PlayerData> entry: playerData.entrySet()) {
+		for (Map.Entry<PlayerColor, PlayerData> entry : playerData.entrySet()) {
 			if (entry.getValue().flowers.contains(f)) {
 				return entry.getKey();
 			}
@@ -233,7 +214,7 @@ public class MainBoard implements Board {
 
 		while (!toVisit.empty()) {
 			Flower visiting = toVisit.pop();
-			for (Flower neighbor : getDirectNeighbors(visiting)) {
+			for (Flower neighbor : getDirectNeighbors(visiting, 1)) {
 				if (!result.contains(neighbor) && playerData.get(flowerColor).flowers.contains(neighbor)) {
 					toVisit.add(neighbor);
 				}
@@ -244,21 +225,27 @@ public class MainBoard implements Board {
 		return result;
 	}
 
-	private LinkedList<Flower> getDirectNeighbors(final Flower f) {
+	private LinkedList<Flower> getDirectNeighbors(final Flower f, final int n) {
 		LinkedList<Flower> result = new LinkedList<>();
 		Position[] nodes = {f.getFirst(), f.getSecond(), f.getThird()};
+		for (int i=0; i<n; i++) {
+			for ()
+		}
+		/*
 		for (int i = 0; i < 3; i++) {
 			try {
 				Position third = new Position(
-					nodes[i%3].getColumn() + nodes[(i+1)%3].getColumn() - nodes[(i+2)%3].getColumn(),
-					nodes[i%3].getRow() + nodes[(i+1)%3].getRow() - nodes[(i+2)%3].getRow()
+						nodes[i % 3].getColumn() + nodes[(i + 1) % 3].getColumn() - nodes[(i + 2) % 3].getColumn(),
+						nodes[i % 3].getRow() + nodes[(i + 1) % 3].getRow() - nodes[(i + 2) % 3].getRow()
 				);
 				Flower neighbor = new Flower(nodes[i % 3], nodes[(i + 1) % 3], third);
 				if (isOnBoard(neighbor)) {
 					result.add(neighbor);
 				}
-			} catch (IllegalArgumentException e) {}
+			} catch (IllegalArgumentException e) {
+			}
 		}
+		*/
 		return result;
 	}
 
@@ -270,11 +257,11 @@ public class MainBoard implements Board {
 		for (int i = 0; i < 9; i++) {
 			try {
 				Position point = new Position(
-					nodes[i/3].getColumn() + nodes[(i+1)/3%3].getColumn() - nodes[((i+2)/3+1)%3].getColumn(),
-					nodes[i/3].getRow() + nodes[(i+1)/3%3].getRow() - nodes[((i+2)/3+1)%3].getRow()
+						nodes[i / 3].getColumn() + nodes[(i + 1) / 3 % 3].getColumn() - nodes[((i + 2) / 3 + 1) % 3].getColumn(),
+						nodes[i / 3].getRow() + nodes[(i + 1) / 3 % 3].getRow() - nodes[((i + 2) / 3 + 1) % 3].getRow()
 				);
 				if (lastPoint != null) {
-					Flower neighbor = new Flower(nodes[i/3], lastPoint, point);
+					Flower neighbor = new Flower(nodes[i / 3], lastPoint, point);
 					if (isOnBoard(neighbor)) {
 						result.add(neighbor);
 					}
@@ -369,8 +356,8 @@ public class MainBoard implements Board {
 	 */
 	private boolean isOnBoard(Position position) {
 		return position != null
-		    && position.getColumn() > 0 && position.getRow() > 0
-		    && position.getColumn() + position.getRow() < size + 3;
+				&& position.getColumn() > 0 && position.getRow() > 0
+				&& position.getColumn() + position.getRow() < size + 3;
 	}
 
 	/*
@@ -451,7 +438,7 @@ public class MainBoard implements Board {
 		public PlayerColor getTurn() {
 			return currentPlayer;
 		}
-		
+
 		// TODO: REFACTOR
 		public LinkedList<Flower> getDirectNeighbors(Flower f) {
 			return MainBoard.this.getDirectNeighbors(f);
