@@ -5,14 +5,11 @@ import flowerwarspp.preset.*;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public class BoardFrame extends JFrame implements Requestable {
+public class BoardFrame extends JFrame implements Requestable, Output {
 	public static void main(String[] args) throws Exception {
 		BoardFrame boardFrame = new BoardFrame();
 		boardFrame.setVisible(true);
@@ -112,5 +109,10 @@ public class BoardFrame extends JFrame implements Requestable {
 	@Override
 	public Move request() throws Exception {
 		return null;
+	}
+
+	@Override
+	public void refresh() {
+		this.repaint();
 	}
 }
