@@ -44,16 +44,16 @@ public class SimpleAI extends BasePlayer {
             // We are only concerned with moves that actually make flowers.
             if ( ! move.getType().equals(MoveType.Flower) ) continue;
 
-            // Obtain the direct neighbours of both flowers.
+            // Obtain the direct neighbors of both flowers.
             // INFO: Checking if these flowers have been planted or no sounds sane. Have to clarify course of actions here...
-            // FIXME: Actually enable us to access the neighbours.
-            Collection<Flower> firstFlowerNeighbors = boardViewer.getDirectNeighbours(move.getFirstFlower());
-            Collection<Flower> secondFlowerNeighbors = boardViewer.getDirectNeighbours(move.getSecondFlower());
+            // FIXME: Actually enable us to access the neighbors.
+            Collection<Flower> firstFlowerNeighbors = boardViewer.getDirectNeighbors(move.getFirstFlower());
+            Collection<Flower> secondFlowerNeighbors = boardViewer.getDirectNeighbors(move.getSecondFlower());
 
             // Calculate the score as indicated by the strategy.
             int score = ( firstFlowerNeighbors.size() + 1 ) * ( secondFlowerNeighbors.size() + 1 );
 
-            // If both flowers are attached (i.e. if they're neighbours) double the score.
+            // If both flowers are attached (i.e. if they're neighbors) double the score.
             if ( firstFlowerNeighbors.contains(move.getSecondFlower()) )
                 score *= 2;
 
