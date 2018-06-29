@@ -247,36 +247,41 @@ public class MainBoard implements Board {
 		LinkedList<Flower> result = new LinkedList<>();
 		Position[] nodes = {f.getFirst(), f.getSecond(), f.getThird()};
 		for (int i = 0; i < 3; i++) {
-			Position third = new Position(
-				nodes[i%3].getColumn() + nodes[(i+1)%3].getColumn() - nodes[(i+2)%3].getColumn(),
-				nodes[i%3].getRow() + nodes[(i+1)%3].getRow() - nodes[(i+2)%3].getRow()
-			);
-			Flower neighbour = new Flower(nodes[i % 3], nodes[(i + 1) % 3], third);
-			if (isOnBoard(neighbour)) {
-				result.add(neighbour);
-			}
+			try {
+				Position third = new Position(
+					nodes[i%3].getColumn() + nodes[(i+1)%3].getColumn() - nodes[(i+2)%3].getColumn(),
+					nodes[i%3].getRow() + nodes[(i+1)%3].getRow() - nodes[(i+2)%3].getRow()
+				);
+				Flower neighbour = new Flower(nodes[i % 3], nodes[(i + 1) % 3], third);
+				if (isOnBoard(neighbour)) {
+					result.add(neighbour);
+				}
+			} catch (IllegalArgumentException e) {}
 		}
 		return result;
 	}
 
 	private LinkedList<Flower> getAllNeighbours(Flower f) {
 		LinkedList<Flower> result = getDirectNeighbours(f);
-		// Über die Positionen iterieren, die das Dreieck umgeben.
 		Position[] nodes = {f.getFirst(), f.getSecond(), f.getThird()};
-		Position last = new Position(
-			nodes[2].getColumn() + nodes[0].getColumn() - nodes[1].getColumn(),
-			nodes[2].getRow() + nodes[0].getRow() - nodes[1].getRow()
-		);
+		Position lastPoint = null;
+		// Über die Positionen iterieren, die das Dreieck umgeben.
 		for (int i = 0; i < 9; i++) {
-			Position third = new Position(
-				nodes[i/3].getColumn() + nodes[(i+1)/3%3].getColumn() - nodes[((i+2)/3+1)%3].getColumn(),
-				nodes[i/3].getRow() + nodes[(i+1)/3%3].getRow() - nodes[((i+2)/3+1)%3].getRow()
-			);
-			Flower neighbour = new Flower(nodes[i/3], last, third);
-			if (isOnBoard(neighbour)) {
-				result.add(neighbour);
+			try {
+				Position point = new Position(
+					nodes[i/3].getColumn() + nodes[(i+1)/3%3].getColumn() - nodes[((i+2)/3+1)%3].getColumn(),
+					nodes[i/3].getRow() + nodes[(i+1)/3%3].getRow() - nodes[((i+2)/3+1)%3].getRow()
+				);
+				if (lastPoint != null) {
+					Flower neighbour = new Flower(nodes[i/3], lastPoint, point);
+					if (isOnBoard(neighbour)) {
+						result.add(neighbour);
+					}
+				}
+				lastPoint = point;
+			} catch (IllegalArgumentException e) {
+				lastPoint = null;
 			}
-			last = third;
 		}
 		return result;
 	}
@@ -362,7 +367,9 @@ public class MainBoard implements Board {
 	 * @return ob die Position auf dem Board ist
 	 */
 	private boolean isOnBoard(Position position) {
-		return position != null && position.getColumn() + position.getRow() < size + 3;
+		return position != null
+		    && position.getColumn() > 0 && position.getRow() > 0
+		    && position.getColumn() + position.getRow() < size + 3;
 	}
 
 	/*
