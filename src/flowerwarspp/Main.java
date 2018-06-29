@@ -6,8 +6,6 @@ import flowerwarspp.board.*;
 import flowerwarspp.io.*;
 import flowerwarspp.player.*;
 
-import java.util.EnumMap;
-
 public class Main {
 	public static final int boardSize = 15;
 	public static void main(String[] args) {
