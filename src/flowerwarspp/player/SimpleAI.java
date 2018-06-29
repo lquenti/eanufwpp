@@ -4,7 +4,7 @@ import flowerwarspp.board.MainBoard;
 import flowerwarspp.preset.*;
 
 import java.rmi.RemoteException;
-import java.util.LinkedList;
+import java.util.Collection;
 
 /**
  * Implementiert die abstrakte Klasse {@link BasePlayer} mit einer simplen KI. Diese KI bedient sich einer limitierten
@@ -47,10 +47,8 @@ public class SimpleAI extends BasePlayer {
             // Obtain the direct neighbours of both flowers.
             // INFO: Checking if these flowers have been planted or no sounds sane. Have to clarify course of actions here...
             // FIXME: Actually enable us to access the neighbours.
-            // LinkedList<Flower> firstFlowerNeighbors = ( (MainBoard) board ).getDirectNeighbours(move.getFirstFlower());
-            // LinkedList<Flower> secondFlowerNeighbors = ( (MainBoard) board ).getDirectNeighbours(move.getSecondFlower());
-            LinkedList<Flower> firstFlowerNeighbors = null;
-            LinkedList<Flower> secondFlowerNeighbors = null;
+            Collection<Flower> firstFlowerNeighbors = boardViewer.getDirectNeighbours(move.getFirstFlower());
+            Collection<Flower> secondFlowerNeighbors = boardViewer.getDirectNeighbours(move.getSecondFlower());
 
             // Calculate the score as indicated by the strategy.
             int score = ( firstFlowerNeighbors.size() + 1 ) * ( secondFlowerNeighbors.size() + 1 );

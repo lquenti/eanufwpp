@@ -76,5 +76,7 @@ public interface Viewer {
     //  Hier koennen weitere Funktionen ergaenzt werden...
     // ********************************************************************
 
+    Collection<Flower> getDirectNeighbours(Flower f);
 
+    Collection<Flower> getAllNeighbours(Flower f);
 }

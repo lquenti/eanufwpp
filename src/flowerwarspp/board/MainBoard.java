@@ -452,8 +452,12 @@ public class MainBoard implements Board {
 		}
 		
 		// TODO: REFACTOR
-		public LinkedList<Flower> getDirectNeighboursTemp(Flower f) {
-			return getDirectNeighbours(f);
+		public LinkedList<Flower> getDirectNeighbours(Flower f) {
+			return MainBoard.this.getDirectNeighbours(f);
+		}
+
+		public LinkedList<Flower> getAllNeighbours(Flower f) {
+			return MainBoard.this.getAllNeighbours(f);
 		}
 	}
 }
