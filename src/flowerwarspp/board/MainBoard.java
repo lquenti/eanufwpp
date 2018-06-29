@@ -174,129 +174,129 @@ public class MainBoard implements Board {
 
 			// Gartencheck
 			Collection<Flower> bed = getFlowerBed(f);
-			switch (bed.size()) {
-				case 4:
-					for (Flower bedFlower : bed) {
-						for (Flower newIllegalFlower : getAllNeighbors(bedFlower)) {
-							playerData.get(currentPlayer).banFlower(newIllegalFlower);
-						}
-					}
-					break;
-				case 3:
+        switch (bed.size()) {
+            case 4:
+            for (Flower bedFlower : bed) {
+                for (Flower newIllegalFlower : getAllNeighbors(bedFlower)) {
+                playerData.get(currentPlayer).banFlower(newIllegalFlower);
+                }
+            }
+            break;
+            case 3:
 
-					break;
-				case 2:
-					break;
-				case 1:
-					break;
-			}
-		}
-	}
+            break;
+            case 2:
+            break;
+            case 1:
+            break;
+        }
+        }
+    }
 
-	private PlayerColor getFlowerColor(final Flower f) {
-		for (Map.Entry<PlayerColor, PlayerData> entry : playerData.entrySet()) {
-			if (entry.getValue().flowers.contains(f)) {
-				return entry.getKey();
-			}
-		}
-		return null;
-	}
+    private PlayerColor getFlowerColor(final Flower f) {
+        for (Map.Entry<PlayerColor, PlayerData> entry : playerData.entrySet()) {
+        if (entry.getValue().flowers.contains(f)) {
+            return entry.getKey();
+        }
+        }
+        return null;
+    }
 
-	private LinkedList<Flower> getFlowerBed(final Flower f) {
-		PlayerColor flowerColor = getFlowerColor(f);
-		if (flowerColor == null) {
-			return null;
-		}
+    private LinkedList<Flower> getFlowerBed(final Flower f) {
+        PlayerColor flowerColor = getFlowerColor(f);
+        if (flowerColor == null) {
+        return null;
+        }
 
-		LinkedList<Flower> result = new LinkedList<>();
-		Stack<Flower> toVisit = new Stack<>();
-		toVisit.add(f);
+        LinkedList<Flower> result = new LinkedList<>();
+        Stack<Flower> toVisit = new Stack<>();
+        toVisit.add(f);
 
-		while (!toVisit.empty()) {
-			Flower visiting = toVisit.pop();
-			for (Flower neighbor : getDirectNeighbors(visiting, 1)) {
-				if (!result.contains(neighbor) && playerData.get(flowerColor).flowers.contains(neighbor)) {
-					toVisit.add(neighbor);
-				}
-				result.add(visiting);
-			}
-		}
+        while (!toVisit.empty()) {
+        Flower visiting = toVisit.pop();
+        for (Flower neighbor : getDirectNeighbors(visiting, 1)) {
+            if (!result.contains(neighbor) && playerData.get(flowerColor).flowers.contains(neighbor)) {
+            toVisit.add(neighbor);
+            }
+            result.add(visiting);
+        }
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	private LinkedList<Flower> getDirectNeighbors(final Flower f, final int n) {
-		LinkedList<Flower> result = new LinkedList<>();
-		Position[] nodes = {f.getFirst(), f.getSecond(), f.getThird()};
-		for (int i=0; i<n; i++) {
-			for ()
-		}
-		/*
-		for (int i = 0; i < 3; i++) {
-			try {
-				Position third = new Position(
-						nodes[i % 3].getColumn() + nodes[(i + 1) % 3].getColumn() - nodes[(i + 2) % 3].getColumn(),
-						nodes[i % 3].getRow() + nodes[(i + 1) % 3].getRow() - nodes[(i + 2) % 3].getRow()
-				);
-				Flower neighbor = new Flower(nodes[i % 3], nodes[(i + 1) % 3], third);
-				if (isOnBoard(neighbor)) {
-					result.add(neighbor);
-				}
-			} catch (IllegalArgumentException e) {
-			}
-		}
-		*/
-		return result;
-	}
-
-	private LinkedList<Flower> getAllNeighbors(final Flower f) { //  n := distance
-		LinkedList<Flower> result = getDirectNeighbors(f);
-		Position[] nodes = {f.getFirst(), f.getSecond(), f.getThird()};
-		Position lastPoint = null;
-		// Über die Positionen iterieren, die das Dreieck umgeben.
-		for (int i = 0; i < 9; i++) {
-			try {
-				Position point = new Position(
-						nodes[i / 3].getColumn() + nodes[(i + 1) / 3 % 3].getColumn() - nodes[((i + 2) / 3 + 1) % 3].getColumn(),
-						nodes[i / 3].getRow() + nodes[(i + 1) / 3 % 3].getRow() - nodes[((i + 2) / 3 + 1) % 3].getRow()
-				);
-				if (lastPoint != null) {
-					Flower neighbor = new Flower(nodes[i / 3], lastPoint, point);
-					if (isOnBoard(neighbor)) {
-						result.add(neighbor);
-					}
-				}
-				lastPoint = point;
-			} catch (IllegalArgumentException e) {
-				lastPoint = null;
-			}
-		}
-		return result;
-	}
-
-	private LinkedList<Flower> getBedNeighbors(final Collection<Flower> bed) {
-		LinkedList<Flower> result = new LinkedList<>();
-		for (Flower flower : bed) {
-			for (Flower neighbor : getDirectNeighbors(flower)) {
-				if (!bed.contains(neighbor)) {
-					result.add(neighbor);
-				}
-			}
-		}
-		return result;
-	}
-
-	// TODO: IDEE, Array aus {column, row} und dann einfach Ein if
-	private void updateValidMoves(Ditch d) {
+    private LinkedList<Flower> getDirectNeighbors(final Flower f, final int n) {
+        LinkedList<Flower> result = new LinkedList<>();
+        Position[] nodes = {f.getFirst(), f.getSecond(), f.getThird()};
+        for (int i=0; i<n; i++) {
+        for ()
+        }
         /*
-        Was aktuell gemacht wird:
-            - Ueber und unter Graben Flower entvalidieren
-            - Andere Graebenmoeglichkeiten entvalidieren falls diese sich eine Position teilen
-         */
+        for (int i = 0; i < 3; i++) {
+        try {
+            Position third = new Position(
+                nodes[i % 3].getColumn() + nodes[(i + 1) % 3].getColumn() - nodes[(i + 2) % 3].getColumn(),
+                nodes[i % 3].getRow() + nodes[(i + 1) % 3].getRow() - nodes[(i + 2) % 3].getRow()
+            );
+            Flower neighbor = new Flower(nodes[i % 3], nodes[(i + 1) % 3], third);
+            if (isOnBoard(neighbor)) {
+            result.add(neighbor);
+            }
+        } catch (IllegalArgumentException e) {
+        }
+        }
+        */
+        return result;
+    }
 
-		// Ueber und unter Graben Flower entvalidieren
-		Flower[] invalids = new Flower[2];
-		if (d.getFirst().getRow() == d.getSecond().getRow()) { // Horizontal
+    private LinkedList<Flower> getAllNeighbors(final Flower f) { //  n := distance
+        LinkedList<Flower> result = getDirectNeighbors(f);
+        Position[] nodes = {f.getFirst(), f.getSecond(), f.getThird()};
+        Position lastPoint = null;
+        // Über die Positionen iterieren, die das Dreieck umgeben.
+        for (int i = 0; i < 9; i++) {
+        try {
+            Position point = new Position(
+                nodes[i / 3].getColumn() + nodes[(i + 1) / 3 % 3].getColumn() - nodes[((i + 2) / 3 + 1) % 3].getColumn(),
+                nodes[i / 3].getRow() + nodes[(i + 1) / 3 % 3].getRow() - nodes[((i + 2) / 3 + 1) % 3].getRow()
+            );
+            if (lastPoint != null) {
+            Flower neighbor = new Flower(nodes[i / 3], lastPoint, point);
+            if (isOnBoard(neighbor)) {
+                result.add(neighbor);
+            }
+            }
+            lastPoint = point;
+        } catch (IllegalArgumentException e) {
+            lastPoint = null;
+        }
+        }
+        return result;
+    }
+
+    private LinkedList<Flower> getBedNeighbors(final Collection<Flower> bed) {
+        LinkedList<Flower> result = new LinkedList<>();
+        for (Flower flower : bed) {
+        for (Flower neighbor : getDirectNeighbors(flower)) {
+            if (!bed.contains(neighbor)) {
+            result.add(neighbor);
+            }
+        }
+        }
+        return result;
+    }
+
+    // TODO: IDEE, Array aus {column, row} und dann einfach Ein if
+    private void updateValidMoves(Ditch d) {
+            /*
+            Was aktuell gemacht wird:
+                - Ueber und unter Graben Flower entvalidieren
+                - Andere Graebenmoeglichkeiten entvalidieren falls diese sich eine Position teilen
+            */
+
+        // Ueber und unter Graben Flower entvalidieren
+        Flower[] invalids = new Flower[2];
+        if (d.getFirst().getRow() == d.getSecond().getRow()) { // Horizontal
 			invalids[0] = new Flower(
 					d.getFirst(),
 					d.getSecond(),
