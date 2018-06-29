@@ -156,7 +156,6 @@ public class MainBoard implements Board {
 	}
 
 	// TODO: Am Ende Exception rausnehmen
-	private void updateValidMoves(Flower[] fs) {
 	private void updateValidMoves(final Flower[] fs) {
         /*
         Was aktuell gemacht wird: (als Referenz zum erweitern (Kommentar kommt bei Abgabe raus))
@@ -189,7 +188,7 @@ public class MainBoard implements Board {
 			// Ein Zug, der zwei Blumen an dieses Beet anlegt und die Größe auf 5 erhöht,
 			// ist verboten.
 			if (bed.size() == 3) {
-				Collection<Flower> bedNeighbors = getBedDirectNeighbors(bed);
+				Collection<Flower> bedNeighbors = getBedNeighbors(bed);
 				for (Iterator<Flower> it = bedNeighbors.iterator(); it.hasNext(); ) {
 					Flower neighbor = it.next();
 					it.remove();

@@ -22,7 +22,7 @@ public class Main {
 		System.exit(1);
 	}
 
-	private static Player createPlayer(PlayerType type, Requestable input) {
+	private static Player createPlayer(final PlayerType type, final Requestable input) {
 		switch (type) {
 			case HUMAN: return new InteractivePlayer(input);
 			case RANDOM_AI: return new RandomAI();
