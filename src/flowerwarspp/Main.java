@@ -7,8 +7,23 @@ import flowerwarspp.io.*;
 import flowerwarspp.player.*;
 
 public class Main {
-	public static final int boardSize = 15;
+	private static int boardSize;
+
 	public static void main(String[] args) {
+		try {
+			ArgumentParser argumentParser = new ArgumentParser(args);
+			boardSize = argumentParser.getSize();
+		} catch (ArgumentParserException e) {
+			System.out.println("Verwendung:");
+			System.out.println("flowerwarspp.Main -size <Spielfeldgröße>");
+			System.exit(1);
+		}
+
+		if (boardSize < 3 || boardSize > 30) {
+			System.out.println("Spielfeldgröße muss zwischen 3 und 30 liegen!");
+			System.exit(1);
+		}
+
 		Board board = new MainBoard(boardSize);
 		Viewer boardViewer = board.viewer();
 		Requestable input = new TextInterface();

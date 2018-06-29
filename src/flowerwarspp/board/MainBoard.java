@@ -79,7 +79,7 @@ public class MainBoard implements Board {
 	 * @param size Groesse des Boardes.
 	 */
 	public MainBoard(final int size) {
-		this.size = (size < 3) ? 3 : ((size > 30) ? 30 : size);
+		this.size = size;
 
 		playerData.put(PlayerColor.Red, new PlayerData());
 		playerData.put(PlayerColor.Blue, new PlayerData());
