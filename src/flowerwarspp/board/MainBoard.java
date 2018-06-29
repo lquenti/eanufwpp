@@ -157,6 +157,7 @@ public class MainBoard implements Board {
 
 	// TODO: Am Ende Exception rausnehmen
 	private void updateValidMoves(Flower[] fs) {
+	private void updateValidMoves(final Flower[] fs) {
         /*
         Was aktuell gemacht wird: (als Referenz zum erweitern (Kommentar kommt bei Abgabe raus))
             - Gaertencheck
@@ -211,7 +212,7 @@ public class MainBoard implements Board {
 		}
 	}
 
-	private PlayerColor getFlowerColor(Flower f) {
+	private PlayerColor getFlowerColor(final Flower f) {
 		for (Map.Entry<PlayerColor, PlayerData> entry: playerData.entrySet()) {
 			if (entry.getValue().flowers.contains(f)) {
 				return entry.getKey();
@@ -220,7 +221,7 @@ public class MainBoard implements Board {
 		return null;
 	}
 
-	private LinkedList<Flower> getFlowerBed(Flower f) {
+	private LinkedList<Flower> getFlowerBed(final Flower f) {
 		PlayerColor flowerColor = getFlowerColor(f);
 		if (flowerColor == null) {
 			return null;
@@ -243,7 +244,7 @@ public class MainBoard implements Board {
 		return result;
 	}
 
-	private LinkedList<Flower> getDirectNeighbors(Flower f) {
+	private LinkedList<Flower> getDirectNeighbors(final Flower f) {
 		LinkedList<Flower> result = new LinkedList<>();
 		Position[] nodes = {f.getFirst(), f.getSecond(), f.getThird()};
 		for (int i = 0; i < 3; i++) {
@@ -261,7 +262,7 @@ public class MainBoard implements Board {
 		return result;
 	}
 
-	private LinkedList<Flower> getAllNeighbors(Flower f) {
+	private LinkedList<Flower> getAllNeighbors(final Flower f) { //  n := distance
 		LinkedList<Flower> result = getDirectNeighbors(f);
 		Position[] nodes = {f.getFirst(), f.getSecond(), f.getThird()};
 		Position lastPoint = null;
@@ -286,7 +287,7 @@ public class MainBoard implements Board {
 		return result;
 	}
 
-	private LinkedList<Flower> getBedDirectNeighbors(Collection<Flower> bed) {
+	private LinkedList<Flower> getBedNeighbors(final Collection<Flower> bed) {
 		LinkedList<Flower> result = new LinkedList<>();
 		for (Flower flower : bed) {
 			for (Flower neighbor : getDirectNeighbors(flower)) {
