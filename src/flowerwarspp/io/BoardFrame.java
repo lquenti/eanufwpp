@@ -10,13 +10,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class BoardFrame extends JFrame implements Requestable, Output {
-	public static void main(String[] args) throws Exception {
-		BoardFrame boardFrame = new BoardFrame();
-		boardFrame.setVisible(true);
-	}
-
-	private MainBoard mainBoard = new MainBoard(10);
-	private Viewer viewer = mainBoard.viewer();
+	private Viewer viewer;
 
 	private SpringLayout springLayout = new SpringLayout();
 	private JPanel container = new JPanel(this.springLayout);
@@ -24,7 +18,9 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 	private JButton testDitchMove = new JButton("Random ditch");
 	private BoardDisplay boardDisplay = new BoardDisplay();
 
-	public BoardFrame() {
+	public BoardFrame(Viewer viewer) {
+		this.viewer = viewer;
+
 		// Do stuff to *this*; it needs setup.
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(600, 600);
@@ -36,22 +32,8 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 		this.boardDisplay.updateSize();
 
 		this.boardDisplay.addMouseListener((MouseClickListener) e -> {
-			this.setBoard(this.mainBoard);
+			this.setViewer(this.viewer);
 			System.out.println("Hallo");
-		});
-
-		this.testFlowerMove.addMouseListener((MouseClickListener) e -> {
-			Collection<Move> moves = this.viewer.getPossibleMoves()
-			        .stream()
-			        .filter(t -> t.getType() == MoveType.Flower)
-			        .collect(Collectors.toList());
-
-			this.boardDisplay.repaint();
-			Random random = new Random();
-			int idx = random.nextInt(moves.size());
-			moves.stream()
-			    .skip(idx)
-			    .findAny().ifPresent(this.mainBoard::make);
 		});
 
 		// Call after adding all the components to the container.
@@ -67,6 +49,7 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 
 		this.invalidate();
 		this.repaint();
+		this.setVisible(true);
 	}
 
 	/**
@@ -100,9 +83,9 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 		        SpringLayout.EAST, this.testFlowerMove);
 	}
 
-	public void setBoard(Board board) {
+	public void setViewer(Viewer viewer) {
 		this.repaint();
-		this.boardDisplay.setBoardViewer(board.viewer());
+		this.boardDisplay.setBoardViewer(viewer);
 		this.boardDisplay.updateSize();
 	}
 

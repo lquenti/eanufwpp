@@ -12,6 +12,8 @@ public class TextInterface implements Requestable {
 	private static final String moveRequestPrompt = "Zug eingeben: ";
 	private static final String moveFormatError = "Zug konnte nicht gelesen werden.";
 
+	Scanner inputScanner = new Scanner(System.in);
+
 	/**
 	 * Liest einen Spielzug von der Standardeingabe ein. Der Nutzer wird solange aufgefordert, einen
 	 * Zug einzugeben, bis er einen gültigen Zug eingibt.
@@ -20,7 +22,6 @@ public class TextInterface implements Requestable {
 	 */
 	@Override
 	public Move request() {
-		Scanner inputScanner = new Scanner(System.in, StandardCharsets.UTF_8.name());
 		Move result = null;
 		while (result == null) {
 			try {
@@ -30,7 +31,6 @@ public class TextInterface implements Requestable {
 				System.out.println(moveFormatError);
 			}
 		}
-		inputScanner.close();
 		return result;
 	}
 }
