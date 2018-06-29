@@ -15,6 +15,7 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 	private BoardDisplay boardDisplay = new BoardDisplay();
 
 	public BoardFrame(Viewer viewer) {
+		super("Flower Wars");
 		this.viewer = viewer;
 
 		// Do stuff to *this*; it needs setup.
