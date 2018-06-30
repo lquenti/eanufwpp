@@ -27,7 +27,7 @@ public class RandomAI extends BasePlayer {
      * <code>private</code> Random Number Generator, um die zufaellige Auswahl eines Spielzugs mit Hilfe von
      * Pseudozufallszahlen leisten zu koennen.
      */
-    private Random random = new Random();
+    private final Random randomFlower = new Random();
 
     /**
      * Fordert einen Zug an, nach den Vorgaben der Interface-Methode {@link Player#request()}. Aus den auf dem
@@ -41,11 +41,7 @@ public class RandomAI extends BasePlayer {
     protected Move requestMove() throws Exception, RemoteException {
 
         // TODO: For now just return any random move. More checks might be necessary depending on our needs.
-        Move randomMove;
-
-        randomMove = getRandomPossibleMove();
-
-        return randomMove;
+        return getRandomPossibleMove();
     }
 
     /**
@@ -59,13 +55,13 @@ public class RandomAI extends BasePlayer {
         //TODO: Potentially filter for surrender moves, although just surrendering might be an available option to the AI.
 
         // Get the Collection of possible moves for the current player.
-        Collection<Move> possibleMoves = this.boardViewer.getPossibleMoves();
+        final Collection<Move> possibleMoves = this.boardViewer.getPossibleMoves();
 
         // Get a random index in the Collection for selection.
-        int randomIdx = random.nextInt(possibleMoves.size());
+        final int randomIdx = randomFlower.nextInt(possibleMoves.size());
 
         // Stream the Collection and skip the amount of elements indicated by randomIdx.
-        Optional<Move> randomMove = possibleMoves.stream().skip(randomIdx).findFirst();
+        final Optional<Move> randomMove = possibleMoves.stream().skip(randomIdx).findFirst();
 
         // If there is an element at that index, all fine and dandy, otherwise throw an exception.
         if ( ! randomMove.isPresent() ) throw new Exception(exception_NoMove);

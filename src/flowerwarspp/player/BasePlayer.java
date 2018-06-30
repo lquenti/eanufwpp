@@ -118,7 +118,7 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
         if ( this.cycleState == PlayerFunction.NULL ) throw new Exception(exception_NoInit);
         if ( this.cycleState != PlayerFunction.REQUEST ) throw new Exception(exception_CycleRequest);
 
-        Move move = requestMove();
+        final Move move = requestMove();
 
         // We just assume the move is valid, might need to check later on
         // For now we just make the move as returned by requestMove
@@ -141,7 +141,6 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
     /* INFO: Method is abstract because requesting a move from the player works differently with each implementation */
     protected abstract Move requestMove() throws Exception, RemoteException;
 
-
     /**
      * Stellt die vom Interface {@link flowerwarspp.preset.Player} geforderte Methode {@link
      * flowerwarspp.preset.Player#confirm(Status)} bereit.
@@ -159,7 +158,7 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
         if ( this.cycleState != PlayerFunction.CONFIRM ) throw new Exception(exception_CycleConfirm);
 
         // Verify that player's status and main program's status are equal
-        Status playerBoardState = this.boardViewer.getStatus();
+        final Status playerBoardState = this.boardViewer.getStatus();
 
         if ( ! playerBoardState.equals(status) ) throw new Exception(exception_StatusError);
 
@@ -188,7 +187,7 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
         this.board.make(opponentMove);
 
         // Verify the status
-        Status playerBoardStatus = this.boardViewer.getStatus();
+        final Status playerBoardStatus = this.boardViewer.getStatus();
 
         if ( ! playerBoardStatus.equals(status) ) throw new Exception(exception_StatusError);
 
@@ -216,7 +215,6 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 
         if ( this.board == null ) {
 
-            // FIXME: Replace DummyBoard with working implementation of MainBoard (or equivalent)
             this.board = new MainBoard(boardSize);
             this.boardViewer = board.viewer();
         } else {
@@ -224,6 +222,7 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
             // Here we need to handle ending the current game and starting a new one, some form of feedback would be
             // necessary to make that happen with the main program.
             // TODO: Restart game with new player
+            throw new Exception("Noch nicht implementiert.");
         }
 
         // Now set the function life cycle according to this player's colour

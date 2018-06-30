@@ -41,6 +41,7 @@ public class InteractivePlayer extends BasePlayer {
      *              Spielzug vom Spieler anzufordern.
      */
     public InteractivePlayer( Requestable input ) {
+        super();
         this.input = input;
     }
 
@@ -56,12 +57,11 @@ public class InteractivePlayer extends BasePlayer {
      * @see Requestable
      */
     protected Move requestMove() throws Exception, RemoteException {
-        //TODO:
-        Move playerMove = input.request();
+        final Move playerMove = input.request();
 
         if ( playerMove == null ) throw new Exception(exception_NoMove);
 
-        // Make sure the move is actually valid (i.e. it's in the list of possible moves)
+        // Make sure the move is actually valid (i.e. it's in the Collection of possible moves)
         if ( ! this.boardViewer.getPossibleMoves().contains(playerMove) ) throw new Exception(exception_InvalidMove);
 
         return playerMove;
