@@ -196,12 +196,13 @@ public class MainBoard implements Board {
 					}
 					break;
 				case 3:
+				case 2:
+				case 1:
 					/*
 					Sei n die Tiefe des Suchalgorithmusses:
 						n == 1: Sind null (irrelevant), eigene Blume (zaehlt nicht) oder gegnerische Blume (TODO: CHECKEN WENN MOVE ENTFERNT WIRD)
 						n >  1: Invalide, da die Distanz zu weit ist
 					 */
-				case 2:
 					/*
 					size == 2
 					Sei n die Tiefe des Suchalgorithmusses:
@@ -209,7 +210,6 @@ public class MainBoard implements Board {
 						n == 2: Duerfen nur noch einzelne Blumen sein, alles andere ist zu gross da fuer Gap +1
 						n >  2: Per Definition invalide
 					 */
-				case 1:
 					/*
 					size == 1
 					Sei n die Tiefe des Suchalgorithmusses:
@@ -219,6 +219,31 @@ public class MainBoard implements Board {
 					 */
 			}
 		}
+	}
+
+	private HashMap<Flower,LinkedList<LinkedList<Flower>>> getPaths(final Collection<Flower> bed, final int n) {
+		LinkedList<Flower> matches = new LinkedList<>(), queue = new LinkedList<>();
+		HashSet<Flower> done = new HashSet<>(bed);
+		int i = 2; // Erste Iteration ist irrelevant da entweder Beet oder null
+		queue.addAll(bed);
+		while (!queue.isEmpty()) {
+			LinkedList<Flower> nextIt = new LinkedList<>();
+			for (Flower f : queue) { // Zurzeitige Ebene
+				nextIt.addAll(getDirectNeighbors(f));
+				done.add(f);
+			}
+			for (Flower f : nextIt) {
+				if (done.contains(f) || !isOnBoard(f) || i > n) {
+					nextIt.remove(f);
+				}
+				if (getFlowerColor(f) == currentPlayer) {
+					matches.add(f);
+				}
+			}
+			queue = nextIt;
+			i++;
+		}
+		return matches;
 	}
 
 	private PlayerColor getFlowerColor(final Flower f) {
