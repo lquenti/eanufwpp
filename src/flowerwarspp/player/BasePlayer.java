@@ -7,7 +7,7 @@ import java.rmi.RemoteException;
 
 /**
  * Abstrakte Basis-Klasse welche die grundlegende Implementation eines Spielers beschreibt, welcher die Anforderungen
- * des Interfaces {@link Player} erfuellt. Die einzige abstrakte Methode deren Implementation gefordert wird, ist {@link
+ * des Interfaces {@link Player} erfüllt. Die einzige abstrakte Methode deren Implementation gefordert wird, ist {@link
  * #requestMove()}. Diese Methode fordert einen Zug vom jeweiligen Spieler an, und leitet diesen Zug an die Methode
  * {@link #request()} weiter.
  *
@@ -52,14 +52,14 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
             exception_UnexpectedCall + " Es haette request() aufgerufen werden sollen.";
 
     /**
-     * Eine vordefinierte Nachricht einer {@link Exception}, welche geworfen wird, wenn es eine Disparitaet zwischen den
+     * Eine vordefinierte Nachricht einer {@link Exception}, welche geworfen wird, wenn es eine Disparität zwischen den
      * Status des Hauptprogramms und des eigenen Spielbretts gab.
      */
     private static final String exception_StatusError =
             "Der Status des Hauptprogramms und der Status des Spielbretts dieses Spielers stimmen nicht ueberein!";
 
     /**
-     * Ein unterstuetzender enum um die Ausfuehrung der durch das Interface {@link flowerwarspp.preset.Player}
+     * Ein unterstützender enum um die Ausführung der durch das Interface {@link flowerwarspp.preset.Player}
      * verlangten Methoden in der korrekten Reihenfolge zu sichern.
      *
      * @see flowerwarspp.preset.Player
@@ -72,14 +72,14 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
     }
 
     /**
-     * Stellt diesem Objekt ein eigenes {@link Board} zur Verfuegung, um die Durchfuehrung der eigenen und gegnerischen
-     * Zuege nachbilden zu koennen.
+     * Stellt diesem Objekt ein eigenes {@link Board} zur Verfügung, um die Durchführung der eigenen und gegnerischen
+     * Züge nachbilden zu können.
      */
     protected Board board;
 
     /**
-     * Ermoeglicht den Zugriff auf relevante Daten des Spielbretts, welche fuer die Verifikation und die Ausarbeitung
-     * von Spielzuegen benoetigt werden.
+     * Ermöglicht den Zugriff auf relevante Daten des Spielbretts, welche für die Verifikation und die Ausarbeitung
+     * von Spielzügen benötigt werden.
      */
     protected Viewer boardViewer;
 
@@ -110,7 +110,7 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
      * @return Der vom Spieler geforderte Zug
      * @throws Exception       Falls der Spieler nicht in der Lage war, einen Zug zu liefern oder falls diese Methode
      *                         zum falschen Zeitpunkt innerhalb des Zyklus aufgerufen worden ist
-     * @throws RemoteException Falls ein Fehler waehrend der Netzwerk-Kommunikation aufgetreten ist
+     * @throws RemoteException Falls ein Fehler während der Netzwerk-Kommunikation aufgetreten ist
      */
     @Override
     public Move request() throws Exception, RemoteException {
@@ -132,11 +132,11 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 
     /**
      * Fordert einen Zug vom Spieler an, wie der {@link Move} angefordert wird, wird der jeweiligen Implementation der
-     * abstrakten Klasse ueberlassen.
+     * abstrakten Klasse überlassen.
      *
-     * @return Der vom Spieler zurueckgegebene Zug.
+     * @return Der vom Spieler zurückgegebene Zug.
      * @throws Exception       Falls der jeweilige Spieler keinen Zug angeben konnte.
-     * @throws RemoteException Falls ein Fehler waehrend der Netzwerk-Kommunikation aufgetreten ist
+     * @throws RemoteException Falls ein Fehler während der Netzwerk-Kommunikation aufgetreten ist
      */
     /* INFO: Method is abstract because requesting a move from the player works differently with each implementation */
     protected abstract Move requestMove() throws Exception, RemoteException;
@@ -145,11 +145,11 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
      * Stellt die vom Interface {@link flowerwarspp.preset.Player} geforderte Methode {@link
      * flowerwarspp.preset.Player#confirm(Status)} bereit.
      *
-     * @param status Status des Spielbretts des Hauptprogramms nach Ausfuehren des zuletzt mit {@link #request()}
+     * @param status Status des Spielbretts des Hauptprogramms nach Ausführen des zuletzt mit {@link #request()}
      *               geholten Zuges
      * @throws Exception       Falls sich der eigene Status und der Status des Hauptprogramms unterscheiden oder falls
      *                         diese Methode zum falschen Zeitpunkt innerhalb des Zyklus aufgerufen worden ist
-     * @throws RemoteException Falls ein Fehler waehrend der Netzwerk-Kommunikation aufgetreten ist
+     * @throws RemoteException Falls ein Fehler während der Netzwerk-Kommunikation aufgetreten ist
      */
     @Override
     public void confirm( Status status ) throws Exception, RemoteException {
@@ -171,11 +171,11 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
      * flowerwarspp.preset.Player#update(Move, Status)} bereit.
      *
      * @param opponentMove Zug des Gegenspielers
-     * @param status       Status des Spielbretts des Hauptprogramms nach Ausfuehren des Zuges des Gegenspielers
-     * @throws Exception       Falls sich die Status des eigenen Spielbretts nach Ausfuehren des gegnerischen Zuges und
+     * @param status       Status des Spielbretts des Hauptprogramms nach Ausführen des Zuges des Gegenspielers
+     * @throws Exception       Falls sich die Status des eigenen Spielbretts nach Ausführen des gegnerischen Zuges und
      *                         des Hauptprogramms unterscheiden oder falls diese Methode zum falschen Zeitpunkt
      *                         innerhalb des Zyklus aufgerufen worden ist
-     * @throws RemoteException Falls ein Fehler waehrend der Netzwerk-Kommunikation aufgetreten ist
+     * @throws RemoteException Falls ein Fehler während der Netzwerk-Kommunikation aufgetreten ist
      */
     @Override
     public void update( Move opponentMove, Status status ) throws Exception, RemoteException {
@@ -197,14 +197,14 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 
 
     /**
-     * Initialisiert einen Spieler, indem dieser mit einem neuen Spielbrett passender Groesse und der gewuenschten Farbe
-     * versehen wird. Falls diese Methode waehrend eines laufenden Spiels aufgerufen wird, wird dieses beendet und mit
+     * Initialisiert einen Spieler, indem dieser mit einem neuen Spielbrett passender Größe und der gewünschten Farbe
+     * versehen wird. Falls diese Methode waärend eines laufenden Spiels aufgerufen wird, wird dieses beendet und mit
      * dem neu initialisierten Spieler wird ein neues Spiel begonnen.
      *
-     * @param boardSize    Spielbrettgroesse
+     * @param boardSize    Spielbrettgröße
      * @param playerColour Farbe des Spielers
-     * @throws Exception       Falls waehrend der Initialisierung ein Fehler auftrat
-     * @throws RemoteException Falls ein Fehler waehrend der Netzwerk-Kommunikation aufgetreten ist
+     * @throws Exception       Falls während der Initialisierung ein Fehler auftrat
+     * @throws RemoteException Falls ein Fehler während der Netzwerk-Kommunikation aufgetreten ist
      */
     /* TODO: Properly handle beginning a new game (i.e. calling init() in the middle of a running game) */
     @Override
@@ -239,7 +239,7 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
     }
 
     /**
-     * Gibt die Farbe dieses Spielers zurueck.
+     * Gibt die Farbe dieses Spielers zurück.
      *
      * @return Die Farbe des Spielers
      */

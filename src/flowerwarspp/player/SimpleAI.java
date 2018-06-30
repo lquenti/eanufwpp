@@ -1,6 +1,5 @@
 package flowerwarspp.player;
 
-import flowerwarspp.board.MainBoard;
 import flowerwarspp.preset.*;
 
 import java.rmi.RemoteException;
@@ -8,7 +7,7 @@ import java.util.Collection;
 
 /**
  * Implementiert die abstrakte Klasse {@link BasePlayer} mit einer simplen KI. Diese KI bedient sich einer limitierten
- * Bewertungsstrategie zur Auswahl eines Zuges und gibt diesen auf Anforderung zurueck.
+ * Bewertungsstrategie zur Auswahl eines Zuges und gibt diesen auf Anforderung zurück.
  *
  * @author Michael Merse
  */
@@ -16,7 +15,7 @@ public class SimpleAI extends BasePlayer {
 
     /**
      * Eine vordefinierte Nachricht einer {@link Exception}, welche geworfen wird, wenn die einfache KI mit ihrer
-     * Strategie keinen Zug auswaehlen konnte.
+     * Strategie keinen Zug auswählen konnte.
      */
     private static final String exception_NoMove =
             "Die einfache KI konnte keinen Zug auswaehlen.";
@@ -24,12 +23,12 @@ public class SimpleAI extends BasePlayer {
 
     /**
      * Fordert einen Zug an, nach den Vorgaben der Interface-Methode {@link Player#request()}. Diese Methode bedient
-     * sich einer einfachen Strategie zur Bewertung und anschliessend zur Auswahl eines Zuges.
+     * sich einer einfachen Strategie zur Bewertung und anschließend zur Auswahl eines Zuges.
      *
-     * @return Der vom Spieler angeforderte Zug
+     * @return Der vom Spieler zurück gegebene Zug
      * @throws Exception       Falls der Spieler nicht in der Lage war, einen Zug zu liefern oder falls diese Methode
      *                         zum falschen Zeitpunkt innerhalb des Zyklus aufgerufen worden ist
-     * @throws RemoteException Falls ein Fehler waehrend der Netzwerk-Kommunikation aufgetreten ist
+     * @throws RemoteException Falls ein Fehler während der Netzwerk-Kommunikation aufgetreten ist
      */
     // TODO: Implement the actual weighted algorithm
     protected Move requestMove() throws Exception, RemoteException {
@@ -60,6 +59,11 @@ public class SimpleAI extends BasePlayer {
         return highestScoredMove;
     }
 
+    /**
+     * Berechnet den Score eines gegebenen Zuges nach den Vorgaben der simplen Strategie.
+     * @param move Der {@link Move} dessen Score berechnet werden soll
+     * @return Der Score des Spielzugs
+     */
     private int getMoveScore( Move move ) {
 
         int n1 = 0;
