@@ -6,6 +6,9 @@ build/
 # Documentation
 doc/
 
+# Distribution
+dist/
+
 # IDEA Workspace
 .idea/
 *.iml
