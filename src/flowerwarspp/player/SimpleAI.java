@@ -60,4 +60,38 @@ public class SimpleAI extends BasePlayer {
         return highestScoredMove;
     }
 
+    private int getMoveScore( Move move ) {
+
+        int n1 = 0;
+        int n2 = 0;
+        int score;
+
+        // Obtain the direct neighbors of both flowers.
+        final Collection<Flower> firstFlowerNeighbors = boardViewer.getDirectNeighbors(move.getFirstFlower());
+        final Collection<Flower> secondFlowerNeighbors = boardViewer.getDirectNeighbors(move.getSecondFlower());
+
+        final Collection<Flower> playerFlowers = boardViewer.getFlowers(this.getPlayerColour());
+
+        // Iterate through all the first flower's neighbours and calculate the score.
+        for ( final Flower neighbor : firstFlowerNeighbors ) {
+            if ( playerFlowers.contains(neighbor) )
+                n1++;
+        }
+
+        // Iterate through all the second flower's neighbours and calculate the score.
+        for ( final Flower neighbor : secondFlowerNeighbors ) {
+            if ( playerFlowers.contains(neighbor) )
+                n2++;
+        }
+
+        // Calculate the score as indicated by the strategy.
+        score = ( n1 + 1 ) * ( n2 + 1 );
+
+        // If both flowers are attached (i.e. if they're neighbors) double the score.
+        if ( firstFlowerNeighbors.contains(move.getSecondFlower()) )
+            score *= 2;
+
+        return score;
+    }
+
 }
