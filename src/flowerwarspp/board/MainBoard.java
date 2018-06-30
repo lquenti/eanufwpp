@@ -20,20 +20,7 @@ class PlayerData {
 	/**
 	 * Die legalen Züge, die der Spieler noch machen kann.
 	 */
-	HashSet<Move> legalMoves = new HashSet<>();
-	/**
-	 * Die Felder, auf die der Spieler noch Blumen setzen kann.
-	 */
-	HashSet<Flower> legalFlowers = new HashSet<>();
-
-	void banFlower(Flower first) {
-		if (!legalFlowers.contains(first)) {
-			return;
-		}
-		for (Flower second : legalFlowers) {
-			legalMoves.remove(new Move(first, second));
-		}
-	}
+	MoveSet legalMoves = new MoveSet();
 }
 
 /**
@@ -107,8 +94,6 @@ public class MainBoard implements Board {
 		}
 
 		for (int i = 0; i < allFlowers.length; i++) {
-			playerData.get(PlayerColor.Red).legalFlowers.add(allFlowers[i]);
-			playerData.get(PlayerColor.Blue).legalFlowers.add(allFlowers[i]);
 			for (int j = i + 1; j < allFlowers.length; j++) {
 				Move move = new Move(allFlowers[i], allFlowers[j]);
 				playerData.get(PlayerColor.Red).legalMoves.add(move);
@@ -171,7 +156,7 @@ public class MainBoard implements Board {
 		for (Flower f : fs) {
 			// Gesetzte Flowers für alle verbieten
 			for (PlayerData player : playerData.values()) {
-				player.banFlower(f);
+				player.legalMoves.removeMovesContaining(f);
 			}
 
 			// Gartencheck
@@ -180,7 +165,7 @@ public class MainBoard implements Board {
 			if (bed.size() == 4) {
 				for (Flower bedFlower : bed) {
 					for (Flower newIllegalFlower : getAllNeighbors(bedFlower)) {
-						playerData.get(currentPlayer).banFlower(newIllegalFlower);
+						playerData.get(currentPlayer).legalMoves.removeMovesContaining(newIllegalFlower);
 					}
 				}
 			}
@@ -195,7 +180,7 @@ public class MainBoard implements Board {
 
 					// Züge, die zwei Blumen irgendwo an dieses Beet anlegen, sind verboten.
 					for (Flower secondNeighbor : bedNeighbors) {
-						playerData.get(currentPlayer).legalFlowers.remove(
+						playerData.get(currentPlayer).legalMoves.remove(
 							new Move(neighbor, secondNeighbor)
 						);
 					}
@@ -333,7 +318,7 @@ public class MainBoard implements Board {
 		}
 		for (Flower f : invalids) {
 			for (PlayerData player : playerData.values()) {
-				player.banFlower(f);
+				player.legalMoves.removeMovesContaining(f);
 			}
 		}
 
@@ -459,5 +444,9 @@ public class MainBoard implements Board {
 		public LinkedList<Flower> getAllNeighbors(Flower f) {
 			return MainBoard.this.getAllNeighbors(f);
 		}
+	}
+
+	public static void main(String[] args) {
+		MainBoard board = new MainBoard(30);
 	}
 }
