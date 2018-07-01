@@ -408,8 +408,8 @@ public class MainBoard implements Board {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public HashSet<Move> getPossibleMoves() {
-			return new HashSet<>(playerData.get(currentPlayer).legalMoves);
+		public MoveSet getPossibleMoves() {
+			return new MoveSet(playerData.get(currentPlayer).legalMoves);
 		}
 
 		/**
