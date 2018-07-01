@@ -26,7 +26,7 @@ public class SimpleAI extends BaseAI {
      * @param move Der {@link Move} dessen Score berechnet werden soll
      * @return Der Score des Spielzugs
      */
-    protected int getMoveScore( Move move ) {
+    protected int getMoveScore( final Move move ) {
 
         // TODO: Maybe check if the passed move is actually valid, but for now we won't bother.
 

@@ -26,7 +26,8 @@ public class RandomAI extends BasePlayer {
      * <code>private</code> Random Number Generator, um die zufällige Auswahl eines Spielzugs mit Hilfe von
      * Pseudozufallszahlen leisten zu können.
      */
-    private final Random randomFlower = new Random();
+    private final Random flowerRNG;
+
     /**
      * Default-Konstruktor, welcher dieses Objekt mit Standardwerten versieht.
      */
@@ -63,7 +64,7 @@ public class RandomAI extends BasePlayer {
         final Collection<Move> possibleMoves = this.boardViewer.getPossibleMoves();
 
         // Get a random index in the Collection for selection.
-        final int randomIdx = randomFlower.nextInt(possibleMoves.size());
+        final int randomIdx = flowerRNG.nextInt(possibleMoves.size());
 
         // Stream the Collection and skip the amount of elements indicated by randomIdx.
         final Optional<Move> randomMove = possibleMoves.stream().skip(randomIdx).findFirst();
