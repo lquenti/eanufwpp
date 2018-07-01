@@ -73,7 +73,7 @@ public class Main {
 			}
 		} catch (Exception e) {
 			System.out.println("Ein Fehler ist aufgetreten:");
-			System.out.println(e);
+			e.printStackTrace();
 		}
 	}
 }
