@@ -24,6 +24,33 @@ abstract class BaseAI extends BasePlayer {
      */
     protected Move requestMove() throws Exception {
 
+        final Move move = getMove();
+
+        // If we do not have a highest scored move, we throw.
+        if ( move == null )
+            throw new Exception(exception_NoMove);
+
+        return move;
+    }
+
+    /**
+     * Methode zur Berechnung des Scores eines gegebenen Zuges. Der höchst-bewerteste Zug wird von {@link
+     * #requestMove()} ausgewählt und ausgeführt.
+     *
+     * @param move Der {@link Move} dessen Score berechnet werden soll
+     * @return Der Score des Spielzugs
+     */
+    abstract protected int getMoveScore( final Move move );
+
+    /**
+     * Gibt einen Spielzug zurück, per default wird dieser Spielzug nach einem implementierten Bewertungsalgorithmus
+     * ausgewählt. Der Spielzug mit dem höchsten Score wird zurück gegeben. Klassen die diese abstrakte Klasse
+     * implementieren können die Auswahl eines Zuges aber durchaus anders definieren.
+     *
+     * @return Der Spielzug mit dem höchsten Score.
+     */
+    protected Move getMove() {
+
         int highestScore = 0;
         Move highestScoredMove = null;
 
@@ -40,19 +67,6 @@ abstract class BaseAI extends BasePlayer {
             }
         }
 
-        // If we do not have a highest scored move, we throw.
-        if ( highestScoredMove == null )
-            throw new Exception(exception_NoMove);
-
         return highestScoredMove;
     }
-
-    /**
-     * Methode zur Berechnung des Scores eines gegebenen Zuges. Der höchst-bewerteste Zug wird von {@link
-     * #requestMove()} ausgewählt und ausgeführt.
-     *
-     * @param move Der {@link Move} dessen Score berechnet werden soll
-     * @return Der Score des Spielzugs
-     */
-    abstract protected int getMoveScore( Move move );
 }
