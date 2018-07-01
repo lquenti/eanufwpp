@@ -3,7 +3,6 @@ package flowerwarspp.board;
 import flowerwarspp.preset.*;
 
 import java.util.*;
-import java.util.function.Function;
 
 /**
  * Verwaltungsklasse, die Daten über die gemachten und noch möglichen Züge
@@ -27,13 +26,19 @@ class PlayerData {
 	 */
 	HashSet<Flower> legalFlowers = new HashSet<>();
 
-	void banFlower(final Flower first) {
-		if (!legalFlowers.contains(first)) {
+	void banFlower(final Flower fst) {
+		if (!legalFlowers.contains(fst)) {
 			return;
 		}
-		for (Flower second : legalFlowers) {
-			legalMoves.remove(new Move(first, second));
+		for (Flower snd : legalFlowers) {
+			legalMoves.remove(new Move(fst, snd));
 		}
+	}
+	void banMove(final Flower fst, final Flower snd) {
+		if (!legalFlowers.contains(fst) || !legalFlowers.contains(snd)) {
+			return;
+		}
+		legalMoves.remove(new Move(fst,snd));
 	}
 }
 
@@ -169,7 +174,7 @@ public class MainBoard implements Board {
         /*
         Was aktuell gemacht wird: (als Referenz zum erweitern (Kommentar kommt bei Abgabe raus))
             - Gaertencheck (done)
-            - Exkludieren von Gaertenabstaenden
+            - Exkludieren von Gaertenabstaenden (done)
             - Alle Moves mit gesetzten Flowern fuer eigenen Spieler devalidieren (done)
             - Moves fuer andere Farbe exkludieren (done)
             - Grabenerstellung:
@@ -181,69 +186,54 @@ public class MainBoard implements Board {
 			for (PlayerData p : playerData.values()) {
 				p.banFlower(f);
 			}
-
 			// Gartencheck
 			HashSet<Flower> bed = getFlowerBed(f);
-
-			// TODO: BIG REFACTOR GEGEN REDUNDANZ
 			// Exkludieren von Gartenabstaenden
-			switch (bed.size()) {
-				case 4:
-					for (Flower bf : bed) {
-						for (Flower newIllegalFlower : getAllNeighbors(bf)) {
-							playerData.get(currentPlayer).banFlower(newIllegalFlower);
-						}
+			if (bed.size() == 4) {
+				for (Flower bf : bed) {
+					for (Flower newIllegalFlower : getAllNeighbors(bf)) {
+						playerData.get(currentPlayer).banFlower(newIllegalFlower);
 					}
-					break;
-				case 3:
-				case 2:
-				case 1:
-					/*
-					Sei n die Tiefe des Suchalgorithmusses:
-						n == 1: Sind null (irrelevant), eigene Blume (zaehlt nicht) oder gegnerische Blume (TODO: CHECKEN WENN MOVE ENTFERNT WIRD)
-						n >  1: Invalide, da die Distanz zu weit ist
-					 */
-					/*
-					size == 2
-					Sei n die Tiefe des Suchalgorithmusses:
-						n == 1: Sind null (irrelevant), eigene Blume (zaehlt nicht) oder gegnerische Blume (TODO: CHECKEN WENN MOVE ENTFERNT WIRD)
-						n == 2: Duerfen nur noch einzelne Blumen sein, alles andere ist zu gross da fuer Gap +1
-						n >  2: Per Definition invalide
-					 */
-					/*
-					size == 1
-					Sei n die Tiefe des Suchalgorithmusses:
-						n == 1: Widerspruch
-						n == 2: Darf max 2 gross sein
-						n == 3: Darf max eine Blume sein
-					 */
+				}
+			}
+			else {
+				Stack<Flower> current = new Stack<>();
+				current.add(f);
+				HashMap<Stack<Flower>,Integer> paths = new HashMap<>();
+
+				recursiveDFS(3,new HashSet<Flower>(bed), paths, current);
+
+				deleteMoves(paths,bed.size());
 			}
 		}
 	}
 
-	private HashMap<Flower,LinkedList<LinkedList<Flower>>> getPaths(final Collection<Flower> bed, final int n) {
-		LinkedList<Flower> matches = new LinkedList<>(), queue = new LinkedList<>();
-		HashSet<Flower> done = new HashSet<>(bed);
-		int i = 2; // Erste Iteration ist irrelevant da entweder Beet oder null
-		queue.addAll(bed);
-		while (!queue.isEmpty()) {
-			LinkedList<Flower> nextIt = new LinkedList<>();
-			for (Flower f : queue) { // Zurzeitige Ebene
-				nextIt.addAll(getDirectNeighbors(f));
-				done.add(f);
+	private void recursiveDFS(final int depth, HashSet<Flower> visited,
+	                          HashMap<Stack<Flower>, Integer> paths,
+	                          Stack<Flower> current) {
+		Flower lastF = current.peek();
+		for (Flower nextIt : getDirectNeighbors(lastF)) {
+			if (visited.contains(nextIt) || !isOnBoard(nextIt)) {
+				continue;
+			} else {
+				visited.add(nextIt);
 			}
-			for (Flower f : nextIt) {
-				if (done.contains(f) || !isOnBoard(f) || i > n) {
-					nextIt.remove(f);
-				}
-				if (getFlowerColor(f) == currentPlayer) {
-					matches.add(f);
-				}
+			if (getFlowerColor(nextIt) == currentPlayer) {
+				paths.put(current, getFlowerBed(nextIt).size());
+			} else if (depth > 1) { // Erste Iteration ist irrelevant da entweder Beet oder null
+				current.push(lastF);
+				recursiveDFS(depth - 1, visited, paths, current);
 			}
-			queue = nextIt;
-			i++;
 		}
-		return matches;
+	}
+
+	private void deleteMoves(HashMap<Stack<Flower>, Integer> paths, int bedsize) {
+		for (Stack<Flower> s : paths.keySet()) {
+			if (((s.size()) == 2 && ((bedsize+paths.get(s)) >2)) ||
+					(s.size() == 1 && ((bedsize+paths.get(s)) > 3))) {
+				playerData.get(currentPlayer).banMove(s.pop(), s.pop());
+			}
+		}
 	}
 
 	private PlayerColor getFlowerColor(final Flower f) {
