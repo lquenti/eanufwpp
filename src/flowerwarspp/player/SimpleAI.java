@@ -13,6 +13,13 @@ import java.util.Collection;
 public class SimpleAI extends BaseAI {
 
     /**
+     * Default-Konstruktor, welcher dieses Objekt mit Standardwerten versieht.
+     */
+    public SimpleAI () {
+        super();
+    }
+
+    /**
      * Methode zur Berechnung des Scores eines gegebenen Zuges nach der gegebenen simplen Strategie der
      * Projektbeschreibung. Wir werden diese Methode in Implementationen verbesserter KIs überschreiben und anpassen.
      *

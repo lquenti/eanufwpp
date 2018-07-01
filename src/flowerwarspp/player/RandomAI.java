@@ -27,6 +27,13 @@ public class RandomAI extends BasePlayer {
      * Pseudozufallszahlen leisten zu können.
      */
     private final Random randomFlower = new Random();
+    /**
+     * Default-Konstruktor, welcher dieses Objekt mit Standardwerten versieht.
+     */
+    public RandomAI () {
+        super();
+        flowerRNG = new Random();
+    }
 
     /**
      * Fordert einen Zug an, nach den Vorgaben der Interface-Methode {@link Player#request()}. Aus den auf dem

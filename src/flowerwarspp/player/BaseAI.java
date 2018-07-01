@@ -18,6 +18,12 @@ abstract class BaseAI extends BasePlayer {
     private static final String exception_NoMove =
             "Die einfache KI konnte keinen Zug auswaehlen.";
 
+    /**
+     * Default-Konstruktor, welcher dieses Objekt mit Standardwerten versieht.
+     */
+    protected BaseAI () {
+        super();
+    }
 
     /**
      * Fordert einen Zug an, nach den Vorgaben der Interface-Methode {@link Player#request()}. Diese Methode bedient
