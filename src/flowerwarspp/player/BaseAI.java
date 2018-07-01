@@ -3,7 +3,13 @@ package flowerwarspp.player;
 import flowerwarspp.preset.Move;
 import flowerwarspp.preset.Player;
 
-
+/**
+ * Eine abstrakte Klasse, welche grundlegende Methoden vordefiniert um KIs zu implementieren. Dabei wird im Laufe der
+ * {@link #requestMove()}-Methode für die möglichen Spielzüge ein Bewertungsalgorithmus durchlaufen, welcher einen Zug
+ * nach Strategie auswählt, zurück gibt und ausführt.
+ *
+ * @author Michael Merse
+ */
 abstract class BaseAI extends BasePlayer {
     /**
      * Eine vordefinierte Nachricht einer {@link Exception}, welche geworfen wird, wenn die KI mit ihrer Strategie
