@@ -197,19 +197,13 @@ public class MainBoard implements Board {
 				}
 			} else {
 				Stack<Flower> current = new Stack<>();
-				current.add(f);
-				HashMap<Stack<Flower>, Integer> paths = new HashMap<>();
-
-				recursiveDFS(3, new HashSet<Flower>(bed), paths, current);
-
-				deleteMoves(paths, bed.size());
+				current.addAll(getDirectNeighbors(f));
+				recursiveDFS(3, new HashSet<Flower>(bed), current);
 			}
 		}
 	}
 
-	private void recursiveDFS(final int depth, HashSet<Flower> visited,
-	                          HashMap<Stack<Flower>, Integer> paths,
-	                          Stack<Flower> current) {
+	private void recursiveDFS(final int depth, HashSet<Flower> visited, Stack<Flower> current) {
 		Flower lastF = current.peek();
 		for (Flower nextIt : getDirectNeighbors(lastF)) {
 			if (visited.contains(nextIt) || !isOnBoard(nextIt)) {
@@ -218,21 +212,16 @@ public class MainBoard implements Board {
 				visited.add(nextIt);
 			}
 			if (getFlowerColor(nextIt) == currentPlayer) {
-				paths.put(current, getFlowerBed(nextIt).size());
+				deleteMoves(visited, current);
 			} else if (depth > 1) { // Erste Iteration ist irrelevant da entweder Beet oder null
 				current.push(lastF);
-				recursiveDFS(depth - 1, visited, paths, current);
+				recursiveDFS(depth - 1, visited, current);
 			}
 		}
 	}
 
-	private void deleteMoves(HashMap<Stack<Flower>, Integer> paths, int bedsize) {
-		for (Stack<Flower> s : paths.keySet()) {
-			if (((s.size()) == 2 && ((bedsize + paths.get(s)) > 2)) ||
-					(s.size() == 1 && ((bedsize + paths.get(s)) > 3))) {
-				playerData.get(currentPlayer).banMove(s.pop(), s.pop());
-			}
-		}
+	private void deleteMoves(HashSet<Flower> visited, Stack<Flower> current) {
+		
 	}
 
 	private PlayerColor getFlowerColor(final Flower f) {
