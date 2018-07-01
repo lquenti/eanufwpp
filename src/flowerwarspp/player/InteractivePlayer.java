@@ -4,7 +4,6 @@ import flowerwarspp.preset.Move;
 import flowerwarspp.preset.Player;
 import flowerwarspp.preset.Requestable;
 
-import java.rmi.RemoteException;
 
 /**
  * Implementiert die abstrakte Klasse {@link BasePlayer} mit einem interaktiven Spieler. Über ein Objekt einer Klasse,
@@ -29,7 +28,7 @@ public class InteractivePlayer extends BasePlayer {
             "Der vom Spieler uebergegebene Zug ist nicht valide.";
 
     /**
-     * Wird genutzt, um Spielzuege vom Spieler anzufordern.
+     * Wird genutzt, um Spielzüge vom Spieler anzufordern.
      */
     private Requestable input;
 
@@ -51,12 +50,11 @@ public class InteractivePlayer extends BasePlayer {
      * implementiert.
      *
      * @return Der vom Spieler angeforderte Zug
-     * @throws Exception       Falls der Spieler nicht in der Lage war, einen Zug zu liefern oder falls diese Methode
-     *                         zum falschen Zeitpunkt innerhalb des Zyklus aufgerufen worden ist
-     * @throws RemoteException Falls ein Fehler während der Netzwerk-Kommunikation aufgetreten ist
+     * @throws Exception Falls der Spieler nicht in der Lage war, einen Zug zu liefern oder falls diese Methode zum
+     *                   falschen Zeitpunkt innerhalb des Zyklus aufgerufen worden ist
      * @see Requestable
      */
-    protected Move requestMove() throws Exception, RemoteException {
+    protected Move requestMove() throws Exception {
         final Move playerMove = input.request();
 
         if ( playerMove == null ) throw new Exception(exception_NoMove);

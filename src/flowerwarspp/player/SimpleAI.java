@@ -2,7 +2,6 @@ package flowerwarspp.player;
 
 import flowerwarspp.preset.*;
 
-import java.rmi.RemoteException;
 import java.util.Collection;
 
 /**
@@ -11,60 +10,21 @@ import java.util.Collection;
  *
  * @author Michael Merse
  */
-public class SimpleAI extends BasePlayer {
+public class SimpleAI extends BaseAI {
 
     /**
-     * Eine vordefinierte Nachricht einer {@link Exception}, welche geworfen wird, wenn die einfache KI mit ihrer
-     * Strategie keinen Zug auswählen konnte.
-     */
-    private static final String exception_NoMove =
-            "Die einfache KI konnte keinen Zug auswaehlen.";
-
-
-    /**
-     * Fordert einen Zug an, nach den Vorgaben der Interface-Methode {@link Player#request()}. Diese Methode bedient
-     * sich einer einfachen Strategie zur Bewertung und anschließend zur Auswahl eines Zuges.
+     * Methode zur Berechnung des Scores eines gegebenen Zuges nach der gegebenen simplen Strategie der
+     * Projektbeschreibung. Wir werden diese Methode in Implementationen verbesserter KIs überschreiben und anpassen.
      *
-     * @return Der vom Spieler zurück gegebene Zug
-     * @throws Exception       Falls der Spieler nicht in der Lage war, einen Zug zu liefern oder falls diese Methode
-     *                         zum falschen Zeitpunkt innerhalb des Zyklus aufgerufen worden ist
-     * @throws RemoteException Falls ein Fehler während der Netzwerk-Kommunikation aufgetreten ist
-     */
-    // TODO: Implement the actual weighted algorithm
-    protected Move requestMove() throws Exception, RemoteException {
-
-        int highestScore = 0;
-        Move highestScoredMove = null;
-
-        // Iterate through all the possible moves...
-        for ( final Move move :
-                this.boardViewer.getPossibleMoves() ) {
-
-            // We are only concerned with moves that actually make flowers.
-            if ( ! move.getType().equals(MoveType.Flower) ) continue;
-
-            final int score = getMoveScore(move);
-
-            // If the score of the currently observed move is higher than the previously highest score, update the relevant variables.
-            if ( score > highestScore ) {
-                highestScore = score;
-                highestScoredMove = move;
-            }
-        }
-
-        // If we do not have a highest scored move, we throw.
-        if ( highestScoredMove == null )
-            throw new Exception(exception_NoMove);
-
-        return highestScoredMove;
-    }
-
-    /**
-     * Berechnet den Score eines gegebenen Zuges nach den Vorgaben der simplen Strategie.
      * @param move Der {@link Move} dessen Score berechnet werden soll
      * @return Der Score des Spielzugs
      */
-    private int getMoveScore( Move move ) {
+    protected int getMoveScore( Move move ) {
+
+        // TODO: Maybe check if the passed move is actually valid, but for now we won't bother.
+
+        // We are only concerned with moves that actually make flowers.
+        if ( ! move.getType().equals(MoveType.Flower) ) return - 1;
 
         int n1 = 0;
         int n2 = 0;
@@ -74,7 +34,7 @@ public class SimpleAI extends BasePlayer {
         final Collection<Flower> firstFlowerNeighbors = boardViewer.getDirectNeighbors(move.getFirstFlower());
         final Collection<Flower> secondFlowerNeighbors = boardViewer.getDirectNeighbors(move.getSecondFlower());
 
-        final Collection<Flower> playerFlowers = boardViewer.getFlowers(this.getPlayerColour());
+        final Collection<Flower> playerFlowers = boardViewer.getFlowers(getPlayerColour());
 
         // Iterate through all the first flower's neighbours and calculate the score.
         for ( final Flower neighbor : firstFlowerNeighbors ) {

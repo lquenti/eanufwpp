@@ -3,7 +3,6 @@ package flowerwarspp.player;
 import flowerwarspp.preset.Move;
 import flowerwarspp.preset.Player;
 
-import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Random;
@@ -34,19 +33,18 @@ public class RandomAI extends BasePlayer {
      * Spielbrett möglichen und validen Zügen wird ein Zug zufällig ausgewählt und zurück gegeben.
      *
      * @return Der vom Spieler angeforderte Zug
-     * @throws Exception       Falls der Spieler nicht in der Lage war, einen Zug zu liefern oder falls diese Methode
-     *                         zum falschen Zeitpunkt innerhalb des Zyklus aufgerufen worden ist
-     * @throws RemoteException Falls ein Fehler während der Netzwerk-Kommunikation aufgetreten ist
+     * @throws Exception Falls der Spieler nicht in der Lage war, einen Zug zu liefern oder falls diese Methode zum
+     *                   falschen Zeitpunkt innerhalb des Zyklus aufgerufen worden ist
      */
-    protected Move requestMove() throws Exception, RemoteException {
+    protected Move requestMove() throws Exception {
 
         // TODO: For now just return any random move. More checks might be necessary depending on our needs.
         return getRandomPossibleMove();
     }
 
     /**
-     * Gibt einen zufällig ausgewählten, validen Spielzug zurück, dieser wird ausgewählt aus den Spielzügen, die
-     * dem Spieler zur Verfügung stehen.
+     * Gibt einen zufällig ausgewählten, validen Spielzug zurück, dieser wird ausgewählt aus den Spielzügen, die dem
+     * Spieler zur Verfügung stehen.
      *
      * @return Ein zufällig ausgewählter Spielzug.
      * @throws Exception Falls kein Zug zufällig ausgewählt werden konnte.
