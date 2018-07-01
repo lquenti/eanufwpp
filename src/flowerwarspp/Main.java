@@ -48,8 +48,9 @@ public class Main {
 
 		Board board = new MainBoard(boardSize);
 		Viewer boardViewer = board.viewer();
-		Requestable input = new TextInterface();
-		Output output = new BoardFrame(board.viewer());
+		BoardFrame boardFrame = new BoardFrame(board.viewer());
+		Requestable input = boardFrame;
+		Output output = boardFrame;
 
 		Player currentPlayer = createPlayer(redType, input);
 		Player oppositePlayer = createPlayer(blueType, input);
