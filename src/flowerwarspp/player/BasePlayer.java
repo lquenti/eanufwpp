@@ -3,7 +3,6 @@ package flowerwarspp.player;
 import flowerwarspp.board.MainBoard;
 import flowerwarspp.preset.*;
 
-import java.rmi.RemoteException;
 
 /**
  * Abstrakte Basis-Klasse welche die grundlegende Implementation eines Spielers beschreibt, welcher die Anforderungen
@@ -59,8 +58,8 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
             "Der Status des Hauptprogramms und der Status des Spielbretts dieses Spielers stimmen nicht ueberein!";
 
     /**
-     * Ein unterstützender enum um die Ausführung der durch das Interface {@link flowerwarspp.preset.Player}
-     * verlangten Methoden in der korrekten Reihenfolge zu sichern.
+     * Ein unterstützender enum um die Ausführung der durch das Interface {@link flowerwarspp.preset.Player} verlangten
+     * Methoden in der korrekten Reihenfolge zu sichern.
      *
      * @see flowerwarspp.preset.Player
      */
@@ -78,8 +77,8 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
     protected Board board;
 
     /**
-     * Ermöglicht den Zugriff auf relevante Daten des Spielbretts, welche für die Verifikation und die Ausarbeitung
-     * von Spielzügen benötigt werden.
+     * Ermöglicht den Zugriff auf relevante Daten des Spielbretts, welche für die Verifikation und die Ausarbeitung von
+     * Spielzügen benötigt werden.
      */
     protected Viewer boardViewer;
 
@@ -108,12 +107,11 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
      * Methode zum Anfordern eines Zugs.
      *
      * @return Der vom Spieler geforderte Zug
-     * @throws Exception       Falls der Spieler nicht in der Lage war, einen Zug zu liefern oder falls diese Methode
-     *                         zum falschen Zeitpunkt innerhalb des Zyklus aufgerufen worden ist
-     * @throws RemoteException Falls ein Fehler während der Netzwerk-Kommunikation aufgetreten ist
+     * @throws Exception Falls der Spieler nicht in der Lage war, einen Zug zu liefern oder falls diese Methode zum
+     *                   falschen Zeitpunkt innerhalb des Zyklus aufgerufen worden ist
      */
     @Override
-    public Move request() throws Exception, RemoteException {
+    public Move request() throws Exception {
         // State validation
         if ( this.cycleState == PlayerFunction.NULL ) throw new Exception(exception_NoInit);
         if ( this.cycleState != PlayerFunction.REQUEST ) throw new Exception(exception_CycleRequest);
@@ -135,11 +133,10 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
      * abstrakten Klasse überlassen.
      *
      * @return Der vom Spieler zurückgegebene Zug.
-     * @throws Exception       Falls der jeweilige Spieler keinen Zug angeben konnte.
-     * @throws RemoteException Falls ein Fehler während der Netzwerk-Kommunikation aufgetreten ist
+     * @throws Exception Falls der jeweilige Spieler keinen Zug angeben konnte.
      */
     /* INFO: Method is abstract because requesting a move from the player works differently with each implementation */
-    protected abstract Move requestMove() throws Exception, RemoteException;
+    protected abstract Move requestMove() throws Exception;
 
     /**
      * Stellt die vom Interface {@link flowerwarspp.preset.Player} geforderte Methode {@link
@@ -147,12 +144,11 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
      *
      * @param status Status des Spielbretts des Hauptprogramms nach Ausführen des zuletzt mit {@link #request()}
      *               geholten Zuges
-     * @throws Exception       Falls sich der eigene Status und der Status des Hauptprogramms unterscheiden oder falls
-     *                         diese Methode zum falschen Zeitpunkt innerhalb des Zyklus aufgerufen worden ist
-     * @throws RemoteException Falls ein Fehler während der Netzwerk-Kommunikation aufgetreten ist
+     * @throws Exception Falls sich der eigene Status und der Status des Hauptprogramms unterscheiden oder falls diese
+     *                   Methode zum falschen Zeitpunkt innerhalb des Zyklus aufgerufen worden ist
      */
     @Override
-    public void confirm( Status status ) throws Exception, RemoteException {
+    public void confirm( Status status ) throws Exception {
         // State validation
         if ( this.cycleState == PlayerFunction.NULL ) throw new Exception(exception_NoInit);
         if ( this.cycleState != PlayerFunction.CONFIRM ) throw new Exception(exception_CycleConfirm);
@@ -172,13 +168,12 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
      *
      * @param opponentMove Zug des Gegenspielers
      * @param status       Status des Spielbretts des Hauptprogramms nach Ausführen des Zuges des Gegenspielers
-     * @throws Exception       Falls sich die Status des eigenen Spielbretts nach Ausführen des gegnerischen Zuges und
-     *                         des Hauptprogramms unterscheiden oder falls diese Methode zum falschen Zeitpunkt
-     *                         innerhalb des Zyklus aufgerufen worden ist
-     * @throws RemoteException Falls ein Fehler während der Netzwerk-Kommunikation aufgetreten ist
+     * @throws Exception Falls sich die Status des eigenen Spielbretts nach Ausführen des gegnerischen Zuges und des
+     *                   Hauptprogramms unterscheiden oder falls diese Methode zum falschen Zeitpunkt innerhalb des
+     *                   Zyklus aufgerufen worden ist
      */
     @Override
-    public void update( Move opponentMove, Status status ) throws Exception, RemoteException {
+    public void update( Move opponentMove, Status status ) throws Exception {
         // State validation
         if ( this.cycleState == PlayerFunction.NULL ) throw new Exception(exception_NoInit);
         if ( this.cycleState != PlayerFunction.UPDATE ) throw new Exception(exception_CycleUpdate);
@@ -203,12 +198,11 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
      *
      * @param boardSize    Spielbrettgröße
      * @param playerColour Farbe des Spielers
-     * @throws Exception       Falls während der Initialisierung ein Fehler auftrat
-     * @throws RemoteException Falls ein Fehler während der Netzwerk-Kommunikation aufgetreten ist
+     * @throws Exception Falls während der Initialisierung ein Fehler auftrat
      */
     /* TODO: Properly handle beginning a new game (i.e. calling init() in the middle of a running game) */
     @Override
-    public void init( int boardSize, PlayerColor playerColour ) throws Exception, RemoteException {
+    public void init( int boardSize, PlayerColor playerColour ) throws Exception {
 
         // Set the colour
         this.playerColour = playerColour;
