@@ -30,7 +30,7 @@ public class InteractivePlayer extends BasePlayer {
     /**
      * Wird genutzt, um Spielzüge vom Spieler anzufordern.
      */
-    private Requestable input;
+    private final Requestable input;
 
     /**
      * Konstruiert einen neuen interaktiven Spieler. Einem interaktiven Spieler muss ein Objekt einer Klasse welche

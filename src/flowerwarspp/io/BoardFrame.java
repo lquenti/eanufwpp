@@ -5,6 +5,7 @@ import flowerwarspp.preset.*;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
+import java.awt.*;
 import java.util.Collection;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -23,19 +24,11 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 		this.setSize(600, 600);
 
 		this.add(this.boardDisplay);
-		this.boardDisplay.updateSize();
-
-		this.boardDisplay.addMouseListener((MouseClickListener) e -> {
-			this.setViewer(this.viewer);
-			System.out.println("Hallo");
-		});
+		this.setViewer(this.viewer);
+//		this.addComponentListener((ComponentResizeListener) e -> this.boardDisplay.refresh());
 
 		// TODO: Make this obsolete.
 		this.boardDisplay.setBorder(new BevelBorder(BevelBorder.LOWERED));
-
-		this.getContentPane().repaint();
-		this.addComponentListener((ComponentResizeListener) e ->
-		        this.boardDisplay.updateSize());
 
 		this.invalidate();
 		this.repaint();
@@ -43,18 +36,21 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 	}
 
 	public void setViewer(Viewer viewer) {
-		this.repaint();
 		this.boardDisplay.setBoardViewer(viewer);
 		this.boardDisplay.updateSize();
+		this.repaint();
 	}
 
 	@Override
 	public Move request() throws Exception {
-		return null;
+		if (this.boardDisplay == null)
+			return null;
+
+		return this.boardDisplay.awaitMove();
 	}
 
 	@Override
 	public void refresh() {
-		this.repaint();
+		this.boardDisplay.refresh();
 	}
 }

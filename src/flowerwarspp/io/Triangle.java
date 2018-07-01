@@ -1,5 +1,6 @@
 package flowerwarspp.io;
 
+import flowerwarspp.preset.Flower;
 import flowerwarspp.preset.Position;
 
 import java.awt.*;
@@ -18,55 +19,10 @@ public class Triangle extends Polygon implements Cloneable {
 	private Point edge1 = null;
 	private Point edge2 = null;
 	private Point edge3 = null;
+
+	private Color flowerColour = Color.GREEN;
+
 	private int size = -1;
-
-	/**
-	 * Erstellt ein Triangle aus Vertices. Private, da es nur intern genutzt werden soll. Zieht die
-	 * Linie zum Schluss zurück zum ersten Vertex.
-	 *
-	 * @param x1
-	 * 		X-Koordinate des ersten Vertex.
-	 * @param y1
-	 * 		Y-Koordinate des ersten Vertex.
-	 * @param x2
-	 * 		X-Koordinate des zweiten Vertex.
-	 * @param y2
-	 * 		Y-Koordinate des zweiten Vertex.
-	 * @param x3
-	 * 		X-Koordinate des dritten Vertex.
-	 * @param y3
-	 * 		Y-Koordinate des dritten Vertex.
-	 * @param tx1
-	 * 		X-Koordinate der ersten {@link Position} auf dem Brett.
-	 * @param ty1
-	 * 		X-Koordinate der ersten {@link Position} auf dem Brett.
-	 * @param tx2
-	 * 		X-Koordinate der zweiten {@link Position} auf dem Brett.
-	 * @param ty2
-	 * 		X-Koordinate der zweiten {@link Position} auf dem Brett.
-	 * @param tx3
-	 * 		X-Koordinate der dritten {@link Position} auf dem Brett.
-	 * @param ty3
-	 * 		X-Koordinate der dritten {@link Position} auf dem Brett.
-	 * @param size
-	 * 		Die Länge der Seiten des Dreiecks.
-	 */
-	private Triangle(int x1, int y1, int x2, int y2, int x3, int y3,
-		             int tx1, int ty1, int tx2, int ty2, int tx3, int ty3,
-		             int size) {
-		this.addPoint(x1, y1);
-		this.addPoint(x2, y2);
-		this.addPoint(x3, y3);
-		this.addPoint(x1, y1);
-
-		this.edge1 = new Point(x1, y1);
-		this.edge2 = new Point(x2, y2);
-		this.edge3 = new Point(x3, y3);
-		this.triangleEdge1 = new Position(tx1, ty1);
-		this.triangleEdge2 = new Position(tx2, ty2);
-		this.triangleEdge3 = new Position(tx3, ty3);
-		this.size = size;
-	}
 
 	/**
 	 * Konstruiert ein dreieckiges {@link Polygon}.
@@ -207,37 +163,70 @@ public class Triangle extends Polygon implements Cloneable {
 	}
 
 	/**
-	 * Konstruiert eine Kopie dieses {@link Triangle}s und gibt ein {@link Triangle} zurück.
+	 * Ändert die Farbe dieses {@link Triangle}s.
 	 *
-	 * @return Ein {@link Triangle} mit denselben Vertices wie dieses Dreieck.
+	 * @param newFlowerColour
+	 * Die Farbe, die dieses Dreieck beim nächsten Zeichnen annehmen soll.
 	 */
-	public Triangle cloneTriangle() {
-		Triangle clone = new Triangle(
-		        this.edge1.x, this.edge1.y,
-		        this.edge2.x, this.edge2.y,
-		        this.edge3.x, this.edge3.y,
-		        this.triangleEdge1.getRow(), triangleEdge1.getColumn(),
-		        this.triangleEdge2.getRow(), triangleEdge2.getColumn(),
-		        this.triangleEdge3.getRow(), triangleEdge3.getColumn(),
-		        this.getSize());
-
-		return clone;
+	public void setFlowerColour(Color newFlowerColour) {
+		this.flowerColour = newFlowerColour;
 	}
 
 	/**
-	 * Konstruiert eine Kopie dieses {@link Triangle}s und gibt ein {@link Triangle} zurück.
+	 * Ein Getter für die Farbe dieses {@link Triangle}s.
 	 *
-	 * @return Ein {@link Triangle} mit denselben Vertices wie dieses Dreieck.
+	 * @return
+	 * Die {@link Color}, mit der dieses {@link Polygon} beim nächsten Zeichnen gefüllt wird.
 	 */
-	@Override
-	public Object clone() {
-		return this.cloneTriangle();
+	public Color getFlowerColour() {
+		return this.flowerColour;
 	}
 
+	/**
+	 * Zeichnet dieses Dreieck und gegebenenfalls andere Informationen über
+	 * die Blume an dieser Stelle.
+	 *
+	 * @param graphics
+	 * Das {@link Graphics}-Element auf das die Blume, welche dieses Dreieck
+	 * repräsentiert, gezeichnet werden soll.
+	 */
 	public void drawTriangle(Graphics graphics)
 	{
+		graphics.setColor(this.flowerColour);
+		graphics.fillPolygon(this);
+		graphics.setColor(Color.BLACK);
 		graphics.drawPolygon(this);
 		String text = this.triangleEdge2.getColumn() + ", " + this.triangleEdge2.getRow();
 		graphics.drawString(text, this.edge3.x, this.edge3.y);
+	}
+
+	/**
+	 * Erstellt eine {@link Flower} aus diesem {@link Triangle}.
+	 *
+	 * @return
+	 * Eine {@link Flower}, die an der Stelle liegt,
+	 * welche dieses {@link Triangle} repräsentiert.
+	 */
+	public Flower toFlower() {
+		return new Flower(this.triangleEdge1, this.triangleEdge2, this.triangleEdge3);
+	}
+
+	public boolean samePlace(Flower thatFlower) {
+		Flower thisFlower = new Flower(this.triangleEdge1, this.triangleEdge2, this.triangleEdge3);
+		return thatFlower.equals(thisFlower);
+	}
+
+	public boolean samePlace(Position p1, Position p2, Position p3) {
+		Flower thatFlower = new Flower(p1, p2, p3);
+		return samePlace(thatFlower);
+	}
+
+	public boolean samePlace(Triangle other) {
+		if (other == null)
+			return false;
+
+		return (this.getTopBoardPosition().equals(other.getTopBoardPosition()) &&
+		        this.getRightBoardPosition().equals(other.getRightBoardPosition()) &&
+		        this.getLeftBoardPosition().equals(other.getLeftBoardPosition()));
 	}
 }

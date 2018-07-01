@@ -13,13 +13,20 @@ import java.util.Collection;
 public class SimpleAI extends BaseAI {
 
     /**
+     * Default-Konstruktor, welcher dieses Objekt mit Standardwerten versieht.
+     */
+    public SimpleAI () {
+        super();
+    }
+
+    /**
      * Methode zur Berechnung des Scores eines gegebenen Zuges nach der gegebenen simplen Strategie der
      * Projektbeschreibung. Wir werden diese Methode in Implementationen verbesserter KIs überschreiben und anpassen.
      *
      * @param move Der {@link Move} dessen Score berechnet werden soll
      * @return Der Score des Spielzugs
      */
-    protected int getMoveScore( Move move ) {
+    protected int getMoveScore( final Move move ) {
 
         // TODO: Maybe check if the passed move is actually valid, but for now we won't bother.
 
