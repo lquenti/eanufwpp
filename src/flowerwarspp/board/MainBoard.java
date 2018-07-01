@@ -173,7 +173,7 @@ public class MainBoard implements Board {
 			// Ein Zug, der zwei Blumen an dieses Beet anlegt und die Größe auf 5 erhöht,
 			// ist verboten.
 			if (bed.size() == 3) {
-				Collection<Flower> bedNeighbors = getBedNeighbors(bed);
+				Collection<Flower> bedNeighbors = getBedDirectNeighbors(bed);
 				for (Iterator<Flower> it = bedNeighbors.iterator(); it.hasNext(); ) {
 					Flower neighbor = it.next();
 					it.remove();
@@ -271,14 +271,18 @@ public class MainBoard implements Board {
 		return result;
 	}
 
-	private LinkedList<Flower> getBedNeighbors(final Collection<Flower> bed) {
-		LinkedList<Flower> result = new LinkedList<>();
+	private HashSet<Flower> getBedDirectNeighbors(final Collection<Flower> bed) {
+		HashSet<Flower> result = new HashSet<>();
 		for (Flower flower : bed) {
-			for (Flower neighbor : getDirectNeighbors(flower)) {
-				if (!bed.contains(neighbor)) {
-					result.add(neighbor);
-				}
-			}
+			result.addAll(getDirectNeighbors(flower));
+		}
+		return result;
+	}
+
+	private HashSet<Flower> getBedAllNeighbors(final Collection<Flower> bed) {
+		HashSet<Flower> result = new HashSet<>();
+		for (Flower flower : bed) {
+			result.addAll(getAllNeighbors(flower));
 		}
 		return result;
 	}
