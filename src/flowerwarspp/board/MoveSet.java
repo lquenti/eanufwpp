@@ -38,9 +38,7 @@ public class MoveSet extends AbstractSet<Move> {
 					flowerMoves.add(e);
 					Flower flowers[] = {e.getFirstFlower(), e.getSecondFlower()};
 					for (Flower flower : flowers) {
-						if (!flowerMap.containsKey(flower)) {
-							flowerMap.put(flower, new HashSet<>());
-						}
+						flowerMap.putIfAbsent(flower, new HashSet<>());
 						flowerMap.get(flower).add(e);
 					}
 					break;
@@ -73,8 +71,6 @@ public class MoveSet extends AbstractSet<Move> {
 						flowerMap.remove(flower);
 					}
 				}
-				flowerMap.get(((Move)o).getFirstFlower()).remove(o);
-				flowerMap.get(((Move)o).getSecondFlower()).remove(o);
 				break;
 			case Ditch:
 				ditchMoves.remove(o);
@@ -86,7 +82,10 @@ public class MoveSet extends AbstractSet<Move> {
 	}
 
 	public boolean removeMovesContaining(Flower flower) {
-		return removeAll(flowerMap.get(flower));
+		if (flowerMap.containsKey(flower)) {
+			return removeAll(getMovesContaining(flower));
+		}
+		return false;
 	}
 
 	public boolean contains(Object o) {
@@ -108,7 +107,10 @@ public class MoveSet extends AbstractSet<Move> {
 	}
 
 	public HashSet<Move> getMovesContaining(Flower flower) {
-		return new HashSet<>(flowerMap.get(flower));
+		if (flowerMap.containsKey(flower)) {
+			return new HashSet<>(flowerMap.get(flower));
+		}
+		return null;
 	}
 
 	public HashSet<Move> getDitchMoves() {
