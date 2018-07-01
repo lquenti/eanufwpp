@@ -4,12 +4,123 @@ import flowerwarspp.preset.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
-public class BoardDisplay extends JPanel {
+public class BoardDisplay extends JPanel implements ActionListener {
+	/**
+	 * Eine private Klasse, die die Mausaktionen für das {@link BoardDisplay} verarbeitet.
+	 */
+	private class BoardDisplayMouseHandler extends MouseAdapter {
+		/**
+		 * Das {@link BoardDisplay}, zu dem dieser {@link MouseAdapter} gehört.
+		 */
+		private BoardDisplay boardDisplay = null;
+
+		private final Object moveAwaitLock = new Object();
+		/**
+		 * Wenn Blumen gesetzt werden, müssen zwei Dreiecke geklickt werden.
+		 * Wurde bereits ein Dreieck geklickt worden, so ist jenes hierin gespeichert.
+		 */
+		private Triangle firstClickedTriangle = null;
+		private Move move = null;
+
+		/**
+		 * Konstruiert einen {@link BoardDisplayMouseHandler}, der an ein {@link BoardDisplay}
+		 * gebunden ist.
+		 *
+		 * @param boardDisplay
+		 * Das {@link BoardDisplay}, an welches dieses Objekt gebunden ist.
+		 */
+		public BoardDisplayMouseHandler(BoardDisplay boardDisplay) {
+			this.boardDisplay = boardDisplay;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void mouseClicked(MouseEvent mouseEvent) {
+			Triangle triangle = findTriangle(mouseEvent.getPoint());
+			Collection<Move> moves = this.boardDisplay.boardViewer.getPossibleMoves();
+			if (this.firstClickedTriangle == null) {
+				this.firstClickedTriangle = triangle;
+			} else {
+				if (triangle != null) {
+					if (this.firstClickedTriangle.samePlace(triangle)) {
+						this.firstClickedTriangle = null;
+					} else {
+						this.move = this.getFlowerMove(this.firstClickedTriangle, triangle, moves);
+						this.firstClickedTriangle = null;
+						synchronized (this.moveAwaitLock) {
+							this.moveAwaitLock.notifyAll();
+						}
+					}
+				}
+			}
+		}
+
+		/**
+		 * Findet ein {@link Triangle} am spezifizierten {@link Point}.
+		 *
+		 * @param point
+		 * Der {@link Point}, an dem das Dreieck liegt.
+		 *
+		 * @return
+		 * Das {@link Triangle}, das derzeit an der angegebenen Stelle liegt,
+		 * oder <code>null</code>, falls dort keines liegt.
+		 */
+		private Triangle findTriangle(Point point) {
+			for (Triangle t : this.boardDisplay.mapTriangles) {
+				if (t.contains(point))
+					return t;
+			}
+
+			return null;
+		}
+
+		/**
+		 * Findet einen {@link Move} in der Liste möglicher Moves, der die gewählten
+		 * Blumen enthält.
+		 *
+		 * @param firstFlowerTriangle
+		 * Die erste Blume. Die Reihenfolge der Blumen ist in dieser Methode unwichtig.
+		 *
+		 * @param secondFlowerTriangle
+		 * Die zweite Blume. Die Reihenfolge der Blumen ist in dieser Methode unwichtig.
+		 *
+		 * @param possibleMoves
+		 * Eine {@link Collection} möglicher {@link Move}s.
+		 *
+		 * @return
+		 */
+		private Move getFlowerMove(Triangle firstFlowerTriangle,
+		                           Triangle secondFlowerTriangle,
+		                           Collection<Move> possibleMoves) {
+			Flower firstFlower = firstFlowerTriangle.toFlower();
+			Flower secondFlower = secondFlowerTriangle.toFlower();
+			Move compareMove = new Move(firstFlower, secondFlower);
+
+			for (Move move : possibleMoves) {
+				if (move.equals(compareMove))
+					return move;
+			}
+
+			return null;
+		}
+
+		/**
+		 * Interne Methode, dieses Objekt zurücksetzt.
+		 * Zurücksetzen bedeutet, dass kein Dreieck mehr gewählt ist,
+		 * und kein {@link Move} mehr gehalten wird.
+		 */
+		private void reset() {
+			this.firstClickedTriangle = null;
+			this.move = null;
+		}
+	}
+
 	/**
 	 * Dieses {@link Stroke}-Objekt zeichnet die Dreiecke auf dem Spielbrett mit dicken Linien. Wird
 	 * nur verwendet, wenn das {@link Graphics}-Objekt das in {@link #paintComponent(Graphics)}
@@ -20,7 +131,9 @@ public class BoardDisplay extends JPanel {
 	        BasicStroke.CAP_ROUND,
 	        BasicStroke.JOIN_ROUND);
 
-	private static final Color triangleColour = Color.BLACK;
+	private static final Color triangleBorderColour = Color.BLACK;
+	private static final Color triangleDefaultColour = Color.GREEN;
+	private static final Color triangleHighlightColour = Color.MAGENTA;
 	private static final Color redColour = Color.RED;
 	private static final Color blueColour = Color.CYAN;
 
@@ -31,7 +144,10 @@ public class BoardDisplay extends JPanel {
 	private static final int componentSizePercentage = 90;
 
 	private Viewer boardViewer = null;
+	private Dimension lastDrawingDimension = new Dimension(500, 500);
 	private Collection<Triangle> mapTriangles = new ArrayList<>();
+	private BoardDisplayMouseHandler boardDisplayMouseHandler = new BoardDisplayMouseHandler(this);
+	private Timer renderTimer = new Timer(50, this);
 
 	/**
 	 * Der {@link Viewer}, mit dem das Spielbrett betrachtet wird.
@@ -40,10 +156,16 @@ public class BoardDisplay extends JPanel {
 	 * 		Der {@link Viewer}, der das zubetrachtende Spielbrett betrachtet.
 	 */
 	public void setBoardViewer(Viewer boardViewer) {
-		this.setPreferredSize(new Dimension(500, 500));
-		this.setSize(500, 500);
+		this.setPreferredSize(this.lastDrawingDimension);
+		this.setSize(this.lastDrawingDimension);
 		this.boardViewer = boardViewer;
+		this.boardDisplayMouseHandler.reset();
+		for (MouseListener mouseListener : this.getMouseListeners())
+			this.removeMouseListener(mouseListener);
+		this.addMouseListener(this.boardDisplayMouseHandler);
 		this.resizeDisplay();
+		this.renderTimer.restart();
+		this.refresh();
 	}
 
 	public void update(Move move) {
@@ -61,33 +183,33 @@ public class BoardDisplay extends JPanel {
 		if (this.boardViewer == null)
 			return;
 
-		g.setColor(BoardDisplay.redColour);
-		for (Flower f : this.boardViewer.getFlowers(PlayerColor.Red))
-		{
-			this.mapTriangles.stream()
-			    .filter(t -> f.getFirst().equals(t.getTopBoardPosition()))
-			    .findFirst()
-			    .ifPresent(g::fillPolygon);
-		}
-		g.setColor(BoardDisplay.blueColour);
-		for (Flower f : this.boardViewer.getFlowers(PlayerColor.Blue))
-		{
-			this.mapTriangles.stream()
-					.filter(t -> f.getFirst().equals(t.getTopBoardPosition()))
-					.findFirst()
-					.ifPresent(g::fillPolygon);
+		Collection<Flower> redFlowers = this.boardViewer.getFlowers(PlayerColor.Red);
+		Collection<Flower> blueFlowers = this.boardViewer.getFlowers(PlayerColor.Blue);
+		for (Triangle triangle : this.mapTriangles) {
+			if (triangle.samePlace(this.boardDisplayMouseHandler.firstClickedTriangle)) {
+				Color triangleColour = triangle.getFlowerColour();
+				Color newColour = new Color(0xFF - triangleColour.getRed(),
+					0xFF - triangleColour.getGreen(),
+					0xFF - triangleColour.getBlue());
+				triangle.setFlowerColour(newColour);
+			}
+
+			triangle.drawTriangle(g);
 		}
 
-		g.setColor(triangleColour);
-		// Sets the stroke width if g is a Graphics2D object.
-		// I reckon this is basically always the case, but it shouldn't
-		// fall apart if it's not.
-		if (g instanceof Graphics2D) {
-			Graphics2D graphics2D = ((Graphics2D) g);
-//			graphics2D.setStroke(BoardDisplay.stroke);
-		}
+		this.lastDrawingDimension = this.getSize();
+	}
 
-		this.mapTriangles.forEach(t -> t.drawTriangle(g));
+	/**
+	 * Diese Methode berechnet gegebenenfalls die Dreiecke neu {@link #updateSize()},
+	 * und scheduledtdtddttt ein Redrawing.
+	 *
+	 * @param actionEvent
+	 * Ignoriert.
+	 */
+	public void actionPerformed(ActionEvent actionEvent) {
+			this.updateSize();
+			this.repaint();
 	}
 
 	/**
@@ -101,6 +223,31 @@ public class BoardDisplay extends JPanel {
 		this.setSize(newSize);
 		this.setPreferredSize(newSize);
 		this.resizeDisplay();
+
+		this.mapTriangles.stream().forEach(t -> t.setFlowerColour(triangleDefaultColour));
+		setTriangleColours(this.boardViewer.getFlowers(PlayerColor.Red), redColour);
+		setTriangleColours(this.boardViewer.getFlowers(PlayerColor.Blue), blueColour);
+	}
+
+	/**
+	 * Färbt Dreiecke basierend auf der Blume, an der sie liegen.
+	 *
+	 * @param flowers
+	 * Eine Sammlung von Blumen.
+	 *
+	 * @param color
+	 * Die Farbe, die den Dreiecken gegeben werden soll, deren Position mit
+	 * der Position einer der Blumen übereinstimmt.
+	 */
+	private void setTriangleColours(Collection<Flower> flowers, Color color) {
+		for (Triangle triangle : this.mapTriangles) {
+			Flower flower = new Flower(triangle.getTopBoardPosition(),
+			                           triangle.getLeftBoardPosition(),
+			                           triangle.getRightBoardPosition());
+
+			if (flowers.contains(flower))
+				triangle.setFlowerColour(color);
+		}
 	}
 
 	/**
@@ -186,5 +333,33 @@ public class BoardDisplay extends JPanel {
 			newTopPosition = newTriangle.getRightBoardPosition();
 			newTopPoint = newTriangle.getRightEdge();
 		}
+	}
+
+	/**
+	 * Erwarte einen Move, der von der GUI (d.h. dem menschlichen User) geholt wird.
+	 *
+	 * @return
+	 * Ein {@link Move}, der von vom menschlichen User erfragt wird.
+	 */
+	public Move awaitMove() throws InterruptedException {
+		this.boardDisplayMouseHandler.reset();
+
+		// NOTE: We need Thread.sleep to avoid 100% CPU usage.
+		while (true) {
+			synchronized (this.boardDisplayMouseHandler.moveAwaitLock) {
+				this.boardDisplayMouseHandler.moveAwaitLock.wait();
+				if (this.boardDisplayMouseHandler.move == null) {
+					this.boardDisplayMouseHandler.moveAwaitLock.notifyAll();
+				} else {
+					Move move = this.boardDisplayMouseHandler.move;
+					this.boardDisplayMouseHandler.reset();
+					return move;
+				}
+			}
+		}
+	}
+
+	public void refresh() {
+		this.updateSize();
 	}
 }
