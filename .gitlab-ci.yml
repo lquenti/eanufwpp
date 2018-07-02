@@ -1,4 +1,4 @@
-image: frekele/ant
+image: dockerschneider/java-jdk-ant
 
 stages:
     - build
