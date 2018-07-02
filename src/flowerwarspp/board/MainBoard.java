@@ -142,17 +142,6 @@ public class MainBoard implements Board {
 
 	// TODO: Am Ende Exception rausnehmen
 	private void updateValidMoves(final Flower[] fs) {
-        /*
-        Was aktuell gemacht wird: (als Referenz zum erweitern (Kommentar kommt bei Abgabe raus))
-            - Gaertencheck
-            - Exkludieren von Gaertenabstaenden
-            - Moves fuer andere Farbe exkludieren
-            - Grabenerstellung:
-                - Gegnerische Graeben entfernen falls geblockt durch eigene Blume
-                - Graben erlauben falls direkte Verbindung UND kein existierender Graben teilt (kann das der Fall sein nach Ditchchecks?)
-         */
-		// TODO: Ist es noetig zu checken ob Flower in valider Spielfeldrange ist?
-		// Idee: Gaerten einzeln speichern um Laufzeit zu verbessern da man nur Aussenbereiche testen muss und diese immutable sind
 		for (Flower f : fs) {
 			// Gesetzte Flowers für alle verbieten
 			for (PlayerData player : playerData.values()) {
@@ -160,40 +149,69 @@ public class MainBoard implements Board {
 			}
 
 			// Gartencheck
-			Collection<Flower> bed = getFlowerBed(f);
-
-			if (bed.size() == 4) {
-				for (Flower bedFlower : bed) {
-					for (Flower newIllegalFlower : getAllNeighbors(bedFlower)) {
-						playerData.get(currentPlayer).legalMoves.removeMovesContaining(newIllegalFlower);
-					}
-				}
+			for (Collection<Flower> bed : getBedsNear(f, 4, currentPlayer)) {
+				updateValidMovesForBed(bed);
 			}
 
-			// Ein Zug, der zwei Blumen an dieses Beet anlegt und die Größe auf 5 erhöht,
-			// ist verboten.
-			if (bed.size() == 3) {
-				Collection<Flower> bedNeighbors = getBedDirectNeighbors(bed);
-				for (Iterator<Flower> it = bedNeighbors.iterator(); it.hasNext(); ) {
-					Flower neighbor = it.next();
-					it.remove();
+			// TODO: Neue Gräben erlauben.
+		}
+	}
 
-					// Züge, die zwei Blumen irgendwo an dieses Beet anlegen, sind verboten.
-					for (Flower secondNeighbor : bedNeighbors) {
-						playerData.get(currentPlayer).legalMoves.remove(
-							new Move(neighbor, secondNeighbor)
-						);
-					}
+	// TODO: Prüfen, ob das hier überhaupt funktioniert.
+	private HashSet<Collection<Flower>> getBedsNear(Flower flower, int radius, PlayerColor player) {
+		HashSet<Collection<Flower>> result = new HashSet<>();
+		if (playerData.get(currentPlayer).flowers.contains(flower)) {
+			result.add(getFlowerBed(flower));
+		}
+		if (radius != 0) {
+			for (Flower neighbor : getDirectNeighbors(flower)) {
+				result.addAll(getBedsNear(neighbor, radius - 1, player));
+			}
+		}
+		return result;
+	}
 
-					// Züge, die zwei zusammenhängende Blumen an dieses Beet anlegen, sind verboten.
-					for (Flower neighborOfNeighbor : getDirectNeighbors(neighbor)) {
-						playerData.get(currentPlayer).legalMoves.remove(
-							new Move(neighbor, neighborOfNeighbor)
-						);
+	private void updateValidMovesForBed(final Collection<Flower> bed) {
+		if (bed.size() == 4) {
+			for (Flower bedNeighbor : getBedAllNeighbors(bed)) {
+				playerData.get(currentPlayer).legalMoves.removeMovesContaining(bedNeighbor);
+			}
+		} else {
+			for (Flower bedNeighbor : getBedDirectNeighbors(bed)) {
+				if (playerData.get(currentPlayer).legalMoves.containsMovesContaining(bedNeighbor)) {
+					playerData.get(currentPlayer).flowers.add(bedNeighbor);
+					Collection<Flower> resultingBed = getFlowerBed(bedNeighbor);
+					if (!isLegalBed(resultingBed, currentPlayer)) {
+						playerData.get(currentPlayer).legalMoves.removeMovesContaining(bedNeighbor);
+					} else if (resultingBed.size() == 4) {
+						for (Flower secondBedNeighbor : getBedAllNeighbors(resultingBed)) {
+							playerData.get(currentPlayer).legalMoves.remove(
+								new Move(bedNeighbor, secondBedNeighbor)
+							);
+						}
+					} else {
+						for (Flower secondBedNeighbor : getBedDirectNeighbors(resultingBed)) {
+							if (playerData.get(currentPlayer).legalMoves.containsMovesContaining(secondBedNeighbor)) {
+								playerData.get(currentPlayer).flowers.add(secondBedNeighbor);
+								if (!isLegalBed(getFlowerBed(secondBedNeighbor), currentPlayer)) {
+									playerData.get(currentPlayer).legalMoves.remove(
+										new Move(bedNeighbor, secondBedNeighbor)
+									);
+								}
+								playerData.get(currentPlayer).flowers.remove(secondBedNeighbor);
+							}
+						}
 					}
+					playerData.get(currentPlayer).flowers.remove(bedNeighbor);
 				}
 			}
 		}
+	}
+
+	private boolean isLegalBed(final Collection<Flower> bed, final PlayerColor player) {
+		return bed.size() < 4
+		    || bed.size() == 4
+		    && Collections.disjoint(getBedAllNeighbors(bed), playerData.get(player).flowers);
 	}
 
 	private PlayerColor getFlowerColor(final Flower f) {
@@ -205,13 +223,13 @@ public class MainBoard implements Board {
 		return null;
 	}
 
-	private LinkedList<Flower> getFlowerBed(final Flower f) {
+	private HashSet<Flower> getFlowerBed(final Flower f) {
 		PlayerColor flowerColor = getFlowerColor(f);
 		if (flowerColor == null) {
 			return null;
 		}
 
-		LinkedList<Flower> result = new LinkedList<>();
+		HashSet<Flower> result = new HashSet<>();
 		Stack<Flower> toVisit = new Stack<>();
 		toVisit.add(f);
 
@@ -274,7 +292,11 @@ public class MainBoard implements Board {
 	private HashSet<Flower> getBedDirectNeighbors(final Collection<Flower> bed) {
 		HashSet<Flower> result = new HashSet<>();
 		for (Flower flower : bed) {
-			result.addAll(getDirectNeighbors(flower));
+			for (Flower neighbor : getDirectNeighbors(flower)) {
+				if (!bed.contains(neighbor)) {
+					result.add(neighbor);
+				}
+			}
 		}
 		return result;
 	}
@@ -282,7 +304,11 @@ public class MainBoard implements Board {
 	private HashSet<Flower> getBedAllNeighbors(final Collection<Flower> bed) {
 		HashSet<Flower> result = new HashSet<>();
 		for (Flower flower : bed) {
-			result.addAll(getAllNeighbors(flower));
+			for (Flower neighbor : getAllNeighbors(flower)) {
+				if (!bed.contains(neighbor)) {
+					result.add(neighbor);
+				}
+			}
 		}
 		return result;
 	}
