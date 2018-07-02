@@ -11,7 +11,7 @@ compile:
         - ant
     artifacts:
         paths:
-            -build
+            - build
         expire_in: 5 min
     only:
         - master
