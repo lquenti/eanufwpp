@@ -269,14 +269,14 @@ public class MainBoard implements Board {
 		Position[] nodes = {f.getFirst(), f.getSecond(), f.getThird()};
 		Position lastPoint = null;
 		// Über die Positionen iterieren, die das Dreieck umgeben.
-		for (int i = 0; i < 9; i++) {
+		for (int i = 0; i <= 9; i++) {
 			try {
 				Position point = new Position(
-					nodes[i/3].getColumn() + nodes[(i+1)/3%3].getColumn() - nodes[((i+2)/3+1)%3].getColumn(),
-					nodes[i/3].getRow() + nodes[(i+1)/3%3].getRow() - nodes[((i+2)/3+1)%3].getRow()
+					nodes[i/3%3].getColumn() + nodes[(i+1)/3%3].getColumn() - nodes[((i+2)/3+1)%3].getColumn(),
+					nodes[i/3%3].getRow() + nodes[(i+1)/3%3].getRow() - nodes[((i+2)/3+1)%3].getRow()
 				);
 				if (lastPoint != null) {
-					Flower neighbor = new Flower(nodes[i/3], lastPoint, point);
+					Flower neighbor = new Flower(nodes[i/3%3], lastPoint, point);
 					if (isOnBoard(neighbor)) {
 						result.add(neighbor);
 					}
