@@ -3,6 +3,7 @@ image: dockerschneider/java-jdk-ant
 stages:
     - build
     - doc
+    - test
     - dist
 
 build:
@@ -21,6 +22,14 @@ doc:
             - doc
     only:
         - master
+
+test:
+    stage: test
+    script:
+        - java -cp build:FlowerWarsPP-Tester.jar BoardTester flowerwarspp.board.MainBoard
+    only:
+        - master
+    allow_failure: yes
 
 dist:
     stage: dist
