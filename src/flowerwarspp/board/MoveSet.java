@@ -32,26 +32,20 @@ public class MoveSet extends AbstractSet<Move> {
 		if (contains(e)) {
 			return false;
 		}
-		try {
-			switch (e.getType()) {
-				case Flower:
-					flowerMoves.add(e);
-					Flower flowers[] = {e.getFirstFlower(), e.getSecondFlower()};
-					for (Flower flower : flowers) {
-						flowerMap.putIfAbsent(flower, new HashSet<>());
-						flowerMap.get(flower).add(e);
-					}
-					break;
-				case Ditch:
-					ditchMoves.add(e);
-					break;
-				default:
-					otherMoves.add(e);
-			}
-		} catch (Exception ex) {
-			System.out.println(e);
-			ex.printStackTrace();
-			System.exit(1);
+		switch (e.getType()) {
+			case Flower:
+				flowerMoves.add(e);
+				Flower flowers[] = {e.getFirstFlower(), e.getSecondFlower()};
+				for (Flower flower : flowers) {
+					flowerMap.putIfAbsent(flower, new HashSet<>());
+					flowerMap.get(flower).add(e);
+				}
+				break;
+			case Ditch:
+				ditchMoves.add(e);
+				break;
+			default:
+				otherMoves.add(e);
 		}
 		return true;
 	}
@@ -95,7 +89,7 @@ public class MoveSet extends AbstractSet<Move> {
 	}
 
 	public boolean containsMovesContaining(Flower flower) {
-		return flowerMap.get(flower) == null;
+		return flowerMap.containsKey(flower);
 	}
 
 	public HashSet<Move> getFlowerMoves() {
