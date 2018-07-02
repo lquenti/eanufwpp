@@ -4,7 +4,7 @@ stages:
     - build
     - dist
 
-build:
+compile:
     stage: build
     script:
         - ant
@@ -20,6 +20,7 @@ doc:
             - doc
     only:
         - master
+    allow_failure: yes
 
 test:
     stage: build
