@@ -26,7 +26,7 @@ doc:
 test:
     stage: test
     script:
-        - java -cp build:FlowerWarsPP-Tester.jar BoardTester flowerwarspp.board.MainBoard
+        - ant test
     only:
         - master
     allow_failure: yes

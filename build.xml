@@ -7,8 +7,11 @@
     <property name="builddir" location="build"/>
     <property name="distdir" location="dist"/>
     <property name="docdir" location="doc"/>
-    <property name="classpath" location="FlowerWarsPP-Display.jar:FlowerWarsPP-Tester.jar"/>
-
+    <path id="classpath">
+        <fileset dir=".">
+            <include name="FlowerWarsPP-*.jar"/>
+        </fileset>
+    </path>
     <target name="init" depends="clean">
         <!-- create the time stamp -->
         <tstamp/>
@@ -20,8 +23,9 @@
     </target>
 
     <target name="compile" depends="init" description="compile the source code">
-        <javac srcdir="${srcdir}" classpath="${classpath}" destdir="${builddir}" debug="true"
-               includeantruntime="false"/>
+        <javac srcdir="${srcdir}" destdir="${builddir}" debug="true" includeantruntime="false">
+            <classpath refid="classpath"/>
+        </javac>
     </target>
 
     <target name="dist" depends="compile" description="generate the distributed jar">
@@ -32,6 +36,17 @@
         </jar>
     </target>
 
+    <target name="run" depends="compile">
+        <java classname="BoardTester" fork="true" failonerror="true">
+            <classpath>
+                <path refid="classpath"/>
+                <pathelement path="${builddir}"/>
+            </classpath>
+            <arg value="flowerwarspp.board.MainBoard"/>
+        </java>
+    </target>
+
+
     <target name="clean" description="clean up, delete the output directories">
         <delete dir="${builddir}"/>
         <delete dir="${distdir}"/>
@@ -39,6 +54,8 @@
     </target>
 
     <target name="doc">
-        <javadoc sourcepath="${srcdir}" classpath="${classpath}" destdir="${docdir}" encoding="UTF-8" charset="UTF-8" private="yes"/>
+        <javadoc sourcepath="${srcdir}" destdir="${docdir}" encoding="UTF-8" charset="UTF-8" private="yes">
+            <classpath refid="classpath"/>
+        </javadoc>
     </target>
 </project>
