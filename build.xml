@@ -1,4 +1,4 @@
-<project name="example" default="compile" basedir=".">
+<project name="eanufwpp" default="compile" basedir=".">
     <description>
         Implementierung des APP-Projekts FlowerWarsPP der Gruppe 'eanufwpp'.
     </description>
@@ -36,7 +36,7 @@
         </jar>
     </target>
 
-    <target name="run" depends="compile">
+    <target name="test" depends="compile">
         <java classname="BoardTester" fork="true" failonerror="true">
             <classpath>
                 <path refid="classpath"/>
