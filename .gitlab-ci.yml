@@ -1,0 +1,33 @@
+image: frekele/ant
+
+stages:
+    - build
+    - dist
+
+build:
+    stage: build
+    script:
+        - ant
+    only:
+        - master
+
+
+pages:
+    stage: build
+    script:
+        - ant doc
+        - cp doc public -R
+    artifacts:
+        paths:
+            - public
+    only:
+        - master
+
+dist:
+    stage: dist
+    script: ant dist
+    artifacts:
+        paths:
+            - dist
+    only:
+        - master

@@ -1,4 +1,4 @@
-<project name="example" default="all" basedir=".">
+<project name="example" default="compile" basedir=".">
     <description>
         Implementierung des APP-Projekts FlowerWarsPP der Gruppe 'eanufwpp'.
     </description>
@@ -7,7 +7,6 @@
     <property name="builddir" location="build"/>
     <property name="distdir" location="dist"/>
     <property name="docdir" location="doc"/>
-
     <property name="classpath" location="FlowerWarsPP-Display.jar:FlowerWarsPP-Tester.jar"/>
 
     <target name="init" depends="clean">
@@ -26,9 +25,7 @@
     </target>
 
     <target name="dist" depends="compile" description="generate the distributed jar">
-        <mkdir dir="${distdir}/lib"/>
-
-        <jar jarfile="${distdir}/lib/eanufwpp-${DSTAMP}.jar" basedir="${builddir}">
+        <jar jarfile="${distdir}/eanufwpp-${DSTAMP}.jar" basedir="${builddir}">
             <manifest>
                 <attribute name="Main-Class" value="flowerwarspp.Main"/>
             </manifest>
@@ -40,8 +37,8 @@
         <delete dir="${distdir}"/>
         <delete dir="${docdir}"/>
     </target>
+
     <target name="doc">
         <javadoc sourcepath="${srcdir}" classpath="${classpath}" destdir="${docdir}" encoding="UTF-8" charset="UTF-8" private="yes"/>
     </target>
-    <target name="all" depends="dist, doc"/>
 </project>
