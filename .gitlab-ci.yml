@@ -2,6 +2,7 @@ image: dockerschneider/java-jdk-ant
 
 stages:
     - build
+    - doc
     - dist
 
 build:
@@ -11,12 +12,10 @@ build:
     only:
         - master
 
-
-build:
-    stage: build
+doc:
+    stage: doc
     script:
         - ant doc
-        - cp doc public -R
     artifacts:
         paths:
             - doc
