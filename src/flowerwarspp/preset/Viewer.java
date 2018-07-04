@@ -79,4 +79,16 @@ public interface Viewer {
     Collection<Flower> getDirectNeighbors(Flower f);
 
     Collection<Flower> getAllNeighbors(Flower f);
+
+    boolean possibleMovesContains(Move move);
+
+    boolean possibleMovesContainsMovesContaining(Flower f);
+
+    Collection<Move> getPossibleFlowerMoves();
+
+    Collection<Flower> getPossibleFlowers();
+
+    Collection<Move> getPossibleMovesContaining(Flower flower);
+
+    Collection<Move> getPossibleDitchMoves();
 }

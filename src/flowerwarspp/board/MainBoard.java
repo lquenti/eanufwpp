@@ -467,12 +467,44 @@ public class MainBoard implements Board {
 		}
 		
 		// TODO: REFACTOR
+		@Override
 		public LinkedList<Flower> getDirectNeighbors(Flower f) {
 			return MainBoard.this.getDirectNeighbors(f);
 		}
 
+		@Override
 		public LinkedList<Flower> getAllNeighbors(Flower f) {
 			return MainBoard.this.getAllNeighbors(f);
+		}
+
+		@Override
+		public boolean possibleMovesContains(Move move) {
+			return playerData.get(currentPlayer).legalMoves.contains(move);
+		}
+
+		@Override
+		public boolean possibleMovesContainsMovesContaining(Flower flower) {
+			return playerData.get(currentPlayer).legalMoves.containsMovesContaining(flower);
+		}
+
+		@Override
+		public Collection<Move> getPossibleFlowerMoves() {
+			return playerData.get(currentPlayer).legalMoves.getFlowerMoves();
+		}
+
+		@Override
+		public Collection<Flower> getPossibleFlowers() {
+			return playerData.get(currentPlayer).legalMoves.getFlowers();
+		}
+
+		@Override
+		public Collection<Move> getPossibleMovesContaining(Flower flower) {
+			return playerData.get(currentPlayer).legalMoves.getMovesContaining(flower);
+		}
+
+		@Override
+		public Collection<Move> getPossibleDitchMoves() {
+			return playerData.get(currentPlayer).legalMoves.getDitchMoves();
 		}
 	}
 
