@@ -20,9 +20,8 @@ public class Triangle extends Polygon implements Cloneable {
 	private Point edge2 = null;
 	private Point edge3 = null;
 
-	private Color flowerColour = Color.GREEN;
-
 	private int size = -1;
+	private Color flowerColour;
 
 	/**
 	 * Konstruiert ein dreieckiges {@link Polygon}.
@@ -46,7 +45,8 @@ public class Triangle extends Polygon implements Cloneable {
 	 */
 	public Triangle(int x1, int y1,
 		            int tx1, int ty1,
-		            int size, boolean flipped) {
+		            int size, boolean flipped,
+	                Color currentColour) {
 		int sign = (flipped) ? -1 : 1;
 		int xDistance = (size / 2);
 		int yDistance = sign * ((int) (xDistance * squareRootThree));
@@ -74,6 +74,7 @@ public class Triangle extends Polygon implements Cloneable {
 			this.triangleEdge3 = new Position(tx1 + 1, ty1 - 1);
 		}
 		this.size = size;
+		this.flowerColour = currentColour;
 	}
 
 	/**

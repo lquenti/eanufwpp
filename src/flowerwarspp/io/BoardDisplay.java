@@ -48,24 +48,38 @@ public class BoardDisplay extends JPanel {
 			Triangle triangle = findTriangle(mouseEvent.getPoint());
 			if (this.firstClickedTriangle == null) {
 				this.firstClickedTriangle = triangle;
-				this.boardDisplay.getParent().repaint();
+				synchronized (this.moveAwaitLock) {
+					this.moveAwaitLock.notify();
+				}
 			} else {
+				// The user has actually clicked on a triangle
 				if (triangle != null) {
+					// If the user clicks on the same triangle again, deselect it.
 					if (this.firstClickedTriangle.samePlace(triangle)) {
-						this.firstClickedTriangle.setFlowerColour(Color.WHITE);
+						Color newColour = this.boardDisplay.getBackground();
+						this.firstClickedTriangle.setFlowerColour(newColour);
 						this.firstClickedTriangle = null;
+					// Otherwise, try and create a move out of it.
 					} else {
-						move = new Move(firstClickedTriangle.toFlower(), triangle.toFlower());
-						if (!boardDisplay.boardViewer.possibleMovesContains(move)) {
+						Flower firstFlower = firstClickedTriangle.toFlower();
+						Flower secondFlower = triangle.toFlower();
+						if (!this.boardDisplay.combinableFlowers.contains(secondFlower)) {
 							move = null;
 						}
+						else {
+							this.move = new Move(firstFlower, secondFlower);
+						}
+
 						this.firstClickedTriangle = null;
+						// The main thread is waiting for a reaction from here, so unlock this
 						synchronized (this.moveAwaitLock) {
 							this.moveAwaitLock.notify();
 						}
 					}
 				}
 			}
+
+			this.boardDisplay.getParent().repaint();
 		}
 
 		/**
@@ -108,9 +122,9 @@ public class BoardDisplay extends JPanel {
 	        BasicStroke.CAP_ROUND,
 	        BasicStroke.JOIN_ROUND);
 
-	private static final Color triangleBorderColour = Color.BLACK;
 	private static final Color triangleDefaultColour = Color.GREEN;
 	private static final Color triangleHighlightColour = Color.MAGENTA;
+	private static final Color combinableTriangleColour = Color.GREEN;
 	private static final Color redColour = Color.RED;
 	private static final Color blueColour = Color.CYAN;
 
@@ -128,6 +142,7 @@ public class BoardDisplay extends JPanel {
 
 	private Collection<Flower> redFlowers = Collections.EMPTY_LIST;
 	private Collection<Flower> blueFlowers = Collections.EMPTY_LIST;
+	private Collection<Flower> combinableFlowers = Collections.EMPTY_LIST;
 	private int boardSize;
 
 	/**
@@ -154,10 +169,6 @@ public class BoardDisplay extends JPanel {
 		super.paintComponent(g);
 
 		for (Triangle triangle : this.mapTriangles) {
-			if (triangle.samePlace(this.boardDisplayMouseHandler.firstClickedTriangle)) {
-				triangle.setFlowerColour(triangleHighlightColour);
-			}
-
 			triangle.drawTriangle(g);
 		}
 
@@ -178,6 +189,18 @@ public class BoardDisplay extends JPanel {
 
 		for (Triangle t : this.mapTriangles) {
 			t.setFlowerColour(triangleDefaultColour);
+			if (t.samePlace(this.boardDisplayMouseHandler.firstClickedTriangle)) {
+				t.setFlowerColour(triangleHighlightColour);
+			} else {
+				Optional<Flower> maybeFlower = this.combinableFlowers.stream()
+					.filter(f -> t.samePlace(f))
+					.findAny();
+
+				if (maybeFlower.isPresent())
+					t.setFlowerColour(combinableTriangleColour);
+				else
+					t.setFlowerColour(this.getBackground());
+			}
 		}
 
 		setTriangleColours(this.redFlowers, redColour);
@@ -231,7 +254,7 @@ public class BoardDisplay extends JPanel {
 		    displaySize.width / 2, 10,
 		    1, (this.boardSize + 1),
 		    triangleHeight,
-		    false);
+		    false, this.getBackground());
 
 		this.mapTriangles.add(topTriangle);
 
@@ -254,7 +277,7 @@ public class BoardDisplay extends JPanel {
 			    currentTriangle.getLeftEdge().y,
 			    currentTriangle.getLeftBoardPosition().getColumn() - 1,
 			    currentTriangle.getLeftBoardPosition().getRow(),
-			    topTriangle.getSize(), false);
+			    topTriangle.getSize(), false, this.getBackground());
 
 			this.mapTriangles.add(currentTriangle);
 
@@ -283,7 +306,7 @@ public class BoardDisplay extends JPanel {
 			    newTopPoint.x, newTopPoint.y,
 			    newTopPosition.getColumn() + 1, newTopPosition.getRow(),
 			    leftTriangle.getSize(),
-			    flipped);
+			    flipped, this.getBackground());
 
 			this.mapTriangles.add(newTriangle);
 
@@ -308,11 +331,21 @@ public class BoardDisplay extends JPanel {
 			synchronized (this.boardDisplayMouseHandler.moveAwaitLock) {
 				this.boardDisplayMouseHandler.moveAwaitLock.wait();
 				if (this.boardDisplayMouseHandler.move == null) {
+					Triangle triangle = this.boardDisplayMouseHandler.firstClickedTriangle;
+					if (triangle != null) {
+						Flower flower = triangle.toFlower();
+						try {
+							this.combinableFlowers = this.boardViewer.getFlowersCombinableWith(flower);
+						} catch (NullPointerException e) {
+							// FIXME: ¿?
+						}
+					}
 					this.boardDisplayMouseHandler.moveAwaitLock.notifyAll();
 				} else {
 					Move move = this.boardDisplayMouseHandler.move;
 					this.boardDisplayMouseHandler.reset();
 					this.boardDisplayMouseHandler.isRequesting = false;
+					this.combinableFlowers = Collections.EMPTY_LIST;
 					return move;
 				}
 			}
