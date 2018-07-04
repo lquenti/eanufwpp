@@ -91,4 +91,6 @@ public interface Viewer {
     Collection<Move> getPossibleMovesContaining(Flower flower);
 
     Collection<Move> getPossibleDitchMoves();
+
+	PlayerColor getFlowerColor(Flower flower);
 }

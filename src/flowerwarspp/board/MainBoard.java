@@ -506,6 +506,11 @@ public class MainBoard implements Board {
 		public Collection<Move> getPossibleDitchMoves() {
 			return playerData.get(currentPlayer).legalMoves.getDitchMoves();
 		}
+
+		@Override
+		public PlayerColor getFlowerColor(Flower flower) {
+			return MainBoard.this.getFlowerColor(flower);
+		}
 	}
 
 	public static void main(String[] args) {
