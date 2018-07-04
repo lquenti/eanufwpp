@@ -25,6 +25,7 @@
     <target name="compile" depends="init" description="compile the source code">
         <javac srcdir="${srcdir}" destdir="${builddir}" debug="true" includeantruntime="false">
             <classpath refid="classpath"/>
+            <compilerarg value="-Xlint:unchecked"/>
         </javac>
     </target>
 
