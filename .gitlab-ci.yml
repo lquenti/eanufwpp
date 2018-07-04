@@ -1,0 +1,47 @@
+image: dockerschneider/java-jdk-ant
+
+stages:
+    - build
+    - test
+    - dist
+
+compile:
+    stage: build
+    script:
+        - ant
+    artifacts:
+        paths:
+            - build
+        expire_in: 5 min
+    only:
+        - master
+
+doc:
+    stage: build
+    script:
+        - ant doc
+    artifacts:
+        paths:
+            - doc
+    only:
+        - master
+    allow_failure: yes
+
+test:
+    stage: test
+    script:
+        - ant test
+    only:
+        - master
+    allow_failure: yes
+    dependencies:
+        - compile
+
+dist:
+    stage: dist
+    script: ant dist
+    artifacts:
+        paths:
+            - dist
+    only:
+        - master

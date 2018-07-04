@@ -1,22 +1,61 @@
-<project name="example" default="all" basedir=".">
-	<property name="srcdir" location="src" />
-	<property name="builddir" location="build" />
-	<property name="docdir" location="doc" />
-	<property name="classpath" location="FlowerWarsPP-Display.jar:FlowerWarsPP-Tester.jar" />
+<project name="eanufwpp" default="compile" basedir=".">
+    <description>
+        Implementierung des APP-Projekts FlowerWarsPP der Gruppe 'eanufwpp'.
+    </description>
+    <!-- global properties -->
+    <property name="srcdir" location="src"/>
+    <property name="builddir" location="build"/>
+    <property name="distdir" location="dist"/>
+    <property name="docdir" location="doc"/>
+    <path id="classpath">
+        <fileset dir=".">
+            <include name="FlowerWarsPP-*.jar"/>
+        </fileset>
+    </path>
+    <target name="init" depends="clean">
+        <!-- create the time stamp -->
+        <tstamp/>
 
-	<target name="init" depends="clean">
-		<mkdir dir="${builddir}" />
-		<mkdir dir="${docdir}" />
-	</target>
-	<target name="compile" depends="init">
-		<javac srcdir="${srcdir}" classpath="${classpath}" destdir="${builddir}" debug="true" includeantruntime="false"/>
-	</target>
-	<target name="clean">
-		<delete dir="${builddir}" />
-		<delete dir="${docdir}" />
-	</target>
-	<target name="javadoc">
-		<javadoc sourcepath="${srcdir}" classpath="${classpath}" destdir="${docdir}" charset="utf-8" private="yes" />
-	</target>
-	<target name="all" depends="compile, javadoc" />
+        <!-- create the necessary directories -->
+        <mkdir dir="${builddir}"/>
+        <mkdir dir="${distdir}"/>
+        <mkdir dir="${docdir}"/>
+    </target>
+
+    <target name="compile" depends="init" description="compile the source code">
+        <javac srcdir="${srcdir}" destdir="${builddir}" debug="true" includeantruntime="false">
+            <classpath refid="classpath"/>
+        </javac>
+    </target>
+
+    <target name="dist" depends="compile" description="generate the distributed jar">
+        <jar jarfile="${distdir}/eanufwpp-${DSTAMP}.jar" basedir="${builddir}">
+            <manifest>
+                <attribute name="Main-Class" value="flowerwarspp.Main"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="test" depends="compile">
+        <java classname="BoardTester" fork="true" failonerror="true">
+            <classpath>
+                <path refid="classpath"/>
+                <pathelement path="${builddir}"/>
+            </classpath>
+            <arg value="flowerwarspp.board.MainBoard"/>
+        </java>
+    </target>
+
+
+    <target name="clean" description="clean up, delete the output directories">
+        <delete dir="${builddir}"/>
+        <delete dir="${distdir}"/>
+        <delete dir="${docdir}"/>
+    </target>
+
+    <target name="doc">
+        <javadoc sourcepath="${srcdir}" destdir="${docdir}" encoding="UTF-8" charset="UTF-8" private="yes">
+            <classpath refid="classpath"/>
+        </javadoc>
+    </target>
 </project>
