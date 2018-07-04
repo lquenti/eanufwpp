@@ -192,19 +192,23 @@ public class BoardDisplay extends JPanel {
 			if (t.samePlace(this.boardDisplayMouseHandler.firstClickedTriangle)) {
 				t.setFlowerColour(triangleHighlightColour);
 			} else {
-				Optional<Flower> maybeFlower = this.combinableFlowers.stream()
-					.filter(f -> t.samePlace(f))
-					.findAny();
+				if (this.combinableFlowers != null) {
+					Optional<Flower> maybeFlower = this.combinableFlowers.stream()
+						.filter(f -> t.samePlace(f))
+						.findAny();
 
-				if (maybeFlower.isPresent())
-					t.setFlowerColour(combinableTriangleColour);
-				else
-					t.setFlowerColour(this.getBackground());
+					if (maybeFlower.isPresent())
+						t.setFlowerColour(combinableTriangleColour);
+					else
+						t.setFlowerColour(this.getBackground());
+				}
 			}
 		}
 
-		setTriangleColours(this.redFlowers, redColour);
-		setTriangleColours(this.blueFlowers, blueColour);
+		if (this.redFlowers != null)
+			setTriangleColours(this.redFlowers, redColour);
+		if (this.blueFlowers != null)
+			setTriangleColours(this.blueFlowers, blueColour);
 	}
 
 	/**
@@ -220,8 +224,8 @@ public class BoardDisplay extends JPanel {
 	private void setTriangleColours(Collection<Flower> flowers, Color color) {
 		for (Triangle triangle : this.mapTriangles) {
 			Flower flower = new Flower(triangle.getTopBoardPosition(),
-				triangle.getLeftBoardPosition(),
-				triangle.getRightBoardPosition());
+			    triangle.getLeftBoardPosition(),
+			    triangle.getRightBoardPosition());
 
 			if (flowers.contains(flower))
 				triangle.setFlowerColour(color);
