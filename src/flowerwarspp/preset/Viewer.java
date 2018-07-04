@@ -88,6 +88,8 @@ public interface Viewer {
 
     Collection<Flower> getPossibleFlowers();
 
+	Collection<Flower> getFlowersCombinableWith(Flower flower);
+
     Collection<Move> getPossibleMovesContaining(Flower flower);
 
     Collection<Move> getPossibleDitchMoves();

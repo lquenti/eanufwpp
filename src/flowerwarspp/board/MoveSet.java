@@ -6,7 +6,7 @@ import java.util.*;
 
 public class MoveSet extends AbstractSet<Move> {
 	private HashSet<Move> flowerMoves;
-	private HashMap<Flower, HashSet<Move>> flowerMap;
+	private HashMap<Flower, HashSet<Flower>> flowerMap;
 
 	private HashSet<Move> ditchMoves;
 
@@ -38,8 +38,9 @@ public class MoveSet extends AbstractSet<Move> {
 				Flower flowers[] = {e.getFirstFlower(), e.getSecondFlower()};
 				for (Flower flower : flowers) {
 					flowerMap.putIfAbsent(flower, new HashSet<>());
-					flowerMap.get(flower).add(e);
 				}
+				flowerMap.get(flowers[0]).add(flowers[1]);
+				flowerMap.get(flowers[1]).add(flowers[0]);
 				break;
 			case Ditch:
 				ditchMoves.add(e);
@@ -58,10 +59,10 @@ public class MoveSet extends AbstractSet<Move> {
 			case Flower:
 				flowerMoves.remove((Move)o);
 				Flower flowers[] = {((Move)o).getFirstFlower(), ((Move)o).getSecondFlower()};
+				flowerMap.get(flowers[0]).remove(flowers[1]);
+				flowerMap.get(flowers[1]).remove(flowers[0]);
 				for (Flower flower : flowers) {
-					HashSet<Move> flowerMoves = flowerMap.get(flower);
-					flowerMoves.remove(o);
-					if (flowerMoves.isEmpty()) {
+					if (flowerMap.get(flower).isEmpty()) {
 						flowerMap.remove(flower);
 					}
 				}
@@ -100,9 +101,17 @@ public class MoveSet extends AbstractSet<Move> {
 		return flowerMap.keySet();
 	}
 
+	public HashSet<Flower> getFlowersCombinableWith(Flower flower) {
+		return new HashSet<>(flowerMap.get(flower));
+	}
+
 	public HashSet<Move> getMovesContaining(Flower flower) {
 		if (flowerMap.containsKey(flower)) {
-			return new HashSet<>(flowerMap.get(flower));
+			HashSet<Move> result = new HashSet<>();
+			for (Flower secondFlower : flowerMap.get(flower)) {
+				result.add(new Move(flower, secondFlower));
+			}
+			return result;
 		}
 		return null;
 	}

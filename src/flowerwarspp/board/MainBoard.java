@@ -498,6 +498,11 @@ public class MainBoard implements Board {
 		}
 
 		@Override
+		public Collection<Flower> getFlowersCombinableWith(Flower flower) {
+			return playerData.get(currentPlayer).legalMoves.getFlowersCombinableWith(flower);
+		}
+
+		@Override
 		public Collection<Move> getPossibleMovesContaining(Flower flower) {
 			return playerData.get(currentPlayer).legalMoves.getMovesContaining(flower);
 		}
