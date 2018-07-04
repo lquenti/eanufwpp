@@ -15,7 +15,7 @@ public class SimpleAI extends BaseAI {
     /**
      * Default-Konstruktor, welcher dieses Objekt mit Standardwerten versieht.
      */
-    public SimpleAI () {
+    public SimpleAI() {
         super();
     }
 
@@ -41,17 +41,15 @@ public class SimpleAI extends BaseAI {
         final Collection<Flower> firstFlowerNeighbors = boardViewer.getDirectNeighbors(move.getFirstFlower());
         final Collection<Flower> secondFlowerNeighbors = boardViewer.getDirectNeighbors(move.getSecondFlower());
 
-        final Collection<Flower> playerFlowers = boardViewer.getFlowers(getPlayerColour());
-
         // Iterate through all the first flower's neighbours and calculate the score.
         for ( final Flower neighbor : firstFlowerNeighbors ) {
-            if ( playerFlowers.contains(neighbor) )
+            if ( boardViewer.getFlowerColor(neighbor) == getPlayerColour() )
                 n1++;
         }
 
         // Iterate through all the second flower's neighbours and calculate the score.
         for ( final Flower neighbor : secondFlowerNeighbors ) {
-            if ( playerFlowers.contains(neighbor) )
+            if ( boardViewer.getFlowerColor(neighbor) == getPlayerColour() )
                 n2++;
         }
 
