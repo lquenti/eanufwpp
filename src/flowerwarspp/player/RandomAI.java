@@ -31,7 +31,7 @@ public class RandomAI extends BasePlayer {
     /**
      * Default-Konstruktor, welcher dieses Objekt mit Standardwerten versieht.
      */
-    public RandomAI () {
+    public RandomAI() {
         super();
         flowerRNG = new Random();
     }
@@ -60,14 +60,11 @@ public class RandomAI extends BasePlayer {
     private Move getRandomPossibleMove() throws Exception {
         //TODO: Potentially filter for surrender moves, although just surrendering might be an available option to the AI.
 
-        // Get the Collection of possible moves for the current player.
-        final Collection<Move> possibleMoves = this.boardViewer.getPossibleMoves();
-
         // Get a random index in the Collection for selection.
-        final int randomIdx = flowerRNG.nextInt(possibleMoves.size());
+        final int randomIdx = flowerRNG.nextInt(this.boardViewer.getPossibleMoves().size());
 
         // Stream the Collection and skip the amount of elements indicated by randomIdx.
-        final Optional<Move> randomMove = possibleMoves.stream().skip(randomIdx).findFirst();
+        final Optional<Move> randomMove = this.boardViewer.getPossibleMoves().stream().skip(randomIdx).findFirst();
 
         // If there is an element at that index, all fine and dandy, otherwise throw an exception.
         if ( ! randomMove.isPresent() ) throw new Exception(exception_NoMove);
