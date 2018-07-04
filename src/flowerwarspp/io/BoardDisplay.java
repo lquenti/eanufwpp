@@ -126,8 +126,8 @@ public class BoardDisplay extends JPanel {
 	private Collection<Triangle> mapTriangles = new ArrayList<>();
 	private BoardDisplayMouseHandler boardDisplayMouseHandler = new BoardDisplayMouseHandler(this);
 
-	private Collection<Flower> redFlowers = Collections.EMPTY_LIST;
-	private Collection<Flower> blueFlowers = Collections.EMPTY_LIST;
+	private Collection<Flower> redFlowers;
+	private Collection<Flower> blueFlowers;
 	private int boardSize;
 
 	/**
