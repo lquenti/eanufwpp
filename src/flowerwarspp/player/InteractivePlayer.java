@@ -60,7 +60,7 @@ public class InteractivePlayer extends BasePlayer {
         if ( playerMove == null ) throw new Exception(exception_NoMove);
 
         // Make sure the move is actually valid (i.e. it's in the Collection of possible moves)
-        if ( ! this.boardViewer.getPossibleMoves().contains(playerMove) ) throw new Exception(exception_InvalidMove);
+        if ( ! this.boardViewer.possibleMovesContains(playerMove) ) throw new Exception(exception_InvalidMove);
 
         return playerMove;
     }

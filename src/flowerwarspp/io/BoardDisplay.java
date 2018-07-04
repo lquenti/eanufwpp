@@ -43,7 +43,6 @@ public class BoardDisplay extends JPanel implements ActionListener {
 		@Override
 		public void mouseClicked(MouseEvent mouseEvent) {
 			Triangle triangle = findTriangle(mouseEvent.getPoint());
-			Collection<Move> moves = this.boardDisplay.boardViewer.getPossibleMoves();
 			if (this.firstClickedTriangle == null) {
 				this.firstClickedTriangle = triangle;
 			} else {
@@ -51,7 +50,10 @@ public class BoardDisplay extends JPanel implements ActionListener {
 					if (this.firstClickedTriangle.samePlace(triangle)) {
 						this.firstClickedTriangle = null;
 					} else {
-						this.move = this.getFlowerMove(this.firstClickedTriangle, triangle, moves);
+						move = new Move(firstClickedTriangle.toFlower(), triangle.toFlower());
+						if (!boardDisplay.boardViewer.possibleMovesContains(move)) {
+							move = null;
+						}
 						this.firstClickedTriangle = null;
 						synchronized (this.moveAwaitLock) {
 							this.moveAwaitLock.notifyAll();
@@ -75,36 +77,6 @@ public class BoardDisplay extends JPanel implements ActionListener {
 			for (Triangle t : this.boardDisplay.mapTriangles) {
 				if (t.contains(point))
 					return t;
-			}
-
-			return null;
-		}
-
-		/**
-		 * Findet einen {@link Move} in der Liste möglicher Moves, der die gewählten
-		 * Blumen enthält.
-		 *
-		 * @param firstFlowerTriangle
-		 * Die erste Blume. Die Reihenfolge der Blumen ist in dieser Methode unwichtig.
-		 *
-		 * @param secondFlowerTriangle
-		 * Die zweite Blume. Die Reihenfolge der Blumen ist in dieser Methode unwichtig.
-		 *
-		 * @param possibleMoves
-		 * Eine {@link Collection} möglicher {@link Move}s.
-		 *
-		 * @return
-		 */
-		private Move getFlowerMove(Triangle firstFlowerTriangle,
-		                           Triangle secondFlowerTriangle,
-		                           Collection<Move> possibleMoves) {
-			Flower firstFlower = firstFlowerTriangle.toFlower();
-			Flower secondFlower = secondFlowerTriangle.toFlower();
-			Move compareMove = new Move(firstFlower, secondFlower);
-
-			for (Move move : possibleMoves) {
-				if (move.equals(compareMove))
-					return move;
 			}
 
 			return null;
