@@ -1,14 +1,9 @@
 package flowerwarspp.io;
 
-import flowerwarspp.board.MainBoard;
 import flowerwarspp.preset.*;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
-import java.awt.*;
-import java.util.Collection;
-import java.util.Random;
-import java.util.stream.Collectors;
 
 public class BoardFrame extends JFrame implements Requestable, Output {
 	private Viewer viewer;
@@ -25,7 +20,6 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 
 		this.add(this.boardDisplay);
 		this.setViewer(this.viewer);
-//		this.addComponentListener((ComponentResizeListener) e -> this.boardDisplay.refresh());
 
 		// TODO: Make this obsolete.
 		this.boardDisplay.setBorder(new BevelBorder(BevelBorder.LOWERED));
@@ -37,7 +31,6 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 
 	public void setViewer(Viewer viewer) {
 		this.boardDisplay.setBoardViewer(viewer);
-		this.boardDisplay.updateSize();
 		this.repaint();
 	}
 
@@ -52,5 +45,6 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 	@Override
 	public void refresh() {
 		this.boardDisplay.refresh();
+		this.repaint();
 	}
 }

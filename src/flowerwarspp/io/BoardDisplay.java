@@ -5,10 +5,9 @@ import flowerwarspp.preset.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 
-public class BoardDisplay extends JPanel implements ActionListener {
+public class BoardDisplay extends JPanel {
 	/**
 	 * Eine private Klasse, die die Mausaktionen für das {@link BoardDisplay} verarbeitet.
 	 */
@@ -17,6 +16,7 @@ public class BoardDisplay extends JPanel implements ActionListener {
 		 * Das {@link BoardDisplay}, zu dem dieser {@link MouseAdapter} gehört.
 		 */
 		private BoardDisplay boardDisplay = null;
+		private boolean isRequesting = false;
 
 		private final Object moveAwaitLock = new Object();
 		/**
@@ -42,12 +42,17 @@ public class BoardDisplay extends JPanel implements ActionListener {
 		 */
 		@Override
 		public void mouseClicked(MouseEvent mouseEvent) {
+			if (!this.isRequesting)
+				return;
+
 			Triangle triangle = findTriangle(mouseEvent.getPoint());
 			if (this.firstClickedTriangle == null) {
 				this.firstClickedTriangle = triangle;
+				this.boardDisplay.getParent().repaint();
 			} else {
 				if (triangle != null) {
 					if (this.firstClickedTriangle.samePlace(triangle)) {
+						this.firstClickedTriangle.setFlowerColour(Color.WHITE);
 						this.firstClickedTriangle = null;
 					} else {
 						move = new Move(firstClickedTriangle.toFlower(), triangle.toFlower());
@@ -56,7 +61,7 @@ public class BoardDisplay extends JPanel implements ActionListener {
 						}
 						this.firstClickedTriangle = null;
 						synchronized (this.moveAwaitLock) {
-							this.moveAwaitLock.notifyAll();
+							this.moveAwaitLock.notify();
 						}
 					}
 				}
@@ -115,11 +120,15 @@ public class BoardDisplay extends JPanel implements ActionListener {
 	 */
 	private static final int componentSizePercentage = 90;
 
+	private final Object boardLock = new Object();
 	private Viewer boardViewer = null;
 	private Dimension lastDrawingDimension = new Dimension(500, 500);
 	private Collection<Triangle> mapTriangles = new ArrayList<>();
 	private BoardDisplayMouseHandler boardDisplayMouseHandler = new BoardDisplayMouseHandler(this);
-	private Timer renderTimer = new Timer(50, this);
+
+	private Collection<Flower> redFlowers = Collections.EMPTY_LIST;
+	private Collection<Flower> blueFlowers = Collections.EMPTY_LIST;
+	private int boardSize;
 
 	/**
 	 * Der {@link Viewer}, mit dem das Spielbrett betrachtet wird.
@@ -131,39 +140,22 @@ public class BoardDisplay extends JPanel implements ActionListener {
 		this.setPreferredSize(this.lastDrawingDimension);
 		this.setSize(this.lastDrawingDimension);
 		this.boardViewer = boardViewer;
+		this.boardSize = this.boardViewer.getSize();
 		this.boardDisplayMouseHandler.reset();
 		for (MouseListener mouseListener : this.getMouseListeners())
 			this.removeMouseListener(mouseListener);
 		this.addMouseListener(this.boardDisplayMouseHandler);
 		this.resizeDisplay();
-		this.renderTimer.restart();
-		this.refresh();
-	}
-
-	public void update(Move move) {
-
-	}
-
-	public void showStatus(Status status) {
-
 	}
 
 	@Override
-	public void paintComponent(Graphics g) {
+	public synchronized void paintComponent(Graphics g) {
+		this.updateSize();
 		super.paintComponent(g);
 
-		if (this.boardViewer == null)
-			return;
-
-		Collection<Flower> redFlowers = this.boardViewer.getFlowers(PlayerColor.Red);
-		Collection<Flower> blueFlowers = this.boardViewer.getFlowers(PlayerColor.Blue);
 		for (Triangle triangle : this.mapTriangles) {
 			if (triangle.samePlace(this.boardDisplayMouseHandler.firstClickedTriangle)) {
-				Color triangleColour = triangle.getFlowerColour();
-				Color newColour = new Color(0xFF - triangleColour.getRed(),
-					0xFF - triangleColour.getGreen(),
-					0xFF - triangleColour.getBlue());
-				triangle.setFlowerColour(newColour);
+				triangle.setFlowerColour(triangleHighlightColour);
 			}
 
 			triangle.drawTriangle(g);
@@ -173,32 +165,23 @@ public class BoardDisplay extends JPanel implements ActionListener {
 	}
 
 	/**
-	 * Diese Methode berechnet gegebenenfalls die Dreiecke neu {@link #updateSize()},
-	 * und scheduledtdtddttt ein Redrawing.
-	 *
-	 * @param actionEvent
-	 * Ignoriert.
-	 */
-	public void actionPerformed(ActionEvent actionEvent) {
-			this.updateSize();
-			this.repaint();
-	}
-
-	/**
 	 * Setzt die Größe dieses Elements auf
 	 * einen festgelegten Anteil der Größe des Elternelements.
 	 */
-	public void updateSize() {
+	private void updateSize() {
 		Dimension newSize = new Dimension(
-		    this.getParent().getWidth() * componentSizePercentage / 100,
-		    this.getParent().getHeight() * componentSizePercentage / 100);
+			this.getParent().getWidth() * componentSizePercentage / 100,
+			this.getParent().getHeight() * componentSizePercentage / 100);
 		this.setSize(newSize);
 		this.setPreferredSize(newSize);
 		this.resizeDisplay();
 
-		this.mapTriangles.stream().forEach(t -> t.setFlowerColour(triangleDefaultColour));
-		setTriangleColours(this.boardViewer.getFlowers(PlayerColor.Red), redColour);
-		setTriangleColours(this.boardViewer.getFlowers(PlayerColor.Blue), blueColour);
+		for (Triangle t : this.mapTriangles) {
+			t.setFlowerColour(triangleDefaultColour);
+		}
+
+		setTriangleColours(this.redFlowers, redColour);
+		setTriangleColours(this.blueFlowers, blueColour);
 	}
 
 	/**
@@ -214,8 +197,8 @@ public class BoardDisplay extends JPanel implements ActionListener {
 	private void setTriangleColours(Collection<Flower> flowers, Color color) {
 		for (Triangle triangle : this.mapTriangles) {
 			Flower flower = new Flower(triangle.getTopBoardPosition(),
-			                           triangle.getLeftBoardPosition(),
-			                           triangle.getRightBoardPosition());
+				triangle.getLeftBoardPosition(),
+				triangle.getRightBoardPosition());
 
 			if (flowers.contains(flower))
 				triangle.setFlowerColour(color);
@@ -226,7 +209,7 @@ public class BoardDisplay extends JPanel implements ActionListener {
 	 * Handhabt eventuelle Größenänderungen des Displays und
 	 * skaliert das gezeichnete Spielfeld dementsprechend.
 	 */
-	public void resizeDisplay() {
+	private void resizeDisplay() {
 		this.mapTriangles.clear();
 
 		Dimension displaySize = this.getSize();
@@ -236,19 +219,20 @@ public class BoardDisplay extends JPanel implements ActionListener {
 		 * If one side is 0px wide, skip to the end.
 		 * Nothing will be visible anyway.
 		 */
-		if ((minimumSize == 0) || (this.boardViewer == null))
+		if (minimumSize == 0)
 			return;
 
 		// The triangles may not be larger than a fraction percentage of the shortest side.
-		int triangleHeight = minimumSize / (this.boardViewer.getSize() + 1);
+		int triangleHeight = minimumSize / (this.boardSize + 1);
 
 		// Create the triangle at the very top of the board.
 		// It has the coordinates (1, board size + 1)
 		Triangle topTriangle = new Triangle(
 		    displaySize.width / 2, 10,
-		    1, (this.boardViewer.getSize() + 1),
+		    1, (this.boardSize + 1),
 		    triangleHeight,
 		    false);
+
 		this.mapTriangles.add(topTriangle);
 
 		recalculateTriangles(topTriangle);
@@ -261,7 +245,7 @@ public class BoardDisplay extends JPanel implements ActionListener {
 	 * Das oberste Dreieck des Zeichenbretts.
 	 */
 	private void recalculateTriangles(Triangle topTriangle) {
-		int maximumRowCount = (this.boardViewer.getSize() * 2) - 1;
+		int maximumRowCount = (this.boardSize * 2) - 1;
 		Triangle currentTriangle = topTriangle;
 
 		for (int triangles = 2; triangles < maximumRowCount; triangles += 2) {
@@ -273,6 +257,7 @@ public class BoardDisplay extends JPanel implements ActionListener {
 			    topTriangle.getSize(), false);
 
 			this.mapTriangles.add(currentTriangle);
+
 			fillRow(currentTriangle, triangles);
 		}
 	}
@@ -301,6 +286,7 @@ public class BoardDisplay extends JPanel implements ActionListener {
 			    flipped);
 
 			this.mapTriangles.add(newTriangle);
+
 			flipped = !flipped;
 			newTopPosition = newTriangle.getRightBoardPosition();
 			newTopPoint = newTriangle.getRightEdge();
@@ -315,6 +301,7 @@ public class BoardDisplay extends JPanel implements ActionListener {
 	 */
 	public Move awaitMove() throws InterruptedException {
 		this.boardDisplayMouseHandler.reset();
+		this.boardDisplayMouseHandler.isRequesting = true;
 
 		// NOTE: We need Thread.sleep to avoid 100% CPU usage.
 		while (true) {
@@ -325,13 +312,15 @@ public class BoardDisplay extends JPanel implements ActionListener {
 				} else {
 					Move move = this.boardDisplayMouseHandler.move;
 					this.boardDisplayMouseHandler.reset();
+					this.boardDisplayMouseHandler.isRequesting = false;
 					return move;
 				}
 			}
 		}
 	}
 
-	public void refresh() {
-		this.updateSize();
+	public synchronized void refresh() {
+		this.redFlowers = this.boardViewer.getFlowers(PlayerColor.Red);
+		this.blueFlowers = this.boardViewer.getFlowers(PlayerColor.Blue);
 	}
 }
