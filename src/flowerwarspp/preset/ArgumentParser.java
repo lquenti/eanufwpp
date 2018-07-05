@@ -247,5 +247,7 @@ public class ArgumentParser {
     //  Hier koennen weitere Schalter und Einstellungen ergaenzt werden...
     // ********************************************************************
 
-
+    public PlayerType getOffer() throws ArgumentParserException {
+        return parsePlayerType((String) getSetting("offer"));
+    }
 }
