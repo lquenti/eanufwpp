@@ -14,8 +14,8 @@ import java.rmi.server.UnicastRemoteObject;
  * @author Michael Merse
  */
 public class RemotePlayer
-        extends UnicastRemoteObject
-        implements Player {
+		extends UnicastRemoteObject
+		implements Player {
 
     private Output output;
     private Board board;
@@ -46,13 +46,13 @@ public class RemotePlayer
         return result;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void confirm( Status status ) throws Exception, RemoteException {
-        this.player.confirm(status);
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void confirm( Status status ) throws Exception, RemoteException {
+		this.player.confirm(status);
+	}
 
     /**
      * {@inheritDoc}
