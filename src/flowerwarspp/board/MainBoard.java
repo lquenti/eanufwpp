@@ -255,15 +255,14 @@ public class MainBoard implements Board {
 		for (int i = 0; i < 3; i++) {
 			try {
 				Position third = new Position(
-						nodes[i % 3].getColumn() + nodes[(i + 1) % 3].getColumn() - nodes[(i + 2) % 3].getColumn(),
-						nodes[i % 3].getRow() + nodes[(i + 1) % 3].getRow() - nodes[(i + 2) % 3].getRow()
+					nodes[i % 3].getColumn() + nodes[(i + 1) % 3].getColumn() - nodes[(i + 2) % 3].getColumn(),
+					nodes[i % 3].getRow() + nodes[(i + 1) % 3].getRow() - nodes[(i + 2) % 3].getRow()
 				);
 				Flower neighbor = new Flower(nodes[i % 3], nodes[(i + 1) % 3], third);
 				if (isOnBoard(neighbor)) {
 					result.add(neighbor);
 				}
-			} catch (IllegalArgumentException e) {
-			}
+			} catch (IllegalArgumentException e) {}
 		}
 		return result;
 	}
@@ -276,8 +275,8 @@ public class MainBoard implements Board {
 		for (int i = 0; i <= 9; i++) {
 			try {
 				Position point = new Position(
-						nodes[i / 3 % 3].getColumn() + nodes[(i + 1) / 3 % 3].getColumn() - nodes[((i + 2) / 3 + 1) % 3].getColumn(),
-						nodes[i / 3 % 3].getRow() + nodes[(i + 1) / 3 % 3].getRow() - nodes[((i + 2) / 3 + 1) % 3].getRow()
+					nodes[i / 3 % 3].getColumn() + nodes[(i + 1) / 3 % 3].getColumn() - nodes[((i + 2) / 3 + 1) % 3].getColumn(),
+					nodes[i / 3 % 3].getRow() + nodes[(i + 1) / 3 % 3].getRow() - nodes[((i + 2) / 3 + 1) % 3].getRow()
 				);
 				if (lastPoint != null) {
 					Flower neighbor = new Flower(nodes[i / 3 % 3], lastPoint, point);
@@ -314,6 +313,33 @@ public class MainBoard implements Board {
 				}
 			}
 		}
+		return result;
+	}
+
+	// TODO: Refactor (was eigentlich für alles gilt)
+	private LinkedList<Flower> getDirectNeighbors(final Ditch ditch) {
+		LinkedList<Flower> result = new LinkedList<>();
+		Position[] nodes = {ditch.getFirst(), ditch.getSecond()};
+		try {
+			Position third = new Position(
+				nodes[1].getColumn() + nodes[1].getRow() - nodes[0].getRow(),
+				nodes[0].getRow() - nodes[1].getColumn() + nodes[0].getColumn()
+				);
+			Flower neighbor = new Flower(nodes[0], nodes[1], third);
+			if (isOnBoard(neighbor)) {
+				result.add(neighbor);
+			}
+		} catch (IllegalArgumentException e) {}
+		try {
+			Position third = new Position(
+				nodes[0].getColumn() - nodes[1].getRow() + nodes[0].getRow(),
+				nodes[1].getRow() + nodes[1].getColumn() - nodes[0].getColumn()
+				);
+			Flower neighbor = new Flower(nodes[0], nodes[1], third);
+			if (isOnBoard(neighbor)) {
+				result.add(neighbor);
+			}
+		} catch (IllegalArgumentException e) {}
 		return result;
 	}
 
