@@ -23,6 +23,10 @@ class PlayerData {
 	 * Die legalen Züge, die der Spieler noch machen kann.
 	 */
 	MoveSet legalMoves = new MoveSet();
+	/**
+	 * Der aktuelle Punktestand
+	 */
+	int currentScore = 0;
 }
 
 /**
@@ -113,14 +117,13 @@ public class MainBoard implements Board {
 	 */
 	@Override
 	public void make(final Move move) throws IllegalStateException {
+		// TODO: Score aktualisieren
 		if (currentStatus != Status.Ok) {
 			throw new IllegalStateException("Das Spielbrett kann keine Züge mehr annehmen!");
 		}
 		if (!playerData.get(currentPlayer).legalMoves.contains(move)) {
 			currentStatus = Status.Illegal;
 		}
-		// Ist es best practise nicht null zu checken weil es literally unmoeglich ist?
-		// (Falls es nicht so ist Kommentar einfach removen)
 		switch (move.getType()) {
 			case Ditch:
 				playerData.get(currentPlayer).ditches.add(move.getDitch());
@@ -132,10 +135,11 @@ public class MainBoard implements Board {
 				updateValidMoves(new Flower[]{move.getFirstFlower(), move.getSecondFlower()});
 				break;
 			case End:
-				// TODO
+				int r = playerData.get(PlayerColor.Red).currentScore, b = playerData.get(PlayerColor.Blue).currentScore;
+				currentStatus = r > b ? Status.RedWin : r < b ? Status.BlueWin : Status.Draw;
 				return;
 			case Surrender:
-				// TODO
+				currentStatus = (currentPlayer == PlayerColor.Red) ? Status.BlueWin : Status.RedWin;
 				return;
 		}
 		currentPlayer = oppositePlayer;
