@@ -255,6 +255,18 @@ public class Log {
 	}
 
 	/**
+	 * Statische Methode zum loggen eines Eintrages, ohne das jeweils die Methode über {@link #getInstance()}
+	 * aufgerufen werden muss.
+	 *
+	 * @param level   Der Log-Level der Nachricht
+	 * @param module  Das Modul aus welchem die Nachricht gesendet worden ist
+	 * @param message Die Nachricht des Log-Eintrags
+	 */
+	public static void log0( LogLevel level, LogModule module, String message ) {
+		Log.getInstance().log(level, module, message);
+	}
+
+	/**
 	 * Gibt die {@link String}-Repräsentation eines gegebenen {@link LogModule} zurück.
 	 *
 	 * @param module Das {@link LogModule} dessen {@link String}-Repräsentation ausgegeben werden soll
