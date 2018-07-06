@@ -137,6 +137,7 @@ public class BoardDisplay extends JPanel {
 	private Viewer boardViewer = null;
 	private Collection<Triangle> mapTriangles = new ArrayList<>();
 	private Collection<Edge> mapEdges = new ArrayList<>();
+	private Collection<Dot> mapDots = new ArrayList<>();
 	private BoardDisplayMouseHandler boardDisplayMouseHandler = new BoardDisplayMouseHandler(this);
 
 	// Cached information fresh (or stale) from the viewer
@@ -144,6 +145,11 @@ public class BoardDisplay extends JPanel {
 	private Collection<Flower> blueFlowers;
 	private Collection<Flower> combinableFlowers;
 	private int boardSize;
+
+	public BoardDisplay() {
+		Font font = this.getFont().deriveFont(10F);
+		this.setFont(font);
+	}
 
 	/**
 	 * Der {@link Viewer}, mit dem das Spielbrett betrachtet wird.
@@ -154,8 +160,10 @@ public class BoardDisplay extends JPanel {
 	public void setBoardViewer(Viewer boardViewer) {
 		this.boardViewer = boardViewer;
 		this.boardSize = this.boardViewer.getSize();
+		// NOTE: It is very very important that the Triangles be created before the ditches and dots
 		this.createTriangles();
 		this.createDitches();
+		this.createDots();
 		this.boardDisplayMouseHandler.reset();
 		for (MouseListener mouseListener : this.getMouseListeners())
 			this.removeMouseListener(mouseListener);
@@ -170,6 +178,7 @@ public class BoardDisplay extends JPanel {
 
 		this.mapTriangles.forEach(t -> t.drawPolygon(g));
 		this.mapEdges.forEach(e -> e.drawPolygon(g));
+		this.mapDots.forEach(d -> d.drawPolygon(g));
 	}
 
 	/**
@@ -236,6 +245,7 @@ public class BoardDisplay extends JPanel {
 		drawBegin.y = sideLength * this.boardSize;
 		this.mapTriangles.forEach(t -> t.recalcPoints(sideLength, drawBegin));
 		this.mapEdges.forEach(e -> e.recalcPoints(sideLength, drawBegin));
+		this.mapDots.forEach(e -> e.recalcPoints(sideLength, drawBegin));
 	}
 
 	/**
@@ -315,6 +325,20 @@ public class BoardDisplay extends JPanel {
 				this.mapEdges.add(leftDitch);
 				this.mapEdges.add(rightDitch);
 				this.mapEdges.add(bottomDitch);
+			}
+		}
+	}
+
+	private void createDots() {
+		for (Triangle t : this.mapTriangles) {
+			if (!t.isFlipped()) {
+				Dot leftDot = new Dot(t.getLeftBoardPosition());
+				Dot topDot = new Dot(t.getTopBoardPosition());
+				Dot rightDot = new Dot(t.getRightBoardPosition());
+
+				this.mapDots.add(leftDot);
+				this.mapDots.add(topDot);
+				this.mapDots.add(rightDot);
 			}
 		}
 	}

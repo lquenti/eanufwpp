@@ -87,22 +87,6 @@ public class Triangle extends BoardPolygon {
 	}
 
 	/**
-	 * Zeichnet dieses Dreieck und gegebenenfalls andere Informationen über
-	 * die Blume an dieser Stelle.
-	 *
-	 * @param graphics
-	 * Das {@link Graphics}-Element auf das die Blume, welche dieses Dreieck
-	 * repräsentiert, gezeichnet werden soll.
-	 */
-	@Override
-	public void drawPolygon(Graphics graphics)
-	{
-		super.drawPolygon(graphics);
-		String text = this.triangleEdge2.getColumn() + ", " + this.triangleEdge2.getRow();
-		graphics.drawString(text, this.edge2.x, this.edge2.y);
-	}
-
-	/**
 	 * Ein Getter für die Umgedrehtheit dieses {@link Triangle}s.
 	 *
 	 * @return

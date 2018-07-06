@@ -7,7 +7,8 @@ import java.awt.*;
 
 public class Edge extends BoardPolygon {
 
-	private static final Color defaultDitchColor = new Color(0x88, 0x55, 0x22);
+	private static final Color defaultDitchColor = Color.BLACK;
+	private static final int divisionFactor = 20;
 
 	/**
 	 * Die "erste" Position (siehe {@link Position#compareTo(Position)}).
@@ -57,20 +58,28 @@ public class Edge extends BoardPolygon {
 		this.reset();
 
 		this.edge1 = positionToPoint(this.position1, triangleSideLength, relativeStart);
-		this.edge1.x += 2;
-		this.edge1.y += 2;
-
 		this.edge2 = positionToPoint(this.position1, triangleSideLength, relativeStart);
-		this.edge2.x -= 2;
-		this.edge2.y -= 2;
-
 		this.edge3 = positionToPoint(this.position2, triangleSideLength, relativeStart);
-		this.edge3.x -= 2;
-		this.edge3.y -= 2;
-
 		this.edge4 = positionToPoint(this.position2, triangleSideLength, relativeStart);
-		this.edge4.x += 2;
-		this.edge4.y += 2;
+
+		// Make a vector from edge1 to edge2, it's easy to find a perpendicular vector for that.
+		Point vector = new Point(this.edge1);
+		vector.x -= this.edge3.x;
+		vector.y -= this.edge3.y;
+
+		Point perpendicularVector = new Point(vector.y, -vector.x);
+		perpendicularVector.x /= divisionFactor;
+		perpendicularVector.y /= divisionFactor;
+
+		this.edge1.x += perpendicularVector.x;
+		this.edge1.y += perpendicularVector.y;
+		this.edge2.x -= perpendicularVector.x;
+		this.edge2.y -= perpendicularVector.y;
+
+		this.edge3.x -= perpendicularVector.x;
+		this.edge3.y -= perpendicularVector.y;
+		this.edge4.x += perpendicularVector.x;
+		this.edge4.y += perpendicularVector.y;
 
 		this.addPoint(this.edge1.x, this.edge1.y);
 		this.addPoint(this.edge2.x, this.edge2.y);

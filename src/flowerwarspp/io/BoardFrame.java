@@ -25,9 +25,6 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 
 		this.add(this.boardDisplay);
 
-		// TODO: Make this obsolete.
-		this.boardDisplay.setBorder(new BevelBorder(BevelBorder.LOWERED));
-
 		this.invalidate();
 		this.repaint();
 		this.setVisible(true);

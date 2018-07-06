@@ -58,13 +58,33 @@ public abstract class BoardPolygon extends Polygon {
 	}
 
 	/**
+	 * Getter für die Farbe, mit der der Umriss dieses {@link Polygon}s gezeichnet werden soll.
+	 *
+	 * @return
+	 * Die Farbe, mit der der Umriss dieses {@link Polygon} gezeichnet werden soll.
+	 */
+	public Color getBorderColour() {
+		return this.borderColour;
+	}
+
+	/**
 	 * Setter für die Farbe, mit der dieses {@link Polygon} beim Zeichnen gefüllt werden soll.
 	 *
 	 * @param fillColour
-	 * Die Farbe, mit dieses {@link Polygon}s gefüllt werden soll.
+	 * Die Farbe, mit dieses {@link Polygon} gefüllt werden soll.
 	 */
 	public void setFillColour(Color fillColour) {
 		this.fillColour = fillColour;
+	}
+
+	/**
+	 * Getter für die Farbe, mit der dieses {@link Polygon} beim Zeichnen gefüllt werden soll.
+	 *
+	 * @return
+	 * Die Farbe, mit dieses {@link Polygon} gefüllt werden soll.
+	 */
+	public Color getFillColour() {
+		return fillColour;
 	}
 
 	/**
@@ -79,6 +99,23 @@ public abstract class BoardPolygon extends Polygon {
 	 */
 	public abstract void recalcPoints(int triangleSideLength, Point relativeStart);
 
+	/**
+	 * Rechnet eine {@link Position} des Spielbretts in einen {@link Point} auf dem Zeichenbrett um.
+	 * Dabei wird die Skalierung des Spielbretts auf dem Zeichenbrett sowie ein Referenzpunkt
+	 * beachtet.
+	 *
+	 * @param position
+	 * Die {@link Position} auf dem Spielbrett.
+	 *
+	 * @param triangleSideLength
+	 * Die aktuelle Länge der Seiten der {@link Triangle}s.
+	 *
+	 * @param referencePoint
+	 * Der {@link Point} von wo aus das Element ausgelegt werden soll.
+	 *
+	 * @return
+	 * Der berechnete Punkt, der an der Stelle liegt, an der der Punkt liegen soll.
+	 */
 	public Point positionToPoint(Position position, int triangleSideLength, Point referencePoint) {
 		int column = position.getColumn();
 		int row = position.getRow();
