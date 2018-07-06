@@ -3,6 +3,8 @@ package flowerwarspp.board;
 import flowerwarspp.preset.*;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Verwaltungsklasse, die Daten über die gemachten und noch möglichen Züge
@@ -153,11 +155,15 @@ public class MainBoard implements Board {
 				updateValidMovesForBed(bed);
 			}
 
-			// TODO: Neue Gräben erlauben.
+			// Ditchchecks:
+			//  - Ditches halt checken
+			//  - Diese duerfen nicht an Blumen anliegen
+			//  - Ditch liegt noch nicht auf
+			generateNewDitches(getImportantDitches(f));
 		}
 	}
 
-	// TODO: Prüfen, ob das hier überhaupt funktioniert.
+	// TODO: Checken ob performant
 	private HashSet<Collection<Flower>> getBedsNear(Flower flower, int radius, PlayerColor player) {
 		HashSet<Collection<Flower>> result = new HashSet<>();
 		if (playerData.get(currentPlayer).flowers.contains(flower)) {
@@ -211,10 +217,62 @@ public class MainBoard implements Board {
 		}
 	}
 
+	// TODO: Refactor
+	private LinkedList<Ditch> getImportantDitches(final Flower newFlower) {
+		LinkedList<Ditch> res = new LinkedList<>();
+		LinkedList<Flower> neighbors = getAllNeighbors(newFlower);
+		for (Flower f : neighbors) {
+			Position[] ps = getPositions(f);
+			int n = ps.length;
+			for (int i=0; i<=n; i++) {
+				if (getPositionNeighbors(ps[i%n]).stream().anyMatch(neighbors::contains) &&
+						Arrays.asList(getPositions(newFlower)).contains(ps[(i+1)%n])
+						||
+						getPositionNeighbors(ps[(i+1)%n]).stream().anyMatch(neighbors::contains) &&
+								Arrays.asList(getPositions(newFlower)).contains(ps[i%n])) {
+					res.add(new Ditch(ps[i%n], ps[(i+1)%n]));
+				}
+			}
+		}
+		return res;
+	}
+
+	private void generateNewDitches(final Collection<Ditch> ds) {
+		//if (getDirectNeighbors(d).stream().noneMatch(df -> getFlowerColor(df) != null)) {
+		for (Ditch d : ds) {
+			if (getDirectNeighbors(d).stream().anyMatch(df -> getFlowerColor(df) != null) ||
+					getDitchColor(d) != null) {
+				continue;
+			}
+			playerData.get(currentPlayer).legalMoves.add(new Move(d));
+		}
+	}
+
+	private Position[] getPositions(Flower f) {
+		return new Position[]{f.getFirst(), f.getSecond(), f.getThird()};
+	}
+
+	private HashSet<Flower> getPositionNeighbors(Position p) {
+		// TODO: Durch Vektormagie replacen
+		return Arrays.stream(allFlowers)
+				.filter(f -> (Arrays.asList(getPositions(f)).contains(p)))
+				.collect(Collectors.toCollection(HashSet::new));
+
+	}
+
 	private boolean isLegalBed(final Collection<Flower> bed, final PlayerColor player) {
 		return bed.size() < 4
 				|| bed.size() == 4
 				&& Collections.disjoint(getBedAllNeighbors(bed), playerData.get(player).flowers);
+	}
+
+	private PlayerColor getDitchColor(final Ditch d) {
+		for (Map.Entry<PlayerColor, PlayerData> entry : playerData.entrySet()) {
+			if (entry.getValue().ditches.contains(d)) {
+				return entry.getKey();
+			}
+		}
+		return null;
 	}
 
 	private PlayerColor getFlowerColor(final Flower f) {
@@ -225,6 +283,7 @@ public class MainBoard implements Board {
 		}
 		return null;
 	}
+
 
 	private HashSet<Flower> getFlowerBed(final Flower f) {
 		PlayerColor flowerColor = getFlowerColor(f);
@@ -251,7 +310,7 @@ public class MainBoard implements Board {
 
 	private LinkedList<Flower> getDirectNeighbors(final Flower f) {
 		LinkedList<Flower> result = new LinkedList<>();
-		Position[] nodes = {f.getFirst(), f.getSecond(), f.getThird()};
+		Position[] nodes = getPositions(f);
 		for (int i = 0; i < 3; i++) {
 			try {
 				Position third = new Position(
@@ -270,7 +329,7 @@ public class MainBoard implements Board {
 
 	private LinkedList<Flower> getAllNeighbors(final Flower f) { //  n := distance
 		LinkedList<Flower> result = getDirectNeighbors(f);
-		Position[] nodes = {f.getFirst(), f.getSecond(), f.getThird()};
+		Position[] nodes = getPositions(f);
 		Position lastPoint = null;
 		// Über die Positionen iterieren, die das Dreieck umgeben.
 		for (int i = 0; i <= 9; i++) {
