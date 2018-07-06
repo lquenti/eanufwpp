@@ -172,50 +172,53 @@ public class MainBoard implements Board {
 	}
 
 	private void updateValidMovesForBed(final Collection<Flower> bed) {
-		if (bed.size() == 4) {
+		if (bed.size() == 4) { // Fuer aktuelles Bed
 			for (Flower bedNeighbor : getBedAllNeighbors(bed)) {
 				playerData.get(currentPlayer).legalMoves.removeMovesContaining(bedNeighbor);
 			}
-		} else {
-			for (Flower bedNeighbor : getBedDirectNeighbors(bed)) {
-				if (playerData.get(currentPlayer).legalMoves.containsMovesContaining(bedNeighbor)) {
-					playerData.get(currentPlayer).flowers.add(bedNeighbor);
-					Collection<Flower> resultingBed = getFlowerBed(bedNeighbor);
-					if (!isLegalBed(resultingBed, currentPlayer)) {
-						playerData.get(currentPlayer).legalMoves.removeMovesContaining(bedNeighbor);
-					} else if (resultingBed.size() == 4) {
-						for (Flower secondBedNeighbor : getBedAllNeighbors(resultingBed)) {
-							playerData.get(currentPlayer).legalMoves.remove(
-								new Move(bedNeighbor, secondBedNeighbor)
-							);
-						}
-					} else {
-						for (Flower secondBedNeighbor : getBedDirectNeighbors(resultingBed)) {
-							if (playerData.get(currentPlayer).legalMoves.containsMovesContaining(secondBedNeighbor)) {
-								playerData.get(currentPlayer).flowers.add(secondBedNeighbor);
-								if (!isLegalBed(getFlowerBed(secondBedNeighbor), currentPlayer)) {
-									playerData.get(currentPlayer).legalMoves.remove(
-										new Move(bedNeighbor, secondBedNeighbor)
-									);
-								}
-								playerData.get(currentPlayer).flowers.remove(secondBedNeighbor);
-							}
-						}
+			return;
+		}
+		for (Flower bedNeighbor : getBedDirectNeighbors(bed)) {
+			// Dann bereits bearbeitet
+			if (!playerData.get(currentPlayer).legalMoves.containsMovesContaining(bedNeighbor)) {
+				continue;
+			}
+			playerData.get(currentPlayer).flowers.add(bedNeighbor);
+			Collection<Flower> resultingBed = getFlowerBed(bedNeighbor);
+			if (!isLegalBed(resultingBed, currentPlayer)) { // Neue Kombination gefaehrlich
+				playerData.get(currentPlayer).legalMoves.removeMovesContaining(bedNeighbor);
+			} else if (resultingBed.size() == 4) { // ILLEGAL, Bed raushauen TODO: exkludieren in eigene Fkt
+				for (Flower secondBedNeighbor : getBedAllNeighbors(resultingBed)) {
+					playerData.get(currentPlayer).legalMoves.remove(
+							new Move(bedNeighbor, secondBedNeighbor)
+					);
+				}
+			} else {
+				for (Flower secondBedNeighbor : getBedDirectNeighbors(resultingBed)) {
+					if (!playerData.get(currentPlayer).legalMoves.containsMovesContaining(secondBedNeighbor)) {
+						continue;
 					}
-					playerData.get(currentPlayer).flowers.remove(bedNeighbor);
+					playerData.get(currentPlayer).flowers.add(secondBedNeighbor);
+					if (!isLegalBed(getFlowerBed(secondBedNeighbor), currentPlayer)) {
+						playerData.get(currentPlayer).legalMoves.remove(
+								new Move(bedNeighbor, secondBedNeighbor)
+						);
+					}
+					playerData.get(currentPlayer).flowers.remove(secondBedNeighbor);
 				}
 			}
+			playerData.get(currentPlayer).flowers.remove(bedNeighbor);
 		}
 	}
 
 	private boolean isLegalBed(final Collection<Flower> bed, final PlayerColor player) {
 		return bed.size() < 4
-		    || bed.size() == 4
-		    && Collections.disjoint(getBedAllNeighbors(bed), playerData.get(player).flowers);
+				|| bed.size() == 4
+				&& Collections.disjoint(getBedAllNeighbors(bed), playerData.get(player).flowers);
 	}
 
 	private PlayerColor getFlowerColor(final Flower f) {
-		for (Map.Entry<PlayerColor, PlayerData> entry: playerData.entrySet()) {
+		for (Map.Entry<PlayerColor, PlayerData> entry : playerData.entrySet()) {
 			if (entry.getValue().flowers.contains(f)) {
 				return entry.getKey();
 			}
@@ -252,14 +255,15 @@ public class MainBoard implements Board {
 		for (int i = 0; i < 3; i++) {
 			try {
 				Position third = new Position(
-					nodes[i%3].getColumn() + nodes[(i+1)%3].getColumn() - nodes[(i+2)%3].getColumn(),
-					nodes[i%3].getRow() + nodes[(i+1)%3].getRow() - nodes[(i+2)%3].getRow()
+						nodes[i % 3].getColumn() + nodes[(i + 1) % 3].getColumn() - nodes[(i + 2) % 3].getColumn(),
+						nodes[i % 3].getRow() + nodes[(i + 1) % 3].getRow() - nodes[(i + 2) % 3].getRow()
 				);
 				Flower neighbor = new Flower(nodes[i % 3], nodes[(i + 1) % 3], third);
 				if (isOnBoard(neighbor)) {
 					result.add(neighbor);
 				}
-			} catch (IllegalArgumentException e) {}
+			} catch (IllegalArgumentException e) {
+			}
 		}
 		return result;
 	}
@@ -272,11 +276,11 @@ public class MainBoard implements Board {
 		for (int i = 0; i <= 9; i++) {
 			try {
 				Position point = new Position(
-					nodes[i/3%3].getColumn() + nodes[(i+1)/3%3].getColumn() - nodes[((i+2)/3+1)%3].getColumn(),
-					nodes[i/3%3].getRow() + nodes[(i+1)/3%3].getRow() - nodes[((i+2)/3+1)%3].getRow()
+						nodes[i / 3 % 3].getColumn() + nodes[(i + 1) / 3 % 3].getColumn() - nodes[((i + 2) / 3 + 1) % 3].getColumn(),
+						nodes[i / 3 % 3].getRow() + nodes[(i + 1) / 3 % 3].getRow() - nodes[((i + 2) / 3 + 1) % 3].getRow()
 				);
 				if (lastPoint != null) {
-					Flower neighbor = new Flower(nodes[i/3%3], lastPoint, point);
+					Flower neighbor = new Flower(nodes[i / 3 % 3], lastPoint, point);
 					if (isOnBoard(neighbor)) {
 						result.add(neighbor);
 					}
@@ -383,8 +387,8 @@ public class MainBoard implements Board {
 	 */
 	private boolean isOnBoard(Position position) {
 		return position != null
-		    && position.getColumn() > 0 && position.getRow() > 0
-		    && position.getColumn() + position.getRow() < size + 3;
+				&& position.getColumn() > 0 && position.getRow() > 0
+				&& position.getColumn() + position.getRow() < size + 3;
 	}
 
 	/*
@@ -465,7 +469,7 @@ public class MainBoard implements Board {
 		public PlayerColor getTurn() {
 			return currentPlayer;
 		}
-		
+
 		// TODO: REFACTOR
 		@Override
 		public LinkedList<Flower> getDirectNeighbors(Flower f) {
