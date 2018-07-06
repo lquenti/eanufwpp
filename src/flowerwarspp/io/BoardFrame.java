@@ -11,15 +11,19 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 	private BoardDisplay boardDisplay = new BoardDisplay();
 
 	public BoardFrame(Viewer viewer) {
+		this();
+		if (viewer != null)
+			this.setViewer(viewer);
+	}
+
+	public BoardFrame() {
 		super("Flower Wars");
-		this.viewer = viewer;
 
 		// Do stuff to *this*; it needs setup.
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(600, 600);
 
 		this.add(this.boardDisplay);
-		this.setViewer(this.viewer);
 
 		// TODO: Make this obsolete.
 		this.boardDisplay.setBorder(new BevelBorder(BevelBorder.LOWERED));
