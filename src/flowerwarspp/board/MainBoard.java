@@ -417,16 +417,16 @@ public class MainBoard implements Board {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public HashSet<Ditch> getDitches(PlayerColor color) {
-			return new HashSet<>(playerData.get(color).ditches);
+		public Set<Ditch> getDitches(PlayerColor color) {
+			return Collections.unmodifiableSet(playerData.get(color).ditches);
 		}
 
 		/**
 		 * {@inheritDoc}
 		 */
 		@Override
-		public HashSet<Flower> getFlowers(PlayerColor color) {
-			return new HashSet<>(playerData.get(color).flowers);
+		public Set<Flower> getFlowers(PlayerColor color) {
+			return Collections.unmodifiableSet(playerData.get(color).flowers);
 		}
 
 		/**
@@ -442,8 +442,8 @@ public class MainBoard implements Board {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public MoveSet getPossibleMoves() {
-			return new MoveSet(playerData.get(currentPlayer).legalMoves);
+		public Set<Move> getPossibleMoves() {
+			return Collections.unmodifiableSet(playerData.get(currentPlayer).legalMoves);
 		}
 
 		/**

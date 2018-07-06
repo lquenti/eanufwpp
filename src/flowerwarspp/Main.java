@@ -1,13 +1,12 @@
 package flowerwarspp;
 
-import java.rmi.Naming;
-import java.util.Scanner;
-
-import flowerwarspp.preset.*;
+import java.rmi.*;
+import java.util.*;
 
 import flowerwarspp.board.*;
 import flowerwarspp.io.*;
 import flowerwarspp.player.*;
+import flowerwarspp.preset.*;
 
 public class Main {
 	private static int boardSize;
@@ -26,47 +25,35 @@ public class Main {
 		System.exit(1);
 	}
 
-	private static Player createPlayer(final PlayerType type, final Requestable input) {
-		switch (type) {
-			case HUMAN: return new InteractivePlayer(input);
-			case RANDOM_AI: return new RandomAI();
-			case SIMPLE_AI: return new SimpleAI();
-			case REMOTE: return findRemotePlayer();
-			default: quitWithUsage(); return null;
-		}
-	}
-
-	private static Player findRemotePlayer() {
-		Scanner inputScanner = new Scanner(System.in);
-		System.out.print("Adresse des entfernten Spielers: ");
-		String host = inputScanner.nextLine();
-		System.out.print("Name des entfernten Spielers: ");
-		String name = inputScanner.nextLine();
-
-		Player result = null;
-		try {
-			result = (Player)Naming.lookup("rmi://" + host + "/" + name);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
-
-	public static void offerPlayer(Player player) {
-		Scanner inputScanner = new Scanner(System.in);
-		System.out.print("Name des entfernten Spielers: ");
-		String name = inputScanner.nextLine();
-
-		try {
-			Naming.rebind(name, new RemotePlayer(player));
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-	}
-
 	public static void main(String[] args) {
+		BoardFrame boardFrame = new BoardFrame();
+		Requestable input = boardFrame;
+		Output output = boardFrame;
+
+		ArgumentParser argumentParser = null;
 		try {
-			ArgumentParser argumentParser = new ArgumentParser(args);
+			argumentParser = new ArgumentParser(args);
+		} catch (ArgumentParserException e) {
+			quitWithUsage();
+		}
+
+		try {
+			offerType = argumentParser.getOffer();
+		} catch(ArgumentParserException e){
+			offerType = null;
+		}
+
+		if (offerType != null) {
+			try {
+				Player offeredPlayer = Players.createPlayer(offerType, input);
+				Players.offerPlayer(new RemotePlayer(offeredPlayer, output));
+				return;
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+		}
+
+		try {
 			boardSize = argumentParser.getSize();
 			redType = argumentParser.getRed();
 			blueType = argumentParser.getBlue();
@@ -81,12 +68,10 @@ public class Main {
 
 		Board board = new MainBoard(boardSize);
 		Viewer boardViewer = board.viewer();
-		BoardFrame boardFrame = new BoardFrame(board.viewer());
-		Requestable input = boardFrame;
-		Output output = boardFrame;
+		boardFrame.setViewer(boardViewer);
 
-		Player currentPlayer = createPlayer(redType, input);
-		Player oppositePlayer = createPlayer(blueType, input);
+		Player currentPlayer = Players.createPlayer(redType, input);
+		Player oppositePlayer = Players.createPlayer(blueType, input);
 
 		try {
 			currentPlayer.init(boardSize, PlayerColor.Red);
