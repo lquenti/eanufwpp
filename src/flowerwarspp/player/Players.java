@@ -33,13 +33,13 @@ public class Players {
 		return result;
 	}
 
-	public static void offerPlayer(Player player) {
+	public static void offerPlayer(RemotePlayer player) {
 		Scanner inputScanner = new Scanner(System.in);
 		System.out.print("Name des entfernten Spielers: ");
 		String name = inputScanner.nextLine();
 
 		try {
-			Naming.rebind(name, new RemotePlayer(player));
+			Naming.rebind(name, player);
 		} catch(Exception e){
 			e.printStackTrace();
 		}

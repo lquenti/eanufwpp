@@ -1,13 +1,12 @@
 package flowerwarspp;
 
-import java.rmi.Naming;
-import java.util.Scanner;
-
-import flowerwarspp.preset.*;
+import java.rmi.*;
+import java.util.*;
 
 import flowerwarspp.board.*;
 import flowerwarspp.io.*;
 import flowerwarspp.player.*;
+import flowerwarspp.preset.*;
 
 public class Main {
 	private static int boardSize;
@@ -27,8 +26,34 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
+		BoardFrame boardFrame = new BoardFrame();
+		Requestable input = boardFrame;
+		Output output = boardFrame;
+
+		ArgumentParser argumentParser = null;
 		try {
-			ArgumentParser argumentParser = new ArgumentParser(args);
+			argumentParser = new ArgumentParser(args);
+		} catch (ArgumentParserException e) {
+			quitWithUsage();
+		}
+
+		try {
+			offerType = argumentParser.getOffer();
+		} catch(ArgumentParserException e){
+			offerType = null;
+		}
+
+		if (offerType != null) {
+			try {
+				Player offeredPlayer = Players.createPlayer(offerType, input);
+				Players.offerPlayer(new RemotePlayer(offeredPlayer, output));
+				return;
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+		}
+
+		try {
 			boardSize = argumentParser.getSize();
 			redType = argumentParser.getRed();
 			blueType = argumentParser.getBlue();
@@ -43,9 +68,7 @@ public class Main {
 
 		Board board = new MainBoard(boardSize);
 		Viewer boardViewer = board.viewer();
-		BoardFrame boardFrame = new BoardFrame(board.viewer());
-		Requestable input = boardFrame;
-		Output output = boardFrame;
+		boardFrame.setViewer(boardViewer);
 
 		Player currentPlayer = Players.createPlayer(redType, input);
 		Player oppositePlayer = Players.createPlayer(blueType, input);
