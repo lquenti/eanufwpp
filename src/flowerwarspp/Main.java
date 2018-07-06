@@ -1,5 +1,8 @@
 package flowerwarspp;
 
+import java.rmi.Naming;
+import java.util.Scanner;
+
 import flowerwarspp.preset.*;
 
 import flowerwarspp.board.*;
@@ -10,6 +13,7 @@ public class Main {
 	private static int boardSize;
 	private static PlayerType redType;
 	private static PlayerType blueType;
+	private static PlayerType offerType;
 	private static int delay;
 
 	private static void quitWithUsage() {
@@ -17,7 +21,7 @@ public class Main {
 		System.out.println("flowerwarspp.Main -size <Spielfeldgröße> -red <Spielertyp> -blue <Spielertyp> -delay <Verzögerung>");
 		System.out.println();
 		System.out.println("Spielfeldgröße: Zahl zwischen 3 und 30");
-		System.out.println("Spielertyp:     \"human\", \"random\" oder \"simple\"");
+		System.out.println("Spielertyp:     \"human\", \"remote\", \"random\" oder \"simple\"");
 		System.out.println("Verzögerung:    Zeit zwischen Zügen in Millisekunden");
 		System.exit(1);
 	}
@@ -27,7 +31,36 @@ public class Main {
 			case HUMAN: return new InteractivePlayer(input);
 			case RANDOM_AI: return new RandomAI();
 			case SIMPLE_AI: return new SimpleAI();
+			case REMOTE: return findRemotePlayer();
 			default: quitWithUsage(); return null;
+		}
+	}
+
+	private static Player findRemotePlayer() {
+		Scanner inputScanner = new Scanner(System.in);
+		System.out.print("Adresse des entfernten Spielers: ");
+		String host = inputScanner.nextLine();
+		System.out.print("Name des entfernten Spielers: ");
+		String name = inputScanner.nextLine();
+
+		Player result = null;
+		try {
+			result = (Player)Naming.lookup("rmi://" + host + "/" + name);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	public static void offerPlayer(Player player) {
+		Scanner inputScanner = new Scanner(System.in);
+		System.out.print("Name des entfernten Spielers: ");
+		String name = inputScanner.nextLine();
+
+		try {
+			Naming.rebind(name, new RemotePlayer(player));
+		} catch(Exception e){
+			e.printStackTrace();
 		}
 	}
 
