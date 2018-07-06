@@ -93,16 +93,16 @@ public class MoveSet extends AbstractSet<Move> {
 		return flowerMap.containsKey(flower);
 	}
 
-	public HashSet<Move> getFlowerMoves() {
-		return new HashSet<>(flowerMoves);
+	public Set<Move> getFlowerMoves() {
+		return Collections.unmodifiableSet(flowerMoves);
 	}
 
 	public Set<Flower> getFlowers() {
-		return flowerMap.keySet();
+		return Collections.unmodifiableSet(flowerMap.keySet());
 	}
 
-	public HashSet<Flower> getFlowersCombinableWith(Flower flower) {
-		return new HashSet<>(flowerMap.get(flower));
+	public Set<Flower> getFlowersCombinableWith(Flower flower) {
+		return Collections.unmodifiableSet(flowerMap.get(flower));
 	}
 
 	public HashSet<Move> getMovesContaining(Flower flower) {
@@ -116,8 +116,8 @@ public class MoveSet extends AbstractSet<Move> {
 		return null;
 	}
 
-	public HashSet<Move> getDitchMoves() {
-		return new HashSet<>(ditchMoves);
+	public Set<Move> getDitchMoves() {
+		return Collections.unmodifiableSet(ditchMoves);
 	}
 
 	public Iterator<Move> iterator() {
