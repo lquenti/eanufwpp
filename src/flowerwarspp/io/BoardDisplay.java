@@ -57,7 +57,7 @@ public class BoardDisplay extends JPanel {
 					// If the user clicks on the same triangle again, deselect it.
 					if (this.firstClickedTriangle.samePlace(triangle)) {
 						Color newColour = this.boardDisplay.getBackground();
-						this.firstClickedTriangle.setFlowerColour(newColour);
+						this.firstClickedTriangle.setFillColour(newColour);
 						this.firstClickedTriangle = null;
 					// Otherwise, try and create a move out of it.
 					} else {
@@ -134,12 +134,12 @@ public class BoardDisplay extends JPanel {
 	 */
 	private static final int componentSizePercentage = 90;
 
-	private final Object boardLock = new Object();
 	private Viewer boardViewer = null;
-	private Dimension lastDrawingDimension = new Dimension(500, 500);
 	private Collection<Triangle> mapTriangles = new ArrayList<>();
+	private Collection<Edge> mapEdges = new ArrayList<>();
 	private BoardDisplayMouseHandler boardDisplayMouseHandler = new BoardDisplayMouseHandler(this);
 
+	// Cached information fresh (or stale) from the viewer
 	private Collection<Flower> redFlowers;
 	private Collection<Flower> blueFlowers;
 	private Collection<Flower> combinableFlowers;
@@ -152,45 +152,34 @@ public class BoardDisplay extends JPanel {
 	 * 		Der {@link Viewer}, der das zubetrachtende Spielbrett betrachtet.
 	 */
 	public void setBoardViewer(Viewer boardViewer) {
-		this.setPreferredSize(this.lastDrawingDimension);
-		this.setSize(this.lastDrawingDimension);
 		this.boardViewer = boardViewer;
 		this.boardSize = this.boardViewer.getSize();
+		this.createTriangles();
+		this.createDitches();
 		this.boardDisplayMouseHandler.reset();
 		for (MouseListener mouseListener : this.getMouseListeners())
 			this.removeMouseListener(mouseListener);
 		this.addMouseListener(this.boardDisplayMouseHandler);
-		this.resizeDisplay();
 	}
 
 	@Override
 	public synchronized void paintComponent(Graphics g) {
-		this.updateSize();
+		this.updateTriangles();
+		this.updatePolygonSizes();
 		super.paintComponent(g);
 
-		for (Triangle triangle : this.mapTriangles) {
-			triangle.drawTriangle(g);
-		}
-
-		this.lastDrawingDimension = this.getSize();
+		this.mapTriangles.forEach(t -> t.drawPolygon(g));
+		this.mapEdges.forEach(e -> e.drawPolygon(g));
 	}
 
 	/**
-	 * Setzt die Größe dieses Elements auf
-	 * einen festgelegten Anteil der Größe des Elternelements.
+	 * Updatet die {@link Triangle}s nach einem Zug.
 	 */
-	private void updateSize() {
-		Dimension newSize = new Dimension(
-			this.getParent().getWidth() * componentSizePercentage / 100,
-			this.getParent().getHeight() * componentSizePercentage / 100);
-		this.setSize(newSize);
-		this.setPreferredSize(newSize);
-		this.resizeDisplay();
-
+	private void updateTriangles() {
 		for (Triangle t : this.mapTriangles) {
-			t.setFlowerColour(triangleDefaultColour);
+			t.setFillColour(triangleDefaultColour);
 			if (t.samePlace(this.boardDisplayMouseHandler.firstClickedTriangle)) {
-				t.setFlowerColour(triangleHighlightColour);
+				t.setFillColour(triangleHighlightColour);
 			} else {
 				if (this.combinableFlowers != null) {
 					Optional<Flower> maybeFlower = this.combinableFlowers.stream()
@@ -198,9 +187,9 @@ public class BoardDisplay extends JPanel {
 						.findAny();
 
 					if (maybeFlower.isPresent())
-						t.setFlowerColour(combinableTriangleColour);
+						t.setFillColour(combinableTriangleColour);
 					else
-						t.setFlowerColour(this.getBackground());
+						t.setFillColour(this.getBackground());
 				}
 			}
 		}
@@ -228,60 +217,60 @@ public class BoardDisplay extends JPanel {
 			    triangle.getRightBoardPosition());
 
 			if (flowers.contains(flower))
-				triangle.setFlowerColour(color);
+				triangle.setFillColour(color);
 		}
+	}
+
+	/**
+	 * Updatet die Größe der {@link Triangle}s. Wird verwendet, um die Dreiecke der aktuellen
+	 * {@link Dimension} des Zeichenbretts anzupassen.
+	 */
+	private void updatePolygonSizes() {
+		Dimension displaySize = this.getSize();
+		int minimumSize = Math.min(displaySize.width, displaySize.height);
+
+		// The triangles may not be larger than a fraction percentage of the shortest side.
+		int sideLength = minimumSize / (this.boardSize + 1);
+		Point drawBegin = new Point();
+		drawBegin.x = (displaySize.width / 2) - sideLength * (this.boardSize + 2) / 2;
+		drawBegin.y = sideLength * this.boardSize;
+		this.mapTriangles.forEach(t -> t.recalcPoints(sideLength, drawBegin));
+		this.mapEdges.forEach(e -> e.recalcPoints(sideLength, drawBegin));
 	}
 
 	/**
 	 * Handhabt eventuelle Größenänderungen des Displays und
 	 * skaliert das gezeichnete Spielfeld dementsprechend.
 	 */
-	private void resizeDisplay() {
+	private void createTriangles() {
 		this.mapTriangles.clear();
-
-		Dimension displaySize = this.getSize();
-		int minimumSize = Math.min(displaySize.width, displaySize.height);
-
-		/*
-		 * If one side is 0px wide, skip to the end.
-		 * Nothing will be visible anyway.
-		 */
-		if (minimumSize == 0)
-			return;
-
-		// The triangles may not be larger than a fraction percentage of the shortest side.
-		int triangleHeight = minimumSize / (this.boardSize + 1);
 
 		// Create the triangle at the very top of the board.
 		// It has the coordinates (1, board size + 1)
 		Triangle topTriangle = new Triangle(
-		    displaySize.width / 2, 10,
 		    1, (this.boardSize + 1),
-		    triangleHeight,
 		    false, this.getBackground());
 
 		this.mapTriangles.add(topTriangle);
-
-		recalculateTriangles(topTriangle);
+		createRowTriangles(topTriangle);
 	}
 
 	/**
-	 * Berechne die Dreiecke der graphischen Oberfläche neu.
+	 * Erstelle die Reihen der Dreiecke.
 	 *
 	 * @param topTriangle
 	 * Das oberste Dreieck des Zeichenbretts.
 	 */
-	private void recalculateTriangles(Triangle topTriangle) {
+	private void createRowTriangles(Triangle topTriangle) {
 		int maximumRowCount = (this.boardSize * 2) - 1;
 		Triangle currentTriangle = topTriangle;
 
 		for (int triangles = 2; triangles < maximumRowCount; triangles += 2) {
+			Position leftPosition = currentTriangle.getLeftBoardPosition();
+
 			currentTriangle = new Triangle(
-			    currentTriangle.getLeftEdge().x,
-			    currentTriangle.getLeftEdge().y,
-			    currentTriangle.getLeftBoardPosition().getColumn() - 1,
-			    currentTriangle.getLeftBoardPosition().getRow(),
-			    topTriangle.getSize(), false, this.getBackground());
+			    leftPosition.getColumn() - 1, leftPosition.getRow(),
+			    false, this.getBackground());
 
 			this.mapTriangles.add(currentTriangle);
 
@@ -301,22 +290,32 @@ public class BoardDisplay extends JPanel {
 	 */
 	private void fillRow(Triangle leftTriangle, int triangleCount) {
 		Position newTopPosition = leftTriangle.getRightBoardPosition();
-		Point newTopPoint = leftTriangle.getRightEdge();
 
 		boolean flipped = true;
 		for (int i = 0; i < triangleCount; i++)
 		{
 			Triangle newTriangle = new Triangle(
-			    newTopPoint.x, newTopPoint.y,
 			    newTopPosition.getColumn() + 1, newTopPosition.getRow(),
-			    leftTriangle.getSize(),
 			    flipped, this.getBackground());
 
 			this.mapTriangles.add(newTriangle);
 
 			flipped = !flipped;
 			newTopPosition = newTriangle.getRightBoardPosition();
-			newTopPoint = newTriangle.getRightEdge();
+		}
+	}
+
+	private void createDitches() {
+		for (Triangle t : this.mapTriangles) {
+			if (!t.isFlipped()) {
+				Edge leftDitch = new Edge(t.getLeftBoardPosition(), t.getTopBoardPosition());
+				Edge rightDitch = new Edge(t.getRightBoardPosition(), t.getTopBoardPosition());
+				Edge bottomDitch = new Edge(t.getLeftBoardPosition(), t.getRightBoardPosition());
+
+				this.mapEdges.add(leftDitch);
+				this.mapEdges.add(rightDitch);
+				this.mapEdges.add(bottomDitch);
+			}
 		}
 	}
 
