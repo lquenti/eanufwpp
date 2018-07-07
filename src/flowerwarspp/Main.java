@@ -7,6 +7,8 @@ import flowerwarspp.board.*;
 import flowerwarspp.io.*;
 import flowerwarspp.player.*;
 import flowerwarspp.preset.*;
+import flowerwarspp.util.log.Log;
+import flowerwarspp.util.log.LogLevel;
 
 public class Main {
 	private static int boardSize;
@@ -14,6 +16,7 @@ public class Main {
 	private static PlayerType blueType;
 	private static PlayerType offerType;
 	private static int delay;
+	private static boolean debug;
 
 	private static void quitWithUsage() {
 		System.out.println("Verwendung:");
@@ -65,6 +68,17 @@ public class Main {
 		if (boardSize < 3 || boardSize > 30 || delay < 0) {
 			quitWithUsage();
 		}
+
+		try {
+			debug = argumentParser.isDebug();
+		} catch ( ArgumentParserException e ) {
+			debug = false;
+		}
+
+		if (debug)
+			Log.getInstance().setLogLevel(LogLevel.DEBUG);
+		else
+			Log.getInstance().setLogLevel(LogLevel.INFO);
 
 		Board board = new MainBoard(boardSize);
 		Viewer boardViewer = board.viewer();
