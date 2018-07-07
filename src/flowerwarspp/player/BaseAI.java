@@ -2,7 +2,11 @@ package flowerwarspp.player;
 
 import flowerwarspp.preset.Move;
 import flowerwarspp.preset.Player;
+import flowerwarspp.util.log.Log;
 import flowerwarspp.util.log.LogLevel;
+
+import java.util.HashSet;
+import java.util.Random;
 
 /**
  * Eine abstrakte Klasse, welche grundlegende Methoden vordefiniert um KIs zu implementieren. Dabei wird im Laufe der
@@ -18,6 +22,12 @@ abstract class BaseAI extends BasePlayer {
 	 */
 	private static final String exception_NoMove =
 			"Die einfache KI konnte keinen Zug auswaehlen.";
+
+	/**
+	 * <code>private</code> Random Number Generator, um die zufällige Auswahl eines Spielzugs mit Hilfe von
+	 * Pseudozufallszahlen leisten zu können.
+	 */
+	protected static final Random aiRNG = new Random();
 
 	/**
 	 * Default-Konstruktor, welcher dieses Objekt mit Standardwerten versieht.
@@ -40,8 +50,10 @@ abstract class BaseAI extends BasePlayer {
 		final Move move = getMove();
 
 		// If we do not have a highest scored move, we throw.
-		if ( move == null )
+		if ( move == null ) {
+			log(LogLevel.ERROR, "AI was unable to return a move");
 			throw new Exception(exception_NoMove);
+		}
 
 		return move;
 	}
@@ -65,7 +77,7 @@ abstract class BaseAI extends BasePlayer {
 	protected Move getMove() {
 
 		int highestScore = 0;
-		Move highestScoredMove = null;
+		HashSet<Move> highestScoredMoves = new HashSet<>();
 
 		// Iterate through all the possible moves...
 		for ( final Move move :
@@ -77,10 +89,23 @@ abstract class BaseAI extends BasePlayer {
 			// If the score of the currently observed move is higher than the previously highest score, update the relevant variables.
 			if ( score > highestScore ) {
 				highestScore = score;
-				highestScoredMove = move;
+				highestScoredMoves.clear();
+				highestScoredMoves.add(move);
+			} else if (score == highestScore) {
+				highestScoredMoves.add(move);
 			}
 		}
 
-		return highestScoredMove;
+		// Manually flush the log now that the data dump is complete...
+		Log.getInstance().flush();
+
+		if (highestScoredMoves.size() == 0) return null;
+
+		// Since we are using
+		return highestScoredMoves
+				.parallelStream()
+				.skip(aiRNG.nextInt(highestScoredMoves.size()))
+				.findFirst()
+				.orElse(null);
 	}
 }
