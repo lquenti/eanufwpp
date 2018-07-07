@@ -1,9 +1,6 @@
 package flowerwarspp.player;
 
-import flowerwarspp.preset.Flower;
-import flowerwarspp.preset.Move;
-import flowerwarspp.preset.MoveType;
-import flowerwarspp.preset.PlayerColor;
+import flowerwarspp.preset.*;
 
 import java.util.Collection;
 
@@ -58,10 +55,12 @@ public class AdvancedAI1 extends BaseAI {
 				score *= 2;
 
 			return score;
-		} else {
+		} else if (move.getType() == MoveType.Ditch) {
 
+			// TODO: Check if given ditch move connects two flower beds. In that case, we'll immediately use this move.
 			return -1;
-		}
+		} else
+			return -1;
 	}
 
 

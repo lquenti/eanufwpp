@@ -5,14 +5,36 @@ import flowerwarspp.preset.Position;
 
 import java.awt.*;
 
+/**
+ * Klasse, die dreieckige Polygone auf dem Zeichenbrett zeichnet.
+ * Objekte dieser Klasse repräsentieren {@link Flower}s auf dem Spielbrett.
+ * Sie bestehen aus einer Spitze ("top") und zwei weiteren Ecken ("left", "right").
+ *
+ * Die Spitze ist die Ecke des Dreiecks, die gegenüber der Seite liegt,
+ * die parallel zur x-Achse des Zeichenbretts verläuft.
+ *
+ * Die linke Ecke ist immer die Ecke, die von der Spitze aus in Richtung
+ * des Ursprungs der x-Achse des Zeichenbretts liegt.
+ *
+ * Die rechte Ecke ist immer die Ecke, die von der Spitze aus auf der
+ * gegenüberliegenden Seite zur linken Ecke liegt (d.h. in Richtung
+ * Unendlich der x-Achse des Zeichenbretts).
+ *
+ * @author Fabian Winter
+ */
 public class Triangle extends BoardPolygon {
+	/**
+	 * Ecke "top" dieses Dreiecks.
+	 */
 	private Position triangleEdge1;
+	/**
+	 * Ecke "left" dieses Dreiecks.
+	 */
 	private Position triangleEdge2;
+	/**
+	 * Ecke "right" dieses Dreiecks.
+	 */
 	private Position triangleEdge3;
-
-	private Point edge1;
-	private Point edge2;
-	private Point edge3;
 
 	private int size = -1;
 	private boolean flipped;
@@ -28,12 +50,13 @@ public class Triangle extends BoardPolygon {
 	 * 		<code>true</code> bedeutet, dass das Dreieck auf dem Kopf steht. <code>false></code>
 	 * 		bedeutet, dass die Spitze nach oben zeigt ("normales Dreieck", wie Δ)
 	 */
-	public Triangle(int tx1, int ty1, boolean flipped,
-	                Color currentColour) {
-		super(Color.WHITE, Color.BLACK);
+	public Triangle(int tx1, int ty1, boolean flipped, Color currentColour) {
+		super(Color.BLACK, currentColour);
 		this.flipped = flipped;
 
 		this.triangleEdge1 = new Position(tx1, ty1);
+		// Dependent upon whether this triangle is on its head or not,
+		// the coordinates are either above or below the other two coordinates
 		if (flipped) {
 			this.triangleEdge2 = new Position(tx1 - 1, ty1 + 1);
 			this.triangleEdge3 = new Position(tx1, ty1 + 1);
@@ -77,16 +100,6 @@ public class Triangle extends BoardPolygon {
 	}
 
 	/**
-	 * Getter für die Größe des Dreiecks, die verwendet wurde, um das Dreieck zu konstruieren (d.h.
-	 * die Länge aller Seiten).
-	 *
-	 * @return Die Größe des Dreiecks (d.h. die Länge aller Seiten).
-	 */
-	public int getSize() {
-		return this.size;
-	}
-
-	/**
 	 * Ein Getter für die Umgedrehtheit dieses {@link Triangle}s.
 	 *
 	 * @return
@@ -101,8 +114,7 @@ public class Triangle extends BoardPolygon {
 	 * Erstellt eine {@link Flower} aus diesem {@link Triangle}.
 	 *
 	 * @return
-	 * Eine {@link Flower}, die an der Stelle liegt,
-	 * welche dieses {@link Triangle} repräsentiert.
+	 * Eine {@link Flower}, die an der Stelle liegt, welche dieses {@link Triangle} repräsentiert.
 	 */
 	public Flower toFlower() {
 		return new Flower(this.triangleEdge1, this.triangleEdge2, this.triangleEdge3);
@@ -121,39 +133,23 @@ public class Triangle extends BoardPolygon {
 	 * <code>thatFlower</code> (siehe {@link Flower#equals(Object)}.
 	 */
 	public boolean samePlace(Flower thatFlower) {
-		Flower thisFlower = new Flower(this.triangleEdge1, this.triangleEdge2, this.triangleEdge3);
-		return thatFlower.equals(thisFlower);
-	}
-
-	/**
-	 * Gibt an, ob ein {@link Triangle} auf dem Spielbrett
-	 * am selben Ort liegt wie <code>this</code>.
-	 *
-	 * @param other
-	 * Das andere {@link Triangle}.
-	 *
-	 * @return
-	 * <code>true</code> genau dann, wenn die Spielbrettkoordinaten des anderen Dreiecks den
-	 * Spielbrettkoordinaten dieses {@link Triangle}s übereinstimmen.
-	 */
-	public boolean samePlace(Triangle other) {
-		if (other == null)
+		if (thatFlower == null)
 			return false;
 
-		return (this.getTopBoardPosition().equals(other.getTopBoardPosition()) &&
-		        this.getRightBoardPosition().equals(other.getRightBoardPosition()) &&
-		        this.getLeftBoardPosition().equals(other.getLeftBoardPosition()));
+		Flower thisFlower = new Flower(this.triangleEdge1, this.triangleEdge2, this.triangleEdge3);
+		return thatFlower.equals(thisFlower);
 	}
 
 	@Override
 	public void recalcPoints(int triangleSideLength, Point relativeStart) {
 		this.reset();
 
-		this.edge1 = positionToPoint(this.triangleEdge1, triangleSideLength, relativeStart);
-		this.edge2 = positionToPoint(this.triangleEdge2, triangleSideLength, relativeStart);
-		this.edge3 = positionToPoint(this.triangleEdge3, triangleSideLength, relativeStart);
-		this.addPoint(this.edge1.x, this.edge1.y);
-		this.addPoint(this.edge2.x, this.edge2.y);
-		this.addPoint(this.edge3.x, this.edge3.y);
+		Point edge1, edge2, edge3;
+		edge1 = positionToPoint(this.triangleEdge1, triangleSideLength, relativeStart);
+		edge2 = positionToPoint(this.triangleEdge2, triangleSideLength, relativeStart);
+		edge3 = positionToPoint(this.triangleEdge3, triangleSideLength, relativeStart);
+		this.addPoint(edge1.x, edge1.y);
+		this.addPoint(edge2.x, edge2.y);
+		this.addPoint(edge3.x, edge3.y);
 	}
 }
