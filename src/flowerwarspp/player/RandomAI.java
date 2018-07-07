@@ -5,7 +5,6 @@ import flowerwarspp.preset.MoveType;
 import flowerwarspp.preset.Player;
 import flowerwarspp.util.log.LogLevel;
 
-import java.util.Optional;
 import java.util.Random;
 
 /**

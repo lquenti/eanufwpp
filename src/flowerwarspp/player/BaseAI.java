@@ -21,7 +21,7 @@ abstract class BaseAI extends BasePlayer {
 	 * keinen Zug auswählen konnte.
 	 */
 	private static final String exception_NoMove =
-			"Die einfache KI konnte keinen Zug auswaehlen.";
+			"Die KI konnte keinen Zug auswaehlen.";
 
 	/**
 	 * <code>private</code> Random Number Generator, um die zufällige Auswahl eines Spielzugs mit Hilfe von
