@@ -3,6 +3,7 @@ package flowerwarspp.player;
 import flowerwarspp.preset.Move;
 import flowerwarspp.preset.Player;
 import flowerwarspp.preset.Requestable;
+import flowerwarspp.util.log.LogLevel;
 
 
 /**
@@ -57,10 +58,17 @@ public class InteractivePlayer extends BasePlayer {
 	protected Move requestMove() throws Exception {
 		final Move playerMove = input.request();
 
-		if ( playerMove == null ) throw new Exception(exception_NoMove);
+		if ( playerMove == null ) {
+			log(LogLevel.ERROR, "interactive player could not return a move");
+			throw new Exception(exception_NoMove);
+		}
 
 		// Make sure the move is actually valid (i.e. it's in the Collection of possible moves)
-		if ( ! this.boardViewer.possibleMovesContains(playerMove) ) throw new Exception(exception_InvalidMove);
+		// TODO: Check if this is actually necessary
+		if ( ! this.boardViewer.possibleMovesContains(playerMove) ) {
+			log(LogLevel.ERROR, "move passed by interactive player is invalid: " + playerMove);
+			throw new Exception(exception_InvalidMove);
+		}
 
 		return playerMove;
 	}
