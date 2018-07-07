@@ -12,7 +12,7 @@
             <include name="FlowerWarsPP-*.jar"/>
         </fileset>
     </path>
-    <target name="init" depends="clean">
+    <target name="init">
         <!-- create the time stamp -->
         <tstamp/>
 
@@ -32,7 +32,7 @@
     <target name="dist" depends="compile" description="generate the distributed jar">
         <jar jarfile="${distdir}/eanufwpp-${DSTAMP}.jar" basedir="${builddir}">
             <manifest>
-                <attribute name="Main-Class" value="flowerwarspp.Main"/>
+                <attribute name="Main-Class" value="flowerwarspp.main.Main"/>
             </manifest>
         </jar>
     </target>
@@ -44,7 +44,7 @@
                 <pathelement path="${builddir}"/>
             </classpath>
             <arg value="flowerwarspp.board.MainBoard"/>
-            <arg value="full"/>
+            <arg value="mini"/>
         </java>
     </target>
 
