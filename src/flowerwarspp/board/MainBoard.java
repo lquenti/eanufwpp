@@ -149,6 +149,13 @@ public class MainBoard implements Board {
 				currentStatus = (currentPlayer == PlayerColor.Red) ? Status.BlueWin : Status.RedWin;
 				return;
 		}
+
+		for (PlayerData player : playerData.values()) {
+			if (!player.legalMoves.isEmpty() && player.legalMoves.getFlowerMoves().isEmpty()) {
+				player.legalMoves.add(new Move(MoveType.End));
+			}
+		}
+
 		currentPlayer = oppositePlayer;
 		oppositePlayer = (currentPlayer == PlayerColor.Red) ? PlayerColor.Blue : PlayerColor.Red;
 	}
