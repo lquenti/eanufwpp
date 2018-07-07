@@ -135,10 +135,12 @@ public class MainBoard implements Board {
 				updateValidMoves(new Flower[]{move.getFirstFlower(), move.getSecondFlower()});
 				break;
 			case End:
+				// TODO: Ueberpruefen
 				int r = playerData.get(PlayerColor.Red).currentScore, b = playerData.get(PlayerColor.Blue).currentScore;
 				currentStatus = r > b ? Status.RedWin : r < b ? Status.BlueWin : Status.Draw;
 				return;
 			case Surrender:
+				// TODO: Ueberpruefen
 				currentStatus = (currentPlayer == PlayerColor.Red) ? Status.BlueWin : Status.RedWin;
 				return;
 		}
