@@ -237,17 +237,37 @@ public class MainBoard implements Board {
 
 	// TODO: Refactor
 	private LinkedList<Ditch> getImportantDitches(final Flower newFlower) {
-		LinkedList<Ditch> res = new LinkedList<>();
-		LinkedList<Flower> neighbors = getAllNeighbors(newFlower);
-		Function<Position, Boolean> ownFlower = (p -> Arrays.asList(getPositions(newFlower)).contains(p));
-		Function<Position, Boolean> anyFlower = (p -> getPositionNeighbors(p).stream().filter(neighbors::contains).anyMatch(f -> f != newFlower));
-		for (Flower f : neighbors) {
+		HashSet<Ditch> allDitches = new HashSet<>();
+		for (Flower f : getAllNeighbors(newFlower)) {
 			Position[] ps = getPositions(f);
 			int n = ps.length;
-			for (int i=0; i<=n; i++) {
-				if (ownFlower.apply(ps[i%n]) && anyFlower.apply(ps[(i+1)%n]) ||
-						ownFlower.apply(ps[(i+1)%n]) && anyFlower.apply(ps[i%n])) {
-					res.add(new Ditch(ps[i%n], ps[(i+1)%n]));
+			for (int i = 0; i < n; i++) {
+				allDitches.add(new Ditch(ps[i % n], ps[(i + 1) % n]));
+			}
+		}
+
+		LinkedList<Ditch> res = new LinkedList<>();
+		Position[] flowerPositions = getPositions(newFlower);
+
+		for (Ditch d : allDitches) {
+			if (Arrays.asList(flowerPositions).contains(d.getFirst())) {
+				HashSet<Flower> positionNeighbors = getPositionNeighbors(d.getSecond());
+				for (Flower positionNeighbor : positionNeighbors) {
+					if (getFlowerColor(positionNeighbor) != null) {
+						if (positionNeighbor != newFlower) {
+							res.add(new Ditch(d.getFirst(), d.getSecond()));
+						}
+					}
+				}
+			}
+			if (Arrays.asList(flowerPositions).contains(d.getSecond())) {
+				HashSet<Flower> positionNeighbors = getPositionNeighbors(d.getFirst());
+				for (Flower positionNeighbor : positionNeighbors) {
+					if (getFlowerColor(positionNeighbor) != null) {
+						if (positionNeighbor != newFlower) {
+							res.add(new Ditch(d.getFirst(), d.getSecond()));
+						}
+					}
 				}
 			}
 		}
@@ -266,6 +286,10 @@ public class MainBoard implements Board {
 
 	private Position[] getPositions(Flower f) {
 		return new Position[]{f.getFirst(), f.getSecond(), f.getThird()};
+	}
+
+	private Position[] getPositions(Ditch d) {
+		return new Position[]{d.getFirst(), d.getSecond()};
 	}
 
 	private HashSet<Flower> getPositionNeighbors(Position p) {
@@ -329,14 +353,15 @@ public class MainBoard implements Board {
 		for (int i = 0; i < 3; i++) {
 			try {
 				Position third = new Position(
-					nodes[i % 3].getColumn() + nodes[(i + 1) % 3].getColumn() - nodes[(i + 2) % 3].getColumn(),
-					nodes[i % 3].getRow() + nodes[(i + 1) % 3].getRow() - nodes[(i + 2) % 3].getRow()
+						nodes[i % 3].getColumn() + nodes[(i + 1) % 3].getColumn() - nodes[(i + 2) % 3].getColumn(),
+						nodes[i % 3].getRow() + nodes[(i + 1) % 3].getRow() - nodes[(i + 2) % 3].getRow()
 				);
 				Flower neighbor = new Flower(nodes[i % 3], nodes[(i + 1) % 3], third);
 				if (isOnBoard(neighbor)) {
 					result.add(neighbor);
 				}
-			} catch (IllegalArgumentException e) {}
+			} catch (IllegalArgumentException e) {
+			}
 		}
 		return result;
 	}
@@ -349,8 +374,8 @@ public class MainBoard implements Board {
 		for (int i = 0; i <= 9; i++) {
 			try {
 				Position point = new Position(
-					nodes[i / 3 % 3].getColumn() + nodes[(i + 1) / 3 % 3].getColumn() - nodes[((i + 2) / 3 + 1) % 3].getColumn(),
-					nodes[i / 3 % 3].getRow() + nodes[(i + 1) / 3 % 3].getRow() - nodes[((i + 2) / 3 + 1) % 3].getRow()
+						nodes[i / 3 % 3].getColumn() + nodes[(i + 1) / 3 % 3].getColumn() - nodes[((i + 2) / 3 + 1) % 3].getColumn(),
+						nodes[i / 3 % 3].getRow() + nodes[(i + 1) / 3 % 3].getRow() - nodes[((i + 2) / 3 + 1) % 3].getRow()
 				);
 				if (lastPoint != null) {
 					Flower neighbor = new Flower(nodes[i / 3 % 3], lastPoint, point);
@@ -396,24 +421,26 @@ public class MainBoard implements Board {
 		Position[] nodes = {ditch.getFirst(), ditch.getSecond()};
 		try {
 			Position third = new Position(
-				nodes[1].getColumn() + nodes[1].getRow() - nodes[0].getRow(),
-				nodes[0].getRow() - nodes[1].getColumn() + nodes[0].getColumn()
-				);
+					nodes[1].getColumn() + nodes[1].getRow() - nodes[0].getRow(),
+					nodes[0].getRow() - nodes[1].getColumn() + nodes[0].getColumn()
+			);
 			Flower neighbor = new Flower(nodes[0], nodes[1], third);
 			if (isOnBoard(neighbor)) {
 				result.add(neighbor);
 			}
-		} catch (IllegalArgumentException e) {}
+		} catch (IllegalArgumentException e) {
+		}
 		try {
 			Position third = new Position(
-				nodes[0].getColumn() - nodes[1].getRow() + nodes[0].getRow(),
-				nodes[1].getRow() + nodes[1].getColumn() - nodes[0].getColumn()
-				);
+					nodes[0].getColumn() - nodes[1].getRow() + nodes[0].getRow(),
+					nodes[1].getRow() + nodes[1].getColumn() - nodes[0].getColumn()
+			);
 			Flower neighbor = new Flower(nodes[0], nodes[1], third);
 			if (isOnBoard(neighbor)) {
 				result.add(neighbor);
 			}
-		} catch (IllegalArgumentException e) {}
+		} catch (IllegalArgumentException e) {
+		}
 		return result;
 	}
 
