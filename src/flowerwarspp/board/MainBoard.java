@@ -123,6 +123,7 @@ public class MainBoard implements Board {
 		}
 		if (!playerData.get(currentPlayer).legalMoves.contains(move)) {
 			currentStatus = Status.Illegal;
+			return;
 		}
 		switch (move.getType()) {
 			case Ditch:
