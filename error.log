@@ -1,0 +1,111 @@
+Starting tests...
+
+..................................................
+..................................................
+..................................................
+..................................................
+..................................................
+..................................................
+..................................................
+..................................................
+..................................................
+..................................................
+.....
+
+505 tests executed in 15.731 s
+Success:  482 ( 95.4%)
+Failed:    23 (  4.6%)
+
+
+------------------------------------------------------------
+Failure #001:
+testFlowerGardenMove[4](board.BoardDitchMoveInvalidBlockedPositionTest): Invalid ditch move on blocked position {{(3,4),(3,5)}} expected:<Illegal> but was:<Ok>
+------------------------------------------------------------
+------------------------------------------------------------
+Failure #002:
+playerHasTenPointsAfterCreatingFourGardensAndConnectingAllOfThemThroughSomeFlowerBeds(board.BoardPointCalculationTest): expected:<10> but was:<0>
+------------------------------------------------------------
+------------------------------------------------------------
+Failure #003:
+playerHasSevenPointsAfterCreatingFourGardensAndConnectingThreeOfThem(board.BoardPointCalculationTest): expected:<7> but was:<0>
+------------------------------------------------------------
+------------------------------------------------------------
+Failure #004:
+playerHasThreePointsAfterCreatingTwoGardensAndConnectingThroughOneFlowerBed(board.BoardPointCalculationTest): expected:<3> but was:<0>
+------------------------------------------------------------
+------------------------------------------------------------
+Failure #005:
+playerHasTenPointsAfterCreatingFourGardensAndConnectingAllOfThemDirectlyMultipleTimes(board.BoardPointCalculationTest): expected:<10> but was:<0>
+------------------------------------------------------------
+------------------------------------------------------------
+Failure #006:
+playerHasOnePointAfterCreatingFirstGarden(board.BoardPointCalculationTest): expected:<1> but was:<0>
+------------------------------------------------------------
+------------------------------------------------------------
+Failure #007:
+playerHasTwoPointsAfterCreatingTwoGardensInTwoMoves(board.BoardPointCalculationTest): expected:<2> but was:<0>
+------------------------------------------------------------
+------------------------------------------------------------
+Failure #008:
+playerHasTwoPointsAfterCreatingTwoGardensInSameMove(board.BoardPointCalculationTest): expected:<2> but was:<0>
+------------------------------------------------------------
+------------------------------------------------------------
+Failure #009:
+playerHasTenPointsAfterCreatingFourGardensAndConnectingAllOfThemDirectly(board.BoardPointCalculationTest): expected:<10> but was:<0>
+------------------------------------------------------------
+------------------------------------------------------------
+Failure #010:
+playerHasFourPointsAfterCreatingFourGardens(board.BoardPointCalculationTest): expected:<4> but was:<0>
+------------------------------------------------------------
+------------------------------------------------------------
+Failure #011:
+playerHasThreePointsAfterCreatingTwoGardensAndDirectlyConnectingThem(board.BoardPointCalculationTest): expected:<3> but was:<0>
+------------------------------------------------------------
+------------------------------------------------------------
+Failure #012:
+playerHasThreePointsAfterCreatingTwoGardensAndConnectingThroughTwoFlowerBeds(board.BoardPointCalculationTest): expected:<3> but was:<0>
+------------------------------------------------------------
+------------------------------------------------------------
+Failure #013:
+playerHasSixPointsAfterCreatingFourGardensAndConnectingTwoEach(board.BoardPointCalculationTest): expected:<6> but was:<0>
+------------------------------------------------------------
+------------------------------------------------------------
+Failure #014:
+comparePossibleMovesBeforeEndWithEndMove(board.BoardPossibleMovesTest): array lengths differed, expected.length=3 actual.length=8
+------------------------------------------------------------
+------------------------------------------------------------
+Failure #015:
+comparePossibleMovesForFollowingRedPlayer(board.BoardPossibleMovesTest): array lengths differed, expected.length=9 actual.length=11
+------------------------------------------------------------
+------------------------------------------------------------
+Failure #016:
+comparePossibleMovesForBluePlayer(board.BoardPossibleMovesTest): array lengths differed, expected.length=41 actual.length=46
+------------------------------------------------------------
+------------------------------------------------------------
+Failure #017:
+bluePlayerWinsByMostPointsInComplexGame(board.BoardWinSituationTest): expected:<BlueWin> but was:<Draw>
+------------------------------------------------------------
+------------------------------------------------------------
+Failure #018:
+drawSituationWithConnectedGardens(board.BoardWinSituationTest): expected:<Draw> but was:<Ok>
+------------------------------------------------------------
+------------------------------------------------------------
+Failure #019:
+bluePlayerWinsWithMoreGardens(board.BoardWinSituationTest): expected:<BlueWin> but was:<Draw>
+------------------------------------------------------------
+------------------------------------------------------------
+Failure #020:
+bluePlayerWinsWithMoreConnectedGardens(board.BoardWinSituationTest): expected:<BlueWin> but was:<Draw>
+------------------------------------------------------------
+------------------------------------------------------------
+Failure #021:
+redPlayerWinsWithMoreGardens(board.BoardWinSituationTest): expected:<RedWin> but was:<Draw>
+------------------------------------------------------------
+------------------------------------------------------------
+Failure #022:
+redPlayerWinsByMostPointsInComplexGame(board.BoardWinSituationTest): illegal column value: 0
+------------------------------------------------------------
+------------------------------------------------------------
+Failure #023:
+redPlayerWinsWithMoreConnectedGardens(board.BoardWinSituationTest): expected:<RedWin> but was:<Draw>
+------------------------------------------------------------

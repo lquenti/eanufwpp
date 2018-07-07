@@ -11,7 +11,7 @@ public class BoardDisplay extends JPanel {
 	/**
 	 * Eine private Klasse, die die Mausaktionen für das {@link BoardDisplay} verarbeitet.
 	 */
-	private class BoardDisplayMouseHandler extends MouseAdapter {
+	private class DisplayMouseHandler extends MouseAdapter {
 		/**
 		 * Das {@link BoardDisplay}, zu dem dieser {@link MouseAdapter} gehört.
 		 */
@@ -20,66 +20,93 @@ public class BoardDisplay extends JPanel {
 
 		private final Object moveAwaitLock = new Object();
 		/**
-		 * Wenn Blumen gesetzt werden, müssen zwei Dreiecke geklickt werden.
-		 * Wurde bereits ein Dreieck geklickt worden, so ist jenes hierin gespeichert.
+		 * Wenn {@link Flower}s gesetzt werden, müssen zwei Dreiecke geklickt werden.
+		 * Wurden zwei geklickt, so sind sie hierin gespeichert.
 		 */
-		private Triangle firstClickedTriangle = null;
-		private Move move = null;
+		private Flower clickedFlower1 = null, clickedFlower2 = null;
+		/**
+		 * Wenn ein {@link Ditch} gesetzt werden soll, muss dieser angeklickt werden.
+		 * Wurde einer geklickt, so ist er hierin gespeichert.
+		 */
+		private Ditch clickedDitch = null;
 
 		/**
-		 * Konstruiert einen {@link BoardDisplayMouseHandler}, der an ein {@link BoardDisplay}
+		 * Konstruiert einen {@link DisplayMouseHandler}, der an ein {@link BoardDisplay}
 		 * gebunden ist.
 		 *
 		 * @param boardDisplay
 		 * Das {@link BoardDisplay}, an welches dieses Objekt gebunden ist.
 		 */
-		public BoardDisplayMouseHandler(BoardDisplay boardDisplay) {
+		public DisplayMouseHandler(BoardDisplay boardDisplay) {
 			this.boardDisplay = boardDisplay;
 		}
 
 		/**
 		 * {@inheritDoc}
 		 */
-		@Override
 		public void mouseClicked(MouseEvent mouseEvent) {
 			if (!this.isRequesting)
 				return;
 
-			Triangle triangle = findTriangle(mouseEvent.getPoint());
-			if (this.firstClickedTriangle == null) {
-				this.firstClickedTriangle = triangle;
-				synchronized (this.moveAwaitLock) {
-					this.moveAwaitLock.notify();
-				}
-			} else {
-				// The user has actually clicked on a triangle
-				if (triangle != null) {
-					// If the user clicks on the same triangle again, deselect it.
-					if (this.firstClickedTriangle.samePlace(triangle)) {
-						Color newColour = this.boardDisplay.getBackground();
-						this.firstClickedTriangle.setFillColour(newColour);
-						this.firstClickedTriangle = null;
-					// Otherwise, try and create a move out of it.
-					} else {
-						Flower firstFlower = firstClickedTriangle.toFlower();
-						Flower secondFlower = triangle.toFlower();
-						if (!this.boardDisplay.combinableFlowers.contains(secondFlower)) {
-							move = null;
-						}
-						else {
-							this.move = new Move(firstFlower, secondFlower);
-						}
+			this.processClick(mouseEvent);
+			this.boardDisplay.getParent().repaint();
+			synchronized (this.moveAwaitLock) {
+				this.moveAwaitLock.notify();
+			}
+		}
 
-						this.firstClickedTriangle = null;
-						// The main thread is waiting for a reaction from here, so unlock this
-						synchronized (this.moveAwaitLock) {
-							this.moveAwaitLock.notify();
-						}
-					}
-				}
+		/**
+		 * Reagiert auf den Klick selbst.
+		 *
+		 * @param mouseEvent
+		 * Das {@link MouseEvent}, das die Ausführung verursacht hat.
+		 */
+		private void processClick(MouseEvent mouseEvent) {
+			Point clickPoint = mouseEvent.getPoint();
+			Dot dot = findDot(clickPoint);
+			if (dot != null)
+				return;
+
+			Edge edge = findEdge(clickPoint);
+			if (edge != null) {
+				this.onEdgeClick(edge);
+				return;
 			}
 
-			this.boardDisplay.getParent().repaint();
+			Triangle triangle = findTriangle(clickPoint);
+			if (triangle != null) {
+				this.onTriangleClick(triangle);
+			}
+		}
+
+		/**
+		 * Verarbietet den {@link Edge}-Klick.
+		 *
+		 * @param edge
+		 * Die geklickte {@link Edge}. Darf nicht <code>null</code> sein.
+		 */
+		private void onEdgeClick(Edge edge) {
+			if (this.clickedFlower1 != null)
+				return;
+
+			Ditch ditch = edge.toDitch();
+			this.clickedDitch = ditch;
+		}
+
+		/**
+		 * Verarbeitet den {@link Triangle}-Klick.
+		 *
+		 * @param triangle
+		 * Das geklickte {@link Triangle}. Darf nicht <code>null</code> sein.
+		 */
+		private void onTriangleClick(Triangle triangle) {
+			if (triangle != null) {
+				if (this.clickedFlower1 == null) {
+					this.clickedFlower1 = triangle.toFlower();
+				} else {
+					this.clickedFlower2 = triangle.toFlower();
+				}
+			}
 		}
 
 		/**
@@ -101,51 +128,123 @@ public class BoardDisplay extends JPanel {
 			return null;
 		}
 
+		private Edge findEdge(Point point) {
+			for (Edge e : this.boardDisplay.mapEdges) {
+				if (e.contains(point))
+					return e;
+			}
+
+			return null;
+		}
+
+		/**
+		 * Findet einen {@link Dot} am spezifizierten {@link Point}.
+		 *
+		 * @param point
+		 * Der {@link Point}, an dem der {@link Dot} liegt.
+		 *
+		 * @return
+		 * Der {@link Dot}, der derzeit an der angegebenen Stelle liegt,
+		 * oder <code>null</code>, falls dort keiner liegt.
+		 */
+		private Dot findDot(Point point) {
+			for (Dot d : this.boardDisplay.mapDots) {
+				if (d.contains(point))
+					return d;
+			}
+
+			return null;
+		}
+
 		/**
 		 * Interne Methode, dieses Objekt zurücksetzt.
 		 * Zurücksetzen bedeutet, dass kein Dreieck mehr gewählt ist,
 		 * und kein {@link Move} mehr gehalten wird.
 		 */
 		private void reset() {
-			this.firstClickedTriangle = null;
-			this.move = null;
+			this.clickedFlower1 = null;
+			this.clickedFlower2 = null;
+			this.clickedDitch = null;
+			this.isRequesting = false;
 		}
 	}
 
 	/**
-	 * Dieses {@link Stroke}-Objekt zeichnet die Dreiecke auf dem Spielbrett mit dicken Linien. Wird
-	 * nur verwendet, wenn das {@link Graphics}-Objekt das in {@link #paintComponent(Graphics)}
-	 * gegeben wird ein {@link Graphics2D}-Objekt ist.
+	 * Die Farbe, die ein angewähltes {@link Triangle} hat,
+	 * bevor ein zweites für einen {@link Move} gewählt wurde.
 	 */
-	private static final Stroke stroke = new BasicStroke(
-	        5.0F,
-	        BasicStroke.CAP_ROUND,
-	        BasicStroke.JOIN_ROUND);
-
-	private static final Color triangleDefaultColour = Color.GREEN;
-	private static final Color triangleHighlightColour = Color.MAGENTA;
-	private static final Color combinableTriangleColour = Color.GREEN;
+	private static final Color triangleClickedColour = Color.MAGENTA;
+	/**
+	 * Die Farbe, die ein {@link Triangle} hat,
+	 * wenn es mit dem aktuell angewählten kombinierbar ist.
+	 */
+	private static final Color triangleCombinableColour = Color.GREEN;
+	/**
+	 * Die Farbe der Dreiecke, die dem {@link PlayerColor#Red} gehören.
+	 */
 	private static final Color redColour = Color.RED;
+	/**
+	 * Die Farbe der Dreiecke, die dem {@link PlayerColor#Blue} gehören.
+	 */
 	private static final Color blueColour = Color.CYAN;
 
 	/**
-	 * Legt fest, wie groß das Spielbrett in Relation zum Fenster sein soll.
-	 * TODO: Dies sollte auch abhängig von der absoluten Größe des Frames sein.
+	 * Der {@link Viewer}, durch den dieses Display auf das {@link Board} schauen soll.
 	 */
-	private static final int componentSizePercentage = 90;
-
-	private Viewer boardViewer = null;
+	private Viewer boardViewer;
+	/**
+	 * Eine {@link Collection} von {@link Triangle}s, die die {@link Flower}s
+	 * des betrachteten {@link Board}s repräsentieren.
+	 */
 	private Collection<Triangle> mapTriangles = new ArrayList<>();
+	/**
+	 * Eine {@link Collection} von {@link Edge}s, die die {@link Ditch}es
+	 * des betrachteten {@link Board}s repräsentieren.
+	 */
 	private Collection<Edge> mapEdges = new ArrayList<>();
+	/**
+	 * Eine {@link Collection} von {@link Dot}s, verwendet für kosmetische Zwecke.
+	 */
 	private Collection<Dot> mapDots = new ArrayList<>();
-	private BoardDisplayMouseHandler boardDisplayMouseHandler = new BoardDisplayMouseHandler(this);
+	/**
+	 * Handhabt alle {@link MouseEvent}s, die in diesem {@link JPanel} auftreten können.
+	 */
+	private DisplayMouseHandler displayMouseHandler = new DisplayMouseHandler(this);
 
 	// Cached information fresh (or stale) from the viewer
+	/**
+	 * Eine {@link Collection} von {@link Flower}s, die dem {@link PlayerColor#Red} gehören.
+	 */
 	private Collection<Flower> redFlowers;
+	/**
+	 * Eine {@link Collection} von {@link Flower}s, die dem {@link PlayerColor#Blue} gehören.
+	 */
 	private Collection<Flower> blueFlowers;
+	/**
+	 * Eine {@link Collection} von {@link Ditch}es, die dem {@link PlayerColor#Red} gehören.
+	 */
+	private Collection<Ditch> redDitches;
+	/**
+	 * Eine {@link Collection} von {@link Ditch}es, die dem {@link PlayerColor#Blue} gehören.
+	 */
+	private Collection<Ditch> blueDitches;
+	/**
+	 * Eine {@link Collection} von {@link Flower}s,
+	 * die mit der aktuell angewählten {@link Flower} kombinierbar sind.
+	 */
 	private Collection<Flower> combinableFlowers;
+	/**
+	 * Eine {@link Collection} möglicher {@link Move}s, die {@link Ditch}es enthalten.
+	 */
+	private Collection<Move> possibleDitchMoves;
+	/**
+	 * Die Größe des {@link Board}s.
+	 */
 	private int boardSize;
 
+	/**
+	 * Konstruiert ein Display für die Darstellung eines {@link Board}s.
+	 */
 	public BoardDisplay() {
 		Font font = this.getFont().deriveFont(10F);
 		this.setFont(font);
@@ -164,10 +263,10 @@ public class BoardDisplay extends JPanel {
 		this.createTriangles();
 		this.createDitches();
 		this.createDots();
-		this.boardDisplayMouseHandler.reset();
+		this.displayMouseHandler.reset();
 		for (MouseListener mouseListener : this.getMouseListeners())
 			this.removeMouseListener(mouseListener);
-		this.addMouseListener(this.boardDisplayMouseHandler);
+		this.addMouseListener(this.displayMouseHandler);
 	}
 
 	@Override
@@ -186,47 +285,39 @@ public class BoardDisplay extends JPanel {
 	 */
 	private void updateTriangles() {
 		for (Triangle t : this.mapTriangles) {
-			t.setFillColour(triangleDefaultColour);
-			if (t.samePlace(this.boardDisplayMouseHandler.firstClickedTriangle)) {
-				t.setFillColour(triangleHighlightColour);
-			} else {
-				if (this.combinableFlowers != null) {
-					Optional<Flower> maybeFlower = this.combinableFlowers.stream()
-						.filter(f -> t.samePlace(f))
-						.findAny();
-
-					if (maybeFlower.isPresent())
-						t.setFillColour(combinableTriangleColour);
-					else
-						t.setFillColour(this.getBackground());
+			Flower f = t.toFlower();
+			if ((this.redFlowers != null) && this.redFlowers.contains(f))
+				t.setFillColour(redColour);
+			else if ((this.blueFlowers != null) && this.blueFlowers.contains(f))
+				t.setFillColour(blueColour);
+			else {
+				if (this.displayMouseHandler.clickedFlower1 != null) {
+					if (t.samePlace(this.displayMouseHandler.clickedFlower1)) {
+						t.setFillColour(triangleClickedColour);
+					} else if (this.combinableFlowers != null) {
+						if (this.combinableFlowers.contains(f)) {
+							t.setFillColour(triangleCombinableColour);
+						}
+					}
+				} else {
+					t.setFillColour(this.getBackground());
 				}
 			}
 		}
 
-		if (this.redFlowers != null)
-			setTriangleColours(this.redFlowers, redColour);
-		if (this.blueFlowers != null)
-			setTriangleColours(this.blueFlowers, blueColour);
+		if (this.redDitches != null)
+			setEdgeColours(this.redDitches, redColour);
+		if (this.blueDitches != null)
+			setEdgeColours(this.blueDitches, blueColour);
 	}
 
-	/**
-	 * Färbt Dreiecke basierend auf der Blume, an der sie liegen.
-	 *
-	 * @param flowers
-	 * Eine Sammlung von Blumen.
-	 *
-	 * @param color
-	 * Die Farbe, die den Dreiecken gegeben werden soll, deren Position mit
-	 * der Position einer der Blumen übereinstimmt.
-	 */
-	private void setTriangleColours(Collection<Flower> flowers, Color color) {
-		for (Triangle triangle : this.mapTriangles) {
-			Flower flower = new Flower(triangle.getTopBoardPosition(),
-			    triangle.getLeftBoardPosition(),
-			    triangle.getRightBoardPosition());
+	private void setEdgeColours(Collection<Ditch> ditches, Color colour) {
+		for (Edge edge : this.mapEdges) {
+			Ditch ditch = edge.toDitch();
 
-			if (flowers.contains(flower))
-				triangle.setFillColour(color);
+			if (ditches.contains(ditch)) {
+				edge.setFillColour(colour);
+			}
 		}
 	}
 
@@ -243,14 +334,14 @@ public class BoardDisplay extends JPanel {
 		Point drawBegin = new Point();
 		drawBegin.x = (displaySize.width / 2) - sideLength * (this.boardSize + 2) / 2;
 		drawBegin.y = sideLength * this.boardSize;
+
 		this.mapTriangles.forEach(t -> t.recalcPoints(sideLength, drawBegin));
 		this.mapEdges.forEach(e -> e.recalcPoints(sideLength, drawBegin));
 		this.mapDots.forEach(e -> e.recalcPoints(sideLength, drawBegin));
 	}
 
 	/**
-	 * Handhabt eventuelle Größenänderungen des Displays und
-	 * skaliert das gezeichnete Spielfeld dementsprechend.
+	 * Erstellt {@link Triangle}-Objekte, die die Dreiecke auf dem Spiel repräsentieren.
 	 */
 	private void createTriangles() {
 		this.mapTriangles.clear();
@@ -266,7 +357,7 @@ public class BoardDisplay extends JPanel {
 	}
 
 	/**
-	 * Erstelle die Reihen der Dreiecke.
+	 * Erstellt die Reihen von Dreiecken
 	 *
 	 * @param topTriangle
 	 * Das oberste Dreieck des Zeichenbretts.
@@ -315,7 +406,11 @@ public class BoardDisplay extends JPanel {
 		}
 	}
 
+	/**
+	 * Konstruiert die {@link Edge}s, die {@link Ditch}es repräsentieren werden.
+	 */
 	private void createDitches() {
+		// for each non-flipped triangle, create the three ditches around it.
 		for (Triangle t : this.mapTriangles) {
 			if (!t.isFlipped()) {
 				Edge leftDitch = new Edge(t.getLeftBoardPosition(), t.getTopBoardPosition());
@@ -329,7 +424,11 @@ public class BoardDisplay extends JPanel {
 		}
 	}
 
+	/**
+	 * Konstruiert die {@link Dot}s. Sie dienen als Orientierung für den Spieler und Zuschaue
+	 */
 	private void createDots() {
+		// For each non-flipped triangle, create three dots for its edges.
 		for (Triangle t : this.mapTriangles) {
 			if (!t.isFlipped()) {
 				Dot leftDot = new Dot(t.getLeftBoardPosition());
@@ -350,37 +449,91 @@ public class BoardDisplay extends JPanel {
 	 * Ein {@link Move}, der von vom menschlichen User erfragt wird.
 	 */
 	public Move awaitMove() throws InterruptedException {
-		this.boardDisplayMouseHandler.reset();
-		this.boardDisplayMouseHandler.isRequesting = true;
+		this.displayMouseHandler.reset();
+		this.displayMouseHandler.isRequesting = true;
+		Move result = null;
 
-		// NOTE: We need Thread.sleep to avoid 100% CPU usage.
-		while (true) {
-			synchronized (this.boardDisplayMouseHandler.moveAwaitLock) {
-				this.boardDisplayMouseHandler.moveAwaitLock.wait();
-				if (this.boardDisplayMouseHandler.move == null) {
-					Triangle triangle = this.boardDisplayMouseHandler.firstClickedTriangle;
-					if (triangle != null) {
-						Flower flower = triangle.toFlower();
-						try {
-							this.combinableFlowers = this.boardViewer.getFlowersCombinableWith(flower);
-						} catch (NullPointerException e) {
-							// FIXME: ¿?
-						}
-					}
-					this.boardDisplayMouseHandler.moveAwaitLock.notifyAll();
+		while (result == null) {
+			synchronized (this.displayMouseHandler.moveAwaitLock) {
+				this.displayMouseHandler.moveAwaitLock.wait();
+
+				if (this.displayMouseHandler.clickedFlower1 != null) {
+					result = this.checkForFlowerMove();
 				} else {
-					Move move = this.boardDisplayMouseHandler.move;
-					this.boardDisplayMouseHandler.reset();
-					this.boardDisplayMouseHandler.isRequesting = false;
-					this.combinableFlowers = Collections.EMPTY_LIST;
-					return move;
+					result = this.checkForDitchMove();
 				}
 			}
 		}
+
+		this.displayMouseHandler.reset();
+		this.repaint();
+		return result;
 	}
 
+	/**
+	 * Ausschließlich intern benutzt.
+	 * Überprüft den aktuellen Klick auf einen {@link Flower}-Move.
+	 *
+	 * @return
+	 * Einen {@link Move} der die gewählten {@link Flower}s enthält,
+	 * oder <code>null</code>, wenn kein gültiger {@link Move} gewählt ist.
+	 */
+	private Move checkForFlowerMove() {
+		Flower flower1 = this.displayMouseHandler.clickedFlower1;
+		if (!this.boardViewer.possibleMovesContainsMovesContaining(flower1)) {
+			this.displayMouseHandler.reset();
+			this.displayMouseHandler.isRequesting = true;
+		} else if (this.displayMouseHandler.clickedFlower2 == null) {
+			this.combinableFlowers = this.boardViewer.getFlowersCombinableWith(flower1);
+		} else {
+			Flower flower2 = this.displayMouseHandler.clickedFlower2;
+			if (!this.combinableFlowers.contains(flower2)) {
+				this.displayMouseHandler.clickedFlower2 = null;
+			} else {
+				return new Move(flower1, flower2);
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Ausschließlich intern benutzt.
+	 * Überprüft den aktuellen Klick auf einen {@link Ditch}-Move.
+	 *
+	 * @return
+	 * Einen {@link Move} der den gewählten {@link Ditch} enthält,
+	 * oder <code>null</code>, wenn kein gültiger {@link Move} gewählt ist.
+	 */
+	private Move checkForDitchMove() {
+		Ditch ditch = this.displayMouseHandler.clickedDitch;
+		if (ditch == null) {
+			this.displayMouseHandler.reset();
+			this.displayMouseHandler.isRequesting = true;
+		} else {
+			if (((this.redDitches != null) && this.redDitches.contains(ditch) ||
+				this.blueDitches != null && this.blueDitches.contains(ditch)))
+			{
+				this.displayMouseHandler.reset();
+				this.displayMouseHandler.isRequesting = true;
+			}
+
+			Move result = new Move(ditch);
+			if ((this.possibleDitchMoves != null) && this.possibleDitchMoves.contains(result))
+				return result;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Updatet das interne Cache des Spielbretts dieses Displays.
+	 */
 	public synchronized void refresh() {
 		this.redFlowers = this.boardViewer.getFlowers(PlayerColor.Red);
 		this.blueFlowers = this.boardViewer.getFlowers(PlayerColor.Blue);
+		this.redDitches = this.boardViewer.getDitches(PlayerColor.Red);
+		this.blueDitches = this.boardViewer.getDitches(PlayerColor.Blue);
+		this.possibleDitchMoves = this.boardViewer.getPossibleDitchMoves();
 	}
 }
