@@ -151,7 +151,7 @@ public class MainBoard implements Board {
 		}
 
 		for (PlayerData player : playerData.values()) {
-			if (!player.legalMoves.isEmpty() && player.legalMoves.getFlowerMoves().isEmpty()) {
+			if (player.legalMoves.getFlowerMoves().isEmpty() && !player.legalMoves.getDitchMoves().isEmpty()) {
 				player.legalMoves.add(new Move(MoveType.End));
 			}
 		}
