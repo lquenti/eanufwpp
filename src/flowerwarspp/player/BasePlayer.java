@@ -121,8 +121,14 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	@Override
 	public Move request() throws Exception, RemoteException {
 		// State validation
-		if ( this.cycleState == PlayerFunction.NULL ) throw new Exception(exception_NoInit);
-		if ( this.cycleState != PlayerFunction.REQUEST ) throw new Exception(exception_CycleRequest);
+		if ( this.cycleState == PlayerFunction.NULL ) {
+			log(ERROR, "request() was called before player was initialized");
+			throw new Exception(exception_NoInit);
+		}
+		if ( this.cycleState != PlayerFunction.REQUEST ) {
+			log(ERROR, "request() was called at the wrong time");
+			throw new Exception(exception_CycleRequest);
+		}
 
 		final Move move = requestMove();
 
@@ -161,15 +167,24 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	@Override
 	public void confirm( Status status ) throws Exception, RemoteException {
 		// State validation
-		if ( this.cycleState == PlayerFunction.NULL ) throw new Exception(exception_NoInit);
-		if ( this.cycleState != PlayerFunction.CONFIRM ) throw new Exception(exception_CycleConfirm);
+		if ( this.cycleState == PlayerFunction.NULL ) {
+			log(ERROR, "confirm() was called before player was initialized");
+			throw new Exception(exception_NoInit);
+		}
+		if ( this.cycleState != PlayerFunction.CONFIRM ) {
+			log(ERROR, "confirm() was called at the wrong time");
+			throw new Exception(exception_CycleConfirm);
+		}
 
 		// Verify that player's status and main program's status are equal
 		final Status playerBoardState = this.boardViewer.getStatus();
 
 		log(DEBUG, "board status on confirm() = " + playerBoardState);
 
-		if ( ! playerBoardState.equals(status) ) throw new Exception(exception_StatusError);
+		if ( ! playerBoardState.equals(status) ) {
+			log(ERROR, "confirm(): status of player board and main program are not the same");
+			throw new Exception(exception_StatusError);
+		}
 
 		// Update state
 		this.cycleState = PlayerFunction.UPDATE;
@@ -189,8 +204,14 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	@Override
 	public void update( Move opponentMove, Status status ) throws Exception, RemoteException {
 		// State validation
-		if ( this.cycleState == PlayerFunction.NULL ) throw new Exception(exception_NoInit);
-		if ( this.cycleState != PlayerFunction.UPDATE ) throw new Exception(exception_CycleUpdate);
+		if ( this.cycleState == PlayerFunction.NULL ) {
+			log(ERROR, "update() was called before player was initialized");
+			throw new Exception(exception_NoInit);
+		}
+		if ( this.cycleState != PlayerFunction.UPDATE ) {
+			log(ERROR, "update() was called at the wrong time");
+			throw new Exception(exception_CycleUpdate);
+		}
 
 		log(DEBUG, "received enemy move " + opponentMove + " and status " + status);
 
@@ -200,7 +221,10 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 		// Verify the status
 		final Status playerBoardStatus = this.boardViewer.getStatus();
 
-		if ( ! playerBoardStatus.equals(status) ) throw new Exception(exception_StatusError);
+		if ( ! playerBoardStatus.equals(status) ) {
+			log(ERROR, "update(): status of player board and main program are not the same");
+			throw new Exception(exception_StatusError);
+		}
 
 		// Update state
 		this.cycleState = PlayerFunction.REQUEST;
@@ -260,6 +284,13 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 		return this.playerColour;
 	}
 
+	/**
+	 * Wrapper für die {@link Log#log(LogLevel, LogModule, String)}-Methode, welcher das {@link LogModule} setzt und den
+	 * Spieler anhand seiner Farbe identifiziert.
+	 *
+	 * @param level   Der Log-Level der Nachricht
+	 * @param message Die Nachricht des Log-Eintrags
+	 */
 	protected void log( LogLevel level, String message ) {
 		Log.getInstance().log(level, PLAYER, "Player " + playerColour + ": " + message);
 	}
