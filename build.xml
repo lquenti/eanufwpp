@@ -44,6 +44,7 @@
                 <pathelement path="${builddir}"/>
             </classpath>
             <arg value="flowerwarspp.board.MainBoard"/>
+            <arg value="full"/>
         </java>
     </target>
 
