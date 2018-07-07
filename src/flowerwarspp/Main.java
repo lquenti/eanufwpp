@@ -23,11 +23,12 @@ public class Main {
 
 	private static void quitWithUsage() {
 		System.out.println("Verwendung:");
-		System.out.println("flowerwarspp.Main -size <Spielfeldgröße> -red <Spielertyp> -blue <Spielertyp> -delay <Verzögerung>");
+		System.out.println("flowerwarspp.Main -size <Spielfeldgröße> -red <Spielertyp> -blue <Spielertyp> -delay <Verzögerung> (optional:) --debug");
 		System.out.println();
 		System.out.println("Spielfeldgröße: Zahl zwischen 3 und 30");
-		System.out.println("Spielertyp:     \"human\", \"remote\", \"random\" oder \"simple\"");
+		System.out.println("Spielertyp:     \"human\", \"remote\", \"random\", \"simple\", oder \"adv1\"");
 		System.out.println("Verzögerung:    Zeit zwischen Zügen in Millisekunden");
+		System.out.println("Debug:          Zeigt Debug-Information im Game-Log an. Optionaler Flag (hat keine Argumente)");
 		System.exit(1);
 	}
 
@@ -82,6 +83,9 @@ public class Main {
 			Log.getInstance().setLogLevel(LogLevel.DEBUG);
 		else
 			Log.getInstance().setLogLevel(LogLevel.INFO);
+
+		Log.getInstance().setOutput(System.err);
+
 
 		Board board = new MainBoard(boardSize);
 		Viewer boardViewer = board.viewer();
