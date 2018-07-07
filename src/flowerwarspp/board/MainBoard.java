@@ -243,10 +243,10 @@ public class MainBoard implements Board {
 			Position[] ps = getPositions(f);
 			int n = ps.length;
 			for (int i=0; i<=n; i++) {
-				if (getPositionNeighbors(ps[i%n]).stream().anyMatch(neighbors::contains) &&
+				if (getFlowersAround(ps[i%n]).stream().anyMatch(neighbors::contains) &&
 						Arrays.asList(getPositions(newFlower)).contains(ps[(i+1)%n])
 						||
-						getPositionNeighbors(ps[(i+1)%n]).stream().anyMatch(neighbors::contains) &&
+						getFlowersAround(ps[(i+1)%n]).stream().anyMatch(neighbors::contains) &&
 								Arrays.asList(getPositions(newFlower)).contains(ps[i%n])) {
 					res.add(new Ditch(ps[i%n], ps[(i+1)%n]));
 				}
@@ -268,14 +268,6 @@ public class MainBoard implements Board {
 
 	private Position[] getPositions(Flower f) {
 		return new Position[]{f.getFirst(), f.getSecond(), f.getThird()};
-	}
-
-	private HashSet<Flower> getPositionNeighbors(Position p) {
-		// TODO: Durch Vektormagie replacen
-		return Arrays.stream(allFlowers)
-				.filter(f -> (Arrays.asList(getPositions(f)).contains(p)))
-				.collect(Collectors.toCollection(HashSet::new));
-
 	}
 
 	private boolean isLegalBed(final Collection<Flower> bed, final PlayerColor player) {
@@ -417,6 +409,46 @@ public class MainBoard implements Board {
 				result.add(neighbor);
 			}
 		} catch (IllegalArgumentException e) {}
+		return result;
+	}
+
+	private LinkedList<Position> getPositionsAround(final Position center) {
+		LinkedList<Position> result = new LinkedList<>();
+		// Im Kreis rumgehen.
+		for (int i = 0; i < 6; i++) {
+			try {
+				Position neighbor = new Position(
+					// Folge, die so ein Bisschen wie sin ist aber nicht ganz.
+					center.getColumn() + Integer.signum(((i+2)%6-2)%3),
+					// Folge, die so ein Bisschen wie -cos ist aber nicht ganz.
+					center.getRow() + Integer.signum((i%6-2)%3)
+				);
+				if (isOnBoard(neighbor)) {
+					result.add(neighbor);
+				}
+			} catch(IllegalArgumentException e) {}
+		}
+		return result;
+	}
+
+	private LinkedList<Flower> getFlowersAround(final Position center) {
+		LinkedList<Flower> result = new LinkedList<>();
+		Deque<Position> positions = getPositionsAround(center);
+		Position previousPosition = positions.getLast();
+		for (Position position : positions) {
+			if (getPositionsAround(position).contains(previousPosition)) {
+				result.add(new Flower(center, previousPosition, position));
+			}
+			previousPosition = position;
+		}
+		return result;
+	}
+
+	private LinkedList<Ditch> getDitchesAround(final Position center) {
+		LinkedList<Ditch> result = new LinkedList<>();
+		for (Position position : getPositionsAround(center)) {
+			result.add(new Ditch(center, position));
+		}
 		return result;
 	}
 
