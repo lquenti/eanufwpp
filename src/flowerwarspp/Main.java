@@ -12,6 +12,7 @@ import flowerwarspp.player.*;
 import flowerwarspp.preset.*;
 import flowerwarspp.util.log.Log;
 import flowerwarspp.util.log.LogLevel;
+import flowerwarspp.util.log.LogModule;
 
 public class Main {
 	private static int boardSize;
@@ -23,12 +24,54 @@ public class Main {
 
 	private static void quitWithUsage() {
 		System.out.println("Verwendung:");
-		System.out.println("flowerwarspp.Main -size <Spielfeldgröße> -red <Spielertyp> -blue <Spielertyp> -delay <Verzögerung>");
+		System.out.println("flowerwarspp.Main -size <Spielfeldgröße> -red <Spielertyp> -blue <Spielertyp> -delay <Verzögerung> (optional:) --debug");
 		System.out.println();
 		System.out.println("Spielfeldgröße: Zahl zwischen 3 und 30");
-		System.out.println("Spielertyp:     \"human\", \"remote\", \"random\" oder \"simple\"");
+		System.out.println("Spielertyp:     \"human\", \"remote\", \"random\", \"simple\", oder \"adv1\"");
 		System.out.println("Verzögerung:    Zeit zwischen Zügen in Millisekunden");
+		System.out.println("Debug:          Zeigt Debug-Information im Game-Log an. Optionaler Flag (hat keine Argumente)");
 		System.exit(1);
+	}
+
+	private static void parseArguments(String[] args) {
+
+		try {
+			// set up
+			ArgumentParser argumentParser = new ArgumentParser(args);
+
+			// If we want to offer the player, set that variable and return
+			try {
+				offerType = argumentParser.getOffer();
+				return;
+			} catch(ArgumentParserException e){
+				offerType = null;
+			}
+
+			// Parse board size
+			boardSize = argumentParser.getSize();
+			redType = argumentParser.getRed();
+			blueType = argumentParser.getBlue();
+			delay = argumentParser.getDelay();
+
+			// Validate board size
+			if (boardSize < 3 || boardSize > 30 || delay < 0) {
+				quitWithUsage();
+			}
+
+			try {
+				debug = argumentParser.isDebug();
+			} catch ( ArgumentParserException e ) {
+				debug = false;
+			}
+
+		} catch ( ArgumentParserException e ) {
+
+			quitWithUsage();
+		}
+	}
+
+	private  static void init() {
+
 	}
 
 	public static void main(String[] args) {
@@ -36,18 +79,7 @@ public class Main {
 		Requestable input = boardFrame;
 		Output output = boardFrame;
 
-		ArgumentParser argumentParser = null;
-		try {
-			argumentParser = new ArgumentParser(args);
-		} catch (ArgumentParserException e) {
-			quitWithUsage();
-		}
-
-		try {
-			offerType = argumentParser.getOffer();
-		} catch(ArgumentParserException e){
-			offerType = null;
-		}
+		parseArguments(args);
 
 		if (offerType != null) {
 			try {
@@ -59,29 +91,13 @@ public class Main {
 			}
 		}
 
-		try {
-			boardSize = argumentParser.getSize();
-			redType = argumentParser.getRed();
-			blueType = argumentParser.getBlue();
-			delay = argumentParser.getDelay();
-		} catch (ArgumentParserException e) {
-			quitWithUsage();
-		}
-
-		if (boardSize < 3 || boardSize > 30 || delay < 0) {
-			quitWithUsage();
-		}
-
-		try {
-			debug = argumentParser.isDebug();
-		} catch ( ArgumentParserException e ) {
-			debug = false;
-		}
-
 		if (debug)
 			Log.getInstance().setLogLevel(LogLevel.DEBUG);
 		else
 			Log.getInstance().setLogLevel(LogLevel.INFO);
+
+		Log.getInstance().setOutput(System.err);
+
 
 		Board board = new MainBoard(boardSize);
 		Viewer boardViewer = board.viewer();
