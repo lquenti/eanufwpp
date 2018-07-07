@@ -12,6 +12,7 @@ import flowerwarspp.player.*;
 import flowerwarspp.preset.*;
 import flowerwarspp.util.log.Log;
 import flowerwarspp.util.log.LogLevel;
+import flowerwarspp.util.log.LogModule;
 
 public class Main {
 	private static int boardSize;
@@ -32,23 +33,53 @@ public class Main {
 		System.exit(1);
 	}
 
+	private static void parseArguments(String[] args) {
+
+		try {
+			// set up
+			ArgumentParser argumentParser = new ArgumentParser(args);
+
+			// If we want to offer the player, set that variable and return
+			try {
+				offerType = argumentParser.getOffer();
+				return;
+			} catch(ArgumentParserException e){
+				offerType = null;
+			}
+
+			// Parse board size
+			boardSize = argumentParser.getSize();
+			redType = argumentParser.getRed();
+			blueType = argumentParser.getBlue();
+			delay = argumentParser.getDelay();
+
+			// Validate board size
+			if (boardSize < 3 || boardSize > 30 || delay < 0) {
+				quitWithUsage();
+			}
+
+			try {
+				debug = argumentParser.isDebug();
+			} catch ( ArgumentParserException e ) {
+				debug = false;
+			}
+
+		} catch ( ArgumentParserException e ) {
+
+			quitWithUsage();
+		}
+	}
+
+	private  static void init() {
+
+	}
+
 	public static void main(String[] args) {
 		BoardFrame boardFrame = new BoardFrame();
 		Requestable input = boardFrame;
 		Output output = boardFrame;
 
-		ArgumentParser argumentParser = null;
-		try {
-			argumentParser = new ArgumentParser(args);
-		} catch (ArgumentParserException e) {
-			quitWithUsage();
-		}
-
-		try {
-			offerType = argumentParser.getOffer();
-		} catch(ArgumentParserException e){
-			offerType = null;
-		}
+		parseArguments(args);
 
 		if (offerType != null) {
 			try {
@@ -58,25 +89,6 @@ public class Main {
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
-		}
-
-		try {
-			boardSize = argumentParser.getSize();
-			redType = argumentParser.getRed();
-			blueType = argumentParser.getBlue();
-			delay = argumentParser.getDelay();
-		} catch (ArgumentParserException e) {
-			quitWithUsage();
-		}
-
-		if (boardSize < 3 || boardSize > 30 || delay < 0) {
-			quitWithUsage();
-		}
-
-		try {
-			debug = argumentParser.isDebug();
-		} catch ( ArgumentParserException e ) {
-			debug = false;
 		}
 
 		if (debug)
