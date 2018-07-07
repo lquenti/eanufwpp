@@ -132,7 +132,7 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 
 		final Move move = requestMove();
 
-		log(DEBUG, "move returned from player through request(): " + move);
+		log(DEBUG, "move of type " + move.getType() + " returned from player through request(): " + move);
 
 		// We just assume the move is valid, might need to check later on
 		// For now we just make the move as returned by requestMove

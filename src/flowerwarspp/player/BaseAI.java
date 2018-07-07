@@ -91,7 +91,7 @@ abstract class BaseAI extends BasePlayer {
 				highestScore = score;
 				highestScoredMoves.clear();
 				highestScoredMoves.add(move);
-			} else if (score == highestScore) {
+			} else if ( score == highestScore ) {
 				highestScoredMoves.add(move);
 			}
 		}
@@ -99,13 +99,13 @@ abstract class BaseAI extends BasePlayer {
 		// Manually flush the log now that the data dump is complete...
 		Log.getInstance().flush();
 
-		if (highestScoredMoves.size() == 0) return null;
+		if ( highestScoredMoves.size() == 0 ) return null;
 
 		// Since we are using
 		return highestScoredMoves
 				.parallelStream()
 				.skip(aiRNG.nextInt(highestScoredMoves.size()))
-				.findFirst()
+				.findAny()
 				.orElse(null);
 	}
 }

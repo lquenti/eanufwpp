@@ -17,6 +17,8 @@ public class Players {
 				return new RandomAI();
 			case SIMPLE_AI:
 				return new SimpleAI();
+			case ADVANCED_AI_1:
+				return new AdvancedAI1();
 			case REMOTE:
 				return findRemotePlayer();
 			default:
