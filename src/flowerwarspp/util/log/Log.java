@@ -1,6 +1,8 @@
 package flowerwarspp.util.log;
 
 import java.io.PrintStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static flowerwarspp.util.log.LogLevel.*;
 import static flowerwarspp.util.log.LogModule.*;
@@ -242,7 +244,8 @@ public class Log {
 	public void log( LogLevel level, LogModule module, String message ) {
 		if ( isLogging && level.compareTo(logLevel) >= 0 && ( ( logModule == ALL ) || ( logModule == module ) ) ) {
 			if ( useFormatting )
-				messageBuffer.append(logLevelToString(level))
+				messageBuffer.append(getTimeStamp())
+						.append('\t').append(logLevelToString(level))
 						.append('\t').append(logModuleToString(module))
 						.append('\t').append(message).append('\n');
 			else
@@ -250,13 +253,15 @@ public class Log {
 						.append(' ').append(module)
 						.append(' ').append(message).append('\n');
 
-			if ( flushOnLog ) flush();
+			// We don't want to flush on data dumps, since they amass a good amount of messages in short time.
+			// Not flushing while the dump is in progress saves a lot of performance.
+			if ( flushOnLog && level != DUMP ) flush();
 		}
 	}
 
 	/**
-	 * Statische Methode zum loggen eines Eintrages, ohne das jeweils die Methode über {@link #getInstance()}
-	 * aufgerufen werden muss.
+	 * Statische Methode zum loggen eines Eintrages, ohne das jeweils die Methode über {@link #getInstance()} aufgerufen
+	 * werden muss.
 	 *
 	 * @param level   Der Log-Level der Nachricht
 	 * @param module  Das Modul aus welchem die Nachricht gesendet worden ist
@@ -294,7 +299,7 @@ public class Log {
 	 * @param level Das {@link LogLevel} dessen {@link String}-Repräsentation ausgegeben werden soll
 	 * @return {@link String}-Repräsentation des gegebenen Levels.
 	 */
-	private static String logLevelToString( LogLevel level ) {
+	private String logLevelToString( LogLevel level ) {
 		switch ( level ) {
 			case NONE:
 			default:
@@ -336,5 +341,16 @@ public class Log {
 	 */
 	public void flush() {
 		output.print(getLogOutput());
+	}
+
+	/**
+	 * Erstellt den aktuellen Timestamp im Format <blockquote>dd-MM-yyyy HH:mm:ss.SS</blockquote>. Wird nur in der
+	 * formartierten Ausgabe verwendet.
+	 *
+	 * @return Aktueller Zeitpunkt im Format <code>dd-MM-yyyy HH:mm:ss.SS</code>
+	 * @see SimpleDateFormat
+	 */
+	private String getTimeStamp() {
+		return new SimpleDateFormat("[dd-MM-yyyy HH:mm:ss.SS]").format(new Date());
 	}
 }
