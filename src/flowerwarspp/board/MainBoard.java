@@ -106,6 +106,10 @@ public class MainBoard implements Board {
 				playerData.get(PlayerColor.Blue).legalMoves.add(move);
 			}
 		}
+
+		Move surrenderMove = new Move(MoveType.Surrender);
+		playerData.get(PlayerColor.Red).legalMoves.add(surrenderMove);
+		playerData.get(PlayerColor.Blue).legalMoves.add(surrenderMove);
 	}
 
 	/**
