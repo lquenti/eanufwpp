@@ -7,7 +7,7 @@ import java.util.*;
 /**
  * <p>Klasse zur Verwaltung einer Menge von Spielzügen. Diese Klasse bietet konstante Laufzeit für
  * grundlegende Operationen (add, remove, contains), sowie für Abfragen von verschiedenen Kategorien
- * von Spielzügen.</p>
+ * von Spielzügen. Das Nullelement wird nicht unterstützt.</p>
  *
  * <p><strong>Diese Implementation ist nicht synchronisiert.</strong> Falls mehrere Threads
  * gleichzeitig auf ein MoveSet zugreifen und mindestens einer der Threads das MoveSet verändert,
@@ -70,13 +70,14 @@ public class MoveSet extends AbstractSet<Move> {
 	}
 
 	/**
-	 * Fügt das angegebene Element zu dieser Menge hinzu, falls es noch nicht vorhanden ist.
+	 * Fügt das angegebene Element zu dieser Menge hinzu, falls es nicht null ist und noch nicht
+	 * vorhanden ist.
 	 *
 	 * @param e Das Element, dass hinzugefügt werden soll
-	 * @return true, falls das Element nicht schon in der Menge enthalten war
+	 * @return true, falls das Element nicht null ist und nicht schon in der Menge enthalten war
 	 */
 	public boolean add(Move e) {
-		if (contains(e)) {
+		if (contains(e) || e == null) {
 			return false;
 		}
 		switch (e.getType()) {
