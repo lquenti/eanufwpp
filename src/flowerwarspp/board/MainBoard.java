@@ -429,31 +429,7 @@ public class MainBoard implements Board {
          */
 
 		// Ueber und unter Graben Flower entvalidieren
-		Flower[] invalids = new Flower[2];
-		if (d.getFirst().getRow() == d.getSecond().getRow()) { // Horizontal
-			invalids[0] = new Flower(
-					d.getFirst(),
-					d.getSecond(),
-					new Position(d.getFirst().getColumn(), d.getFirst().getRow() + 1)
-			);
-			invalids[1] = new Flower(
-					d.getFirst(),
-					d.getSecond(),
-					new Position(d.getSecond().getColumn(), d.getSecond().getRow() - 1)
-			);
-		} else { // Vertikal
-			invalids[0] = new Flower(
-					d.getFirst(),
-					d.getSecond(),
-					new Position(d.getSecond().getColumn() - 1, d.getSecond().getRow())
-			);
-			invalids[1] = new Flower(
-					d.getFirst(),
-					d.getSecond(),
-					new Position(d.getFirst().getColumn() + 1, d.getSecond().getRow())
-			);
-		}
-		for (Flower f : invalids) {
+		for (Flower f : getDirectNeighbors(d)) {
 			for (PlayerData player : playerData.values()) {
 				player.legalMoves.removeMovesContaining(f);
 			}
