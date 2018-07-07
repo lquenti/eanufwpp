@@ -2,6 +2,7 @@ package flowerwarspp.player;
 
 import flowerwarspp.preset.Move;
 import flowerwarspp.preset.Player;
+import flowerwarspp.util.log.LogLevel;
 
 import java.util.Optional;
 import java.util.Random;
@@ -46,7 +47,14 @@ public class RandomAI extends BasePlayer {
 	protected Move requestMove() throws Exception {
 
 		// TODO: For now just return any random move. More checks might be necessary depending on our needs.
-		return getRandomPossibleMove();
+
+		final Move move = getRandomPossibleMove();
+
+		if (move == null) {
+			log(LogLevel.ERROR, "random AI could not return a random move");
+			throw new Exception(exception_NoMove);
+		} else
+			return move;
 	}
 
 	/**
@@ -54,21 +62,16 @@ public class RandomAI extends BasePlayer {
 	 * Spieler zur Verfügung stehen.
 	 *
 	 * @return Ein zufällig ausgewählter Spielzug.
-	 * @throws Exception Falls kein Zug zufällig ausgewählt werden konnte.
 	 */
-	private Move getRandomPossibleMove() throws Exception {
+	private Move getRandomPossibleMove() {
 		//TODO: Potentially filter for surrender moves, although just surrendering might be an available option to the AI.
+
+		if (this.boardViewer.getPossibleMoves().size() == 0) return null;
 
 		// Get a random index in the Collection for selection.
 		final int randomIdx = flowerRNG.nextInt(this.boardViewer.getPossibleMoves().size());
 
 		// Stream the Collection and skip the amount of elements indicated by randomIdx.
-		final Optional<Move> randomMove = this.boardViewer.getPossibleMoves().stream().skip(randomIdx).findFirst();
-
-		// If there is an element at that index, all fine and dandy, otherwise throw an exception.
-		if ( ! randomMove.isPresent() ) throw new Exception(exception_NoMove);
-
-		// If we have survived up until here, return the value (i.e. the Move).
-		return randomMove.get();
+		return this.boardViewer.getPossibleMoves().stream().skip(randomIdx).findFirst().orElse(null);
 	}
 }
