@@ -209,7 +209,7 @@ public class MainBoard implements Board {
 			}
 			playerData.get(currentPlayer).flowers.add(bedNeighbor);
 			Collection<Flower> resultingBed = getFlowerBed(bedNeighbor);
-			if (!isLegalBed(resultingBed, currentPlayer)) { // Neue Kombination gefaehrlich
+			if (!isLegalBed(resultingBed, currentPlayer)) {
 				playerData.get(currentPlayer).legalMoves.removeMovesContaining(bedNeighbor);
 			} else if (resultingBed.size() == 4) { // ILLEGAL, Bed raushauen TODO: exkludieren in eigene Fkt
 				for (Flower secondBedNeighbor : getAllNeighbors(resultingBed)) {
@@ -239,15 +239,14 @@ public class MainBoard implements Board {
 	private LinkedList<Ditch> getImportantDitches(final Flower newFlower) {
 		LinkedList<Ditch> res = new LinkedList<>();
 		LinkedList<Flower> neighbors = getAllNeighbors(newFlower);
+		Function<Position, Boolean> ownFlower = (p -> Arrays.asList(getPositions(newFlower)).contains(p));
+		Function<Position, Boolean> anyFlower = (p -> getPositionNeighbors(p).stream().filter(neighbors::contains).anyMatch(f -> f != newFlower));
 		for (Flower f : neighbors) {
 			Position[] ps = getPositions(f);
 			int n = ps.length;
 			for (int i=0; i<=n; i++) {
-				if (getPositionNeighbors(ps[i%n]).stream().anyMatch(neighbors::contains) &&
-						Arrays.asList(getPositions(newFlower)).contains(ps[(i+1)%n])
-						||
-						getPositionNeighbors(ps[(i+1)%n]).stream().anyMatch(neighbors::contains) &&
-								Arrays.asList(getPositions(newFlower)).contains(ps[i%n])) {
+				if (ownFlower.apply(ps[i%n]) && anyFlower.apply(ps[(i+1)%n]) ||
+						ownFlower.apply(ps[(i+1)%n]) && anyFlower.apply(ps[i%n])) {
 					res.add(new Ditch(ps[i%n], ps[(i+1)%n]));
 				}
 			}
@@ -256,7 +255,6 @@ public class MainBoard implements Board {
 	}
 
 	private void generateNewDitches(final Collection<Ditch> ds) {
-		//if (getDirectNeighbors(d).stream().noneMatch(df -> getFlowerColor(df) != null)) {
 		for (Ditch d : ds) {
 			if (getDirectNeighbors(d).stream().anyMatch(df -> getFlowerColor(df) != null) ||
 					getDitchColor(d) != null) {
@@ -275,7 +273,6 @@ public class MainBoard implements Board {
 		return Arrays.stream(allFlowers)
 				.filter(f -> (Arrays.asList(getPositions(f)).contains(p)))
 				.collect(Collectors.toCollection(HashSet::new));
-
 	}
 
 	private boolean isLegalBed(final Collection<Flower> bed, final PlayerColor player) {
