@@ -88,11 +88,13 @@ public interface Viewer {
 
     Collection<Flower> getPossibleFlowers();
 
-	Collection<Flower> getFlowersCombinableWith(Flower flower);
+    Collection<Flower> getFlowersCombinableWith(Flower flower);
 
     Collection<Move> getPossibleMovesContaining(Flower flower);
 
     Collection<Move> getPossibleDitchMoves();
 
-	PlayerColor getFlowerColor(Flower flower);
+    PlayerColor getFlowerColor(Flower flower);
+
+    HashSet<Flower> getFlowerBed(Flower flower);
 }

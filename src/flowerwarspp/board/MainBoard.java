@@ -599,6 +599,11 @@ public class MainBoard implements Board {
 		public PlayerColor getFlowerColor(Flower flower) {
 			return MainBoard.this.getFlowerColor(flower);
 		}
+
+		@Override
+		public HashSet<Flower> getFlowerBed(final Flower flower) {
+			return MainBoard.this.getFlowerBed(flower);
+		}
 	}
 
 	public static void main(String[] args) {
