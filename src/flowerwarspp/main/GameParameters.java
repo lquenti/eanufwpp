@@ -45,6 +45,11 @@ class GameParameters {
 	private boolean debug;
 
 	/**
+	 * Ob die Texteingabe verwendet werden soll.
+	 */
+	private boolean text;
+
+	/**
 	 * Erzeugt ein neues Objekt basierend auf den angegebenen Kommandozeilenparametern.
 	 *
 	 * @param args Die Kommandozeilenparameter
@@ -78,6 +83,12 @@ class GameParameters {
 				debug = argumentParser.isDebug();
 			} catch ( ArgumentParserException e ) {
 				debug = false;
+			}
+
+			try {
+				text = argumentParser.isText();
+			} catch ( ArgumentParserException e ) {
+				text = false;
 			}
 		} catch ( ArgumentParserException e ) {
 			Log.log0(LogLevel.ERROR, LogModule.MAIN, "Invalid arguments passed: " + Arrays.toString(args));
@@ -137,5 +148,14 @@ class GameParameters {
 	 */
 	boolean getDebug() {
 		return debug;
+	}
+
+	/**
+	 * Gibt {@link #text} zurück.
+	 *
+	 * @return Wert von {@link #text}
+	 */
+	boolean getText() {
+		return text;
 	}
 }

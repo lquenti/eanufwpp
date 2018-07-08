@@ -20,12 +20,14 @@ public class Main {
 	public static void quitWithUsage() {
 		System.out.println("Verwendung:");
 		System.out.println("flowerwarspp.main.Main -size <Spielfeldgröße> -red <Spielertyp> -blue <Spielertyp> "
-				+ "-delay <Verzögerung> (optional:) --debug");
+				+ "-delay <Verzögerung> (optional:) [--debug] [--text]");
 		System.out.println();
 		System.out.println("Spielfeldgröße: Zahl zwischen 3 und 30");
 		System.out.println("Spielertyp:     \"human\", \"remote\", \"random\", \"simple\", oder \"adv1\"");
 		System.out.println("Verzögerung:    Zeit zwischen Zügen in Millisekunden");
-		System.out.println("Debug:          Zeigt Debug-Information im Game-Log an. Optionaler Flag (hat"
+		System.out.println("Debug:          Zeigt Debug-Information im Game-Log an. Optionale Flag (hat"
+				+ " keine Argumente)");
+		System.out.println("Text:           Die Texteingabe wird verwendet. Optionale Flag (hat"
 				+ " keine Argumente)");
 		System.exit(ERRORCODE_INVALID_ARGS);
 	}

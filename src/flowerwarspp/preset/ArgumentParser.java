@@ -250,4 +250,8 @@ public class ArgumentParser {
     public PlayerType getOffer() throws ArgumentParserException {
         return parsePlayerType((String) getSetting("offer"));
     }
+
+    public boolean isText() throws ArgumentParserException {
+        return getFlag("text");
+    }
 }
