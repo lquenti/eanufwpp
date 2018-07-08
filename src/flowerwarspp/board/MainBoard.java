@@ -1,10 +1,9 @@
 package flowerwarspp.board;
 
 import flowerwarspp.preset.*;
+import javafx.util.Pair;
 
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * Verwaltungsklasse, die Daten über die gemachten und noch möglichen Züge
@@ -160,7 +159,6 @@ public class MainBoard implements Board {
 		oppositePlayer = (currentPlayer == PlayerColor.Red) ? PlayerColor.Blue : PlayerColor.Red;
 	}
 
-	// TODO: Am Ende Exception rausnehmen
 	private void updateValidMoves(final Flower[] fs) {
 		for (Flower f : fs) {
 			// Gesetzte Flowers für alle verbieten
@@ -235,51 +233,40 @@ public class MainBoard implements Board {
 		}
 	}
 
-	// TODO: Refactor
-	private LinkedList<Ditch> getImportantDitches(final Flower newFlower) {
-		HashSet<Ditch> allDitches = new HashSet<>();
-		for (Flower f : getAllNeighbors(newFlower)) {
-			Position[] ps = getPositions(f);
-			int n = ps.length;
-			for (int i = 0; i < n; i++) {
-				allDitches.add(new Ditch(ps[i % n], ps[(i + 1) % n]));
-			}
+	private HashSet<Ditch> getImportantDitches(final Flower newFlower) {
+		HashSet<Ditch> res = new HashSet<>();
+		for (Position p : getPositions(newFlower)) {
+			res.addAll(getDitchesAround(p));
 		}
 
-		LinkedList<Ditch> res = new LinkedList<>();
 		Position[] flowerPositions = getPositions(newFlower);
+		HashSet<Ditch> tobeRemoved = new HashSet<>(); // Um ConcurrentModificationException zu umgehen
+		for (Ditch d : res) {
+			if (Arrays.asList(flowerPositions).containsAll(Arrays.asList(d.getFirst(), d.getSecond()))) {
+				tobeRemoved.add(d);
+			}
 
-		for (Ditch d : allDitches) {
-			if (Arrays.asList(flowerPositions).contains(d.getFirst())) {
-				Collection<Flower> positionNeighbors = getFlowersAround(d.getSecond());
-				for (Flower positionNeighbor : positionNeighbors) {
-					if (getFlowerColor(positionNeighbor) != null) {
-						if (positionNeighbor != newFlower) {
-							res.add(new Ditch(d.getFirst(), d.getSecond()));
-						}
-					}
+			Position p = (Arrays.asList(flowerPositions).contains(d.getFirst())) ? d.getSecond() : d.getFirst();
+			if (getFlowersAround(p).stream().noneMatch(f -> getFlowerColor(f) != null) ||
+					getDirectNeighbors(d).stream().anyMatch(f -> getFlowerColor(f) != null)) {
+				tobeRemoved.add(d);
+			}
+
+			/* TODO: Gehoert in Ditch lol (glaube ich)
+			for (Position pd : getPositions(d)) {
+				LinkedList<Ditch> ditchesAround = getDitchesAround(pd);
+				if (ditchesAround.stream().filter(ditch -> getDitchColor(ditch) != null).anyMatch(ditch -> ditch != d)) {
+					tobeRemoved.add(d);
 				}
 			}
-			if (Arrays.asList(flowerPositions).contains(d.getSecond())) {
-				Collection<Flower> positionNeighbors = getFlowersAround(d.getFirst());
-				for (Flower positionNeighbor : positionNeighbors) {
-					if (getFlowerColor(positionNeighbor) != null) {
-						if (positionNeighbor != newFlower) {
-							res.add(new Ditch(d.getFirst(), d.getSecond()));
-						}
-					}
-				}
-			}
+			*/
 		}
+		res.removeAll(tobeRemoved);
 		return res;
 	}
 
 	private void generateNewDitches(final Collection<Ditch> ds) {
 		for (Ditch d : ds) {
-			if (getDirectNeighbors(d).stream().anyMatch(df -> getFlowerColor(df) != null) ||
-					getDitchColor(d) != null) {
-				continue;
-			}
 			playerData.get(currentPlayer).legalMoves.add(new Move(d));
 		}
 	}
@@ -296,15 +283,6 @@ public class MainBoard implements Board {
 		return bed.size() < 4
 				|| bed.size() == 4
 				&& Collections.disjoint(getAllNeighbors(bed), playerData.get(player).flowers);
-	}
-
-	private PlayerColor getDitchColor(final Ditch d) {
-		for (Map.Entry<PlayerColor, PlayerData> entry : playerData.entrySet()) {
-			if (entry.getValue().ditches.contains(d)) {
-				return entry.getKey();
-			}
-		}
-		return null;
 	}
 
 	private PlayerColor getFlowerColor(final Flower f) {
@@ -336,7 +314,6 @@ public class MainBoard implements Board {
 				result.add(visiting);
 			}
 		}
-
 		return result;
 	}
 
@@ -359,7 +336,7 @@ public class MainBoard implements Board {
 		return result;
 	}
 
-	private LinkedList<Flower> getAllNeighbors(final Flower f) { //  n := distance
+	private LinkedList<Flower> getAllNeighbors(final Flower f) {
 		LinkedList<Flower> result = getDirectNeighbors(f);
 		Position[] nodes = getPositions(f);
 		Position lastPoint = null;
