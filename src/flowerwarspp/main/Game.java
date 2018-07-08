@@ -66,7 +66,7 @@ public class Game {
 
 		Log.getInstance().setOutput(System.err);
 
-		BoardFrame boardFrame = new BoardFrame();
+		BoardFrame boardFrame = BoardFrame.getInstance();
 		input = gameParameters.getText() ? new TextInterface() : boardFrame;
 		output = boardFrame;
 

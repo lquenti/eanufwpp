@@ -10,6 +10,11 @@ import java.awt.*;
  */
 public class BoardFrame extends JFrame implements Requestable, Output {
 	/**
+	 * Private Referenz auf die singuläre Instanz dieser Klasse.
+	 */
+	private static BoardFrame instance;
+
+	/**
 	 * Der {@link Viewer}, durch den dieses {@link JFrame} auf das {@link Board} schaut.
 	 */
 	private Viewer viewer;
@@ -35,21 +40,9 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 	private JButton endButton = new JButton("End");
 
 	/**
-	 * Konstruiert ein JFrame, gegebenenfalls mit einem {@link Viewer}.
-	 *
-	 * @param viewer
-	 * Der {@link Viewer}, durch den auf das {@link Board} geschaut werden soll.
-	 */
-	public BoardFrame(Viewer viewer) {
-		this();
-		if (viewer != null)
-			this.setViewer(viewer);
-	}
-
-	/**
 	 * Konstruiert das {@link JFrame} und versetzt es in einen nutzbaren Zustand.
 	 */
-	public BoardFrame() {
+	private BoardFrame() {
 		super("Flower Wars");
 		this.setSize(600, 600);
 
@@ -60,6 +53,19 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
+	}
+
+	/**
+	 * Gibt einen Verweis auf die singuläre Instanz dieser Singleton-Klasse zurück. Falls noch keine Instanz existiert,
+	 * wird eine neue erzeugt.
+	 *
+	 * @return Die singuläre Instanz des Frames
+	 */
+	public synchronized static BoardFrame getInstance() {
+		if (instance == null) {
+			instance = new BoardFrame();
+		}
+		return instance;
 	}
 
 	/**
