@@ -284,6 +284,10 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 		return this.playerColour;
 	}
 
+	public void setBoard( Board board ) {
+		this.board = board;
+	}
+
 	/**
 	 * Wrapper für die {@link Log#log(LogLevel, LogModule, String)}-Methode, welcher das {@link LogModule} setzt und den
 	 * Spieler anhand seiner Farbe identifiziert.
