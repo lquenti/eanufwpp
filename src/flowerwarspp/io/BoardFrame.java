@@ -15,44 +15,19 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 	private static BoardFrame instance;
 
 	/**
-	 * Der {@link Viewer}, durch den dieses {@link JFrame} auf das {@link Board} schaut.
-	 */
-	private Viewer viewer;
-
-	/**
-	 * Der Container für das {@link BoardDisplay}.
-	 */
-	private JPanel boardContainer = new JPanel();
-	/**
 	 * Das {@link BoardDisplay}, das auf das {@link Board} schaut.
 	 */
 	private BoardDisplay boardDisplay;
-
-	private JPanel buttonContainer = new JPanel();
-	/**
-	 * Der {@link JButton}, der das Aufgeben ermöglicht.
-	 */
-	private JButton surrenderButton = new JButton("Surrender");
-	/**
-	 * Der {@link JButton}, der das Beenden des Spiels ermöglicht,
-	 * wenn dies den Spielregeln zufolge möglich ist.
-	 */
-	private JButton endButton = new JButton("End");
 
 	/**
 	 * Konstruiert das {@link JFrame} und versetzt es in einen nutzbaren Zustand.
 	 */
 	private BoardFrame() {
 		super("Flower Wars");
-		this.setSize(600, 600);
+		setSize(600, 600);
 
-		// Do stuff to *this*; it needs setup.
-		this.buttonContainer.add(this.surrenderButton);
-		this.buttonContainer.add(this.endButton);
-		this.add(this.buttonContainer, BorderLayout.SOUTH);
-
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setVisible(true);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setVisible(true);
 	}
 
 	/**
@@ -76,10 +51,10 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 	 * Der {@link Viewer}, durch den auf das Spielbrett geschaut wird.
 	 */
 	public void setViewer(Viewer viewer) {
-		this.boardDisplay = new BoardDisplay();
-		this.boardDisplay.setBoardViewer(viewer);
-		this.add(this.boardDisplay, BorderLayout.CENTER);
-		this.setVisible(true);
+		boardDisplay = new BoardDisplay();
+		boardDisplay.setBoardViewer(viewer);
+		add(boardDisplay, BorderLayout.CENTER);
+		setVisible(true);
 	}
 
 	/**
@@ -87,10 +62,10 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 	 */
 	@Override
 	public Move request() throws Exception {
-		if (this.boardDisplay == null)
+		if (boardDisplay == null)
 			return null;
 
-		return this.boardDisplay.awaitMove();
+		return boardDisplay.awaitMove();
 	}
 
 	/**
@@ -98,10 +73,10 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 	 */
 	@Override
 	public void refresh() {
-		if (this.boardDisplay == null)
+		if (boardDisplay == null)
 			return;
 
-		this.boardDisplay.refresh();
-		this.repaint();
+		boardDisplay.refresh();
+		repaint();
 	}
 }

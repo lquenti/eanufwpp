@@ -21,7 +21,7 @@ public class Dot extends BoardPolygon {
 	public Dot(Position position) {
 		super(Color.WHITE, Color.BLACK);
 		this.position = position;
-		this.currentLocation = new Point();
+		currentLocation = new Point();
 	}
 
 	/**
@@ -40,33 +40,33 @@ public class Dot extends BoardPolygon {
 	 */
 	@Override
 	public boolean contains(int x, int y) {
-		Point difference = new Point(this.currentLocation);
+		Point difference = new Point(currentLocation);
 		difference.x -= x;
 		difference.y -= y;
 
 		double distance = Math.sqrt(Math.pow(difference.x, 2.0) + (Math.pow(difference.y, 2.0)));
-		return ((this.currentDiameter / 2) > distance);
+		return ((currentDiameter / 2) > distance);
 	}
 
 	@Override
 	public void recalcPoints(int triangleSideLength, Point relativeStart) {
-		this.currentLocation = positionToPoint(this.position, triangleSideLength, relativeStart);
-		this.currentDiameter = triangleSideLength / 2;
+		currentLocation = positionToPoint(position, triangleSideLength, relativeStart);
+		currentDiameter = triangleSideLength / 2;
 	}
 
 	@Override
 	public void drawPolygon(Graphics graphics) {
-		int drawLocationX = this.currentLocation.x - (this.currentDiameter / 2);
-		int drawLocationY = this.currentLocation.y - (this.currentDiameter / 2);
-		graphics.setColor(this.getFillColour());
-		graphics.fillOval(drawLocationX, drawLocationY, this.currentDiameter, this.currentDiameter);
+		int drawLocationX = currentLocation.x - (currentDiameter / 2);
+		int drawLocationY = currentLocation.y - (currentDiameter / 2);
+		graphics.setColor(getFillColour());
+		graphics.fillOval(drawLocationX, drawLocationY, currentDiameter, currentDiameter);
 
-		String text = this.position.getColumn() + ", " + this.position.getRow();
+		String text = position.getColumn() + ", " + position.getRow();
 		Rectangle2D textBounds = graphics.getFontMetrics().getStringBounds(text, graphics);
-		drawLocationX = (int) (this.currentLocation.x - textBounds.getWidth() / 2.0);
-		drawLocationY = (int) (this.currentLocation.y + textBounds.getHeight() / 2.0);
+		drawLocationX = (int) (currentLocation.x - textBounds.getWidth() / 2.0);
+		drawLocationY = (int) (currentLocation.y + textBounds.getHeight() / 2.0);
 
-		graphics.setColor(this.getBorderColour());
+		graphics.setColor(getBorderColour());
 		graphics.drawString(text, drawLocationX, drawLocationY);
 	}
 }

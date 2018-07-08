@@ -60,11 +60,11 @@ public class PlayerStatusDisplay {
 		int x = currentSize.width - width;
 		int y = 0;
 
-		this.redPlayerArea.setSize(width, height);
-		this.bluePlayerArea.setSize(width, height);
+		redPlayerArea.setSize(width, height);
+		bluePlayerArea.setSize(width, height);
 
-		this.redPlayerArea.setLocation(x, y);
-		this.bluePlayerArea.setLocation(x, y + height);
+		redPlayerArea.setLocation(x, y);
+		bluePlayerArea.setLocation(x, y + height);
 	}
 
 	/**
@@ -88,8 +88,8 @@ public class PlayerStatusDisplay {
 	 * Das {@link Graphics}-Objekt, auf das gezeichnet werden soll.
 	 */
 	public synchronized void draw(Graphics g) {
-		this.drawRectangle(g, this.redPlayerArea, this.redColour, this.redPlayerPoints);
-		this.drawRectangle(g, this.bluePlayerArea, this.blueColour, this.bluePlayerPoints);
+		drawRectangle(g, redPlayerArea, redColour, redPlayerPoints);
+		drawRectangle(g, bluePlayerArea, blueColour, bluePlayerPoints);
 	}
 
 	/**
