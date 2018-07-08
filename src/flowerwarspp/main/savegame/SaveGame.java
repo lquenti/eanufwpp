@@ -86,6 +86,9 @@ public class SaveGame implements Iterable<Move> {
 	 * @param saveGameName Name des Spielstands.
 	 */
 	public void save( String saveGameName ) {
+
+		// TODO: Sanitize file names (no special chars, no whitespace etc).
+
 		try {
 			File saveDir = new File(SAVE_PATH_ROOT);
 			saveDir.mkdir()
@@ -138,6 +141,8 @@ public class SaveGame implements Iterable<Move> {
 	 * @throws IOException Falls während des Ladevorgangs ein Fehler aufgetreten ist
 	 */
 	public static SaveGame load( String saveGameName ) throws IOException {
+
+		// TODO: Sanitize file names (no special chars, no whitespace etc).
 
 		try ( BufferedReader bufferedReader = new BufferedReader(new FileReader(getFilePath(saveGameName))) ) {
 
