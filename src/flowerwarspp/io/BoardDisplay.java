@@ -544,5 +544,8 @@ public class BoardDisplay extends JPanel {
 		this.redDitches = this.boardViewer.getDitches(PlayerColor.Red);
 		this.blueDitches = this.boardViewer.getDitches(PlayerColor.Blue);
 		this.possibleDitchMoves = this.boardViewer.getPossibleDitchMoves();
+
+		if (this.boardViewer.getStatus() != Status.Ok)
+			new EndPopupFrame(this.boardViewer.getStatus());
 	}
 }
