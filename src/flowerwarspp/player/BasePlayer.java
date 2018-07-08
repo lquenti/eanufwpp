@@ -99,16 +99,23 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	 */
 	private PlayerFunction cycleState;
 
+	/**
+	 * Ein Konstruktor, der das interne Spielbrett des Spielers auf das gegebene Spielbrett setzt.
+	 *
+	 * @param board Das Board
+	 */
+	protected BasePlayer(Board board) {
+		this.playerColour = PlayerColor.Red;
+		this.board = board;
+		this.cycleState = PlayerFunction.NULL;
+	}
 
 	/**
 	 * Ein <code>default</code>-Konstruktor, welcher die Instanzvariablen mit Basiswerten initialisiert.
 	 */
 	protected BasePlayer() {
-		this.playerColour = PlayerColor.Red;
-		this.board = null;
-		this.cycleState = PlayerFunction.NULL;
+		this(null);
 	}
-
 
 	/**
 	 * Methode zum Anfordern eines Zugs.
@@ -249,16 +256,9 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 		this.playerColour = playerColour;
 
 		if ( this.board == null ) {
-
 			this.board = new MainBoard(boardSize);
-			this.boardViewer = board.viewer();
-		} else {
-
-			// Here we need to handle ending the current game and starting a new one, some form of feedback would be
-			// necessary to make that happen with the main program.
-			// TODO: Restart game with new player
-			throw new Exception("Noch nicht implementiert.");
 		}
+		this.boardViewer = board.viewer();
 
 		// Now set the function life cycle according to this player's colour
 		if ( this.playerColour == PlayerColor.Red ) {

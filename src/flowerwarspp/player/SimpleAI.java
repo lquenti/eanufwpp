@@ -20,6 +20,15 @@ public class SimpleAI extends BaseAI {
 	}
 
 	/**
+	 * Konstruktor, der das initiale Spielbrett des Spielers setzt.
+	 *
+	 * @param Board Das initiale Spielbrett
+	 */
+	protected SimpleAI(Board board) {
+		super(board);
+	}
+
+	/**
 	 * Methode zur Berechnung des Scores eines gegebenen Zuges nach der gegebenen simplen Strategie der
 	 * Projektbeschreibung. Wir werden diese Methode in Implementationen verbesserter KIs überschreiben und anpassen.
 	 *

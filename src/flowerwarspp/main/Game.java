@@ -18,7 +18,7 @@ public class Game {
 	/**
 	 * Das Spielbrett des Hauptprogramms.
 	 */
-	private Board board;
+	private MainBoard board;
 
 	/**
 	 * Referenz auf eine Klasse welche das Interface {@link Viewer} implementiert, um auf den {@link Status} des
@@ -96,8 +96,11 @@ public class Game {
 	 * Initialisiert das Spiel. Das Spielbrett und die beiden Spieler werden initialisiert.
 	 */
 	private void init() {
-		currentPlayer = Players.createPlayer(gameParameters.getRedType(), input);
-		oppositePlayer = Players.createPlayer(gameParameters.getBlueType(), input);
+		board = new MainBoard(gameParameters.getBoardSize());
+		Log.log0(LogLevel.INFO, LogModule.MAIN, "Initialized main board.");
+
+		currentPlayer = Players.createPlayer(gameParameters.getRedType(), input, new MainBoard(board));
+		oppositePlayer = Players.createPlayer(gameParameters.getBlueType(), input, new MainBoard(board));
 
 		try {
 			currentPlayer.init(gameParameters.getBoardSize(), PlayerColor.Red);
@@ -109,8 +112,6 @@ public class Game {
 			e.printStackTrace();
 		}
 
-		board = new MainBoard(gameParameters.getBoardSize());
-		Log.log0(LogLevel.INFO, LogModule.MAIN, "Initialized main board.");
 		viewer = board.viewer();
 		output.setViewer(viewer);
 	}

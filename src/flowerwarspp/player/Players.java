@@ -9,16 +9,17 @@ import flowerwarspp.util.log.LogLevel;
 import flowerwarspp.util.log.LogModule;
 
 public class Players {
-	public static Player createPlayer( final PlayerType type, final Requestable input ) {
+	public static Player createPlayer( final PlayerType type, final Requestable input, final Board board) {
+		System.out.println("creating player with board " + board);
 		switch ( type ) {
 			case HUMAN:
-				return new InteractivePlayer(input);
+				return new InteractivePlayer(input, board);
 			case RANDOM_AI:
-				return new RandomAI();
+				return new RandomAI(board);
 			case SIMPLE_AI:
-				return new SimpleAI();
+				return new SimpleAI(board);
 			case ADVANCED_AI_1:
-				return new AdvancedAI1();
+				return new AdvancedAI1(board);
 			case REMOTE:
 				return findRemotePlayer();
 			default:
@@ -27,6 +28,10 @@ public class Players {
 						"Players.createPlayer: Invalid PlayerType passed");
 				return null;
 		}
+	}
+
+	public static Player createPlayer( final PlayerType type, final Requestable input) {
+		return createPlayer(type, input, null);
 	}
 
 	public static Player findRemotePlayer() {
