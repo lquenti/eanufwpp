@@ -127,15 +127,15 @@ public class BaseGame {
 				Move move = null;
 				try {
 					move = currentPlayer.request();
-				} catch ( ConnectException e ) {
-					Log.log0(LogLevel.INFO, LogModule.MAIN, "Remote player disconnected.");
+				} catch ( Exception e ) {
+					Log.log0(LogLevel.INFO, LogModule.MAIN, "Player " + currentPlayer + " didn't make a move.");
 					move = new Move(MoveType.Surrender);
 				}
 				board.make(move);
 				try {
 					currentPlayer.confirm(viewer.getStatus());
 					oppositePlayer.update(move, viewer.getStatus());
-				} catch ( ConnectException e ) {}
+				} catch ( Exception e ) {}
 				output.refresh();
 
 				Player t = currentPlayer;
