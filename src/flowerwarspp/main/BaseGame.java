@@ -58,27 +58,6 @@ public class BaseGame {
 
 		this.gameParameters = gameParameters;
 
-		if ( this.gameParameters.getOfferType() != null ) {
-			try {
-				Player offeredPlayer = Players.createPlayer(this. gameParameters.getOfferType(), input);
-				Players.offerPlayer(new RemotePlayer(offeredPlayer, output));
-			} catch ( RemoteException e ) {
-				Log.log0(LogLevel.ERROR, LogModule.MAIN, "There was an error offering the player: "
-						+ e.getMessage());
-				e.printStackTrace();
-			}
-		} else {
-			init();
-			run();
-		}
-
-	}
-
-	/**
-	 * Initialisiert das Spiel. Der Logger wird mit den korrekten Einstellungen versehen, die I/O Referennzen werden
-	 * gesetzt und das Spielbrett und die beiden Spieler werden initialisiert.
-	 */
-	private void init() {
 		if ( gameParameters.getDebug() )
 			Log.getInstance().setLogLevel(LogLevel.DEBUG);
 		else
@@ -90,6 +69,32 @@ public class BaseGame {
 		input = boardFrame;
 		output = boardFrame;
 
+		if ( this.gameParameters.getOfferType() != null ) {
+			offer();
+		} else {
+			init();
+			run();
+		}
+	}
+
+	/**
+	 * Erzeugt einen Spieler und bietet ihn im Netzwerk an.
+	 */
+	private void offer() {
+		try {
+			Player offeredPlayer = Players.createPlayer(this.gameParameters.getOfferType(), input);
+			Players.offerPlayer(new RemotePlayer(offeredPlayer, output));
+		} catch ( RemoteException e ) {
+			Log.log0(LogLevel.ERROR, LogModule.MAIN, "There was an error offering the player: "
+					+ e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Initialisiert das Spiel. Das Spielbrett und die beiden Spieler werden initialisiert.
+	 */
+	private void init() {
 		board = new MainBoard(gameParameters.getBoardSize());
 		viewer = board.viewer();
 		output.setViewer(viewer);
