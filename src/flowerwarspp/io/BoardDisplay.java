@@ -20,6 +20,12 @@ public class BoardDisplay extends JPanel {
 
 		private final Object moveAwaitLock = new Object();
 		/**
+		 * Der {@link MoveType}, der durch den Klick erzeugt wird.
+		 * Nur genau dann nicht {@link MoveType#Flower}, wenn entweder
+		 * der Surrender- oder der End-Button geklickt wurde.
+		 */
+		private MoveType moveType = MoveType.Flower;
+		/**
 		 * Wenn {@link Flower}s gesetzt werden, müssen zwei Dreiecke geklickt werden.
 		 * Wurden zwei geklickt, so sind sie hierin gespeichert.
 		 */
@@ -62,6 +68,17 @@ public class BoardDisplay extends JPanel {
 		 * Das {@link MouseEvent}, das die Ausführung verursacht hat.
 		 */
 		private void processClick(MouseEvent mouseEvent) {
+			// Yes, both of these are supposed to be "==".
+			// We want to make sure they are the same object.
+			if (mouseEvent.getComponent() == this.boardDisplay.surrenderButton) {
+				this.moveType = MoveType.Surrender;
+				return;
+			}
+			if (mouseEvent.getComponent() == this.boardDisplay.endButton) {
+				this.moveType = MoveType.End;
+				return;
+			}
+
 			Point clickPoint = mouseEvent.getPoint();
 			Dot dot = findDot(clickPoint);
 			if (dot != null)
@@ -187,6 +204,8 @@ public class BoardDisplay extends JPanel {
 	 * Die Farbe der Dreiecke, die dem {@link PlayerColor#Blue} gehören.
 	 */
 	private static final Color blueColour = Color.CYAN;
+	private static final int buttonHeight = 20;
+	private static final int buttonWidth = 200;
 
 	/**
 	 * Der {@link Viewer}, durch den dieses Display auf das {@link Board} schauen soll.
@@ -254,6 +273,9 @@ public class BoardDisplay extends JPanel {
 	 */
 	private boolean gameEnd = false;
 
+	private JButton surrenderButton = new JButton("Surrender");
+	private JButton endButton = new JButton("End");
+
 	/**
 	 * Konstruiert ein Display für die Darstellung eines {@link Board}s.
 	 */
@@ -261,6 +283,11 @@ public class BoardDisplay extends JPanel {
 		Font font = this.getFont().deriveFont(10F);
 		this.setFont(font);
 		this.setOpaque(false);
+		this.setLayout(null);
+		this.surrenderButton.addMouseListener(this.displayMouseHandler);
+		this.endButton.addMouseListener(this.displayMouseHandler);
+		this.add(this.surrenderButton);
+		this.add(this.endButton);
 	}
 
 	/**
@@ -288,6 +315,7 @@ public class BoardDisplay extends JPanel {
 	public synchronized void paintComponent(Graphics g) {
 		this.updateTriangles();
 		this.updatePolygonSizes();
+		this.updateComponents();
 		super.paintComponent(g);
 
 		this.mapTriangles.forEach(t -> t.drawPolygon(g));
@@ -350,7 +378,7 @@ public class BoardDisplay extends JPanel {
 	 */
 	private void updatePolygonSizes() {
 		Dimension displaySize = this.getParent().getSize();
-		displaySize.height -= 20;
+		displaySize.height -= buttonHeight;
 		this.setPreferredSize(displaySize);
 		int minimumSize = Math.min(displaySize.width, displaySize.height);
 
@@ -364,6 +392,18 @@ public class BoardDisplay extends JPanel {
 		this.mapEdges.forEach(e -> e.recalcPoints(sideLength, drawBegin));
 		this.mapDots.forEach(e -> e.recalcPoints(sideLength, drawBegin));
 		this.statusDisplay.updateRectangleSizes(displaySize);
+	}
+
+	/**
+	 * Updatet die {@link JComponent}s (Buttons etc).
+	 */
+	private void updateComponents() {
+		Dimension size = this.getSize();
+		this.surrenderButton.setSize(buttonWidth, buttonHeight);
+		this.endButton.setSize(buttonWidth, buttonHeight);
+
+		this.surrenderButton.setLocation((size.width / 2) - buttonWidth, size.height - buttonHeight);
+		this.endButton.setLocation(size.width / 2, size.height - buttonHeight);
 	}
 
 	/**
@@ -481,11 +521,20 @@ public class BoardDisplay extends JPanel {
 
 		while (result == null) {
 			this.combinableFlowers = this.boardViewer.getPossibleFlowers();
-			this.repaint();
+			this.getParent().repaint();
 			synchronized (this.displayMouseHandler.moveAwaitLock) {
 				this.displayMouseHandler.moveAwaitLock.wait();
 
-				if (this.displayMouseHandler.clickedFlower1 != null) {
+				if (this.displayMouseHandler.moveType == MoveType.Surrender) {
+					result = new Move(MoveType.Surrender);
+				} else if (this.displayMouseHandler.moveType == MoveType.End) {
+					result = new Move(MoveType.End);
+					if (!this.boardViewer.possibleMovesContains(result)) {
+						result = null;
+						this.displayMouseHandler.reset();
+						this.displayMouseHandler.isRequesting = true;
+					}
+				} else if (this.displayMouseHandler.clickedFlower1 != null) {
 					result = this.checkForFlowerMove();
 				} else {
 					result = this.checkForDitchMove();
@@ -494,7 +543,8 @@ public class BoardDisplay extends JPanel {
 		}
 
 		this.displayMouseHandler.reset();
-		this.repaint();
+		this.combinableFlowers = null;
+		this.getParent().repaint();
 		return result;
 	}
 
@@ -561,20 +611,22 @@ public class BoardDisplay extends JPanel {
 		if (this.gameEnd)
 			return;
 
-		this.redFlowers = this.boardViewer.getFlowers(PlayerColor.Red);
-		this.blueFlowers = this.boardViewer.getFlowers(PlayerColor.Blue);
-		this.redDitches = this.boardViewer.getDitches(PlayerColor.Red);
-		this.blueDitches = this.boardViewer.getDitches(PlayerColor.Blue);
-		this.possibleDitchMoves = this.boardViewer.getPossibleDitchMoves();
-		this.currentPlayer = this.boardViewer.getTurn();
-
-		int redPlayerPoints = this.boardViewer.getPoints(PlayerColor.Red);
-		int bluePlayerPoints = this.boardViewer.getPoints(PlayerColor.Blue);
-		this.statusDisplay.updateStatus(redPlayerPoints, bluePlayerPoints);
-
 		if (this.boardViewer.getStatus() != Status.Ok) {
-			new EndPopupFrame(this.boardViewer.getStatus());
+			// NOTE: This is necessary to be invoked by EventQueue.
+			// Due to Swing's Threading structure, the program stalls otherwise.
+			EventQueue.invokeLater(() -> new EndPopupFrame(this.boardViewer.getStatus()));
 			this.gameEnd = true;
+		} else {
+			this.redFlowers = this.boardViewer.getFlowers(PlayerColor.Red);
+			this.blueFlowers = this.boardViewer.getFlowers(PlayerColor.Blue);
+			this.redDitches = this.boardViewer.getDitches(PlayerColor.Red);
+			this.blueDitches = this.boardViewer.getDitches(PlayerColor.Blue);
+			this.possibleDitchMoves = this.boardViewer.getPossibleDitchMoves();
+			this.currentPlayer = this.boardViewer.getTurn();
+
+			int redPlayerPoints = this.boardViewer.getPoints(PlayerColor.Red);
+			int bluePlayerPoints = this.boardViewer.getPoints(PlayerColor.Blue);
+			this.statusDisplay.updateStatus(redPlayerPoints, bluePlayerPoints);
 		}
 	}
 }

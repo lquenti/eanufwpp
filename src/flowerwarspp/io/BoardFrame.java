@@ -10,29 +10,9 @@ import java.awt.*;
  */
 public class BoardFrame extends JFrame implements Requestable, Output {
 	/**
-	 * Der {@link Viewer}, durch den dieses {@link JFrame} auf das {@link Board} schaut.
-	 */
-	private Viewer viewer;
-
-	/**
-	 * Der Container für das {@link BoardDisplay}.
-	 */
-	private JPanel boardContainer = new JPanel();
-	/**
 	 * Das {@link BoardDisplay}, das auf das {@link Board} schaut.
 	 */
 	private BoardDisplay boardDisplay;
-
-	private JPanel buttonContainer = new JPanel();
-	/**
-	 * Der {@link JButton}, der das Aufgeben ermöglicht.
-	 */
-	private JButton surrenderButton = new JButton("Surrender");
-	/**
-	 * Der {@link JButton}, der das Beenden des Spiels ermöglicht,
-	 * wenn dies den Spielregeln zufolge möglich ist.
-	 */
-	private JButton endButton = new JButton("End");
 
 	/**
 	 * Konstruiert ein JFrame, gegebenenfalls mit einem {@link Viewer}.
@@ -52,11 +32,6 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 	public BoardFrame() {
 		super("Flower Wars");
 		this.setSize(600, 600);
-
-		// Do stuff to *this*; it needs setup.
-		this.buttonContainer.add(this.surrenderButton);
-		this.buttonContainer.add(this.endButton);
-		this.add(this.buttonContainer, BorderLayout.SOUTH);
 
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
