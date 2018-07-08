@@ -29,7 +29,7 @@ public class Players {
 			default:
 				System.err.println("Unbekannter Spielertyp " + type);
 				Log.log0(LogLevel.ERROR, LogModule.PLAYER,
-						"Players.createPlayer: Invalid PlayerType passed");
+						"Players.createPlayer: Invalid PlayerType passed: " + type);
 				return null;
 		}
 		player.setBoard(board);
