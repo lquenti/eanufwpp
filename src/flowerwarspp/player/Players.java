@@ -36,13 +36,20 @@ public class Players {
 		String host = inputScanner.nextLine();
 		Log.log0(LogLevel.INFO, LogModule.PLAYER, "Address of the remote player: " + host);
 
+		System.out.print("Port des entfernten Spielers [1099]: ");
+		String port = inputScanner.nextLine();
+		if (port.equals("")) {
+			port = "1099";
+		}
+		Log.log0(LogLevel.INFO, LogModule.PLAYER, "Port of the remote player: " + port);
+
 		System.out.print("Name des entfernten Spielers: ");
 		String name = inputScanner.nextLine();
 		Log.log0(LogLevel.INFO, LogModule.PLAYER, "Name of the remote player: " + name);
 
 		Player result = null;
 		try {
-			result = (Player) Naming.lookup("rmi://" + host + "/" + name);
+			result = (Player) Naming.lookup("rmi://" + host + ":" + port + "/" + name);
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}
