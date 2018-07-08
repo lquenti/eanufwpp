@@ -1,41 +1,66 @@
 package flowerwarspp.main;
 
 import flowerwarspp.board.MainBoard;
-import flowerwarspp.io.BoardFrame;
-import flowerwarspp.io.Output;
-import flowerwarspp.player.Players;
-import flowerwarspp.player.RemotePlayer;
+import flowerwarspp.io.*;
+import flowerwarspp.player.*;
 import flowerwarspp.preset.*;
-import flowerwarspp.util.log.Log;
-import flowerwarspp.util.log.LogLevel;
-import flowerwarspp.util.log.LogModule;
+import flowerwarspp.util.log.*;
 
 import java.rmi.RemoteException;
-import java.util.Arrays;
 
+/**
+ * Diese Klasse realisiert das Hauptprogramm. Ein neues Spiel wird auf Basis der an {@link Main} übergebenen Argumente
+ * initialisiert, anschließend wird eine Game-Loop gestartet.
+ */
 public class BaseGame {
-	private int boardSize;
+
+	/**
+	 * Das Spielbrett des Hauptprogramms.
+	 */
 	private Board board;
+
+	/**
+	 * Referenz auf eine Klasse welche das Interface {@link Viewer} implementiert, um auf den {@link Status} des
+	 * Spielbretts zugreifen zu können.
+	 */
 	private Viewer viewer;
-	private PlayerType redType;
-	private PlayerType blueType;
-	private PlayerType offerType;
-	private int delay;
-	private boolean logActive;
+
+	/**
+	 * Eine Referenz auf eine Klasse welche das Interface {@link Requestable} implementiert, um Züge von einem {@link
+	 * InteractivePlayer} anzufordern.
+	 */
 	private Requestable input;
+
+	/**
+	 * Eine Referenz auf eine Klasse welche das Interface {@link Output} implementiert, um das Spiel für den Benutzer
+	 * sichtbar und nachvollziehbar zu machen.
+	 */
 	private Output output;
+
+	/**
+	 * Eine Referenz auf den Spieler, der in der aktuellen Iteration der Game-Loop am Zug ist.
+	 */
 	private Player currentPlayer;
+
+	/**
+	 * Eine Referenz auf den Spieler, der in der aktuellen Iteration der Game-Loop nicht am Zug ist.
+	 */
 	private Player oppositePlayer;
 
-	private static final int ERRORCODE_INVALID_ARGS = 1;
+	private GameParameters gameParameters;
 
-	BaseGame( String[] args ) {
+	/**
+	 * Startet ein neues Spiel. Das Spiel wird initialisiert und der Life-Cycle des Spiel gestartet.
+	 *
+	 * @param gameParameters Die Parameter wie sie auf der Kommandozeile übergeben worden sind
+	 */
+	BaseGame( final GameParameters gameParameters ) {
 
-		parseArguments(args);
+		this.gameParameters = gameParameters;
 
-		if ( offerType != null ) {
+		if ( this.gameParameters.getOfferType() != null ) {
 			try {
-				Player offeredPlayer = Players.createPlayer(offerType, input);
+				Player offeredPlayer = Players.createPlayer(this. gameParameters.getOfferType(), input);
 				Players.offerPlayer(new RemotePlayer(offeredPlayer, output));
 			} catch ( RemoteException e ) {
 				Log.log0(LogLevel.ERROR, LogModule.MAIN, "There was an error offering the player: "
@@ -49,8 +74,12 @@ public class BaseGame {
 
 	}
 
+	/**
+	 * Initialisiert das Spiel. Der Logger wird mit den korrekten Einstellungen versehen, die I/O Referennzen werden
+	 * gesetzt und das Spielbrett und die beiden Spieler werden initialisiert.
+	 */
 	private void init() {
-		if ( logActive )
+		if ( gameParameters.getDebug() )
 			Log.getInstance().setLogLevel(LogLevel.DEBUG);
 		else
 			Log.getInstance().setLogLevel(LogLevel.INFO);
@@ -61,16 +90,16 @@ public class BaseGame {
 		input = boardFrame;
 		output = boardFrame;
 
-		board = new MainBoard(boardSize);
+		board = new MainBoard(gameParameters.getBoardSize());
 		viewer = board.viewer();
 		output.setViewer(viewer);
 
-		currentPlayer = Players.createPlayer(redType, input);
-		oppositePlayer = Players.createPlayer(blueType, input);
+		currentPlayer = Players.createPlayer(gameParameters.getRedType(), input);
+		oppositePlayer = Players.createPlayer(gameParameters.getBlueType(), input);
 
 		try {
-			currentPlayer.init(boardSize, PlayerColor.Red);
-			oppositePlayer.init(boardSize, PlayerColor.Blue);
+			currentPlayer.init(gameParameters.getBoardSize(), PlayerColor.Red);
+			oppositePlayer.init(gameParameters.getBoardSize(), PlayerColor.Blue);
 		} catch ( Exception e ) {
 			Log.log0(LogLevel.ERROR, LogModule.MAIN, "There was an error initializing the players: "
 					+ currentPlayer + " and " + oppositePlayer);
@@ -79,6 +108,13 @@ public class BaseGame {
 		}
 	}
 
+	/**
+	 * Startet und verwaltet die Game-Loop. In jeder Iteration wird ein Zug vom aktuellen Spieler angefordert, dieser
+	 * Zug wird auf dem Spielbrett ausgeführt, dann werden die Status vom Spielbrett und des aktuellen Spielers mit
+	 * {@link Player#confirm(Status)} validiert, der validierte Zug und Status werden dem Gegenspieler mit {@link
+	 * Player#update(Move, Status)}  übergeben, abschließend werden aktueller Spieler und Gegenspieler vertauscht und
+	 * die nächste Iteration beginnt.
+	 */
 	private void run() {
 		try {
 			while ( viewer.getStatus() == Status.Ok ) {
@@ -92,62 +128,13 @@ public class BaseGame {
 				currentPlayer = oppositePlayer;
 				oppositePlayer = t;
 
-				Thread.sleep(delay);
+				Thread.sleep(gameParameters.getDelay());
 			}
 		} catch ( Exception e ) {
 			Log.log0(LogLevel.ERROR, LogModule.MAIN, "There was an error during the game loop: "
 					+ e.getMessage());
 			System.out.println("Es ist ein Fehler aufgetreten:");
 			e.printStackTrace();
-		}
-	}
-
-	private static void quitWithUsage() {
-		System.out.println("Verwendung:");
-		System.out.println("flowerwarspp.main.Main -size <Spielfeldgröße> -red <Spielertyp> -blue <Spielertyp> -delay <Verzögerung> (optional:) --debug");
-		System.out.println();
-		System.out.println("Spielfeldgröße: Zahl zwischen 3 und 30");
-		System.out.println("Spielertyp:     \"human\", \"remote\", \"random\", \"simple\", oder \"adv1\"");
-		System.out.println("Verzögerung:    Zeit zwischen Zügen in Millisekunden");
-		System.out.println("Debug:          Zeigt Debug-Information im Game-Log an. Optionaler Flag (hat keine Argumente)");
-		System.exit(ERRORCODE_INVALID_ARGS);
-	}
-
-	private void parseArguments( String[] args ) {
-
-		try {
-			// set up
-			ArgumentParser argumentParser = new ArgumentParser(args);
-
-			// If we want to offer the player, set that variable and return
-			try {
-				offerType = argumentParser.getOffer();
-				return;
-			} catch ( ArgumentParserException e ) {
-				offerType = null;
-			}
-
-			// Parse board size
-			boardSize = argumentParser.getSize();
-			redType = argumentParser.getRed();
-			blueType = argumentParser.getBlue();
-			delay = argumentParser.getDelay();
-
-			// Validate board size
-			if ( boardSize < 3 || boardSize > 30 || delay < 0 ) {
-				throw new ArgumentParserException("Groeße des Spielfelds ist nicht gueltig.");
-			}
-
-			try {
-				logActive = argumentParser.isDebug();
-			} catch ( ArgumentParserException e ) {
-				logActive = false;
-			}
-
-		} catch ( ArgumentParserException e ) {
-
-			Log.log0(LogLevel.ERROR, LogModule.MAIN, "Invalid arguments passed: " + Arrays.toString(args));
-			quitWithUsage();
 		}
 	}
 }
