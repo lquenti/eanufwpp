@@ -19,8 +19,6 @@ import java.awt.*;
  * Die rechte Ecke ist immer die Ecke, die von der Spitze aus auf der
  * gegenüberliegenden Seite zur linken Ecke liegt (d.h. in Richtung
  * Unendlich der x-Achse des Zeichenbretts).
- *
- * @author Fabian Winter
  */
 public class Triangle extends BoardPolygon {
 	/**

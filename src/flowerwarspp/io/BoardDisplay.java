@@ -248,6 +248,7 @@ public class BoardDisplay extends JPanel {
 	public BoardDisplay() {
 		Font font = this.getFont().deriveFont(10F);
 		this.setFont(font);
+		this.setOpaque(false);
 	}
 
 	/**
@@ -264,8 +265,6 @@ public class BoardDisplay extends JPanel {
 		this.createDitches();
 		this.createDots();
 		this.displayMouseHandler.reset();
-		for (MouseListener mouseListener : this.getMouseListeners())
-			this.removeMouseListener(mouseListener);
 		this.addMouseListener(this.displayMouseHandler);
 	}
 
@@ -311,6 +310,15 @@ public class BoardDisplay extends JPanel {
 			setEdgeColours(this.blueDitches, blueColour);
 	}
 
+	/**
+	 * Setzt die Farbe der Edges zur Farbe der Spieler, dem sie gehören.
+	 *
+	 * @param ditches
+	 * Eine {@link Collection} von {@link Ditch}es.
+	 *
+	 * @param colour
+	 * Eine {@link Color}, die den Spieler repräsentiert, dem die {@link Ditch}es gehören.
+	 */
 	private void setEdgeColours(Collection<Ditch> ditches, Color colour) {
 		for (Edge edge : this.mapEdges) {
 			Ditch ditch = edge.toDitch();
@@ -326,7 +334,8 @@ public class BoardDisplay extends JPanel {
 	 * {@link Dimension} des Zeichenbretts anzupassen.
 	 */
 	private void updatePolygonSizes() {
-		Dimension displaySize = this.getSize();
+		Dimension displaySize = this.getParent().getSize();
+		this.setPreferredSize(displaySize);
 		int minimumSize = Math.min(displaySize.width, displaySize.height);
 
 		// The triangles may not be larger than a fraction percentage of the shortest side.

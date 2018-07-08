@@ -4,6 +4,11 @@ import flowerwarspp.preset.Position;
 
 import java.awt.*;
 
+/**
+ * Handhabt die Umrechnung von {@link flowerwarspp.preset.Board}-Koordinaten nach
+ * Swing-Koordinaten für die Darstellung von {@link flowerwarspp.preset.Flower}s
+ * oder {@link flowerwarspp.preset.Ditch}es.
+ */
 public abstract class BoardPolygon extends Polygon {
 	/**
 	 * Die Quadratwurzel von 3.0. Wird zum Berechnen der Koordinaten der beiden anderen Vertices des
