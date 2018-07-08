@@ -210,6 +210,10 @@ public class BoardDisplay extends JPanel {
 	 * Handhabt alle {@link MouseEvent}s, die in diesem {@link JPanel} auftreten können.
 	 */
 	private DisplayMouseHandler displayMouseHandler = new DisplayMouseHandler(this);
+	/**
+	 * Ein {@link PlayerStatusDisplay}, das den Status der Spieler anzeigt.
+	 */
+	private PlayerStatusDisplay statusDisplay = new PlayerStatusDisplay(redColour, blueColour);
 
 	// Cached information fresh (or stale) from the viewer
 	/**
@@ -241,6 +245,14 @@ public class BoardDisplay extends JPanel {
 	 * Die Größe des {@link Board}s.
 	 */
 	private int boardSize;
+	/**
+	 * Die {@link PlayerColor} des Spielers, der gerade am Zug ist.
+	 */
+	private PlayerColor currentPlayer;
+	/**
+	 * <code>true</code> genau dann, wenn das Spiel geendet hat.
+	 */
+	private boolean gameEnd = false;
 
 	/**
 	 * Konstruiert ein Display für die Darstellung eines {@link Board}s.
@@ -260,6 +272,7 @@ public class BoardDisplay extends JPanel {
 	public void setBoardViewer(Viewer boardViewer) {
 		this.boardViewer = boardViewer;
 		this.boardSize = this.boardViewer.getSize();
+		this.statusDisplay.updateStatus(0, 0);
 		// NOTE: It is very very important that the Triangles be created before the ditches and dots
 		this.createTriangles();
 		this.createDitches();
@@ -268,6 +281,9 @@ public class BoardDisplay extends JPanel {
 		this.addMouseListener(this.displayMouseHandler);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public synchronized void paintComponent(Graphics g) {
 		this.updateTriangles();
@@ -277,6 +293,7 @@ public class BoardDisplay extends JPanel {
 		this.mapTriangles.forEach(t -> t.drawPolygon(g));
 		this.mapEdges.forEach(e -> e.drawPolygon(g));
 		this.mapDots.forEach(d -> d.drawPolygon(g));
+		this.statusDisplay.draw(g);
 	}
 
 	/**
@@ -290,16 +307,14 @@ public class BoardDisplay extends JPanel {
 			else if ((this.blueFlowers != null) && this.blueFlowers.contains(f))
 				t.setFillColour(blueColour);
 			else {
-				if (this.displayMouseHandler.clickedFlower1 != null) {
-					if (t.samePlace(this.displayMouseHandler.clickedFlower1)) {
-						t.setFillColour(triangleClickedColour);
-					} else if (this.combinableFlowers != null) {
-						if (this.combinableFlowers.contains(f)) {
-							t.setFillColour(triangleCombinableColour);
-						}
+				if (this.displayMouseHandler.clickedFlower1 == null) {
+					if ((this.combinableFlowers != null) && (this.combinableFlowers.contains(f))) {
+						t.setFillColour(triangleCombinableColour);
+					} else {
+						t.setFillColour(this.getBackground());
 					}
-				} else {
-					t.setFillColour(this.getBackground());
+				} else if (t.samePlace(this.displayMouseHandler.clickedFlower1)) {
+						t.setFillColour(triangleClickedColour);
 				}
 			}
 		}
@@ -335,6 +350,7 @@ public class BoardDisplay extends JPanel {
 	 */
 	private void updatePolygonSizes() {
 		Dimension displaySize = this.getParent().getSize();
+		displaySize.height -= 20;
 		this.setPreferredSize(displaySize);
 		int minimumSize = Math.min(displaySize.width, displaySize.height);
 
@@ -347,6 +363,7 @@ public class BoardDisplay extends JPanel {
 		this.mapTriangles.forEach(t -> t.recalcPoints(sideLength, drawBegin));
 		this.mapEdges.forEach(e -> e.recalcPoints(sideLength, drawBegin));
 		this.mapDots.forEach(e -> e.recalcPoints(sideLength, drawBegin));
+		this.statusDisplay.updateRectangleSizes(displaySize);
 	}
 
 	/**
@@ -463,6 +480,8 @@ public class BoardDisplay extends JPanel {
 		Move result = null;
 
 		while (result == null) {
+			this.combinableFlowers = this.boardViewer.getPossibleFlowers();
+			this.repaint();
 			synchronized (this.displayMouseHandler.moveAwaitLock) {
 				this.displayMouseHandler.moveAwaitLock.wait();
 
@@ -539,13 +558,23 @@ public class BoardDisplay extends JPanel {
 	 * Updatet das interne Cache des Spielbretts dieses Displays.
 	 */
 	public synchronized void refresh() {
+		if (this.gameEnd)
+			return;
+
 		this.redFlowers = this.boardViewer.getFlowers(PlayerColor.Red);
 		this.blueFlowers = this.boardViewer.getFlowers(PlayerColor.Blue);
 		this.redDitches = this.boardViewer.getDitches(PlayerColor.Red);
 		this.blueDitches = this.boardViewer.getDitches(PlayerColor.Blue);
 		this.possibleDitchMoves = this.boardViewer.getPossibleDitchMoves();
+		this.currentPlayer = this.boardViewer.getTurn();
 
-		if (this.boardViewer.getStatus() != Status.Ok)
+		int redPlayerPoints = this.boardViewer.getPoints(PlayerColor.Red);
+		int bluePlayerPoints = this.boardViewer.getPoints(PlayerColor.Blue);
+		this.statusDisplay.updateStatus(redPlayerPoints, bluePlayerPoints);
+
+		if (this.boardViewer.getStatus() != Status.Ok) {
 			new EndPopupFrame(this.boardViewer.getStatus());
+			this.gameEnd = true;
+		}
 	}
 }
