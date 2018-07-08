@@ -2,10 +2,6 @@ package flowerwarspp.player;
 
 import flowerwarspp.preset.Move;
 import flowerwarspp.preset.MoveType;
-import flowerwarspp.preset.Player;
-import flowerwarspp.util.log.LogLevel;
-
-import java.util.Random;
 
 /**
  * Implementiert die abstrakte Klasse {@link BasePlayer} mit einer zufallsbasierten KI, welche zufällig einen der zur
@@ -28,7 +24,7 @@ public class RandomAI extends BaseAI {
 	@Override
 	protected int getMoveScore( final Move move ) {
 
-		if ( move.getType() == MoveType.Surrender  || move.getType() == MoveType.Ditch )
+		if ( move.getType() == MoveType.Surrender )
 			return - 1;
 
 		return 0;
