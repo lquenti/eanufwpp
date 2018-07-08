@@ -96,10 +96,6 @@ public class Game {
 	 * Initialisiert das Spiel. Das Spielbrett und die beiden Spieler werden initialisiert.
 	 */
 	private void init() {
-		board = new MainBoard(gameParameters.getBoardSize());
-		viewer = board.viewer();
-		output.setViewer(viewer);
-
 		currentPlayer = Players.createPlayer(gameParameters.getRedType(), input);
 		oppositePlayer = Players.createPlayer(gameParameters.getBlueType(), input);
 
@@ -112,6 +108,11 @@ public class Game {
 			System.out.println("Waehrend der Initialisierung der Spieler ist ein Fehler aufgetreten:");
 			e.printStackTrace();
 		}
+
+		board = new MainBoard(gameParameters.getBoardSize());
+		Log.log0(LogLevel.INFO, LogModule.MAIN, "Initialized main board.");
+		viewer = board.viewer();
+		output.setViewer(viewer);
 	}
 
 	/**
