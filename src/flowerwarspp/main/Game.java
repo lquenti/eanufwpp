@@ -13,7 +13,7 @@ import flowerwarspp.util.log.*;
  * Diese Klasse realisiert das Hauptprogramm. Ein neues Spiel wird auf Basis der an {@link Main} übergebenen Argumente
  * initialisiert, anschließend wird eine Game-Loop gestartet.
  */
-public class BaseGame {
+public class Game {
 
 	/**
 	 * Das Spielbrett des Hauptprogramms.
@@ -55,7 +55,7 @@ public class BaseGame {
 	 *
 	 * @param gameParameters Die Parameter wie sie auf der Kommandozeile übergeben worden sind
 	 */
-	BaseGame( final GameParameters gameParameters ) {
+	Game( final GameParameters gameParameters ) {
 
 		this.gameParameters = gameParameters;
 

@@ -82,6 +82,6 @@ public class Main {
 
 	public static void main( String[] args ) {
 
-		new BaseGame(parseArguments(args));
+		new Game(parseArguments(args));
 	}
 }
