@@ -1,7 +1,11 @@
 package flowerwarspp.main;
 
+import java.util.Arrays;
+
+import flowerwarspp.preset.ArgumentParser;
+import flowerwarspp.preset.ArgumentParserException;
 import flowerwarspp.preset.PlayerType;
-import flowerwarspp.util.log.Log;
+import flowerwarspp.util.log.*;
 
 /**
  * Ein Daten-Konstrukt um gesammelt Parameter an die Spiel-Klassen weiterleiten zu können.
@@ -41,21 +45,53 @@ class GameParameters {
 	private boolean debug;
 
 	/**
+	 * Erzeugt ein neues Objekt basierend auf den angegebenen Kommandozeilenparametern.
+	 *
+	 * @param args Die Kommandozeilenparameter
+	 */
+	public GameParameters(String[] args) {
+		try {
+			// set up
+			ArgumentParser argumentParser = new ArgumentParser(args);
+
+			// If we want to offer the player, set that variable and return
+			try {
+				offerType = argumentParser.getOffer();
+				return;
+			} catch ( ArgumentParserException e ) {
+				offerType = null;
+			}
+
+			boardSize = argumentParser.getSize();
+			redType = argumentParser.getRed();
+			blueType = argumentParser.getBlue();
+			delay = argumentParser.getDelay();
+
+			// Validate board size
+			if ( getBoardSize() < 3
+					|| getBoardSize() > 30
+					|| getBoardSize() < 0 ) {
+				throw new ArgumentParserException("Groeße des Spielfelds ist nicht gueltig.");
+					}
+
+			try {
+				debug = argumentParser.isDebug();
+			} catch ( ArgumentParserException e ) {
+				debug = false;
+			}
+		} catch ( ArgumentParserException e ) {
+			Log.log0(LogLevel.ERROR, LogModule.MAIN, "Invalid arguments passed: " + Arrays.toString(args));
+			Main.quitWithUsage();
+		}
+	}
+
+	/**
 	 * Gibt {@link #boardSize} zurück.
 	 *
 	 * @return Wert von {@link #boardSize}
 	 */
 	int getBoardSize() {
 		return boardSize;
-	}
-
-	/**
-	 * Setzt einen neuen Wert für {@link #boardSize}.
-	 *
-	 * @param boardSize Neuer Wert für {@link #boardSize}
-	 */
-	void setBoardSize( int boardSize ) {
-		this.boardSize = boardSize;
 	}
 
 	/**
@@ -68,30 +104,12 @@ class GameParameters {
 	}
 
 	/**
-	 * Setzt einen neuen Wert für {@link #redType}.
-	 *
-	 * @param redType Neuer Wert für {@link #redType}
-	 */
-	void setRedType( PlayerType redType ) {
-		this.redType = redType;
-	}
-
-	/**
 	 * Gibt {@link #blueType} zurück.
 	 *
 	 * @return Wert von {@link #blueType}
 	 */
 	PlayerType getBlueType() {
 		return blueType;
-	}
-
-	/**
-	 * Setzt einen neuen Wert für {@link #blueType}.
-	 *
-	 * @param blueType Neuer Wert für {@link #blueType}
-	 */
-	void setBlueType( PlayerType blueType ) {
-		this.blueType = blueType;
 	}
 
 	/**
@@ -104,15 +122,6 @@ class GameParameters {
 	}
 
 	/**
-	 * Setzt einen neuen Wert für {@link #offerType}.
-	 *
-	 * @param offerType Neuer Wert für {@link #offerType}
-	 */
-	void setOfferType( PlayerType offerType ) {
-		this.offerType = offerType;
-	}
-
-	/**
 	 * Gibt {@link #delay} zurück.
 	 *
 	 * @return Wert von {@link #delay}
@@ -122,29 +131,11 @@ class GameParameters {
 	}
 
 	/**
-	 * Setzt einen neuen Wert für {@link #delay}.
-	 *
-	 * @param delay Neuer Wert für {@link #delay}
-	 */
-	void setDelay( int delay ) {
-		this.delay = delay;
-	}
-
-	/**
 	 * Gibt {@link #debug} zurück.
 	 *
 	 * @return Wert von {@link #debug}
 	 */
 	boolean getDebug() {
 		return debug;
-	}
-
-	/**
-	 * Setzt einen neuen Wert für {@link #debug}.
-	 *
-	 * @param debug Neuer Wert für {@link #debug}
-	 */
-	void setDebug( boolean debug ) {
-		this.debug = debug;
 	}
 }
