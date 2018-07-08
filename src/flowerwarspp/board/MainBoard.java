@@ -1,8 +1,6 @@
 package flowerwarspp.board;
 
 import flowerwarspp.preset.*;
-import javafx.util.Pair;
-
 import java.util.*;
 
 /**
