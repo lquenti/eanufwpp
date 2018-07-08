@@ -1,10 +1,9 @@
 package flowerwarspp.board;
 
 import flowerwarspp.preset.*;
+import javafx.util.Pair;
 
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * Verwaltungsklasse, die Daten über die gemachten und noch möglichen Züge
@@ -160,7 +159,6 @@ public class MainBoard implements Board {
 		oppositePlayer = (currentPlayer == PlayerColor.Red) ? PlayerColor.Blue : PlayerColor.Red;
 	}
 
-	// TODO: Am Ende Exception rausnehmen
 	private void updateValidMoves(final Flower[] fs) {
 		for (Flower f : fs) {
 			// Gesetzte Flowers für alle verbieten
@@ -209,7 +207,7 @@ public class MainBoard implements Board {
 			}
 			playerData.get(currentPlayer).flowers.add(bedNeighbor);
 			Collection<Flower> resultingBed = getFlowerBed(bedNeighbor);
-			if (!isLegalBed(resultingBed, currentPlayer)) { // Neue Kombination gefaehrlich
+			if (!isLegalBed(resultingBed, currentPlayer)) {
 				playerData.get(currentPlayer).legalMoves.removeMovesContaining(bedNeighbor);
 			} else if (resultingBed.size() == 4) { // ILLEGAL, Bed raushauen TODO: exkludieren in eigene Fkt
 				for (Flower secondBedNeighbor : getAllNeighbors(resultingBed)) {
@@ -235,39 +233,44 @@ public class MainBoard implements Board {
 		}
 	}
 
-	// TODO: Refactor
-	private LinkedList<Ditch> getImportantDitches(final Flower newFlower) {
-		LinkedList<Ditch> res = new LinkedList<>();
-		LinkedList<Flower> neighbors = getAllNeighbors(newFlower);
-		for (Flower f : neighbors) {
-			Position[] ps = getPositions(f);
-			int n = ps.length;
-			for (int i=0; i<=n; i++) {
-				if (getFlowersAround(ps[i%n]).stream().anyMatch(neighbors::contains) &&
-						Arrays.asList(getPositions(newFlower)).contains(ps[(i+1)%n])
-						||
-						getFlowersAround(ps[(i+1)%n]).stream().anyMatch(neighbors::contains) &&
-								Arrays.asList(getPositions(newFlower)).contains(ps[i%n])) {
-					res.add(new Ditch(ps[i%n], ps[(i+1)%n]));
-				}
-			}
+	private HashSet<Ditch> getImportantDitches(final Flower newFlower) {
+		HashSet<Ditch> res = new HashSet<>();
+		for (Position p : getPositions(newFlower)) {
+			res.addAll(getDitchesAround(p));
 		}
+
+		Position[] flowerPositions = getPositions(newFlower);
+		HashSet<Ditch> tobeRemoved = new HashSet<>(); // Um ConcurrentModificationException zu umgehen
+		for (Ditch d : res) {
+			if (Arrays.asList(flowerPositions).containsAll(Arrays.asList(d.getFirst(), d.getSecond()))) {
+				tobeRemoved.add(d);
+			}
+
+			Position p = (Arrays.asList(flowerPositions).contains(d.getFirst())) ? d.getSecond() : d.getFirst();
+			if (getFlowersAround(p).stream().noneMatch(f -> getFlowerColor(f) != null) ||
+					getDirectNeighbors(d).stream().anyMatch(f -> getFlowerColor(f) != null)) {
+				tobeRemoved.add(d);
+			}
+
+			/* TODO: Gehoert in Ditch lol (glaube ich)
+			*/
+		}
+		res.removeAll(tobeRemoved);
 		return res;
 	}
 
 	private void generateNewDitches(final Collection<Ditch> ds) {
-		//if (getDirectNeighbors(d).stream().noneMatch(df -> getFlowerColor(df) != null)) {
 		for (Ditch d : ds) {
-			if (getDirectNeighbors(d).stream().anyMatch(df -> getFlowerColor(df) != null) ||
-					getDitchColor(d) != null) {
-				continue;
-			}
 			playerData.get(currentPlayer).legalMoves.add(new Move(d));
 		}
 	}
 
 	private Position[] getPositions(Flower f) {
 		return new Position[]{f.getFirst(), f.getSecond(), f.getThird()};
+	}
+
+	private Position[] getPositions(Ditch d) {
+		return new Position[]{d.getFirst(), d.getSecond()};
 	}
 
 	private boolean isLegalBed(final Collection<Flower> bed, final PlayerColor player) {
@@ -314,7 +317,6 @@ public class MainBoard implements Board {
 				result.add(visiting);
 			}
 		}
-
 		return result;
 	}
 
@@ -324,19 +326,20 @@ public class MainBoard implements Board {
 		for (int i = 0; i < 3; i++) {
 			try {
 				Position third = new Position(
-					nodes[i % 3].getColumn() + nodes[(i + 1) % 3].getColumn() - nodes[(i + 2) % 3].getColumn(),
-					nodes[i % 3].getRow() + nodes[(i + 1) % 3].getRow() - nodes[(i + 2) % 3].getRow()
+						nodes[i % 3].getColumn() + nodes[(i + 1) % 3].getColumn() - nodes[(i + 2) % 3].getColumn(),
+						nodes[i % 3].getRow() + nodes[(i + 1) % 3].getRow() - nodes[(i + 2) % 3].getRow()
 				);
 				Flower neighbor = new Flower(nodes[i % 3], nodes[(i + 1) % 3], third);
 				if (isOnBoard(neighbor)) {
 					result.add(neighbor);
 				}
-			} catch (IllegalArgumentException e) {}
+			} catch (IllegalArgumentException e) {
+			}
 		}
 		return result;
 	}
 
-	private LinkedList<Flower> getAllNeighbors(final Flower f) { //  n := distance
+	private LinkedList<Flower> getAllNeighbors(final Flower f) {
 		LinkedList<Flower> result = getDirectNeighbors(f);
 		Position[] nodes = getPositions(f);
 		Position lastPoint = null;
@@ -344,8 +347,8 @@ public class MainBoard implements Board {
 		for (int i = 0; i <= 9; i++) {
 			try {
 				Position point = new Position(
-					nodes[i / 3 % 3].getColumn() + nodes[(i + 1) / 3 % 3].getColumn() - nodes[((i + 2) / 3 + 1) % 3].getColumn(),
-					nodes[i / 3 % 3].getRow() + nodes[(i + 1) / 3 % 3].getRow() - nodes[((i + 2) / 3 + 1) % 3].getRow()
+						nodes[i / 3 % 3].getColumn() + nodes[(i + 1) / 3 % 3].getColumn() - nodes[((i + 2) / 3 + 1) % 3].getColumn(),
+						nodes[i / 3 % 3].getRow() + nodes[(i + 1) / 3 % 3].getRow() - nodes[((i + 2) / 3 + 1) % 3].getRow()
 				);
 				if (lastPoint != null) {
 					Flower neighbor = new Flower(nodes[i / 3 % 3], lastPoint, point);
@@ -391,24 +394,26 @@ public class MainBoard implements Board {
 		Position[] nodes = {ditch.getFirst(), ditch.getSecond()};
 		try {
 			Position third = new Position(
-				nodes[1].getColumn() + nodes[1].getRow() - nodes[0].getRow(),
-				nodes[0].getRow() - nodes[1].getColumn() + nodes[0].getColumn()
-				);
+					nodes[1].getColumn() + nodes[1].getRow() - nodes[0].getRow(),
+					nodes[0].getRow() - nodes[1].getColumn() + nodes[0].getColumn()
+			);
 			Flower neighbor = new Flower(nodes[0], nodes[1], third);
 			if (isOnBoard(neighbor)) {
 				result.add(neighbor);
 			}
-		} catch (IllegalArgumentException e) {}
+		} catch (IllegalArgumentException e) {
+		}
 		try {
 			Position third = new Position(
-				nodes[0].getColumn() - nodes[1].getRow() + nodes[0].getRow(),
-				nodes[1].getRow() + nodes[1].getColumn() - nodes[0].getColumn()
-				);
+					nodes[0].getColumn() - nodes[1].getRow() + nodes[0].getRow(),
+					nodes[1].getRow() + nodes[1].getColumn() - nodes[0].getColumn()
+			);
 			Flower neighbor = new Flower(nodes[0], nodes[1], third);
 			if (isOnBoard(neighbor)) {
 				result.add(neighbor);
 			}
-		} catch (IllegalArgumentException e) {}
+		} catch (IllegalArgumentException e) {
+		}
 		return result;
 	}
 
@@ -452,7 +457,6 @@ public class MainBoard implements Board {
 		return result;
 	}
 
-	// TODO: IDEE, Array aus {column, row} und dann einfach Ein if
 	private void updateValidMoves(Ditch d) {
         /*
         Was aktuell gemacht wird:
@@ -468,27 +472,14 @@ public class MainBoard implements Board {
 		}
 
 		// Andere Grabenmoeglichkeiten entvalidieren falls diese sich eine Position teilen
-		Ditch[] invalidD = new Ditch[4];
-		if (d.getFirst().getRow() == d.getSecond().getRow()) { // Horizontal
-			Position above = new Position(d.getFirst().getColumn(), d.getFirst().getRow() + 1);
-			Position below = new Position(d.getSecond().getColumn(), d.getSecond().getRow() - 1);
-			invalidD[0] = new Ditch(d.getFirst(), above);
-			invalidD[1] = new Ditch(d.getSecond(), above);
-			invalidD[2] = new Ditch(d.getFirst(), below);
-			invalidD[3] = new Ditch(d.getSecond(), below);
-		} else { // Vertikal
-			Position left = new Position(d.getSecond().getColumn() - 1, d.getSecond().getRow());
-			Position right = new Position(d.getFirst().getColumn() + 1, d.getFirst().getRow());
-			invalidD[0] = new Ditch(d.getFirst(), left);
-			invalidD[1] = new Ditch(d.getSecond(), left);
-			invalidD[2] = new Ditch(d.getFirst(), right);
-			invalidD[3] = new Ditch(d.getSecond(), right);
+		for (Position p : getPositions(d)) {
+			for (Ditch samePos : getDitchesAround(p)) {
+				playerData.get(currentPlayer).legalMoves.remove(new Move(samePos));
+			}
 		}
-		for (Ditch var : invalidD) {
-			// Egal ob das drin ist oder nicht
-			playerData.get(currentPlayer).legalMoves.remove(new Move(var));
-		}
+
 		// und zuletzt
+		playerData.get(currentPlayer).legalMoves.remove(new Move(d));
 		playerData.get(currentPlayer).ditches.add(d);
 	}
 
