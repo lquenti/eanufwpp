@@ -122,7 +122,7 @@ public class Game {
 			oppositePlayer.init(gameParameters.getBoardSize(), PlayerColor.Blue);
 		} catch ( Exception e ) {
 			Log.log0(LogLevel.ERROR, LogModule.MAIN, "There was an error initializing the players: "
-					+ currentPlayer + " and " + oppositePlayer);
+					+ e.getMessage());
 			System.out.println("Waehrend der Initialisierung der Spieler ist ein Fehler aufgetreten:");
 			e.printStackTrace();
 		}

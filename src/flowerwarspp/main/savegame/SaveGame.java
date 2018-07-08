@@ -91,7 +91,7 @@ public class SaveGame implements Iterable<Move> {
 
 		try {
 			File saveDir = new File(SAVE_PATH_ROOT);
-			saveDir.mkdir()
+			saveDir.mkdir();
 
 			PrintWriter printWriter = new PrintWriter(getFilePath(saveGameName), "UTF-8");
 
