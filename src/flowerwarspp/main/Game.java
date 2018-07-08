@@ -1,10 +1,11 @@
 package flowerwarspp.main;
 
-import java.rmi.ConnectException;
+import java.io.IOException;
 import java.rmi.RemoteException;
 
 import flowerwarspp.board.MainBoard;
 import flowerwarspp.io.*;
+import flowerwarspp.main.savegame.SaveGame;
 import flowerwarspp.player.*;
 import flowerwarspp.preset.*;
 import flowerwarspp.util.log.*;
@@ -50,6 +51,8 @@ public class Game {
 
 	private GameParameters gameParameters;
 
+	private SaveGame saveGame;
+
 	/**
 	 * Startet ein neues Spiel. Das Spiel wird initialisiert und der Life-Cycle des Spiel gestartet.
 	 *
@@ -72,9 +75,56 @@ public class Game {
 
 		if ( this.gameParameters.getOfferType() != null ) {
 			offer();
+		} else if ( this.gameParameters.getSaveGameName() != null ) {
+			loadGame();
+			run();
 		} else {
 			init();
 			run();
+		}
+	}
+
+	private void loadGame() {
+
+		Log.log0(LogLevel.DEBUG, LogModule.MAIN, "Started loading savegame " + gameParameters.getSaveGameName());
+
+		try {
+			saveGame = SaveGame.load(gameParameters.getSaveGameName());
+		} catch ( IOException e ) {
+			Log.log0(LogLevel.ERROR, LogModule.MAIN, "There was an error loading the save game:");
+			Log.log0(LogLevel.ERROR, LogModule.MAIN, e.getMessage());
+			e.printStackTrace();
+		}
+
+		board = saveGame.initBoard();
+
+		Log.log0(LogLevel.DEBUG, LogModule.MAIN, "Savegame " + gameParameters.getSaveGameName() + " loaded");
+
+		if ( board.viewer().getTurn() == PlayerColor.Red ) {
+
+			currentPlayer = Players.createPlayer(gameParameters.getRedType(), input, new MainBoard(board));
+			oppositePlayer = Players.createPlayer(gameParameters.getBlueType(), input, new MainBoard(board));
+		} else {
+
+			oppositePlayer = Players.createPlayer(gameParameters.getRedType(), input, new MainBoard(board));
+			currentPlayer = Players.createPlayer(gameParameters.getBlueType(), input, new MainBoard(board));
+		}
+
+		initPlayers();
+
+		viewer = board.viewer();
+		output.setViewer(viewer);
+	}
+
+	private void initPlayers() {
+		try {
+			currentPlayer.init(gameParameters.getBoardSize(), PlayerColor.Red);
+			oppositePlayer.init(gameParameters.getBoardSize(), PlayerColor.Blue);
+		} catch ( Exception e ) {
+			Log.log0(LogLevel.ERROR, LogModule.MAIN, "There was an error initializing the players: "
+					+ currentPlayer + " and " + oppositePlayer);
+			System.out.println("Waehrend der Initialisierung der Spieler ist ein Fehler aufgetreten:");
+			e.printStackTrace();
 		}
 	}
 
@@ -96,21 +146,16 @@ public class Game {
 	 * Initialisiert das Spiel. Das Spielbrett und die beiden Spieler werden initialisiert.
 	 */
 	private void init() {
+
 		board = new MainBoard(gameParameters.getBoardSize());
+		saveGame = new SaveGame(gameParameters.getBoardSize());
+
 		Log.log0(LogLevel.INFO, LogModule.MAIN, "Initialized main board.");
 
 		currentPlayer = Players.createPlayer(gameParameters.getRedType(), input, new MainBoard(board));
 		oppositePlayer = Players.createPlayer(gameParameters.getBlueType(), input, new MainBoard(board));
 
-		try {
-			currentPlayer.init(gameParameters.getBoardSize(), PlayerColor.Red);
-			oppositePlayer.init(gameParameters.getBoardSize(), PlayerColor.Blue);
-		} catch ( Exception e ) {
-			Log.log0(LogLevel.ERROR, LogModule.MAIN, "There was an error initializing the players: "
-					+ currentPlayer + " and " + oppositePlayer);
-			System.out.println("Waehrend der Initialisierung der Spieler ist ein Fehler aufgetreten:");
-			e.printStackTrace();
-		}
+		initPlayers();
 
 		viewer = board.viewer();
 		output.setViewer(viewer);
@@ -130,14 +175,19 @@ public class Game {
 				try {
 					move = currentPlayer.request();
 				} catch ( Exception e ) {
-					Log.log0(LogLevel.INFO, LogModule.MAIN, "Player " + currentPlayer + " didn't make a move.");
+					Log.log0(LogLevel.INFO, LogModule.MAIN, "Player " + viewer.getTurn() + " didn't make a move.");
 					move = new Move(MoveType.Surrender);
 				}
+
 				board.make(move);
+				saveGame.add(move);
+
 				try {
 					currentPlayer.confirm(viewer.getStatus());
 					oppositePlayer.update(move, viewer.getStatus());
-				} catch ( Exception e ) {}
+				} catch ( Exception e ) {
+				}
+
 				output.refresh();
 
 				Player t = currentPlayer;
@@ -146,11 +196,14 @@ public class Game {
 
 				Thread.sleep(gameParameters.getDelay());
 			}
+
 		} catch ( Exception e ) {
 			Log.log0(LogLevel.ERROR, LogModule.MAIN, "There was an error during the game loop: "
 					+ e.getMessage());
 			System.out.println("Es ist ein Fehler aufgetreten:");
 			e.printStackTrace();
 		}
+
+		Log.log0(LogLevel.INFO, LogModule.MAIN, "Game ended with status " + viewer.getStatus());
 	}
 }

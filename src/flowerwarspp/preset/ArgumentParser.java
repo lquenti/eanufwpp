@@ -251,6 +251,10 @@ public class ArgumentParser {
         return parsePlayerType((String) getSetting("offer"));
     }
 
+    public String getLoad() throws ArgumentParserException {
+        return (String) getSetting("load");
+    }
+
     public boolean isText() throws ArgumentParserException {
         return getFlag("text");
     }

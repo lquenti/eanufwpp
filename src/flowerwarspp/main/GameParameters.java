@@ -50,6 +50,11 @@ class GameParameters {
 	private boolean text;
 
 	/**
+	 * Name des zu ladenden Spielstands (falls geladen werden soll).
+	 */
+	private String saveGameName;
+
+	/**
 	 * Erzeugt ein neues Objekt basierend auf den angegebenen Kommandozeilenparametern.
 	 *
 	 * @param args Die Kommandozeilenparameter
@@ -65,6 +70,12 @@ class GameParameters {
 				return;
 			} catch ( ArgumentParserException e ) {
 				offerType = null;
+			}
+
+			try {
+				saveGameName = argumentParser.getLoad();
+			} catch ( ArgumentParserException e ) {
+				saveGameName = null;
 			}
 
 			boardSize = argumentParser.getSize();
@@ -158,4 +169,14 @@ class GameParameters {
 	boolean getText() {
 		return text;
 	}
+
+	/**
+	 * Gibt {@link #saveGameName} zurück.
+	 *
+	 * @return Wert von {@link #saveGameName}
+	 */
+	public String getSaveGameName() {
+		return saveGameName;
+	}
+
 }

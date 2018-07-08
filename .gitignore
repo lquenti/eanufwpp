@@ -12,3 +12,6 @@ dist/
 # IDEA Workspace
 .idea/
 *.iml
+
+# Savegames
+SaveGames/
