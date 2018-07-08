@@ -253,12 +253,6 @@ public class MainBoard implements Board {
 			}
 
 			/* TODO: Gehoert in Ditch lol (glaube ich)
-			for (Position pd : getPositions(d)) {
-				LinkedList<Ditch> ditchesAround = getDitchesAround(pd);
-				if (ditchesAround.stream().filter(ditch -> getDitchColor(ditch) != null).anyMatch(ditch -> ditch != d)) {
-					tobeRemoved.add(d);
-				}
-			}
 			*/
 		}
 		res.removeAll(tobeRemoved);
@@ -283,6 +277,15 @@ public class MainBoard implements Board {
 		return bed.size() < 4
 				|| bed.size() == 4
 				&& Collections.disjoint(getAllNeighbors(bed), playerData.get(player).flowers);
+	}
+
+	private PlayerColor getDitchColor(final Ditch d) {
+		for (Map.Entry<PlayerColor, PlayerData> entry : playerData.entrySet()) {
+			if (entry.getValue().ditches.contains(d)) {
+				return entry.getKey();
+			}
+		}
+		return null;
 	}
 
 	private PlayerColor getFlowerColor(final Flower f) {
@@ -454,7 +457,6 @@ public class MainBoard implements Board {
 		return result;
 	}
 
-	// TODO: IDEE, Array aus {column, row} und dann einfach Ein if
 	private void updateValidMoves(Ditch d) {
         /*
         Was aktuell gemacht wird:
@@ -470,27 +472,14 @@ public class MainBoard implements Board {
 		}
 
 		// Andere Grabenmoeglichkeiten entvalidieren falls diese sich eine Position teilen
-		Ditch[] invalidD = new Ditch[4];
-		if (d.getFirst().getRow() == d.getSecond().getRow()) { // Horizontal
-			Position above = new Position(d.getFirst().getColumn(), d.getFirst().getRow() + 1);
-			Position below = new Position(d.getSecond().getColumn(), d.getSecond().getRow() - 1);
-			invalidD[0] = new Ditch(d.getFirst(), above);
-			invalidD[1] = new Ditch(d.getSecond(), above);
-			invalidD[2] = new Ditch(d.getFirst(), below);
-			invalidD[3] = new Ditch(d.getSecond(), below);
-		} else { // Vertikal
-			Position left = new Position(d.getSecond().getColumn() - 1, d.getSecond().getRow());
-			Position right = new Position(d.getFirst().getColumn() + 1, d.getFirst().getRow());
-			invalidD[0] = new Ditch(d.getFirst(), left);
-			invalidD[1] = new Ditch(d.getSecond(), left);
-			invalidD[2] = new Ditch(d.getFirst(), right);
-			invalidD[3] = new Ditch(d.getSecond(), right);
+		for (Position p : getPositions(d)) {
+			for (Ditch samePos : getDitchesAround(p)) {
+				playerData.get(currentPlayer).legalMoves.remove(new Move(samePos));
+			}
 		}
-		for (Ditch var : invalidD) {
-			// Egal ob das drin ist oder nicht
-			playerData.get(currentPlayer).legalMoves.remove(new Move(var));
-		}
+
 		// und zuletzt
+		playerData.get(currentPlayer).legalMoves.remove(new Move(d));
 		playerData.get(currentPlayer).ditches.add(d);
 	}
 
