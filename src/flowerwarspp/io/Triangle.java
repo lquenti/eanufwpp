@@ -52,15 +52,15 @@ public class Triangle extends BoardPolygon {
 		super(Color.BLACK, currentColour);
 		this.flipped = flipped;
 
-		this.triangleEdge1 = new Position(tx1, ty1);
+		triangleEdge1 = new Position(tx1, ty1);
 		// Dependent upon whether this triangle is on its head or not,
 		// the coordinates are either above or below the other two coordinates
 		if (flipped) {
-			this.triangleEdge2 = new Position(tx1 - 1, ty1 + 1);
-			this.triangleEdge3 = new Position(tx1, ty1 + 1);
+			triangleEdge2 = new Position(tx1 - 1, ty1 + 1);
+			triangleEdge3 = new Position(tx1, ty1 + 1);
 		} else {
-			this.triangleEdge2 = new Position(tx1, ty1 - 1);
-			this.triangleEdge3 = new Position(tx1 + 1, ty1 - 1);
+			triangleEdge2 = new Position(tx1, ty1 - 1);
+			triangleEdge3 = new Position(tx1 + 1, ty1 - 1);
 		}
 	}
 
@@ -72,7 +72,7 @@ public class Triangle extends BoardPolygon {
 	 */
 	public Position getTopBoardPosition()
 	{
-		return new Position(this.triangleEdge1.getColumn(), this.triangleEdge1.getRow());
+		return new Position(triangleEdge1.getColumn(), triangleEdge1.getRow());
 	}
 
 	/**
@@ -83,7 +83,7 @@ public class Triangle extends BoardPolygon {
 	 */
 	public Position getLeftBoardPosition()
 	{
-		return new Position(this.triangleEdge3.getColumn(), this.triangleEdge3.getRow());
+		return new Position(triangleEdge3.getColumn(), triangleEdge3.getRow());
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class Triangle extends BoardPolygon {
 	 */
 	public Position getRightBoardPosition()
 	{
-		return new Position(this.triangleEdge2.getColumn(), this.triangleEdge2.getRow());
+		return new Position(triangleEdge2.getColumn(), triangleEdge2.getRow());
 	}
 
 	/**
@@ -115,7 +115,7 @@ public class Triangle extends BoardPolygon {
 	 * Eine {@link Flower}, die an der Stelle liegt, welche dieses {@link Triangle} repräsentiert.
 	 */
 	public Flower toFlower() {
-		return new Flower(this.triangleEdge1, this.triangleEdge2, this.triangleEdge3);
+		return new Flower(triangleEdge1, triangleEdge2, triangleEdge3);
 	}
 
 	/**
@@ -134,20 +134,20 @@ public class Triangle extends BoardPolygon {
 		if (thatFlower == null)
 			return false;
 
-		Flower thisFlower = new Flower(this.triangleEdge1, this.triangleEdge2, this.triangleEdge3);
+		Flower thisFlower = new Flower(triangleEdge1, triangleEdge2, triangleEdge3);
 		return thatFlower.equals(thisFlower);
 	}
 
 	@Override
 	public void recalcPoints(int triangleSideLength, Point relativeStart) {
-		this.reset();
+		reset();
 
 		Point edge1, edge2, edge3;
-		edge1 = positionToPoint(this.triangleEdge1, triangleSideLength, relativeStart);
-		edge2 = positionToPoint(this.triangleEdge2, triangleSideLength, relativeStart);
-		edge3 = positionToPoint(this.triangleEdge3, triangleSideLength, relativeStart);
-		this.addPoint(edge1.x, edge1.y);
-		this.addPoint(edge2.x, edge2.y);
-		this.addPoint(edge3.x, edge3.y);
+		edge1 = positionToPoint(triangleEdge1, triangleSideLength, relativeStart);
+		edge2 = positionToPoint(triangleEdge2, triangleSideLength, relativeStart);
+		edge3 = positionToPoint(triangleEdge3, triangleSideLength, relativeStart);
+		addPoint(edge1.x, edge1.y);
+		addPoint(edge2.x, edge2.y);
+		addPoint(edge3.x, edge3.y);
 	}
 }

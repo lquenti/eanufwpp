@@ -16,14 +16,14 @@ public class EndPopupFrame extends JFrame {
 		super("Spiel Beendet");
 
 		// Do stuff to *this*; it needs setup.
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setSize(300, 150);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setSize(300, 150);
 
-		this.add(new PopupComponentPane(status));
+		add(new PopupComponentPane(status));
 
-		this.invalidate();
-		this.repaint();
-		this.setVisible(true);
+		invalidate();
+		repaint();
+		setVisible(true);
 	}
 
 
@@ -39,9 +39,9 @@ class PopupComponentPane extends JPanel {
 	PopupComponentPane( Status status ) {
 		endStatus = status;
 
-		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-		label = new JLabel(getTextFromStatus(this.endStatus));
+		label = new JLabel(getTextFromStatus(endStatus));
 		label.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		button = new JButton("Spiel Beenden");
@@ -58,10 +58,10 @@ class PopupComponentPane extends JPanel {
 			}
 		});
 
-		this.add(Box.createRigidArea(new Dimension(0, 10)));
-		this.add(this.label);
-		this.add(Box.createRigidArea(new Dimension(0, 50)));
-		this.add(this.button);
+		add(Box.createRigidArea(new Dimension(0, 10)));
+		add(label);
+		add(Box.createRigidArea(new Dimension(0, 50)));
+		add(button);
 	}
 
 	private static String getTextFromStatus( Status status ) {

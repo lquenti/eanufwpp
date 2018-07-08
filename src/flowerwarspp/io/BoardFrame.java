@@ -23,7 +23,7 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 	public BoardFrame(Viewer viewer) {
 		this();
 		if (viewer != null)
-			this.setViewer(viewer);
+			setViewer(viewer);
 	}
 
 	/**
@@ -31,10 +31,10 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 	 */
 	public BoardFrame() {
 		super("Flower Wars");
-		this.setSize(600, 600);
+		setSize(600, 600);
 
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setVisible(true);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setVisible(true);
 	}
 
 	/**
@@ -45,10 +45,10 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 	 * Der {@link Viewer}, durch den auf das Spielbrett geschaut wird.
 	 */
 	public void setViewer(Viewer viewer) {
-		this.boardDisplay = new BoardDisplay();
-		this.boardDisplay.setBoardViewer(viewer);
-		this.add(this.boardDisplay, BorderLayout.CENTER);
-		this.setVisible(true);
+		boardDisplay = new BoardDisplay();
+		boardDisplay.setBoardViewer(viewer);
+		add(boardDisplay, BorderLayout.CENTER);
+		setVisible(true);
 	}
 
 	/**
@@ -56,10 +56,10 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 	 */
 	@Override
 	public Move request() throws Exception {
-		if (this.boardDisplay == null)
+		if (boardDisplay == null)
 			return null;
 
-		return this.boardDisplay.awaitMove();
+		return boardDisplay.awaitMove();
 	}
 
 	/**
@@ -67,10 +67,10 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 	 */
 	@Override
 	public void refresh() {
-		if (this.boardDisplay == null)
+		if (boardDisplay == null)
 			return;
 
-		this.boardDisplay.refresh();
-		this.repaint();
+		boardDisplay.refresh();
+		repaint();
 	}
 }

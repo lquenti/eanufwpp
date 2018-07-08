@@ -50,40 +50,40 @@ public class Edge extends BoardPolygon {
 	 * Ein neues {@link Ditch}-Objekt, das die Koordinaten diese Edge auf dem Spielbrett hat.
 	 */
 	public Ditch toDitch() {
-		return new Ditch(this.position1, this.position2);
+		return new Ditch(position1, position2);
 	}
 
 	@Override
 	public void recalcPoints(int triangleSideLength, Point relativeStart) {
-		this.reset();
+		reset();
 
-		this.edge1 = positionToPoint(this.position1, triangleSideLength, relativeStart);
-		this.edge2 = positionToPoint(this.position1, triangleSideLength, relativeStart);
-		this.edge3 = positionToPoint(this.position2, triangleSideLength, relativeStart);
-		this.edge4 = positionToPoint(this.position2, triangleSideLength, relativeStart);
+		edge1 = positionToPoint(position1, triangleSideLength, relativeStart);
+		edge2 = positionToPoint(position1, triangleSideLength, relativeStart);
+		edge3 = positionToPoint(position2, triangleSideLength, relativeStart);
+		edge4 = positionToPoint(position2, triangleSideLength, relativeStart);
 
 		// Make a vector from edge1 to edge2, it's easy to find a perpendicular vector for that.
-		Point vector = new Point(this.edge1);
-		vector.x -= this.edge3.x;
-		vector.y -= this.edge3.y;
+		Point vector = new Point(edge1);
+		vector.x -= edge3.x;
+		vector.y -= edge3.y;
 
 		Point perpendicularVector = new Point(vector.y, -vector.x);
 		perpendicularVector.x /= divisionFactor;
 		perpendicularVector.y /= divisionFactor;
 
-		this.edge1.x += perpendicularVector.x;
-		this.edge1.y += perpendicularVector.y;
-		this.edge2.x -= perpendicularVector.x;
-		this.edge2.y -= perpendicularVector.y;
+		edge1.x += perpendicularVector.x;
+		edge1.y += perpendicularVector.y;
+		edge2.x -= perpendicularVector.x;
+		edge2.y -= perpendicularVector.y;
 
-		this.edge3.x -= perpendicularVector.x;
-		this.edge3.y -= perpendicularVector.y;
-		this.edge4.x += perpendicularVector.x;
-		this.edge4.y += perpendicularVector.y;
+		edge3.x -= perpendicularVector.x;
+		edge3.y -= perpendicularVector.y;
+		edge4.x += perpendicularVector.x;
+		edge4.y += perpendicularVector.y;
 
-		this.addPoint(this.edge1.x, this.edge1.y);
-		this.addPoint(this.edge2.x, this.edge2.y);
-		this.addPoint(this.edge3.x, this.edge3.y);
-		this.addPoint(this.edge4.x, this.edge4.y);
+		addPoint(edge1.x, edge1.y);
+		addPoint(edge2.x, edge2.y);
+		addPoint(edge3.x, edge3.y);
+		addPoint(edge4.x, edge4.y);
 	}
 }

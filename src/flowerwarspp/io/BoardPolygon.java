@@ -42,12 +42,12 @@ public abstract class BoardPolygon extends Polygon {
 	 * Das {@link Graphics}-Objekt, auf das dieses {@link Polygon} gezeichnet werden soll.
 	 */
 	public void drawPolygon(Graphics graphics) {
-		if (this.fillColour != null) {
-			graphics.setColor(this.fillColour);
+		if (fillColour != null) {
+			graphics.setColor(fillColour);
 			graphics.fillPolygon(this);
 		}
-		if (this.borderColour != null) {
-			graphics.setColor(this.borderColour);
+		if (borderColour != null) {
+			graphics.setColor(borderColour);
 			graphics.drawPolygon(this);
 		}
 	}
@@ -69,7 +69,7 @@ public abstract class BoardPolygon extends Polygon {
 	 * Die Farbe, mit der der Umriss dieses {@link Polygon} gezeichnet werden soll.
 	 */
 	public Color getBorderColour() {
-		return this.borderColour;
+		return borderColour;
 	}
 
 	/**
