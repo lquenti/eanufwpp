@@ -76,6 +76,19 @@ public class MainBoard implements Board {
 	 */
 	private final Flower[] allFlowers;
 
+	public MainBoard(MainBoard original) {
+		size = original.size;
+		currentPlayer = original.currentPlayer;
+		oppositePlayer = original.oppositePlayer;
+		currentStatus = original.currentStatus;
+
+		for (Map.Entry<PlayerColor, PlayerData> entry : original.playerData.entrySet()) {
+			playerData.put(entry.getKey(), new PlayerData(entry.getValue()));
+		}
+
+		allFlowers = Arrays.copyOf(original.allFlowers, original.allFlowers.length);
+	}
+
 	/**
 	 * Konstruktor. Befuellt Board einer variablen Groesse zwischen [3;30].
 	 * Falls Wert invalide wird dieser dem naechsten Element des Intervalls angepasst.
@@ -121,19 +134,6 @@ public class MainBoard implements Board {
 		Move surrenderMove = new Move(MoveType.Surrender);
 		playerData.get(PlayerColor.Red).legalMoves.add(surrenderMove);
 		playerData.get(PlayerColor.Blue).legalMoves.add(surrenderMove);
-	}
-
-	public MainBoard(MainBoard original) {
-		size = original.size;
-		currentPlayer = original.currentPlayer;
-		oppositePlayer = original.oppositePlayer;
-		currentStatus = original.currentStatus;
-
-		for (Map.Entry<PlayerColor, PlayerData> entry : original.playerData.entrySet()) {
-			playerData.put(entry.getKey(), new PlayerData(entry.getValue()));
-		}
-
-		allFlowers = Arrays.copyOf(original.allFlowers, original.allFlowers.length);
 	}
 
 	/**
