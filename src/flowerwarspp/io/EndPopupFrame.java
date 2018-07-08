@@ -10,13 +10,14 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class EndPopupFrame extends JFrame {
+public class EndPopupFrame extends JDialog {
 
 	public EndPopupFrame( Status status ) {
-		super("Spiel Beendet");
+		super(BoardFrame.getInstance(), "Spiel Beendet");
 
 		// Do stuff to *this*; it needs setup.
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		setLocationByPlatform(true);
 		setSize(300, 150);
 
 		add(new PopupComponentPane(status));
