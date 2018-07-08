@@ -1,6 +1,5 @@
 package flowerwarspp.player;
 
-import flowerwarspp.preset.Board;
 import flowerwarspp.preset.Move;
 import flowerwarspp.preset.Player;
 import flowerwarspp.preset.Requestable;
@@ -40,23 +39,10 @@ public class InteractivePlayer extends BasePlayer {
 	 *
 	 * @param input Ein Objekt einer Klasse welche {@link Requestable} implementiert, welches genutzt wird um einen
 	 *              Spielzug vom Spieler anzufordern.
-	 * @param board Das initale Spielbrett des Spielers.
-	 */
-	public InteractivePlayer( Requestable input, Board board ) {
-		super(board);
-		this.input = input;
-	}
-
-	/**
-	 * Konstruiert einen neuen interaktiven Spieler. Einem interaktiven Spieler muss ein Objekt einer Klasse welche
-	 * {@link Requestable} implementiert übergeben werden, damit das Anfordern eines Spielzugs sichergestellt ist.
-	 *
-	 * @param input Ein Objekt einer Klasse welche {@link Requestable} implementiert, welches genutzt wird um einen
-	 *              Spielzug vom Spieler anzufordern.
-	 * @param board Das initale Spielbrett des Spielers.
 	 */
 	public InteractivePlayer( Requestable input ) {
-		this(input, null);
+		super();
+		this.input = input;
 	}
 
 	/**

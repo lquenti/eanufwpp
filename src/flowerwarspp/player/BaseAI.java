@@ -1,6 +1,5 @@
 package flowerwarspp.player;
 
-import flowerwarspp.preset.Board;
 import flowerwarspp.preset.Move;
 import flowerwarspp.preset.Player;
 import flowerwarspp.util.log.Log;
@@ -35,15 +34,6 @@ abstract class BaseAI extends BasePlayer {
 	 */
 	protected BaseAI() {
 		super();
-	}
-
-	/**
-	 * Konstruktor, der das initiale Spielbrett des Spielers setzt.
-	 *
-	 * @param Board Das initiale Spielbrett
-	 */
-	protected BaseAI(Board board) {
-		super(board);
 	}
 
 	/**

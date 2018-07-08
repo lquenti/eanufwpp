@@ -1,6 +1,5 @@
 package flowerwarspp.player;
 
-import flowerwarspp.preset.Board;
 import flowerwarspp.preset.Move;
 import flowerwarspp.preset.MoveType;
 
@@ -11,18 +10,7 @@ import flowerwarspp.preset.MoveType;
  * @author Michael Merse
  */
 public class RandomAI extends BaseAI {
-	protected RandomAI() {
-		super();
-	}
 
-	/**
-	 * Konstruktor, der das initiale Spielbrett des Spielers setzt.
-	 *
-	 * @param Board Das initiale Spielbrett
-	 */
-	protected RandomAI(Board board) {
-		super(board);
-	}
 
 	/**
 	 * Gibt immer einen Score gleich 0 zurück, außer für den {@link MoveType#Surrender}-Spielzug. Dieser wird mit -1

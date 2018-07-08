@@ -9,15 +9,6 @@ public class AdvancedAI1 extends BaseAI {
 		super();
 	}
 
-	/**
-	 * Konstruktor, der das initiale Spielbrett des Spielers setzt.
-	 *
-	 * @param Board Das initiale Spielbrett
-	 */
-	protected AdvancedAI1(Board board) {
-		super(board);
-	}
-
 	@Override
 	protected int getMoveScore( final Move move ) {
 		if (move.getType() == MoveType.Surrender) return -1;
