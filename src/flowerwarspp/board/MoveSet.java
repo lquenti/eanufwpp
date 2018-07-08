@@ -69,7 +69,10 @@ public class MoveSet extends AbstractSet<Move> {
 	 */
 	public MoveSet(MoveSet original) throws NullPointerException {
 		flowerMoves = new HashSet<>(original.flowerMoves);
-		flowerMap = new HashMap<>(original.flowerMap);
+		flowerMap = new HashMap<>();
+		for (Map.Entry<Flower, HashSet<Flower>> entry : original.flowerMap.entrySet()) {
+			flowerMap.put(entry.getKey(), new HashSet<Flower>(entry.getValue()));
+		}
 		ditchMoves = new HashSet<>(original.ditchMoves);
 		otherMoves = new HashSet<>(original.otherMoves);
 	}
