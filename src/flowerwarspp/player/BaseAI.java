@@ -103,9 +103,9 @@ abstract class BaseAI extends BasePlayer {
 
 		// Since we are using
 		return highestScoredMoves
-				.parallelStream()
-				.skip(aiRNG.nextInt(highestScoredMoves.size()))
-				.findAny()
+				.stream()
+				.skip((aiRNG.nextInt(highestScoredMoves.size())))
+				.findFirst()
 				.orElse(null);
 	}
 }
