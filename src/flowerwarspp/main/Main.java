@@ -1,11 +1,5 @@
 package flowerwarspp.main;
 
-import flowerwarspp.preset.ArgumentParser;
-import flowerwarspp.preset.ArgumentParserException;
-import flowerwarspp.util.log.Log;
-import flowerwarspp.util.log.LogLevel;
-import flowerwarspp.util.log.LogModule;
-
 public class Main {
 
 	/**
