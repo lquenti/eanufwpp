@@ -1,6 +1,5 @@
 package flowerwarspp.board;
 
-import flowerwarspp.board.MoveSet;
 import flowerwarspp.preset.*;
 import java.util.*;
 
@@ -128,7 +127,7 @@ public class MoveSet extends AbstractSet<Move> {
 		}
 		switch (((Move)o).getType()) {
 			case Flower:
-				flowerMoves.remove((Move)o);
+				flowerMoves.remove(o);
 				Flower flowers[] = {((Move)o).getFirstFlower(), ((Move)o).getSecondFlower()};
 				flowerMap.get(flowers[0]).remove(flowers[1]);
 				flowerMap.get(flowers[1]).remove(flowers[0]);
