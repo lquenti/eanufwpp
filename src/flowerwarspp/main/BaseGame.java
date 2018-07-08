@@ -1,12 +1,13 @@
 package flowerwarspp.main;
 
+import java.rmi.ConnectException;
+import java.rmi.RemoteException;
+
 import flowerwarspp.board.MainBoard;
 import flowerwarspp.io.*;
 import flowerwarspp.player.*;
 import flowerwarspp.preset.*;
 import flowerwarspp.util.log.*;
-
-import java.rmi.RemoteException;
 
 /**
  * Diese Klasse realisiert das Hauptprogramm. Ein neues Spiel wird auf Basis der an {@link Main} übergebenen Argumente
@@ -123,10 +124,18 @@ public class BaseGame {
 	private void run() {
 		try {
 			while ( viewer.getStatus() == Status.Ok ) {
-				Move move = currentPlayer.request();
+				Move move = null;
+				try {
+					move = currentPlayer.request();
+				} catch ( ConnectException e ) {
+					Log.log0(LogLevel.INFO, LogModule.MAIN, "Remote player disconnected.");
+					move = new Move(MoveType.Surrender);
+				}
 				board.make(move);
-				currentPlayer.confirm(viewer.getStatus());
-				oppositePlayer.update(move, viewer.getStatus());
+				try {
+					currentPlayer.confirm(viewer.getStatus());
+					oppositePlayer.update(move, viewer.getStatus());
+				} catch ( ConnectException e ) {}
 				output.refresh();
 
 				Player t = currentPlayer;
