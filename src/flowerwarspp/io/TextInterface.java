@@ -4,33 +4,28 @@ import flowerwarspp.preset.Move;
 import flowerwarspp.preset.MoveFormatException;
 import flowerwarspp.preset.Requestable;
 
-import java.nio.charset.StandardCharsets;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class TextInterface implements Requestable {
 	private static final String moveRequestPrompt = "Zug eingeben: ";
 	private static final String moveFormatError = "Zug konnte nicht gelesen werden.";
 
-	Scanner inputScanner = new Scanner(System.in);
+	private Scanner inputScanner = new Scanner(System.in);
 
 	/**
-	 * Liest einen Spielzug von der Standardeingabe ein. Der Nutzer wird solange aufgefordert, einen
-	 * Zug einzugeben, bis er einen gültigen Zug eingibt.
+	 * Liest einen Spielzug vom Standard Input ein.
 	 *
-	 * @return Der eingelesene Zug
+	 * @return
+	 * Der eingelesene Zug, oder <code>null</code>, wenn der eingegebene Zug invalide war.
 	 */
 	@Override
 	public Move request() {
-		Move result = null;
-		while (result == null) {
-			try {
-				System.out.print(moveRequestPrompt);
-				result = Move.parseMove(inputScanner.nextLine());
-			} catch (NoSuchElementException | MoveFormatException e) {
-				System.out.println(moveFormatError);
-			}
+		try {
+			System.out.print(moveRequestPrompt);
+			Move result = Move.parseMove(inputScanner.nextLine());
+			return result;
+		} catch (MoveFormatException e) {
+			return null;
 		}
-		return result;
 	}
 }

@@ -56,7 +56,9 @@ public class InteractivePlayer extends BasePlayer {
 	 * @see Requestable
 	 */
 	protected Move requestMove() throws Exception {
-		final Move playerMove = input.request();
+		Move playerMove = null;
+		while (playerMove == null)
+			playerMove = input.request();
 
 		if ( playerMove == null ) {
 			log(LogLevel.ERROR, "interactive player could not return a move");
