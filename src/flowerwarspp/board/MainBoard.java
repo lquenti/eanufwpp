@@ -11,19 +11,33 @@ class PlayerData {
 	/**
 	 * Die Blumen, die der Spieler gesetzt hat.
 	 */
-	HashSet<Flower> flowers = new HashSet<>();
+	HashSet<Flower> flowers;
 	/**
 	 * Die Gräben, die der Spieler gesetzt hat.
 	 */
-	HashSet<Ditch> ditches = new HashSet<>();
+	HashSet<Ditch> ditches;
 	/**
 	 * Die legalen Züge, die der Spieler noch machen kann.
 	 */
-	MoveSet legalMoves = new MoveSet();
+	MoveSet legalMoves;
 	/**
 	 * Der aktuelle Punktestand
 	 */
-	int currentScore = 0;
+	int currentScore;
+
+	public PlayerData() {
+		flowers = new HashSet<>();
+		ditches = new HashSet<>();
+		legalMoves = new MoveSet();
+		currentScore = 0;
+	}
+
+	public PlayerData(PlayerData original) {
+		flowers = new HashSet<>(original.flowers);
+		ditches = new HashSet<>(original.ditches);
+		legalMoves = new MoveSet(original.legalMoves);
+		currentScore = original.currentScore;
+	}
 }
 
 /**
@@ -107,6 +121,19 @@ public class MainBoard implements Board {
 		Move surrenderMove = new Move(MoveType.Surrender);
 		playerData.get(PlayerColor.Red).legalMoves.add(surrenderMove);
 		playerData.get(PlayerColor.Blue).legalMoves.add(surrenderMove);
+	}
+
+	public MainBoard(MainBoard original) {
+		size = original.size;
+		currentPlayer = original.currentPlayer;
+		oppositePlayer = original.oppositePlayer;
+		currentStatus = original.currentStatus;
+
+		for (Map.Entry<PlayerColor, PlayerData> entry : original.playerData.entrySet()) {
+			playerData.put(entry.getKey(), new PlayerData(entry.getValue()));
+		}
+
+		allFlowers = Arrays.copyOf(original.allFlowers, original.allFlowers.length);
 	}
 
 	/**

@@ -1,7 +1,7 @@
 package flowerwarspp.board;
 
+import flowerwarspp.board.MoveSet;
 import flowerwarspp.preset.*;
-
 import java.util.*;
 
 /**
@@ -58,6 +58,20 @@ public class MoveSet extends AbstractSet<Move> {
 	public MoveSet(Collection<Move> list) throws NullPointerException {
 		this();
 		addAll(list);
+	}
+
+	/**
+	 * Erzeugt eine Kopie eines MoveSets. Die Implementation ist wesentlich schneller als die
+	 * für allgemeine Collections, da die initiale Kapazität der HashSets korrekt gesetzt wird.
+	 *
+	 * @param original Das MoveSet, das kopiert werden Soll.
+	 * @throws NullPointerException falls das angegebene MoveSet null ist.
+	 */
+	public MoveSet(MoveSet original) throws NullPointerException {
+		flowerMoves = new HashSet<>(original.flowerMoves);
+		flowerMap = new HashMap<>(original.flowerMap);
+		ditchMoves = new HashSet<>(original.ditchMoves);
+		otherMoves = new HashSet<>(original.otherMoves);
 	}
 
 	/**
