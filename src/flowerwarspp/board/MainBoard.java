@@ -1,6 +1,8 @@
 package flowerwarspp.board;
 
 import flowerwarspp.preset.*;
+import flowerwarspp.util.log.*;
+
 import java.util.*;
 
 /**
@@ -154,6 +156,7 @@ public class MainBoard implements Board {
 	 */
 	@Override
 	public void make(final Move move) throws IllegalStateException {
+		Log.log0(LogLevel.DEBUG, LogModule.BOARD, "Status at beginning of make: " + currentStatus);
 		if (currentStatus != Status.Ok) {
 			throw new IllegalStateException("Das Spielbrett kann keine Züge mehr annehmen!");
 		}
@@ -174,12 +177,11 @@ public class MainBoard implements Board {
 				break;
 			case End:
 				// TODO: Ueberpruefen
-				int r = playerData.get(PlayerColor.Red).currentScore, b = playerData.get(PlayerColor.Blue).currentScore;
-				currentStatus = r > b ? Status.RedWin : r < b ? Status.BlueWin : Status.Draw;
+				endGame();
 				return;
 			case Surrender:
 				// TODO: Ueberpruefen
-				currentStatus = (currentPlayer == PlayerColor.Red) ? Status.BlueWin : Status.RedWin;
+				endGame(oppositePlayer);
 				return;
 		}
 
@@ -189,8 +191,40 @@ public class MainBoard implements Board {
 			}
 		}
 
+		if (playerData.get(oppositePlayer).legalMoves.getFlowerMoves().isEmpty() &&
+		    playerData.get(oppositePlayer).legalMoves.getDitchMoves().isEmpty()) {
+			Log.log0(LogLevel.DEBUG, LogModule.BOARD, "Ending game because next Player can't make more moves");
+			endGame();
+			return;
+		}
+
+		PlayerColor t = currentPlayer;
 		currentPlayer = oppositePlayer;
-		oppositePlayer = (currentPlayer == PlayerColor.Red) ? PlayerColor.Blue : PlayerColor.Red;
+		oppositePlayer = t;
+	}
+
+	private void endGame(PlayerColor winner) {
+		if (winner == null) {
+			currentStatus = Status.Draw;
+			return;
+		}
+		switch (winner) {
+			case Red: currentStatus = Status.RedWin; break;
+			case Blue: currentStatus = Status.BlueWin; break;
+			default: currentStatus = Status.Draw;
+		}
+	}
+
+	private void endGame() {
+		int redPoints = playerData.get(PlayerColor.Red).currentScore;
+		int bluePoints = playerData.get(PlayerColor.Blue).currentScore;
+		if (redPoints > bluePoints) {
+			endGame(PlayerColor.Red);
+		} else if (bluePoints > redPoints) {
+			endGame(PlayerColor.Blue);
+		} else {
+			endGame(null);
+		}
 	}
 
 	private void updateValidMoves(final Flower[] fs) {

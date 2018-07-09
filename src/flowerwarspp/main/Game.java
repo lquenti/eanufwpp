@@ -178,26 +178,33 @@ public class Game {
 	private void run() {
 		try {
 			while ( viewer.getStatus() == Status.Ok ) {
+				Log.log0(LogLevel.DEBUG, LogModule.MAIN, "Beginning game loop.");
 				Move move = null;
 				try {
+					Log.log0(LogLevel.DEBUG, LogModule.MAIN, "Requesting move from player " + viewer.getTurn() + ".");
 					move = currentPlayer.request();
+					Log.log0(LogLevel.DEBUG, LogModule.MAIN, "Player " + viewer.getTurn() + " returned move " + move);
 				} catch ( Exception e ) {
 					Log.log0(LogLevel.INFO, LogModule.MAIN, "Player " + viewer.getTurn() + " didn't make a " +
 							"move.");
-					Log.log0(LogLevel.DEBUG, LogModule.MAIN, e.getMessage());
+					Log.log0(LogLevel.DEBUG, LogModule.MAIN, "Message: " + e.getMessage());
 					move = new Move(MoveType.Surrender);
 				}
 
+				Log.log0(LogLevel.DEBUG, LogModule.MAIN, "Making move on main board.");
 				board.make(move);
 				saveGame.add(move);
 
 				try {
+					Log.log0(LogLevel.DEBUG, LogModule.MAIN, "Confirming status.");
 					currentPlayer.confirm(viewer.getStatus());
+					Log.log0(LogLevel.DEBUG, LogModule.MAIN, "Updating opposite player.");
 					oppositePlayer.update(move, viewer.getStatus());
 				} catch ( Exception e ) {
 					Log.log0(LogLevel.DEBUG, LogModule.MAIN, e.getMessage());
 				}
 
+				Log.log0(LogLevel.DEBUG, LogModule.MAIN, "Refreshing output.");
 				output.refresh();
 
 				Player t = currentPlayer;
