@@ -45,7 +45,7 @@ public class Triangle extends BoardPolygon {
 	 * @param ty1
 	 * 		Die y-Koordinate der {@link Position} der Spitze dieses Dreiecks.
 	 * @param flipped
-	 * 		<code>true</code> bedeutet, dass das Dreieck auf dem Kopf steht. <code>false></code>
+	 * 		<code>true</code> bedeutet, dass das Dreieck auf dem Kopf steht. <code>false</code>
 	 * 		bedeutet, dass die Spitze nach oben zeigt ("normales Dreieck", wie Δ)
 	 */
 	public Triangle(int tx1, int ty1, boolean flipped, Color currentColour) {
