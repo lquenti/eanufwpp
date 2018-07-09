@@ -1,4 +1,4 @@
-<project name="eanufwpp" default="compile" basedir=".">
+<project name="eanufwpp" default="release" basedir=".">
     <description>
         Implementierung des APP-Projekts FlowerWarsPP der Gruppe 'eanufwpp'.
     </description>
@@ -15,20 +15,17 @@
     <target name="init">
         <!-- create the time stamp -->
         <tstamp/>
-
         <!-- create the necessary directories -->
         <mkdir dir="${builddir}"/>
         <mkdir dir="${distdir}"/>
         <mkdir dir="${docdir}"/>
     </target>
-
     <target name="compile" depends="init" description="compile the source code">
         <javac srcdir="${srcdir}" destdir="${builddir}" debug="true" includeantruntime="false">
             <classpath refid="classpath"/>
             <compilerarg value="-Xlint:unchecked"/>
         </javac>
     </target>
-
     <target name="dist" depends="compile" description="generate the distributed jar">
         <jar jarfile="${distdir}/eanufwpp-${DSTAMP}.jar" basedir="${builddir}">
             <manifest>
@@ -36,7 +33,15 @@
             </manifest>
         </jar>
     </target>
-
+    <target name="release" depends="clean, dist, doc"
+            description="generate the release version incl. full documentation and the release distribution">
+        <move file="${distdir}/eanufwpp-${DSTAMP}.jar" tofile="eanufwpp.jar"/>
+        <delete dir="${builddir}"/>
+        <delete dir="${distdir}"/>
+        <echo>
+            Die Release-Version des Projekts eanufwpp wurde generiert.
+        </echo>
+    </target>
     <target name="test" depends="compile">
         <java classname="BoardTester" fork="true" failonerror="true">
             <classpath>
@@ -47,14 +52,12 @@
             <arg value="mini"/>
         </java>
     </target>
-
-
     <target name="clean" description="clean up, delete the output directories">
         <delete dir="${builddir}"/>
         <delete dir="${distdir}"/>
         <delete dir="${docdir}"/>
+        <delete file="eanufwpp.jar"/>
     </target>
-
     <target name="doc">
         <javadoc sourcepath="${srcdir}" destdir="${docdir}" encoding="UTF-8" charset="UTF-8" private="yes">
             <classpath refid="classpath"/>
