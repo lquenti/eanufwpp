@@ -8,6 +8,12 @@ public class Main {
 	private static final int ERRORCODE_INVALID_ARGS = 1;
 
 	/**
+	 * Dieser Error-Code wird vom Programm zurück gegeben, falls beim Laden eines Spielstands ein Fehler aufgetreten
+	 * ist.
+	 */
+	static final int ERRORCODE_LOAD_FAILED = 2;
+
+	/**
 	 * Gibt Informationen zur Verwendendung des Programms auf der Standardausgabe aus und beendet das Programm mit dem
 	 * Exit-Code {@link #ERRORCODE_INVALID_ARGS}.
 	 */

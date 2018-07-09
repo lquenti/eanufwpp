@@ -329,20 +329,21 @@ public class BoardDisplay extends JPanel {
 	 */
 	private void updateTriangles() {
 		for (Triangle t : mapTriangles) {
+			t.setFillColour(getBackground());
 			Flower f = t.toFlower();
 			if ((redFlowers != null) && redFlowers.contains(f))
 				t.setFillColour(redColour);
 			else if ((blueFlowers != null) && blueFlowers.contains(f))
 				t.setFillColour(blueColour);
 			else {
-				if (displayMouseHandler.clickedFlower1 == null) {
-					if ((combinableFlowers != null) && (combinableFlowers.contains(f))) {
-						t.setFillColour(triangleCombinableColour);
-					} else {
-						t.setFillColour(getBackground());
-					}
-				} else if (t.samePlace(displayMouseHandler.clickedFlower1)) {
+				if (displayMouseHandler.clickedFlower1 != null) {
+					if (f.equals(displayMouseHandler.clickedFlower1)) {
 						t.setFillColour(triangleClickedColour);
+					} else if ((combinableFlowers != null) && (combinableFlowers.contains(f))) {
+						t.setFillColour(triangleCombinableColour);
+					}
+				} else if ((combinableFlowers != null) && combinableFlowers.contains(f)) {
+					t.setFillColour(triangleCombinableColour);
 				}
 			}
 		}
@@ -515,11 +516,12 @@ public class BoardDisplay extends JPanel {
 	public Move awaitMove() throws InterruptedException {
 		displayMouseHandler.reset();
 		displayMouseHandler.isRequesting = true;
+		combinableFlowers = boardViewer.getPossibleFlowers();
+		this.repaint();
+
 		Move result = null;
 
 		while (result == null) {
-			combinableFlowers = boardViewer.getPossibleFlowers();
-			getParent().repaint();
 			synchronized (displayMouseHandler.moveAwaitLock) {
 				displayMouseHandler.moveAwaitLock.wait();
 

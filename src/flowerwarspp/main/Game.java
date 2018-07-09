@@ -1,6 +1,5 @@
 package flowerwarspp.main;
 
-import java.io.IOException;
 import java.rmi.RemoteException;
 
 import flowerwarspp.board.MainBoard;
@@ -97,10 +96,11 @@ public class Game {
 
 		try {
 			saveGame = SaveGame.load(gameParameters.getSaveGameName());
-		} catch ( IOException e ) {
+		} catch ( Exception e ) {
 			Log.log0(LogLevel.ERROR, LogModule.MAIN, "There was an error loading the save game:");
 			Log.log0(LogLevel.ERROR, LogModule.MAIN, e.getMessage());
 			e.printStackTrace();
+			System.exit(Main.ERRORCODE_LOAD_FAILED);
 		}
 
 		board = saveGame.initBoard();
