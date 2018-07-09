@@ -609,8 +609,7 @@ public class MainBoard implements Board {
 		 */
 		@Override
 		public int getPoints(PlayerColor color) {
-			// TODO!
-			return 0;
+			return playerData.get(color).currentScore;
 		}
 
 		/**
