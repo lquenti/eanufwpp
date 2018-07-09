@@ -1,6 +1,7 @@
 package flowerwarspp.main;
 
 import java.rmi.RemoteException;
+import java.util.Iterator;
 
 import flowerwarspp.board.MainBoard;
 import flowerwarspp.io.*;
@@ -103,7 +104,17 @@ public class Game {
 			System.exit(Main.ERRORCODE_LOAD_FAILED);
 		}
 
-		board = saveGame.initBoard();
+		if (gameParameters.getReplaySpeed() > 0) {
+			board = new MainBoard(gameParameters.getBoardSize());
+		} else {
+			board = saveGame.initBoard();
+		}
+
+		viewer = board.viewer();
+		output.setViewer(viewer);
+
+		if (gameParameters.getReplaySpeed() > 0)
+			replay(500);
 
 		Log.log0(LogLevel.DEBUG, LogModule.MAIN, "Savegame " + gameParameters.getSaveGameName() + " loaded");
 
@@ -116,11 +127,8 @@ public class Game {
 			oppositePlayer = Players.createPlayer(gameParameters.getRedType(), input, new MainBoard(board));
 			currentPlayer = Players.createPlayer(gameParameters.getBlueType(), input, new MainBoard(board));
 		}
-
 		initPlayers();
 
-		viewer = board.viewer();
-		output.setViewer(viewer);
 	}
 
 	private void initPlayers() {
@@ -222,5 +230,20 @@ public class Game {
 		}
 
 		Log.log0(LogLevel.INFO, LogModule.MAIN, "Game ended with status " + viewer.getStatus());
+	}
+
+	private void replay(long replayDelay) {
+
+		if (gameParameters.getSaveGameName() == null) return;
+
+		for ( final Move aSaveGame : saveGame ) {
+			board.make(aSaveGame);
+			output.refresh();
+			try {
+				Thread.sleep(replayDelay);
+			} catch ( InterruptedException e ) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
