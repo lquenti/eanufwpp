@@ -551,6 +551,9 @@ public class BoardDisplay extends JPanel {
 			}
 		}
 
+		// This sets the endButton enabled if and only if there is an "End" move available.
+		endButton.setEnabled(boardViewer.possibleMovesContains(new Move(MoveType.End)));
+
 		displayMouseHandler.reset();
 		combinableFlowers = null;
 		getParent().repaint();
@@ -632,8 +635,6 @@ public class BoardDisplay extends JPanel {
 			blueDitches = boardViewer.getDitches(PlayerColor.Blue);
 			possibleDitchMoves = boardViewer.getPossibleDitchMoves();
 			currentPlayer = boardViewer.getTurn();
-			// This sets the endButton enabled if and only if there is an "End" move available.
-			endButton.setEnabled(boardViewer.possibleMovesContains(new Move(MoveType.End)));
 
 			int redPlayerPoints = boardViewer.getPoints(PlayerColor.Red);
 			int bluePlayerPoints = boardViewer.getPoints(PlayerColor.Blue);
