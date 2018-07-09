@@ -184,6 +184,7 @@ public class Game {
 				} catch ( Exception e ) {
 					Log.log0(LogLevel.INFO, LogModule.MAIN, "Player " + viewer.getTurn() + " didn't make a " +
 							"move.");
+					Log.log0(LogLevel.DEBUG, LogModule.MAIN, e.getMessage());
 					move = new Move(MoveType.Surrender);
 				}
 
@@ -194,6 +195,7 @@ public class Game {
 					currentPlayer.confirm(viewer.getStatus());
 					oppositePlayer.update(move, viewer.getStatus());
 				} catch ( Exception e ) {
+					Log.log0(LogLevel.DEBUG, LogModule.MAIN, e.getMessage());
 				}
 
 				output.refresh();
