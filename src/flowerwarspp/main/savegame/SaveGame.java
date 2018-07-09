@@ -121,8 +121,8 @@ public class SaveGame implements Iterable<Move> {
 			for ( Move m
 					: madeMoves ) {
 
-				printWriter.println(m.toString() + ";" + playerColorToString(currentPlayer) + ", " + "#" + i + ", " +
-					m.hashCode());
+				printWriter.println(m.toString() + ";" + m.hashCode() + ";" + Convert.playerColorToString(currentPlayer)
+						+ ", " + "#" + i);
 				currentPlayer = currentPlayer == Red ? Blue : Red;
 				i++;
 			}
@@ -146,9 +146,9 @@ public class SaveGame implements Iterable<Move> {
 	 *
 	 * @param saveGameName Name der zu ladenden Spielstand-Datei ohne Endung
 	 * @return Die, mit den in der Datei gespeicherten Spielzüge, intialisierte Instanz dieser Klasse
-	 * @throws IOException Falls während des Ladevorgangs ein Fehler aufgetreten ist
+	 * @throws Exception Falls während des Ladevorgangs ein Fehler aufgetreten ist
 	 */
-	public static SaveGame load( String saveGameName ) throws IOException {
+	public static SaveGame load( String saveGameName ) throws Exception {
 
 		Matcher matcher = saveGameNamePattern.matcher(saveGameName);
 		if ( ! matcher.find() ) {
@@ -166,7 +166,18 @@ public class SaveGame implements Iterable<Move> {
 
 			while ( currentLine != null ) {
 
-				saveGame.add(Move.parseMove(currentLine.split(";", 2)[0]));
+				Move move = Move.parseMove(currentLine.split(";", 2)[0]);
+				int hashCode = Integer.parseInt(currentLine.split(";", 3)[1]);
+
+				if (move.hashCode() != hashCode) {
+					Log.log0(LogLevel.ERROR, LogModule.MAIN, "The hasCode of the loaded move was not equal " +
+							"to the hasCode stored in the savegame");
+					throw new Exception("Der hashCode des geladenen Spielzugs stimmt nicht mit dem hinterlegten" +
+							"hashCode überein!");
+				}
+
+				saveGame.add(move);
+
 				currentLine = bufferedReader.readLine();
 			}
 			return saveGame;
