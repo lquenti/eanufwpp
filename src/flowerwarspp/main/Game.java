@@ -69,7 +69,7 @@ public class Game {
 
 		Log.getInstance().setOutput(System.err);
 
-		if (gameParameters.getText()) {
+		if ( gameParameters.getText() ) {
 			TextInterface textInterface = new TextInterface();
 			input = textInterface;
 			output = textInterface;
@@ -104,7 +104,7 @@ public class Game {
 			System.exit(Main.ERRORCODE_LOAD_FAILED);
 		}
 
-		if (gameParameters.getReplaySpeed() > 0) {
+		if ( gameParameters.getReplaySpeed() > 0 ) {
 			board = new MainBoard(gameParameters.getBoardSize());
 		} else {
 			board = saveGame.initBoard();
@@ -113,10 +113,10 @@ public class Game {
 		viewer = board.viewer();
 		output.setViewer(viewer);
 
-		if (gameParameters.getReplaySpeed() > 0)
-			replay(500);
+		if ( gameParameters.getReplaySpeed() > 0 )
+			replay(gameParameters.getReplaySpeed());
 
-		Log.log0(LogLevel.DEBUG, LogModule.MAIN, "Savegame " + gameParameters.getSaveGameName() + " loaded");
+		Log.log0(LogLevel.INFO, LogModule.MAIN, "Savegame " + gameParameters.getSaveGameName() + " loaded");
 
 		if ( board.viewer().getTurn() == PlayerColor.Red ) {
 
@@ -232,9 +232,9 @@ public class Game {
 		Log.log0(LogLevel.INFO, LogModule.MAIN, "Game ended with status " + viewer.getStatus());
 	}
 
-	private void replay(long replayDelay) {
+	private void replay( final long replayDelay ) {
 
-		if (gameParameters.getSaveGameName() == null) return;
+		if ( gameParameters.getSaveGameName() == null ) return;
 
 		for ( final Move aSaveGame : saveGame ) {
 			board.make(aSaveGame);
