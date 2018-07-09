@@ -4,13 +4,33 @@ import flowerwarspp.preset.*;
 
 import java.util.Collection;
 
+/**
+ * Diese Klasse stellt einen Computerspieler mit verbesserter Strategie (Level 1) zur Verfügung.
+ * <p>
+ * Der zu spielende Zug wird auf Basis eines angepassten Bewertungsalgorithmus des simplen Computerspielers ausgewählt.
+ *
+ * @author Michael Merse
+ */
 public class AdvancedAI1 extends BaseAI {
+
+	/**
+	 * Globale Definition des Scores, falls ein {@link MoveType#Ditch}-Move gemacht werden kann.
+	 */
 	private static final int SCORE_DITCH = 1000;
 
+	/**
+	 * Konstruktor, um eine neue Instanz dieser Klasse zu erstellen.
+	 */
 	public AdvancedAI1() {
 		super();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Der Bewertungsalgorithmus ist eine angepasste Variante des Algorithmus von {@link SimpleAI}. Ditch-Moves werden
+	 * immer zuerst genommen, da diese potentiell mehr Punkte bringen.
+	 */
 	@Override
 	protected int getMoveScore( final Move move ) {
 
@@ -42,6 +62,13 @@ public class AdvancedAI1 extends BaseAI {
 
 	}
 
+	/**
+	 * Berechnet den Score für die Nachbarblumen beider Blumen eines Flower-Moves. Die Berechnung läuft für beide
+	 * Nachbarn glech, deshalb wurde sie in diese Methode ausgelagert.
+	 *
+	 * @param flowerNeighbors  Die Nachbarn einer Blume, dessen Score berechnet werden soll
+	 * @return Der Score basierend auf den Nachbarn einer Blume
+	 */
 	private int[] getNeighborScore( Collection<Flower> flowerNeighbors ) {
 		int[] res = new int[2];
 

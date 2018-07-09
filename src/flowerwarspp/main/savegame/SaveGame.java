@@ -27,6 +27,8 @@ import static flowerwarspp.preset.PlayerColor.*;
  * Die Methode {@link #initBoard()} erstellt ein neues Objekt der Klasse {@link MainBoard} und führt die in diesem
  * Objekt gespeicherten Züge auf diesem neuen Spielbrett in Reihenfolge aus. Das so initialisierte Spielbrett wird dann
  * zurückgegeben.
+ *
+ * @author Michael Merse
  */
 public class SaveGame implements Iterable<Move> {
 
@@ -114,7 +116,7 @@ public class SaveGame implements Iterable<Move> {
 
 			PrintWriter printWriter = new PrintWriter(getFilePath(saveGameName), "UTF-8");
 
-			printWriter.println(this.boardSize);
+			printWriter.println(boardSize);
 			PlayerColor currentPlayer = Red;
 
 			int i = 0;

@@ -13,8 +13,8 @@ public class RandomAI extends BaseAI {
 
 
 	/**
-	 * Gibt immer einen Score gleich 1 zurück, außer für den {@link MoveType#Surrender}-Spielzug. Dieser wird mit 0
-	 * zurückgegeben und somit nicht ausgeführt.
+	 * Gibt immer einen Score gleich 0 zurück, außer für den {@link MoveType#Surrender}-Spielzug. Dieser wird mit -1
+	 * bewertet und somit nie ausgeführt.
 	 * <p>
 	 * Somit wird der {@link BaseAI}-Klasse die zufallsbasierte Auswahl eines Spielzugs überlassen.
 	 *

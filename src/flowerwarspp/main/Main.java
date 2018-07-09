@@ -1,5 +1,9 @@
 package flowerwarspp.main;
 
+/**
+ * Hauptklasse des Spiels. Dieses Klasse muss mit den notwendigen Kommandozeilenparametern aufgerufen werden, um das
+ * Spiel zu starten.
+ */
 public class Main {
 
 	/**

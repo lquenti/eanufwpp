@@ -57,7 +57,7 @@ class GameParameters {
 	private long replaySpeed;
 
 	/**
-	 * Erzeugt ein neues Objekt basierend auf den angegebenen Kommandozeilenparametern.
+	 * Erzeugt ein neues Objekt basierend auf den angegebenen Kommandozeilenparametern und versucht, diese zu parsen.
 	 *
 	 * @param args Die Kommandozeilenparameter
 	 */

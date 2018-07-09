@@ -27,7 +27,7 @@ abstract class BaseAI extends BasePlayer {
 	 * <code>private</code> Random Number Generator, um die zufällige Auswahl eines Spielzugs mit Hilfe von
 	 * Pseudozufallszahlen leisten zu können.
 	 */
-	protected static final Random aiRNG = new Random();
+	private static final Random aiRNG = new Random();
 
 	/**
 	 * Default-Konstruktor, welcher dieses Objekt mit Standardwerten versieht.
@@ -81,7 +81,7 @@ abstract class BaseAI extends BasePlayer {
 
 		// Iterate through all the possible moves...
 		for ( final Move move :
-				this.boardViewer.getPossibleMoves() ) {
+				boardViewer.getPossibleMoves() ) {
 
 			final int score = getMoveScore(move);
 			log(LogLevel.DUMP, "move " + move + " has score of " + score);

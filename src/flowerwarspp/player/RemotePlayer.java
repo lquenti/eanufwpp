@@ -30,7 +30,7 @@ public class RemotePlayer
      * Default-Konstruktor, welcher einen neuen Netzwerkspieler mit einem bestehenden Objekt einer Klasse, welche das
      * Interface {@link Player} implementiert, initialisiert.
      */
-    public RemotePlayer( Player player, Output output ) throws RemoteException {
+    public RemotePlayer( final Player player, final Output output ) throws RemoteException {
         this.player = player;
         this.output = output;
     }
@@ -40,7 +40,7 @@ public class RemotePlayer
      */
     @Override
     public Move request() throws Exception, RemoteException {
-        Move result = this.player.request();
+        final Move result = player.request();
         board.make(result);
         output.refresh();
         return result;
@@ -50,16 +50,16 @@ public class RemotePlayer
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void confirm( Status status ) throws Exception, RemoteException {
-		this.player.confirm(status);
+	public void confirm( final Status status ) throws Exception, RemoteException {
+		player.confirm(status);
 	}
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void update( Move opponentMove, Status status ) throws Exception, RemoteException {
-        this.player.update(opponentMove, status);
+    public void update( final Move opponentMove, final Status status ) throws Exception, RemoteException {
+        player.update(opponentMove, status);
         board.make(opponentMove);
         output.refresh();
     }
@@ -68,11 +68,11 @@ public class RemotePlayer
      * {@inheritDoc}
      */
     @Override
-    public void init( int boardSize, PlayerColor color ) throws Exception, RemoteException {
+    public void init( final int boardSize, final PlayerColor color ) throws Exception, RemoteException {
         board = new MainBoard(boardSize);
-        Viewer boardViewer = board.viewer();
+        final Viewer boardViewer = board.viewer();
         output.setViewer(boardViewer);
 
-        this.player.init(boardSize, color);
+        player.init(boardSize, color);
     }
 }

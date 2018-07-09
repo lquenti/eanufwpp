@@ -148,7 +148,7 @@ public class Game {
 	 */
 	private void offer() {
 		try {
-			Player offeredPlayer = Players.createPlayer(this.gameParameters.getOfferType(), input);
+			Player offeredPlayer = Players.createPlayer(gameParameters.getOfferType(), input);
 			Players.offerPlayer(new RemotePlayer(offeredPlayer, output));
 		} catch ( RemoteException e ) {
 			Log.log0(LogLevel.ERROR, LogModule.MAIN, "There was an error offering the player: "

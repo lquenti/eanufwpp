@@ -121,11 +121,11 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	@Override
 	public Move request() throws Exception, RemoteException {
 		// State validation
-		if ( this.cycleState == PlayerFunction.NULL ) {
+		if ( cycleState == PlayerFunction.NULL ) {
 			log(ERROR, "request() was called before player was initialized");
 			throw new Exception(exception_NoInit);
 		}
-		if ( this.cycleState != PlayerFunction.REQUEST ) {
+		if ( cycleState != PlayerFunction.REQUEST ) {
 			log(ERROR, "request() was called at the wrong time");
 			throw new Exception(exception_CycleRequest);
 		}
@@ -136,10 +136,10 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 
 		// We just assume the move is valid, might need to check later on
 		// For now we just make the move as returned by requestMove
-		this.board.make(move);
+		board.make(move);
 
 		// Update state
-		this.cycleState = PlayerFunction.CONFIRM;
+		cycleState = PlayerFunction.CONFIRM;
 
 		return move;
 	}
@@ -167,17 +167,17 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	@Override
 	public void confirm( Status status ) throws Exception, RemoteException {
 		// State validation
-		if ( this.cycleState == PlayerFunction.NULL ) {
+		if ( cycleState == PlayerFunction.NULL ) {
 			log(ERROR, "confirm() was called before player was initialized");
 			throw new Exception(exception_NoInit);
 		}
-		if ( this.cycleState != PlayerFunction.CONFIRM ) {
+		if ( cycleState != PlayerFunction.CONFIRM ) {
 			log(ERROR, "confirm() was called at the wrong time");
 			throw new Exception(exception_CycleConfirm);
 		}
 
 		// Verify that player's status and main program's status are equal
-		final Status playerBoardState = this.boardViewer.getStatus();
+		final Status playerBoardState = boardViewer.getStatus();
 
 		log(DEBUG, "board status on confirm() = " + playerBoardState);
 
@@ -187,7 +187,7 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 		}
 
 		// Update state
-		this.cycleState = PlayerFunction.UPDATE;
+		cycleState = PlayerFunction.UPDATE;
 	}
 
 	/**
@@ -204,11 +204,11 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	@Override
 	public void update( Move opponentMove, Status status ) throws Exception, RemoteException {
 		// State validation
-		if ( this.cycleState == PlayerFunction.NULL ) {
+		if ( cycleState == PlayerFunction.NULL ) {
 			log(ERROR, "update() was called before player was initialized");
 			throw new Exception(exception_NoInit);
 		}
-		if ( this.cycleState != PlayerFunction.UPDATE ) {
+		if ( cycleState != PlayerFunction.UPDATE ) {
 			log(ERROR, "update() was called at the wrong time");
 			throw new Exception(exception_CycleUpdate);
 		}
@@ -216,10 +216,10 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 		log(DEBUG, "received enemy move " + opponentMove + " and status " + status);
 
 		// Process the opponent's move on this player's own board
-		this.board.make(opponentMove);
+		board.make(opponentMove);
 
 		// Verify the status
-		final Status playerBoardStatus = this.boardViewer.getStatus();
+		final Status playerBoardStatus = boardViewer.getStatus();
 
 		if ( ! playerBoardStatus.equals(status) ) {
 			log(ERROR, "update(): status of player board and main program are not the same");
@@ -227,7 +227,7 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 		}
 
 		// Update state
-		this.cycleState = PlayerFunction.REQUEST;
+		cycleState = PlayerFunction.REQUEST;
 	}
 
 
@@ -248,21 +248,21 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 		// Set the colour
 		this.playerColour = playerColour;
 
-		if ( this.board == null ) {
-			this.board = new MainBoard(boardSize);
+		if ( board == null ) {
+			board = new MainBoard(boardSize);
 		}
-		this.boardViewer = board.viewer();
+		boardViewer = board.viewer();
 
 		// Now set the function life cycle according to this player's colour
-		if ( this.playerColour == PlayerColor.Red ) {
+		if ( playerColour == PlayerColor.Red ) {
 
 			// If we have a Red player, first move is request()
-			this.cycleState = PlayerFunction.REQUEST;
+			cycleState = PlayerFunction.REQUEST;
 
 		} else {
 
 			// The Blue player has to process the Red player's move first
-			this.cycleState = PlayerFunction.UPDATE;
+			cycleState = PlayerFunction.UPDATE;
 		}
 
 		log(INFO, "Initialized new player with colour " + playerColour + " on a board with size " + boardSize);
@@ -274,7 +274,7 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	 * @return Die Farbe des Spielers
 	 */
 	public PlayerColor getPlayerColour() {
-		return this.playerColour;
+		return playerColour;
 	}
 
 	public void setBoard( Board board ) {

@@ -3,7 +3,6 @@ package flowerwarspp.player;
 import flowerwarspp.preset.Move;
 import flowerwarspp.preset.Player;
 import flowerwarspp.preset.Requestable;
-import flowerwarspp.util.log.LogLevel;
 
 
 /**
@@ -50,7 +49,7 @@ public class InteractivePlayer extends BasePlayer {
 	 */
 	protected Move requestMove() throws Exception {
 		Move playerMove = null;
-		while ((playerMove == null) || (!this.boardViewer.possibleMovesContains(playerMove))) {
+		while ((playerMove == null) || (!boardViewer.possibleMovesContains(playerMove))) {
 			playerMove = input.request();
 		}
 

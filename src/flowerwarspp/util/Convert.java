@@ -1,12 +1,9 @@
 package flowerwarspp.util;
 
-import flowerwarspp.preset.PlayerColor;
 import flowerwarspp.preset.Status;
 import flowerwarspp.util.log.Log;
 import flowerwarspp.util.log.LogLevel;
 import flowerwarspp.util.log.LogModule;
-
-import static flowerwarspp.preset.PlayerColor.Red;
 
 /**
  * Hilfs-Klasse, welche statische Methoden zum Konvertieren zwischen Datentypen anbietet.
@@ -14,6 +11,7 @@ import static flowerwarspp.preset.PlayerColor.Red;
 public class Convert {
 	/**
 	 * Gibt die {@link String-Repräsentation} eines {@link Status} zurück.
+	 *
 	 * @param status Wert des {@link Status} dessen {@link String}-Repräsentation zurpckgegeben werden soll
 	 * @return {@link String}-Repräsentation des gegebenen {@link Status}
 	 */
