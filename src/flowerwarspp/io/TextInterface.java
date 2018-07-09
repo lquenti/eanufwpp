@@ -115,6 +115,7 @@ public class TextInterface implements Requestable, Output {
 				flower.getThird()
 			))));
 			triangle.append('/');
+			triangle.append(AnsiColors.RESET);
 			triangle.append(bgColor(viewer.getFlowerColor(flower)));
 			triangle.append(fgColor(viewer.getDitchColor(new Ditch (
 				flower.getFirst(),
