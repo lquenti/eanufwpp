@@ -123,7 +123,11 @@ public class TextInterface implements Requestable, Output {
 			throw new IllegalStateException("Viewer wurde noch nicht gesetzt.");
 		}
 
+		System.out.println();
 		System.out.print(drawBoard());
+		System.out.println();
+		System.out.println("Rot:  " + viewer.getPoints(PlayerColor.Red) + " Punkte");
+		System.out.println("Blau: " + viewer.getPoints(PlayerColor.Blue) + " Punkte");
 	}
 
 	@Override
