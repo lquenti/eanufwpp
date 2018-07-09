@@ -332,6 +332,7 @@ public class MainBoard implements Board {
 			}
 		}
 		res.removeAll(tobeRemoved);
+		Log.log0(LogLevel.DEBUG, LogModule.BOARD, res.toString());
 		return res;
 	}
 

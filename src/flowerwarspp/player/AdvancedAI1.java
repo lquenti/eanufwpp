@@ -11,7 +11,7 @@ public class AdvancedAI1 extends BaseAI {
 
 	@Override
 	protected int getMoveScore( final Move move ) {
-		if (move.getType() == MoveType.Surrender) return -1;
+		if (move.getType() == MoveType.Surrender || move.getType() == MoveType.End) return -1;
 
 		if (move.getType() == MoveType.Flower) {
 
@@ -55,12 +55,11 @@ public class AdvancedAI1 extends BaseAI {
 				score *= 2;
 
 			return score;
-		} else if (move.getType() == MoveType.Ditch) {
+		} else {
 
 			// TODO: Check if given ditch move connects two flower beds. In that case, we'll immediately use this move.
 			return -1;
-		} else
-			return -1;
+		}
 	}
 
 

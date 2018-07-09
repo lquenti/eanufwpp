@@ -31,7 +31,8 @@ public class SimpleAI extends BaseAI {
 		// TODO: Maybe check if the passed move is actually valid, but for now we won't bother.
 
 		// We are only concerned with moves that actually make flowers.
-		if ( ! move.getType().equals(MoveType.Flower) ) return - 1;
+		if ( move.getType().equals(MoveType.Ditch) ) return 0;
+		if (! move.getType().equals(MoveType.Flower)) return -1;
 
 		int n1 = 0;
 		int n2 = 0;
