@@ -209,7 +209,7 @@ public class MainBoard implements Board {
 			//  - Ditches halt checken
 			//  - Diese duerfen nicht an Blumen anliegen
 			//  - Ditch liegt noch nicht auf
-			generateNewDitches(getImportantDitches(f));
+			generateNewDitches(getAdjacentDitches(f));
 
 			// Scorecheck
 			playerData.get(currentPlayer).currentScore += updateScore(f);
@@ -270,7 +270,7 @@ public class MainBoard implements Board {
 		}
 	}
 
-	private HashSet<Ditch> getImportantDitches(final Flower newFlower) {
+	private HashSet<Ditch> getAdjacentDitches(final Flower newFlower) {
 		HashSet<Ditch> res = new HashSet<>();
 		for (Position p : getPositions(newFlower)) {
 			res.addAll(getDitchesAround(p));
@@ -563,7 +563,7 @@ public class MainBoard implements Board {
 	private HashSet<HashSet<Flower>> getBedsConnectedToBed(final HashSet<Flower> bed) {
 		HashSet<HashSet<Flower>> bedsConnectedToBed = new HashSet<>();
 		for (Flower bedFlower : bed) {
-			HashSet<Ditch> flowerDitches = getImportantDitches(bedFlower);
+			HashSet<Ditch> flowerDitches = getAdjacentDitches(bedFlower);
 
 			for (Ditch d : flowerDitches) {
 				// Nun muessen wir herausfinden welche Seite zum neuen Beet gehoert.
