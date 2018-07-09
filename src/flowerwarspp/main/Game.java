@@ -69,9 +69,15 @@ public class Game {
 
 		Log.getInstance().setOutput(System.err);
 
-		BoardFrame boardFrame = BoardFrame.getInstance();
-		input = gameParameters.getText() ? new TextInterface() : boardFrame;
-		output = boardFrame;
+		if (gameParameters.getText()) {
+			TextInterface textInterface = new TextInterface();
+			input = textInterface;
+			output = textInterface;
+		} else {
+			BoardFrame boardFrame = BoardFrame.getInstance();
+			input = boardFrame;
+			output = boardFrame;
+		}
 
 		if ( this.gameParameters.getOfferType() != null ) {
 			offer();
