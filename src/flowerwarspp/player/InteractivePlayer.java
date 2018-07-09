@@ -22,13 +22,6 @@ public class InteractivePlayer extends BasePlayer {
 			"Es konnte kein Zug vom interaktiven Spieler angefordert werden.";
 
 	/**
-	 * Eine vordefinierte Nachricht einer {@link Exception}, welche geworfen wird, wenn der interaktive Spieler einen
-	 * nicht validen Zug angegeben hat.
-	 */
-	private static final String exception_InvalidMove =
-			"Der vom Spieler uebergegebene Zug ist nicht valide.";
-
-	/**
 	 * Wird genutzt, um Spielzüge vom Spieler anzufordern.
 	 */
 	private final Requestable input;
@@ -57,19 +50,8 @@ public class InteractivePlayer extends BasePlayer {
 	 */
 	protected Move requestMove() throws Exception {
 		Move playerMove = null;
-		while (playerMove == null)
+		while ((playerMove == null) || (!this.boardViewer.possibleMovesContains(playerMove))) {
 			playerMove = input.request();
-
-		if ( playerMove == null ) {
-			log(LogLevel.ERROR, "interactive player could not return a move");
-			throw new Exception(exception_NoMove);
-		}
-
-		// Make sure the move is actually valid (i.e. it's in the Collection of possible moves)
-		// TODO: Check if this is actually necessary
-		if ( ! this.boardViewer.possibleMovesContains(playerMove) ) {
-			log(LogLevel.ERROR, "move passed by interactive player is invalid: " + playerMove);
-			throw new Exception(exception_InvalidMove);
 		}
 
 		return playerMove;

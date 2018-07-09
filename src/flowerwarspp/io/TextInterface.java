@@ -4,13 +4,33 @@ import flowerwarspp.preset.*;
 
 import java.util.Scanner;
 
+/**
+ * Eine Klasse, die ein Command Line Interface implementiert.
+ * Stellt Spielfunktionen mittels ASCII-Art und Texteingabe zur Verfügung.
+ */
 public class TextInterface implements Requestable, Output {
+	/**
+	 * Ein vordefinierter String, der nach einem {@link Move} fragt.
+	 */
 	private static final String moveRequestPrompt = "Zug eingeben: ";
+
+	/**
+	 * Eine vordefinierte Nachricht für eine {@link MoveFormatException}, das heißt für
+	 * eine Exception die geworfen wird, wenn das Format des Zuges, den der interaktive
+	 * Spieler eingegeben hat, ingültig ist.
+	 */
 	private static final String moveFormatError = "Zug konnte nicht gelesen werden.";
 
-	private Scanner inputScanner = new Scanner(System.in);
+	/**
+	 * Eine vordefinierte Nachricht einer {@link Exception}, welche geworfen wird,
+	 * wenn der Spieler einen nicht validen Zug angegeben hat.
+	 */
+	private static final String exception_InvalidMove =
+		"Der vom Spieler uebergegebene Zug ist nicht valide.";
 
 	private Viewer viewer = null;
+
+	private Scanner inputScanner = new Scanner(System.in);
 
 	/**
 	 * Liest einen Spielzug vom Standard Input ein.
@@ -21,14 +41,32 @@ public class TextInterface implements Requestable, Output {
 	@Override
 	public Move request() {
 		try {
-			System.out.print(moveRequestPrompt);
-			Move result = Move.parseMove(inputScanner.nextLine());
-			return result;
+			Move move = null;
+			while (move == null) {
+				System.out.print(moveRequestPrompt);
+				move = Move.parseMove(inputScanner.nextLine());
+
+				if (!this.viewer.possibleMovesContains(move)) {
+					System.out.println(exception_InvalidMove);
+					move = null;
+				}
+			}
+
+			return move;
 		} catch (MoveFormatException e) {
 			return null;
 		}
 	}
 
+	/**
+	 * Akquiriert die Vordergrundfarbe für eine {@link PlayerColor}.
+	 *
+	 * @param color
+	 * Die {@link PlayerColor}, für die der Farbstring zurückgegeben werden soll.
+	 *
+	 * @return
+	 * Der zur {@link PlayerColor} gehörende Vordergrundfarbe.
+	 */
 	private String fgColor(final PlayerColor color) {
 		if (color == null) {
 			return "";
@@ -40,6 +78,15 @@ public class TextInterface implements Requestable, Output {
 		}
 	}
 
+	/**
+	 * Akquiriert die Hintergrundfarbe für eine {@link PlayerColor}.
+	 *
+	 * @param color
+	 * Die {@link PlayerColor}, für die der Farbstring zurückgegeben werden soll.
+	 *
+	 * @return
+	 * Der zur {@link PlayerColor} gehörende Hintergrundfarbe.
+	 */
 	private String bgColor(final PlayerColor color) {
 		if (color == null) {
 			return "";
@@ -51,6 +98,15 @@ public class TextInterface implements Requestable, Output {
 		}
 	}
 
+	/**
+	 * Erstellt ein Dreieck aus ASCII-Zeichen, gegebenenfalls mit einer Farbe.
+	 *
+	 * @param flower
+	 * Die zu zeichnende {@link Flower}.
+	 *
+	 * @return
+	 * Ein {@link StringBuilder}, der das Dreieck enthält.
+	 */
 	private StringBuilder drawTriangle(final Flower flower) {
 		StringBuilder triangle = new StringBuilder();
 		if (flower.getFirst().getRow() == flower.getSecond().getRow()) {
@@ -80,6 +136,12 @@ public class TextInterface implements Requestable, Output {
 		return triangle;
 	}
 
+	/**
+	 * Zeichnet das {@link Board} aus ASCII-Art.
+	 *
+	 * @return
+	 * Einen {@link StringBuilder}, der eine Textdarstellung des Spielbretts enthält.
+	 */
 	private StringBuilder drawBoard() {
 		int size = viewer.getSize();
 		StringBuilder board = new StringBuilder(size * size); // TODO: Kapazität genauer einstellen
