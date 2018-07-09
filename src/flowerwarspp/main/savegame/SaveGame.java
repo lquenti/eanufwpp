@@ -139,17 +139,6 @@ public class SaveGame implements Iterable<Move> {
 	}
 
 	/**
-	 * Gibt die {@link String}-Repräsentation von {@link PlayerColor} zurück.
-	 *
-	 * @param playerColor Farbe des Spielers als Enum
-	 * @return Zum Enum passende {@link String}-Repräsentation
-	 */
-	private static String playerColorToString( PlayerColor playerColor ) {
-		if ( playerColor == Red ) return "Red";
-		else return "Blue";
-	}
-
-	/**
 	 * Diese Methode ermöglicht das Laden eines mit {@link #save(String)} gespeicherten Spielstands.
 	 * <p>
 	 * Dabei werden die, von der Datei beschriebenen, Spielzüge in der {@link ArrayDeque} einer neuen Instanz dieser

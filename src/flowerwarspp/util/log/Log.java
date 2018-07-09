@@ -245,8 +245,8 @@ public class Log {
 		if ( isLogging && level.compareTo(logLevel) >= 0 && ( ( logModule == ALL ) || ( logModule == module ) ) ) {
 			if ( useFormatting )
 				messageBuffer.append(getTimeStamp())
-						.append('\t').append(logLevelToString(level))
-						.append('\t').append(logModuleToString(module))
+						.append('\t').append(Convert.logLevelToString(level))
+						.append('\t').append(Convert.logModuleToString(module))
 						.append('\t').append(message).append('\n');
 			else
 				messageBuffer.append(level)
@@ -269,60 +269,6 @@ public class Log {
 	 */
 	public static void log0( LogLevel level, LogModule module, String message ) {
 		Log.getInstance().log(level, module, message);
-	}
-
-	/**
-	 * Gibt die {@link String}-Repräsentation eines gegebenen {@link LogModule} zurück.
-	 *
-	 * @param module Das {@link LogModule} dessen {@link String}-Repräsentation ausgegeben werden soll
-	 * @return {@link String}-Repräsentation des gegebenen Moduls.
-	 */
-	private String logModuleToString( LogModule module ) {
-		switch ( module ) {
-			case ALL:
-			default:
-				return "(GENERIC)";
-			case MAIN:
-				return "(MAIN)";
-			case BOARD:
-				return "(BOARD)";
-			case IO:
-				return "(IO)";
-			case PLAYER:
-				return "(PLAYER)";
-		}
-	}
-
-	/**
-	 * Gibt die {@link String}-Repräsentation eines gegebenen {@link LogLevel} zurück.
-	 *
-	 * @param level Das {@link LogLevel} dessen {@link String}-Repräsentation ausgegeben werden soll
-	 * @return {@link String}-Repräsentation des gegebenen Levels.
-	 */
-	private String logLevelToString( LogLevel level ) {
-		switch ( level ) {
-			case NONE:
-			default:
-				return "[NONE]";
-
-			case DUMP:
-				return "[DUMP]";
-
-			case DEBUG:
-				return "[DEBUG]";
-
-			case INFO:
-				return "[INFO]";
-
-			case WARNING:
-				return "[WARNING]";
-
-			case ERROR:
-				return "[ERROR]";
-
-			case CRITICAL:
-				return "[CRITICAL]";
-		}
 	}
 
 	/**

@@ -1,9 +1,7 @@
 package flowerwarspp.io;
 
 import flowerwarspp.preset.Status;
-import flowerwarspp.util.log.Log;
-import flowerwarspp.util.log.LogLevel;
-import flowerwarspp.util.log.LogModule;
+import flowerwarspp.util.log.Convert;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,7 +40,7 @@ class PopupComponentPane extends JPanel {
 
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-		label = new JLabel(getTextFromStatus(endStatus));
+		label = new JLabel(Convert.statusToText(endStatus));
 		label.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		button = new JButton("Spiel Beenden");
@@ -65,18 +63,4 @@ class PopupComponentPane extends JPanel {
 		add(button);
 	}
 
-	private static String getTextFromStatus( Status status ) {
-		switch ( status ) {
-			case Draw:
-				return "Das Spiel endete unentschieden.";
-			case RedWin:
-				return "Der rote Spieler hat das Spiel gewonnen!";
-			case BlueWin:
-				return "Der blaue Spieler hat das Spiel gewonnen!";
-			case Illegal:
-			default:
-				Log.log0(LogLevel.ERROR, LogModule.IO, "Invalid status passed to EndPopupFrame");
-				return null;
-		}
-	}
 }
