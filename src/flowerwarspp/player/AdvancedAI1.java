@@ -5,64 +5,54 @@ import flowerwarspp.preset.*;
 import java.util.Collection;
 
 public class AdvancedAI1 extends BaseAI {
+	private static final int SCORE_DITCH = 1000;
+
 	public AdvancedAI1() {
 		super();
 	}
 
 	@Override
 	protected int getMoveScore( final Move move ) {
-		if (move.getType() == MoveType.Surrender || move.getType() == MoveType.End) return -1;
 
-		if (move.getType() == MoveType.Flower) {
+		switch ( move.getType() ) {
+			case Flower:
+				// Obtain the direct neighbors of both flowers.
+				final Collection<Flower> firstFlowerNeighbors = boardViewer.getDirectNeighbors(move.getFirstFlower());
+				final Collection<Flower> secondFlowerNeighbors = boardViewer.getDirectNeighbors(move.getSecondFlower());
 
-			int n1 = 0;
-			int n2 = 0;
+				final int[] s1 = getNeighborScore(firstFlowerNeighbors);
+				final int[] s2 = getNeighborScore(secondFlowerNeighbors);
 
-			int m1 = 0;
-			int m2 = 0;
+				// Calculate the score as indicated by the strategy.
+				int score = 4 * ( s1[0] + 1 ) * ( s2[0] + 1 ) - ( s1[1] + 1 ) * ( s2[1] + 1 );
 
-			int score;
+				// If both flowers are attached (i.e. if they're neighbors) double the score.
+				if ( firstFlowerNeighbors.contains(move.getSecondFlower()) )
+					score *= 2;
 
-			// Obtain the direct neighbors of both flowers.
-			final Collection<Flower> firstFlowerNeighbors = boardViewer.getDirectNeighbors(move.getFirstFlower());
-			final Collection<Flower> secondFlowerNeighbors = boardViewer.getDirectNeighbors(move.getSecondFlower());
+				return score;
 
-			// Iterate through all the first flower's neighbours and calculate the score.
-			for ( final Flower neighbor : firstFlowerNeighbors ) {
-				if ( boardViewer.getFlowerColor(neighbor) == getPlayerColour() )
-					n1++;
+			case Ditch:
+				// TODO: Actually make some score calculation here. For now using ditch moves whenever possible is fine
+				return SCORE_DITCH;
 
-				if (boardViewer.getFlowerColor(neighbor) == (getPlayerColour() == PlayerColor.Red ? PlayerColor.Blue
-						: PlayerColor.Red))
-					m1++;
-			}
-
-			// Iterate through all the second flower's neighbours and calculate the score.
-			for ( final Flower neighbor : secondFlowerNeighbors ) {
-				if ( boardViewer.getFlowerColor(neighbor) == getPlayerColour() )
-					n2++;
-
-				if (boardViewer.getFlowerColor(neighbor) == (getPlayerColour() == PlayerColor.Red ? PlayerColor.Blue
-						: PlayerColor.Red))
-					m2++;
-			}
-
-			// Calculate the score as indicated by the strategy.
-			score = 4 * ( n1 + 1 ) * ( n2 + 1 ) - (m1 + 1) * (m2 + 1);
-
-			// If both flowers are attached (i.e. if they're neighbors) double the score.
-			if ( firstFlowerNeighbors.contains(move.getSecondFlower()) )
-				score *= 2;
-
-			return score;
-		} else {
-			/* Ditch Moves right here */
-
-			// TODO: Check if given ditch move connects two flower beds. In that case, we'll immediately use this move.
-			// For now, just use ditch moves whener possible. Chances are that they improve the score.
-			return 1000;
+			default:
+				return - 1;
 		}
+
 	}
 
+	private int[] getNeighborScore( Collection<Flower> flowerNeighbors ) {
+		int[] res = new int[2];
 
+		for ( final Flower neighbor : flowerNeighbors ) {
+			if ( boardViewer.getFlowerColor(neighbor) == getPlayerColour() )
+				res[0]++;
+
+			if ( boardViewer.getFlowerColor(neighbor) == ( getPlayerColour() == PlayerColor.Red ? PlayerColor.Blue
+					: PlayerColor.Red ) )
+				res[1]++;
+		}
+		return res;
+	}
 }
