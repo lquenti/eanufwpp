@@ -258,4 +258,8 @@ public class ArgumentParser {
     public boolean isText() throws ArgumentParserException {
         return getFlag("text");
     }
+
+    public long getReplay() throws ArgumentParserException {
+        return Long.parseLong((String) getSetting("replay"));
+    }
 }

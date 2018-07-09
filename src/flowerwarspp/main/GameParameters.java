@@ -54,6 +54,8 @@ class GameParameters {
 	 */
 	private String saveGameName;
 
+	private long replaySpeed;
+
 	/**
 	 * Erzeugt ein neues Objekt basierend auf den angegebenen Kommandozeilenparametern.
 	 *
@@ -76,6 +78,12 @@ class GameParameters {
 				saveGameName = argumentParser.getLoad();
 			} catch ( ArgumentParserException e ) {
 				saveGameName = null;
+			}
+
+			try {
+				replaySpeed = argumentParser.getReplay();
+			} catch ( ArgumentParserException e ) {
+				replaySpeed = -1;
 			}
 
 			boardSize = argumentParser.getSize();
@@ -182,6 +190,15 @@ class GameParameters {
 	 */
 	public String getSaveGameName() {
 		return saveGameName;
+	}
+
+	/**
+	 * Gibt {@link #replaySpeed} zurück.
+	 *
+	 * @return Wert von {@link #replaySpeed}
+	 */
+	public long getReplaySpeed() {
+		return replaySpeed;
 	}
 
 }

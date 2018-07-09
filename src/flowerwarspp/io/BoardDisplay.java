@@ -299,7 +299,10 @@ public class BoardDisplay extends JPanel {
 	public void setBoardViewer(Viewer boardViewer) {
 		this.boardViewer = boardViewer;
 		boardSize = boardViewer.getSize();
-		statusDisplay.updateStatus(0, 0);
+		statusDisplay.updateStatus(boardViewer.getPoints(PlayerColor.Red),
+		                           boardViewer.getPoints(PlayerColor.Blue));
+		// This sets the endButton enabled if and only if there is an "End" move available.
+		endButton.setEnabled(boardViewer.possibleMovesContains(new Move(MoveType.End)));
 		// NOTE: It is very very important that the Triangles be created before the ditches and dots
 		createTriangles();
 		createDitches();
@@ -317,6 +320,12 @@ public class BoardDisplay extends JPanel {
 		updatePolygonSizes();
 		updateComponents();
 		super.paintComponent(g);
+
+		// Antialiasing makes things look good.
+		if (g instanceof Graphics2D) {
+			((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+			                                  RenderingHints.VALUE_ANTIALIAS_ON);
+		}
 
 		mapTriangles.forEach(t -> t.drawPolygon(g));
 		mapEdges.forEach(e -> e.drawPolygon(g));
@@ -541,6 +550,9 @@ public class BoardDisplay extends JPanel {
 				}
 			}
 		}
+
+		// This sets the endButton enabled if and only if there is an "End" move available.
+		endButton.setEnabled(boardViewer.possibleMovesContains(new Move(MoveType.End)));
 
 		displayMouseHandler.reset();
 		combinableFlowers = null;
