@@ -96,5 +96,7 @@ public interface Viewer {
 
     PlayerColor getFlowerColor(Flower flower);
 
+    PlayerColor getDitchColor(Ditch flower);
+
     HashSet<Flower> getFlowerBed(Flower flower);
 }

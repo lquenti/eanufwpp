@@ -697,6 +697,11 @@ public class MainBoard implements Board {
 		}
 
 		@Override
+		public PlayerColor getDitchColor(Ditch flower) {
+			return MainBoard.this.getDitchColor(flower);
+		}
+
+		@Override
 		public HashSet<Flower> getFlowerBed(final Flower flower) {
 			return MainBoard.this.getFlowerBed(flower);
 		}
