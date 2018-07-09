@@ -1,6 +1,10 @@
 package flowerwarspp.board;
 
 import flowerwarspp.preset.*;
+import flowerwarspp.util.log.Log;
+import flowerwarspp.util.log.LogLevel;
+import flowerwarspp.util.log.LogModule;
+
 import java.util.*;
 
 /**
@@ -211,8 +215,11 @@ public class MainBoard implements Board {
 			//  - Ditch liegt noch nicht auf
 			generateNewDitches(getAdjacentDitches(f));
 
-			// Scorecheck
-			playerData.get(currentPlayer).currentScore += updateScore(f);
+		}
+		playerData.get(currentPlayer).currentScore += updateScore(fs[0]);
+		// Scorecheck
+		if (!getFlowerBed(fs[0]).contains(fs[1])) {
+			playerData.get(currentPlayer).currentScore += updateScore(fs[1]);
 		}
 	}
 
@@ -272,24 +279,24 @@ public class MainBoard implements Board {
 
 	private HashSet<Ditch> getAdjacentDitches(final Flower newFlower) {
 		HashSet<Ditch> res = new HashSet<>();
-		for (Position p : getPositions(newFlower)) {
+		Position[] flowerPositions = getPositions(newFlower);
+		for (Position p : flowerPositions) {
 			res.addAll(getDitchesAround(p));
 		}
 
-		Position[] flowerPositions = getPositions(newFlower);
 		HashSet<Ditch> tobeRemoved = new HashSet<>(); // Um ConcurrentModificationException zu umgehen
 		for (Ditch d : res) {
-			// Ditch der Flower selbst
-			if (Arrays.asList(flowerPositions).containsAll(Arrays.asList(d.getFirst(), d.getSecond()))) {
-				tobeRemoved.add(d);
-			}
-
 			// 1. Condition: Ob auf der anderen Seite eine Flower ist
 			// 2. Condition: Ob die Blumen daneben schon eingefaerbt sind
 			Position p = (Arrays.asList(flowerPositions).contains(d.getFirst())) ? d.getSecond() : d.getFirst();
-			if (getFlowersAround(p).stream().noneMatch(f -> getFlowerColor(f) != null) ||
-					getDirectNeighbors(d).stream().anyMatch(f -> getFlowerColor(f) != null)) {
+			if (getFlowersAround(p).stream().noneMatch(f -> getFlowerColor(f) == currentPlayer)) {
 				tobeRemoved.add(d);
+				continue;
+			}
+			for (Flower ditchNeighbor : getDirectNeighbors(d)) {
+				if (getFlowerColor(ditchNeighbor) != null) {
+					tobeRemoved.add(d);
+				}
 			}
 		}
 		res.removeAll(tobeRemoved);
@@ -766,5 +773,13 @@ public class MainBoard implements Board {
 
 	public static void main(String[] args) {
 		MainBoard board = new MainBoard(30);
+
+		Move r1 = new Move(new Flower(new Position(2,6), new Position(3,6), new Position(3,5)), new Flower(new Position(3,5), new Position(4,5), new Position(4,4)));
+		board.make(r1);
+		Move b1 = new Move(new Flower(new Position(3,5), new Position(3,6), new Position(4,5)), new Flower(new Position(2,5), new Position(2,6), new Position(3,5)));
+		board.make(b1);
+		for (Ditch d : board.getAdjacentDitches(new Flower(new Position(2,5), new Position(3,5), new Position(2,6)))) {
+			System.out.println(d);
+		}
 	}
 }
