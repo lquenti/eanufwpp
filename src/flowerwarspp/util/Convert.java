@@ -1,7 +1,10 @@
-package flowerwarspp.util.log;
+package flowerwarspp.util;
 
 import flowerwarspp.preset.PlayerColor;
 import flowerwarspp.preset.Status;
+import flowerwarspp.util.log.Log;
+import flowerwarspp.util.log.LogLevel;
+import flowerwarspp.util.log.LogModule;
 
 import static flowerwarspp.preset.PlayerColor.Red;
 

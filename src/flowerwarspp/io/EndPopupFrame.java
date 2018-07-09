@@ -1,7 +1,7 @@
 package flowerwarspp.io;
 
 import flowerwarspp.preset.Status;
-import flowerwarspp.util.log.Convert;
+import flowerwarspp.util.Convert;
 
 import javax.swing.*;
 import java.awt.*;

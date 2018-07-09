@@ -1,5 +1,7 @@
 package flowerwarspp.util.log;
 
+import flowerwarspp.util.Convert;
+
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;

@@ -2,6 +2,7 @@ package flowerwarspp.main.savegame;
 
 import flowerwarspp.board.MainBoard;
 import flowerwarspp.preset.*;
+import flowerwarspp.util.Convert;
 import flowerwarspp.util.log.*;
 
 import java.io.*;
