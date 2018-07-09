@@ -247,12 +247,27 @@ public class MainBoard implements Board {
 			//  - Ditch liegt noch nicht auf
 			generateNewDitches(getAdjacentDitches(f));
 
+			for (Ditch d : getEdgeDitches(f)) {
+				for (PlayerData player : playerData.values()) {
+					player.legalMoves.remove(new Move(d));
+				}
+			}
+
 		}
 		playerData.get(currentPlayer).currentScore += updateScore(fs[0]);
 		// Scorecheck
 		if (!getFlowerBed(fs[0]).contains(fs[1])) {
 			playerData.get(currentPlayer).currentScore += updateScore(fs[1]);
 		}
+	}
+
+	private Ditch[] getEdgeDitches(Flower flower) {
+		Ditch[] result = new Ditch[3];
+		Position[] positions = getPositions(flower);
+		for ( int i = 0; i < positions.length; i++ ) {
+			result[i] = new Ditch(positions[i], positions[(i+1)%positions.length]);
+		}
+		return result;
 	}
 
 	// TODO: Checken ob performant
@@ -326,19 +341,29 @@ public class MainBoard implements Board {
 				continue;
 			}
 			for (Flower ditchNeighbor : getDirectNeighbors(d)) {
-				if (getFlowerColor(ditchNeighbor) != null) {
+				if ( getFlowerColor(ditchNeighbor) != null ) {
 					tobeRemoved.add(d);
 				}
 			}
 		}
 		res.removeAll(tobeRemoved);
-		Log.log0(LogLevel.DEBUG, LogModule.BOARD, res.toString());
+		Log.log0(LogLevel.DEBUG, LogModule.BOARD, "Allowing ditches: " + res);
 		return res;
 	}
 
 	private void generateNewDitches(final Collection<Ditch> ds) {
 		for (Ditch d : ds) {
-			playerData.get(currentPlayer).legalMoves.add(new Move(d));
+			boolean remove = false;
+			for (Position pos : getPositions(d)) {
+				for (Ditch ditchContainingPosition : getDitchesAround(pos)) {
+					if (getDitchColor(ditchContainingPosition) != null) {
+						remove = true;
+					}
+				}
+			}
+			if (getDitchColor(d) == null && !remove) {
+				playerData.get(currentPlayer).legalMoves.add(new Move(d));
+			}
 		}
 	}
 
@@ -640,13 +665,12 @@ public class MainBoard implements Board {
 		// Andere Grabenmoeglichkeiten entvalidieren falls diese sich eine Position teilen
 		for (Position p : getPositions(d)) {
 			for (Ditch samePos : getDitchesAround(p)) {
-				playerData.get(currentPlayer).legalMoves.remove(new Move(samePos));
+				for (PlayerData player : playerData.values()) {
+					Log.log0(LogLevel.DEBUG, LogModule.BOARD, "Banning Ditch: " + samePos);
+					player.legalMoves.remove(new Move(samePos));
+				}
 			}
 		}
-
-		// und zuletzt
-		playerData.get(currentPlayer).legalMoves.remove(new Move(d));
-		playerData.get(currentPlayer).ditches.add(d);
 
 		// Scorecheck
 		updateScore(d);
@@ -808,14 +832,38 @@ public class MainBoard implements Board {
 	}
 
 	public static void main(String[] args) {
-		MainBoard board = new MainBoard(30);
+		MainBoard board = new MainBoard(5);
 
-		Move r1 = new Move(new Flower(new Position(2,6), new Position(3,6), new Position(3,5)), new Flower(new Position(3,5), new Position(4,5), new Position(4,4)));
-		board.make(r1);
-		Move b1 = new Move(new Flower(new Position(3,5), new Position(3,6), new Position(4,5)), new Flower(new Position(2,5), new Position(2,6), new Position(3,5)));
-		board.make(b1);
-		for (Ditch d : board.getAdjacentDitches(new Flower(new Position(2,5), new Position(3,5), new Position(2,6)))) {
-			System.out.println(d);
-		}
+		System.out.println(new Move(new Flower(new Position(2, 1), new Position(1, 2), new Position(2, 2)), new Flower(new
+				Position
+				(1, 2), new Position(2, 2), new Position(1, 3))));
+		System.out.println(new Move(new Flower(new Position(3, 2), new Position(4, 2), new Position(3, 3)), new Flower(new
+				Position(4,	2), new Position(3, 3), new Position(4, 3))));
+		System.out.println(new Move(new Flower(new Position(2, 2), new Position(1, 3), new Position(2, 3)), new Flower(new Position(2, 2), new Position(3, 2), new Position(2, 3))));
+		System.out.println(new Move(new Flower(new Position(3, 3), new Position(2, 4), new Position(3, 4)), new Flower(new Position(2, 4), new Position(3, 4), new Position(2, 5))));
+		System.out.println(new Move(new Flower(new Position(4, 1), new Position(5, 1), new Position(4, 2)), new Flower(new Position(1, 4), new Position(2, 4), new Position(1, 5))));
+		System.out.println(new Move(new Flower(new Position(2, 1), new Position(3, 1), new Position(2, 2)), new Flower(new Position(3, 1), new Position(2, 2), new Position(3, 2))));
+		System.out.println(new Move(new Ditch(new Position(2, 3), new Position(2, 4))));
+		System.out.println(new Move(new Flower(new Position(1, 3), new Position(2, 3), new Position(1, 4)), new Flower(new Position(2, 4), new Position(1, 5), new Position(2, 5))));
+		System.out.println(new Move(new Flower(new Position(5, 1), new Position(4, 2), new Position(5, 2)), new Flower(new Position(4, 2), new Position(5, 2), new Position(4, 3))));
+		System.out.println(new Move(new Flower(new Position(1, 1), new Position(2, 1), new Position(1, 2)), new Flower(new Position(4, 1), new Position(3, 2), new Position(4, 2))));
+		System.out.println(new Move(new Flower(new Position(3, 3), new Position(4, 3), new Position(3, 4)), new Flower(new Position(1, 5), new Position(2, 5), new Position(1, 6))));
+		
+		board.make(new Move(new Flower(new Position(2, 1), new Position(1, 2), new Position(2, 2)), new Flower(new
+				Position
+				(1, 2), new Position(2, 2), new Position(1, 3))));
+		board.make(new Move(new Flower(new Position(3, 2), new Position(4, 2), new Position(3, 3)), new Flower(new
+				Position(4,	2), new Position(3, 3), new Position(4, 3))));
+		board.make(new Move(new Flower(new Position(2, 2), new Position(1, 3), new Position(2, 3)), new Flower(new Position(2, 2), new Position(3, 2), new Position(2, 3))));
+		board.make(new Move(new Flower(new Position(3, 3), new Position(2, 4), new Position(3, 4)), new Flower(new Position(2, 4), new Position(3, 4), new Position(2, 5))));
+		board.make(new Move(new Flower(new Position(4, 1), new Position(5, 1), new Position(4, 2)), new Flower(new Position(1, 4), new Position(2, 4), new Position(1, 5))));
+		board.make(new Move(new Flower(new Position(2, 1), new Position(3, 1), new Position(2, 2)), new Flower(new Position(3, 1), new Position(2, 2), new Position(3, 2))));
+		board.make(new Move(new Ditch(new Position(2, 3), new Position(2, 4))));
+		board.make(new Move(new Flower(new Position(1, 3), new Position(2, 3), new Position(1, 4)), new Flower(new Position(2, 4), new Position(1, 5), new Position(2, 5))));
+		board.make(new Move(new Flower(new Position(5, 1), new Position(4, 2), new Position(5, 2)), new Flower(new Position(4, 2), new Position(5, 2), new Position(4, 3))));
+		board.make(new Move(new Flower(new Position(1, 1), new Position(2, 1), new Position(1, 2)), new Flower(new Position(4, 1), new Position(3, 2), new Position(4, 2))));
+		board.make(new Move(new Flower(new Position(3, 3), new Position(4, 3), new Position(3, 4)), new Flower(new Position(1, 5), new Position(2, 5), new Position(1, 6))));
+
+		System.out.println(board.viewer().getPossibleMoves());
 	}
 }
