@@ -122,7 +122,7 @@ public class SaveGame implements Iterable<Move> {
 			for ( Move m
 					: madeMoves ) {
 
-				printWriter.println(m.toString() + ";" + m.hashCode() + ";" + Convert.playerColorToString(currentPlayer)
+				printWriter.println(m.toString() + ";" + m.hashCode() + ";" + currentPlayer
 						+ ", " + "#" + i);
 				currentPlayer = currentPlayer == Red ? Blue : Red;
 				i++;

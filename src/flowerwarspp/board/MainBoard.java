@@ -209,10 +209,10 @@ public class MainBoard implements Board {
 			//  - Ditches halt checken
 			//  - Diese duerfen nicht an Blumen anliegen
 			//  - Ditch liegt noch nicht auf
-			generateNewDitches(getImportantDitches(f));
+			generateNewDitches(getAdjacentDitches(f));
 
 			// Scorecheck
-			updateScore(f);
+			playerData.get(currentPlayer).currentScore += updateScore(f);
 		}
 	}
 
@@ -270,7 +270,7 @@ public class MainBoard implements Board {
 		}
 	}
 
-	private HashSet<Ditch> getImportantDitches(final Flower newFlower) {
+	private HashSet<Ditch> getAdjacentDitches(final Flower newFlower) {
 		HashSet<Ditch> res = new HashSet<>();
 		for (Position p : getPositions(newFlower)) {
 			res.addAll(getDitchesAround(p));
@@ -302,27 +302,69 @@ public class MainBoard implements Board {
 		}
 	}
 
-	// TODO: Check ob es wirklich klappt
-	private void updateScore(Flower f) {
+	private int updateScore(Flower f) {
 		HashSet<HashSet<Flower>> visitedBeds = new HashSet<>();
 		LinkedList<HashSet<Flower>> queue = new LinkedList<>();
+
 		queue.add(getFlowerBed(f));
 
 		int score = 0;
 		while (!queue.isEmpty()) {
 			HashSet<Flower> currentBed = queue.pop();
-			if (currentBed.size() == 4) {
+			if (currentBed.size() == 4 && !visitedBeds.contains(currentBed)) {
 				score += 1;
 			}
 
 			visitedBeds.add(currentBed);
-			getBedsConnectedToBed(currentBed).stream().filter((visitedBeds::contains)).forEach(queue::add);
+			getBedsConnectedToBed(currentBed).stream().filter(x -> !visitedBeds.contains(x)).forEach(queue::add);
 		}
-		playerData.get(currentPlayer).currentScore += score;
+		return score;
 	}
 
-	private void updateScore(Ditch d) {
-		
+	// TODO: Redundancy updateScore
+	private void updateScore(final Ditch d) {
+		// Temporäres entfernen der Ditch
+		Position[] ps = new Position[]{d.getFirst(), d.getSecond()};
+		LinkedList<Integer> scores = new LinkedList<>();
+		playerData.get(currentPlayer).ditches.remove(d);
+
+		HashSet<HashSet<Flower>> visitedBeds = new HashSet<>();
+		LinkedList<HashSet<Flower>> queue = new LinkedList<>();
+
+		for (Position p : ps) {
+			// Für Randfälle wie dass 2 Pfade an einem Ditchende verbunden sind welche kein Kreis sind
+			for (Flower flowerConnectedToPos : getFlowersAround(p)) {
+				if (playerData.get(currentPlayer).flowers.contains(flowerConnectedToPos)) {
+					queue.add(getFlowerBed(flowerConnectedToPos));
+				}
+			}
+
+			int score = 0;
+			while (!queue.isEmpty()) {
+				HashSet<Flower> currentBed = queue.pop();
+				if (currentBed.size() == 4 && !visitedBeds.contains(currentBed)) {
+					score += 1;
+				}
+
+				visitedBeds.add(currentBed);
+				getBedsConnectedToBed(currentBed).stream().filter(x -> !visitedBeds.contains(x)).forEach(queue::add);
+			}
+			scores.add(score);
+		}
+
+		// Hier muss dann jeweils der Score der einzelnen Pfade entfernt werden und dann die Summe der Summe
+		// aller Pfäden hinzugefügt werden
+		for (int score : scores) {
+			// Kleiner Gauss
+			playerData.get(currentPlayer).currentScore -= (score*score+score)/2;
+		}
+
+		// i -> i bedeutet unboxing
+		int newScore = scores.stream().mapToInt(i -> i).sum();
+		playerData.get(currentPlayer).currentScore += (newScore*newScore+newScore)/2;
+
+		// Wieder hinzufügen
+		playerData.get(currentPlayer).ditches.add(d);
 	}
 
 	private Position[] getPositions(Flower f) {
@@ -519,9 +561,9 @@ public class MainBoard implements Board {
 
 	// TODO: Datenstruktur damit nicht solchen Overhead?
 	private HashSet<HashSet<Flower>> getBedsConnectedToBed(final HashSet<Flower> bed) {
-		HashSet<HashSet<Flower>> bedsConenctedToBed = new HashSet<>();
+		HashSet<HashSet<Flower>> bedsConnectedToBed = new HashSet<>();
 		for (Flower bedFlower : bed) {
-			HashSet<Ditch> flowerDitches = getImportantDitches(bedFlower);
+			HashSet<Ditch> flowerDitches = getAdjacentDitches(bedFlower);
 
 			for (Ditch d : flowerDitches) {
 				// Nun muessen wir herausfinden welche Seite zum neuen Beet gehoert.
@@ -529,11 +571,13 @@ public class MainBoard implements Board {
 
 				LinkedList<Flower> nearby = getFlowersAround(p);
 				for (Flower nearbyFlower : nearby) {
-					bedsConenctedToBed.add(getFlowerBed(nearbyFlower));
+					if (playerData.get(currentPlayer).flowers.contains(nearbyFlower)) {
+						bedsConnectedToBed.add(getFlowerBed(nearbyFlower));
+					}
 				}
 			}
 		}
-		return bedsConenctedToBed;
+		return bedsConnectedToBed;
 	}
 
 	private void updateValidMoves(Ditch d) {

@@ -33,18 +33,6 @@ public class Convert {
 	}
 
 	/**
-	 * Gibt die {@link String}-Repräsentation von {@link PlayerColor} zurück.
-	 *
-	 * @param playerColor Farbe des Spielers als Enum
-	 * @return Zum Enum passende {@link String}-Repräsentation
-	 */
-	public static String playerColorToString( PlayerColor playerColor ) {
-		if ( playerColor == Red ) return "Red";
-		else return "Blue";
-	}
-
-
-	/**
 	 * Gibt die {@link String}-Repräsentation eines gegebenen {@link LogModule} zurück.
 	 *
 	 * @param module Das {@link LogModule} dessen {@link String}-Repräsentation ausgegeben werden soll
