@@ -8,7 +8,7 @@ stages:
 compile:
     stage: build
     script:
-        - ant
+        - ant compile
     artifacts:
         paths:
             - build
