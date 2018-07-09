@@ -145,10 +145,10 @@ public class MainBoard implements Board {
 	 */
 	@Override
 	public void make(final Move move) throws IllegalStateException {
-		// TODO: Score aktualisieren
 		if (currentStatus != Status.Ok) {
 			throw new IllegalStateException("Das Spielbrett kann keine Züge mehr annehmen!");
 		}
+		// TODO: Softblock?
 		if (!playerData.get(currentPlayer).legalMoves.contains(move)) {
 			currentStatus = Status.Illegal;
 			return;
@@ -201,6 +201,9 @@ public class MainBoard implements Board {
 			//  - Diese duerfen nicht an Blumen anliegen
 			//  - Ditch liegt noch nicht auf
 			generateNewDitches(getImportantDitches(f));
+
+			// Scorecheck
+			updateScore(f);
 		}
 	}
 
@@ -267,18 +270,18 @@ public class MainBoard implements Board {
 		Position[] flowerPositions = getPositions(newFlower);
 		HashSet<Ditch> tobeRemoved = new HashSet<>(); // Um ConcurrentModificationException zu umgehen
 		for (Ditch d : res) {
+			// Ditch der Flower selbst
 			if (Arrays.asList(flowerPositions).containsAll(Arrays.asList(d.getFirst(), d.getSecond()))) {
 				tobeRemoved.add(d);
 			}
 
+			// 1. Condition: Ob auf der anderen Seite eine Flower ist
+			// 2. Condition: Ob die Blumen daneben schon eingefaerbt sind
 			Position p = (Arrays.asList(flowerPositions).contains(d.getFirst())) ? d.getSecond() : d.getFirst();
 			if (getFlowersAround(p).stream().noneMatch(f -> getFlowerColor(f) != null) ||
 					getDirectNeighbors(d).stream().anyMatch(f -> getFlowerColor(f) != null)) {
 				tobeRemoved.add(d);
 			}
-
-			/* TODO: Gehoert in Ditch lol (glaube ich)
-			*/
 		}
 		res.removeAll(tobeRemoved);
 		return res;
@@ -288,6 +291,29 @@ public class MainBoard implements Board {
 		for (Ditch d : ds) {
 			playerData.get(currentPlayer).legalMoves.add(new Move(d));
 		}
+	}
+
+	// TODO: Check ob es wirklich klappt
+	private void updateScore(Flower f) {
+		HashSet<HashSet<Flower>> visitedBeds = new HashSet<>();
+		LinkedList<HashSet<Flower>> queue = new LinkedList<>();
+		queue.add(getFlowerBed(f));
+
+		int score = 0;
+		while (!queue.isEmpty()) {
+			HashSet<Flower> currentBed = queue.pop();
+			if (currentBed.size() == 4) {
+				score += 1;
+			}
+
+			visitedBeds.add(currentBed);
+			getBedsConnectedToBed(currentBed).stream().filter((visitedBeds::contains)).forEach(queue::add);
+		}
+		playerData.get(currentPlayer).currentScore += score;
+	}
+
+	private void updateScore(Ditch d) {
+		
 	}
 
 	private Position[] getPositions(Flower f) {
@@ -482,6 +508,25 @@ public class MainBoard implements Board {
 		return result;
 	}
 
+	// TODO: Datenstruktur damit nicht solchen Overhead?
+	private HashSet<HashSet<Flower>> getBedsConnectedToBed(final HashSet<Flower> bed) {
+		HashSet<HashSet<Flower>> bedsConenctedToBed = new HashSet<>();
+		for (Flower bedFlower : bed) {
+			HashSet<Ditch> flowerDitches = getImportantDitches(bedFlower);
+
+			for (Ditch d : flowerDitches) {
+				// Nun muessen wir herausfinden welche Seite zum neuen Beet gehoert.
+				Position p = (Arrays.asList(getPositions(bedFlower)).contains(d.getFirst())) ? d.getSecond() : d.getFirst();
+
+				LinkedList<Flower> nearby = getFlowersAround(p);
+				for (Flower nearbyFlower : nearby) {
+					bedsConenctedToBed.add(getFlowerBed(nearbyFlower));
+				}
+			}
+		}
+		return bedsConenctedToBed;
+	}
+
 	private void updateValidMoves(Ditch d) {
         /*
         Was aktuell gemacht wird:
@@ -506,6 +551,9 @@ public class MainBoard implements Board {
 		// und zuletzt
 		playerData.get(currentPlayer).legalMoves.remove(new Move(d));
 		playerData.get(currentPlayer).ditches.add(d);
+
+		// Scorecheck
+		updateScore(d);
 	}
 
 	/*
