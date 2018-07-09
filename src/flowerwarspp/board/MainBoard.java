@@ -606,6 +606,9 @@ public class MainBoard implements Board {
 			HashSet<Ditch> flowerDitches = getAdjacentDitches(bedFlower);
 
 			for (Ditch d : flowerDitches) {
+				if (!playerData.get(currentPlayer).ditches.contains(d)) {
+					continue;
+				}
 				// Nun muessen wir herausfinden welche Seite zum neuen Beet gehoert.
 				Position p = (Arrays.asList(getPositions(bedFlower)).contains(d.getFirst())) ? d.getSecond() : d.getFirst();
 
