@@ -690,6 +690,11 @@ public class MainBoard implements Board {
 		}
 
 		@Override
+		public Map<Flower, HashSet<Flower>> getFlowerMap() {
+			return playerData.get(currentPlayer).legalMoves.getFlowerMap();
+		}
+
+		@Override
 		public Collection<Move> getPossibleMovesContaining(Flower flower) {
 			return playerData.get(currentPlayer).legalMoves.getMovesContaining(flower);
 		}

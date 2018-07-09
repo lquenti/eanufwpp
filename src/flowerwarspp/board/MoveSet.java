@@ -215,6 +215,17 @@ public class MoveSet extends AbstractSet<Move> {
 	}
 
 	/**
+	 * Gibt eine Map zurück, die jeder erlaubten Blume die Blumen zuordnet, mit denen sie sich
+	 * kombinieren lässt.
+	 *
+	 * @return Eine Map, die jeder erlaubten Blume die Blumen zuordnet, mit denen sie sich
+	 * kombinieren lässt.
+	 */
+	public Map<Flower, HashSet<Flower>> getFlowerMap() {
+		return Collections.unmodifiableMap(flowerMap);
+	}
+
+	/**
 	 * Gibt alle in dieser Menge enthaltenen Spielzüge zurück, die die angegebene Blume enthalten.
 	 * 
 	 * @param flower Die Blume, für die die zugehörigen Züge zurückgegeben werden sollen

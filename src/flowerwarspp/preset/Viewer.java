@@ -90,6 +90,8 @@ public interface Viewer {
 
     Collection<Flower> getFlowersCombinableWith(Flower flower);
 
+    Map<Flower, HashSet<Flower>> getFlowerMap();
+    
     Collection<Move> getPossibleMovesContaining(Flower flower);
 
     Collection<Move> getPossibleDitchMoves();
