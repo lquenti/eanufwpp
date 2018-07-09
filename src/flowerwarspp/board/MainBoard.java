@@ -123,6 +123,15 @@ public class MainBoard implements Board {
 		playerData.get(PlayerColor.Blue).legalMoves.add(surrenderMove);
 	}
 
+	/*
+	 * Wenn die Tests alle fehlschlagen: diesen Konstruktor nehmen und vor/hinter den anderen
+	 * verschieben
+	 */
+	/**
+	 * Erzeugt eine Kopie eines vorhandenen MainBoards
+	 *
+	 * param original Das Brett, das kopiert werden soll.
+	 */
 	public MainBoard(MainBoard original) {
 		size = original.size;
 		currentPlayer = original.currentPlayer;
