@@ -56,9 +56,11 @@ public class AdvancedAI1 extends BaseAI {
 
 			return score;
 		} else {
+			/* Ditch Moves right here */
 
 			// TODO: Check if given ditch move connects two flower beds. In that case, we'll immediately use this move.
-			return -1;
+			// For now, just use ditch moves whener possible. Chances are that they improve the score.
+			return 1000;
 		}
 	}
 
