@@ -33,7 +33,7 @@ test:
         - ant test
     only:
         - master
-    allow_failure: yes
+    allow_failure: no
     dependencies:
         - compile
 
