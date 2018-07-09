@@ -250,6 +250,10 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 
 		if ( board == null ) {
 			board = new MainBoard(boardSize);
+		} else {
+			// TODO!
+			log(ERROR, "tried to call init() while game was already active");
+			throw new Exception("Noch nicht implementiert");
 		}
 		boardViewer = board.viewer();
 
