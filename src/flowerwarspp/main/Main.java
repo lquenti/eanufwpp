@@ -14,7 +14,7 @@ public class Main {
 	public static void quitWithUsage() {
 		System.out.println("Verwendung:");
 		System.out.println("flowerwarspp.main.Main -size <Spielfeldgröße> -red <Spielertyp> -blue <Spielertyp> "
-				+ "-delay <Verzögerung> (optional:) [--debug] [--text]");
+				+ "[-delay <Verzögerung>] [--debug] [--text]");
 		System.out.println();
 		System.out.println("Spielfeldgröße: Zahl zwischen 3 und 30");
 		System.out.println("Spielertyp:     \"human\", \"remote\", \"random\", \"simple\", oder \"adv1\"");

@@ -81,7 +81,12 @@ class GameParameters {
 			boardSize = argumentParser.getSize();
 			redType = argumentParser.getRed();
 			blueType = argumentParser.getBlue();
-			delay = argumentParser.getDelay();
+
+			try {
+				delay = argumentParser.getDelay();
+			} catch ( ArgumentParserException e ) {
+				delay = 0;
+			}
 
 			// Validate board size
 			if ( getBoardSize() < 3
