@@ -7,6 +7,8 @@ import flowerwarspp.util.log.*;
 import java.io.*;
 import java.util.ArrayDeque;
 import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static flowerwarspp.preset.PlayerColor.*;
 
@@ -33,6 +35,16 @@ public class SaveGame implements Iterable<Move> {
 	 */
 	private static final String SAVE_PATH_ROOT = System.getProperty("user.dir") + File.separator + "SaveGames"
 			+ File.separator;
+
+	/**
+	 * Dieses Regex-{@link Pattern} hilft uns bei der Validierung von nutzbaren Namen für SaveGames. Die Bedigungen für
+	 * einen validen Namen sind:
+	 * <p>
+	 * Der Name des Spielstands setzt sich nur aus alphanumerischen Zeichen oder Underscores (_) zusammen. Das erste
+	 * Zeichen des Namens eines Spielstands ist immer ein Buchstabe und nie eine Zahl oder ein Underscore. Der Name darf
+	 * nicht leer sein.
+	 */
+	private static final Pattern saveGameNamePattern = Pattern.compile("\\p{Alpha}+[\\p{Alnum}|_]*");
 
 	/**
 	 * Diese {@link ArrayDeque} speichert die ausgeführten Spielzüge.
@@ -85,9 +97,13 @@ public class SaveGame implements Iterable<Move> {
 	 *
 	 * @param saveGameName Name des Spielstands.
 	 */
-	public void save( String saveGameName ) {
+	public void save( String saveGameName ) throws Exception {
 
-		// TODO: Sanitize file names (no special chars, no whitespace etc).
+		Matcher matcher = saveGameNamePattern.matcher(saveGameName);
+		if ( ! matcher.find() ) {
+			Log.log0(LogLevel.ERROR, LogModule.MAIN, "The name of the savegame may only contain alphanumeric characters and underscores");
+			throw new Exception("Der Dateiname darf nur alpahnumerische Zeichen oder Underscores enthalten, das erste Zeichen muss ein Buchstabe sein");
+		}
 
 		try {
 			File saveDir = new File(SAVE_PATH_ROOT);
@@ -142,7 +158,11 @@ public class SaveGame implements Iterable<Move> {
 	 */
 	public static SaveGame load( String saveGameName ) throws IOException {
 
-		// TODO: Sanitize file names (no special chars, no whitespace etc).
+		Matcher matcher = saveGameNamePattern.matcher(saveGameName);
+		if ( ! matcher.find() ) {
+			Log.log0(LogLevel.ERROR, LogModule.MAIN, "The name of the savegame may only contain alphanumeric characters and underscores");
+			return null;
+		}
 
 		try ( BufferedReader bufferedReader = new BufferedReader(new FileReader(getFilePath(saveGameName))) ) {
 
