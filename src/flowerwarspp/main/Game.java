@@ -86,7 +86,8 @@ public class Game {
 
 	private void loadGame() {
 
-		Log.log0(LogLevel.DEBUG, LogModule.MAIN, "Started loading savegame " + gameParameters.getSaveGameName());
+		Log.log0(LogLevel.DEBUG, LogModule.MAIN, "Started loading savegame " +
+				gameParameters.getSaveGameName());
 
 		try {
 			saveGame = SaveGame.load(gameParameters.getSaveGameName());
@@ -175,7 +176,8 @@ public class Game {
 				try {
 					move = currentPlayer.request();
 				} catch ( Exception e ) {
-					Log.log0(LogLevel.INFO, LogModule.MAIN, "Player " + viewer.getTurn() + " didn't make a move.");
+					Log.log0(LogLevel.INFO, LogModule.MAIN, "Player " + viewer.getTurn() + " didn't make a " +
+							"move.");
 					move = new Move(MoveType.Surrender);
 				}
 

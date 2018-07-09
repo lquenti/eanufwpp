@@ -101,8 +101,10 @@ public class SaveGame implements Iterable<Move> {
 
 		Matcher matcher = saveGameNamePattern.matcher(saveGameName);
 		if ( ! matcher.find() ) {
-			Log.log0(LogLevel.ERROR, LogModule.MAIN, "The name of the savegame may only contain alphanumeric characters and underscores");
-			throw new Exception("Der Dateiname darf nur alpahnumerische Zeichen oder Underscores enthalten, das erste Zeichen muss ein Buchstabe sein");
+			Log.log0(LogLevel.ERROR, LogModule.MAIN, "The name of the savegame may only contain alphanumeric" +
+					" characters and underscores");
+			throw new Exception("Der Dateiname darf nur alpahnumerische Zeichen oder Underscores enthalten, das" +
+					" erste Zeichen muss ein Buchstabe sein");
 		}
 
 		try {
@@ -119,7 +121,8 @@ public class SaveGame implements Iterable<Move> {
 			for ( Move m
 					: madeMoves ) {
 
-				printWriter.println(m.toString() + ";" + playerColorToString(currentPlayer) + ", " + "#" + i);
+				printWriter.println(m.toString() + ";" + playerColorToString(currentPlayer) + ", " + "#" + i + ", " +
+					m.hashCode());
 				currentPlayer = currentPlayer == Red ? Blue : Red;
 				i++;
 			}
@@ -160,7 +163,8 @@ public class SaveGame implements Iterable<Move> {
 
 		Matcher matcher = saveGameNamePattern.matcher(saveGameName);
 		if ( ! matcher.find() ) {
-			Log.log0(LogLevel.ERROR, LogModule.MAIN, "The name of the savegame may only contain alphanumeric characters and underscores");
+			Log.log0(LogLevel.ERROR, LogModule.MAIN, "The name of the savegame may only contain alpha" +
+					"numeric characters and underscores");
 			return null;
 		}
 
