@@ -224,18 +224,6 @@ public class MainBoard implements Board {
 		}
 	}
 
-	// TODO: Auch hier Redundancy
-	private HashSet<HashSet<Flower>> getFlowerChain(Flower f) {
-		HashSet<HashSet<Flower>> flowerChain = new HashSet<>();
-		LinkedList<HashSet<Flower>> queue = new LinkedList<>();
-		queue.add(getFlowerBed(f));
-		while (!queue.isEmpty()) {
-			HashSet<Flower> currentBed = queue.pop();
-			flowerChain.add(currentBed);
-			getBedsConnectedToBed(currentBed).stream().filter(x -> !flowerChain.contains(x)).forEach(queue::add);
-		}
-		return flowerChain;
-	}
 
 	private void updateAfterMove(final Flower[] fs) {
 		for (Flower f : fs) {
@@ -376,31 +364,16 @@ public class MainBoard implements Board {
 	}
 
 	private int updateScore(Flower f) {
-		HashSet<HashSet<Flower>> visitedBeds = new HashSet<>();
 		LinkedList<HashSet<Flower>> queue = new LinkedList<>();
 
 		HashSet<Flower> changedBed = getFlowerBed(f);
-
 		if (changedBed.size() != 4) {
 			return 0;
 		}
-
 		queue.add(changedBed);
-
-		int score = 0;
-		while (!queue.isEmpty()) {
-			HashSet<Flower> currentBed = queue.pop();
-			if (currentBed.size() == 4 && !visitedBeds.contains(currentBed)) {
-				score += 1;
-			}
-
-			visitedBeds.add(currentBed);
-			getBedsConnectedToBed(currentBed).stream().filter(x -> !visitedBeds.contains(x)).forEach(queue::add);
-		}
-		return score;
+		return depthFirstSearch(new HashSet<>(), queue);
 	}
 
-	// TODO: Redundancy updateScore
 	private void updateScore(final Ditch d) {
 		// Temporäres entfernen der Ditch
 		Position[] ps = new Position[]{d.getFirst(), d.getSecond()};
@@ -418,17 +391,7 @@ public class MainBoard implements Board {
 				}
 			}
 
-			int score = 0;
-			while (!queue.isEmpty()) {
-				HashSet<Flower> currentBed = queue.pop();
-				if (currentBed.size() == 4 && !visitedBeds.contains(currentBed)) {
-					score += 1;
-				}
-
-				visitedBeds.add(currentBed);
-				getBedsConnectedToBed(currentBed).stream().filter(x -> !visitedBeds.contains(x)).forEach(queue::add);
-			}
-			scores.add(score);
+			scores.add(depthFirstSearch(visitedBeds, queue));
 		}
 
 		// Hier muss dann jeweils der Score der einzelnen Pfade entfernt werden und dann die Summe der Summe
@@ -444,6 +407,27 @@ public class MainBoard implements Board {
 
 		// Wieder hinzufügen
 		playerData.get(currentPlayer).ditches.add(d);
+	}
+
+	private HashSet<HashSet<Flower>> getFlowerChain(Flower f) {
+		HashSet<HashSet<Flower>> flowerChain = new HashSet<>();
+		LinkedList<HashSet<Flower>> queue = new LinkedList<>();
+		queue.add(getFlowerBed(f));
+		depthFirstSearch(flowerChain, queue);
+		return flowerChain;
+	}
+
+	private int depthFirstSearch(HashSet<HashSet<Flower>> flowerChain, LinkedList<HashSet<Flower>> queue) {
+		int score=0;
+		while (!queue.isEmpty()) {
+			HashSet<Flower> currentBed = queue.pop();
+			if (currentBed.size() == 4 && !flowerChain.contains(currentBed)) {
+				score += 1;
+			}
+			flowerChain.add(currentBed);
+			getBedsConnectedToBed(currentBed).stream().filter(x -> !flowerChain.contains(x)).forEach(queue::add);
+		}
+		return score;
 	}
 
 	private Position[] getPositions(Flower f) {

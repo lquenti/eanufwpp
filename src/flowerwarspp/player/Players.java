@@ -71,6 +71,9 @@ public class Players {
 	 * @return Der im Netzwerk angebotene und gefundene entfernte Spieler
 	 */
 	public static Player findRemotePlayer() {
+
+		// TODO: Handle not finding a player!
+
 		Scanner inputScanner = new Scanner(System.in);
 
 		System.out.print("Adresse des entfernten Spielers: ");
