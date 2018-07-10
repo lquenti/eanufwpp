@@ -60,7 +60,7 @@ public class Players {
 	 * @param type  Typs the zu erstellenden Spielers
 	 * @param input Implementation des Interfaces {@link Requestable}, welche der Spieler zum Abfragen von Zügen
 	 *              verwenden soll
-	 * @return
+	 * @return Der erzeugte Player
 	 */
 	public static Player createPlayer( final PlayerType type, final Requestable input ) {
 		return createPlayer(type, input, null);

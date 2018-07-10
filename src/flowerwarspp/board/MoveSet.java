@@ -183,7 +183,7 @@ public class MoveSet extends AbstractSet<Move> {
 
 	/**
 	 * Gibt alle in dieser Menge enthaltenen Spielzüge zurück, die Blumen enthalten. Die
-	 * zurückgegebene Menge ist unveränderlich.
+	 * zurückgegebene Menge ist ein unmodifiableSet.
 	 *
 	 * @return Alle in dieser Menge enthaltenen Spielzüge, die Blumen enthalten
 	 */
@@ -193,7 +193,7 @@ public class MoveSet extends AbstractSet<Move> {
 
 	/**
 	 * Gibt alle Blumen zurück, für die diese Menge Spielzüge enthält, die die Blume enthalten.
-	 * Die zurückgegebene Menge ist unveränderlich.
+	 * Die zurückgegebene Menge ist ein unmodifiableSet.
 	 *
 	 * @return Alle Blumen, für die diese Menge Spielzüge enthält, die die Blume enthalten
 	 */
@@ -204,7 +204,7 @@ public class MoveSet extends AbstractSet<Move> {
 	/**
 	 * Gibt alle Blumen zurück, mit denen sich die angegebene Blume kombinieren lässt, sodass sich
 	 * Spielzüge ergeben, die in dieser Menge enthalten sind. Die zurückgegebene Menge ist
-	 * unveränderlich.
+	 * ein unmodifiableSet.
 	 *
 	 * @param flower Die Blume, für die die kombinierbaren Blumen zurückgegeben werden sollen
 	 * @return Alle Blumen, mit denen sich die angegebene Blume kombinieren lässt, sodass sich
@@ -216,7 +216,7 @@ public class MoveSet extends AbstractSet<Move> {
 
 	/**
 	 * Gibt eine Map zurück, die jeder erlaubten Blume die Blumen zuordnet, mit denen sie sich
-	 * kombinieren lässt.
+	 * kombinieren lässt. Das Ergebnis ist eine unmodifiableMap.
 	 *
 	 * @return Eine Map, die jeder erlaubten Blume die Blumen zuordnet, mit denen sie sich
 	 * kombinieren lässt.
@@ -244,7 +244,7 @@ public class MoveSet extends AbstractSet<Move> {
 
 	/**
 	 * Gibt alle in dieser Menge enthaltenen Spielzüge zurück, die Gräben enthalten. Die
-	 * zurückgegebene Menge ist unveränderlich.
+	 * zurückgegebene Menge ist ein unmodifiableSet.
 	 *
 	 * @return Alle in dieser Menge enthaltenen Spielzüge, die Gräben enthalten
 	 */

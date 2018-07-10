@@ -720,7 +720,7 @@ public class MainBoard implements Board {
 	 */
 	private class MainBoardViewer implements Viewer {
 		/**
-		 * {@inheritDoc}
+		 * {@inheritDoc} Das Ergebnis ist ein unmodifiableSet.
 		 */
 		@Override
 		public Set<Ditch> getDitches(PlayerColor color) {
@@ -728,7 +728,7 @@ public class MainBoard implements Board {
 		}
 
 		/**
-		 * {@inheritDoc}
+		 * {@inheritDoc} Das Ergebnis ist ein unmodifiableSet.
 		 */
 		@Override
 		public Set<Flower> getFlowers(PlayerColor color) {
@@ -744,7 +744,7 @@ public class MainBoard implements Board {
 		}
 
 		/**
-		 * {@inheritDoc}
+		 * {@inheritDoc} Das Ergebnis ist ein unmodifiableSet.
 		 */
 		@Override
 		public Set<Move> getPossibleMoves() {
@@ -775,67 +775,105 @@ public class MainBoard implements Board {
 			return currentPlayer;
 		}
 
-		// TODO: REFACTOR
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		public LinkedList<Flower> getDirectNeighbors(Flower f) {
 			return MainBoard.this.getDirectNeighbors(f);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		public LinkedList<Flower> getAllNeighbors(Flower f) {
 			return MainBoard.this.getAllNeighbors(f);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		public boolean possibleMovesContains(Move move) {
 			return playerData.get(currentPlayer).legalMoves.contains(move);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		public boolean possibleMovesContainsMovesContaining(Flower flower) {
 			return playerData.get(currentPlayer).legalMoves.containsMovesContaining(flower);
 		}
 
+		/**
+		 * {@inheritDoc} Das Ergebnis ist ein unmodifiableSet.
+		 */
 		@Override
 		public Collection<Move> getPossibleFlowerMoves() {
 			return playerData.get(currentPlayer).legalMoves.getFlowerMoves();
 		}
 
+		/**
+		 * {@inheritDoc} Das Ergebnis ist ein unmodifiableSet.
+		 */
 		@Override
 		public Collection<Flower> getPossibleFlowers() {
 			return playerData.get(currentPlayer).legalMoves.getFlowers();
 		}
 
+		/**
+		 * {@inheritDoc} Das Ergebnis ist ein unmodifiableSet.
+		 */
 		@Override
 		public Collection<Flower> getFlowersCombinableWith(Flower flower) {
 			return playerData.get(currentPlayer).legalMoves.getFlowersCombinableWith(flower);
 		}
 
+		/**
+		 * {@inheritDoc} Das Ergebnis ist eine unmodifiableMap.
+		 */
 		@Override
 		public Map<Flower, HashSet<Flower>> getFlowerMap() {
 			return playerData.get(currentPlayer).legalMoves.getFlowerMap();
 		}
 
+		/**
+		 * {@inheritDoc} Das Ergebnis ist ein unmodifiableSet.
+		 */
 		@Override
 		public Collection<Move> getPossibleMovesContaining(Flower flower) {
 			return playerData.get(currentPlayer).legalMoves.getMovesContaining(flower);
 		}
 
+		/**
+		 * {@inheritDoc} Das Ergebnis ist ein unmodifiableSet.
+		 */
 		@Override
 		public Collection<Move> getPossibleDitchMoves() {
 			return playerData.get(currentPlayer).legalMoves.getDitchMoves();
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		public PlayerColor getFlowerColor(Flower flower) {
 			return MainBoard.this.getFlowerColor(flower);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		public PlayerColor getDitchColor(Ditch flower) {
 			return MainBoard.this.getDitchColor(flower);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		public HashSet<Flower> getFlowerBed(final Flower flower) {
 			return MainBoard.this.getFlowerBed(flower);
