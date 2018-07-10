@@ -60,8 +60,8 @@ Um ein lokales Spiel zu starten, müssen die folgenden Einstellungen gesetzt wer
 - Die Größe des Spielbretts, eine Ganzzahl zwischen 5 und 30 (inklusive). Diese Einstellung wird gesetzt mit  
     **`-size {5 ,..., 30}`**
 - Die Spielertypen des roten und blauen Spielers. Die verfügbaren Spielertypen werden in einem folgenden Abschnitt genauer behandelt. Diese Einstellungen werden für beide Spieler gesetzt mit  
-  - **`-red {human, random, simple, adv1, remote}`**
-  - **`-blue {human, random, simple, adv1, remote}`**
+  - **`-red {human, random, simple, adv1, adv2, remote}`**
+  - **`-blue {human, random, simple, adv1, adv2, remote}`**
 
 #### Optionale Einstellungen (lokales Spiel)
 
@@ -101,7 +101,11 @@ Dieser computergesteuerte Spieler wählt auf Basis eines einfachen Bewertungsalg
 
 #### `adv1`
 
-Der verbesserte Computerspieler bedient sich einer angepassten Version des Bewertungsalgorithmus des einfachen Computerspielers. Außerdem führt dieser Computerspieler Graben-Züge, die zwei Gärten miteinander verbinden, sofort aus.
+Der verbesserte Computerspieler ersten Levels bedient sich einer angepassten Version des Bewertungsalgorithmus des einfachen Computerspielers. Außerdem führt dieser Computerspieler Graben-Züge, die zwei Gärten miteinander verbinden, sofort aus.
+
+#### `adv2`
+
+Der verbesserte Computerspieler zweiten Levels bedient sich einer angepassten Version des Bewertungsalgorithmus des verbesserten Computerspielers ersten Levels. Außerdem führt dieser Computerspieler Graben-Züge, die zwei Gärten miteinander verbinden, sofort aus. Zudem versucht dieser Computerspieler, die eigenen Blumen und Gärten in Clustern anzuordnen, sodass sich möglichst lange zusammenhängende Strukturen ergeben, welche die höchste Anzahl an Punkten bringt.
 
 #### `remote`
 
