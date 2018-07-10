@@ -3,6 +3,7 @@ package flowerwarspp.player;
 import flowerwarspp.board.MainBoard;
 import flowerwarspp.preset.*;
 
+import java.rmi.RemoteException;
 import java.util.Collection;
 
 /**
@@ -16,10 +17,41 @@ import java.util.Collection;
 public class AdvancedAI2 extends BaseAI {
 
 	/**
+	 * Der Zug, ab welchem Cluster gebildet werden sollen.
+	 */
+	private static final int START_CLUSTERING_AT = 6;
+
+	/**
+	 * Die Anzahl an Zügen, die dieser Spieler ausgeführt hat, seid Beginn des Spiels.
+	 */
+	private int moveNr = 0;
+
+	/**
 	 * Konstruktor, um eine neue Instanz dieser Klasse zu erstellen.
 	 */
 	public AdvancedAI2() {
 		super();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected Move requestMove() throws Exception {
+
+		if (moveNr <= START_CLUSTERING_AT )
+			moveNr++;
+
+		return super.requestMove();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void init( int boardSize, PlayerColor playerColour ) throws Exception {
+		super.init(boardSize, playerColour);
+		moveNr = 0;
 	}
 
 	/**
@@ -85,12 +117,14 @@ public class AdvancedAI2 extends BaseAI {
 				res[0]++;
 		}
 
-		if ( res[0] > 0 ) return res;
+		if ( res[0] > 0  || moveNr <= START_CLUSTERING_AT ) return res;
 
 		for ( final Flower neighbor : boardViewer.getAllNeighbors(flower) ) {
 
-			if (boardViewer.getFlowerColor(neighbor) == getPlayerColour())
-				continue;
+			if (boardViewer.getFlowerColor(neighbor) == getPlayerColour()) {
+				res[1] = - 2;
+				return res;
+			}
 
 			for ( Flower f1 : boardViewer.getDirectNeighbors(neighbor) ) {
 				if ( boardViewer.getFlowerColor(f1) == getPlayerColour())

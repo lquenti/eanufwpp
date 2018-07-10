@@ -22,7 +22,7 @@ abstract class BaseAI extends BasePlayer {
 	 * Eine vordefinierte Nachricht einer {@link Exception}, welche geworfen wird, wenn die KI mit ihrer Strategie
 	 * keinen Zug auswählen konnte.
 	 */
-	private static final String exception_NoMove =
+	protected static final String exception_NoMove =
 			"Die KI konnte keinen Zug auswaehlen.";
 
 	/**
