@@ -219,7 +219,9 @@ public class MainBoard implements Board {
 
 	private void endGame() {
 		int redPoints = playerData.get(PlayerColor.Red).currentScore;
+		Log.log0(LogLevel.DEBUG, LogModule.BOARD, "Red player has " + redPoints + "points at end of game.");
 		int bluePoints = playerData.get(PlayerColor.Blue).currentScore;
+		Log.log0(LogLevel.DEBUG, LogModule.BOARD, "Blue player has " + bluePoints + "points at end of game.");
 		if (redPoints > bluePoints) {
 			endGame(PlayerColor.Red);
 		} else if (bluePoints > redPoints) {
