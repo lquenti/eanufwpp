@@ -66,6 +66,23 @@ class GameParameters {
 			// set up
 			ArgumentParser argumentParser = new ArgumentParser(args);
 
+			try {
+				if (argumentParser.isHelp())
+					Main.quitWithUsage();
+			} catch ( ArgumentParserException ignored ) {}
+			
+			try {
+				debug = argumentParser.isDebug();
+			} catch ( ArgumentParserException e ) {
+				debug = false;
+			}
+
+			try {
+				text = argumentParser.isText();
+			} catch ( ArgumentParserException e ) {
+				text = false;
+			}
+
 			// If we want to offer the player, set that variable and return
 			try {
 				offerType = argumentParser.getOffer();
@@ -101,19 +118,8 @@ class GameParameters {
 					|| getBoardSize() > 30
 					|| getBoardSize() < 0 ) {
 				throw new ArgumentParserException("Groeße des Spielfelds ist nicht gueltig.");
-					}
-
-			try {
-				debug = argumentParser.isDebug();
-			} catch ( ArgumentParserException e ) {
-				debug = false;
 			}
 
-			try {
-				text = argumentParser.isText();
-			} catch ( ArgumentParserException e ) {
-				text = false;
-			}
 		} catch ( ArgumentParserException e ) {
 			Log.log0(LogLevel.ERROR, LogModule.MAIN, "Invalid arguments passed: " + Arrays.toString(args));
 			Main.quitWithUsage();
