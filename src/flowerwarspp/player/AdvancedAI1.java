@@ -15,11 +15,6 @@ import java.util.Collection;
 public class AdvancedAI1 extends BaseAI {
 
 	/**
-	 * Globale Definition des Scores, falls ein {@link MoveType#Ditch}-Move gemacht werden kann.
-	 */
-	private static final int SCORE_DITCH = 1000;
-
-	/**
 	 * Konstruktor, um eine neue Instanz dieser Klasse zu erstellen.
 	 */
 	public AdvancedAI1() {
@@ -54,11 +49,9 @@ public class AdvancedAI1 extends BaseAI {
 				return score;
 
 			case Ditch:
-				// TODO: Actually make some score calculation here. For now using ditch moves whenever possible is fine
-
 				// Simulate and check if ditch actually increases our points.
 				// This way we won't make duplicate/useless ditch moves.
-				// Works perfectly performance-wise, delay is close to none
+				// Works perfectly performance-wise, unwanted delay is close to none.
 				MainBoard sim = new MainBoard((MainBoard) getBoard());
 				sim.make(move);
 
@@ -68,13 +61,12 @@ public class AdvancedAI1 extends BaseAI {
 					return 0;
 
 			case End:
-				return 0;
+				return SCORE_END;
 
 			case Surrender:
 			default:
 				return - 1;
 		}
-
 	}
 
 	/**
