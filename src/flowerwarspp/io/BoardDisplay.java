@@ -54,8 +54,8 @@ public class BoardDisplay extends JPanel {
 			if (!isRequesting)
 				return;
 
-			this.processClick(mouseEvent);
-			this.boardDisplay.getParent().repaint();
+			processClick(mouseEvent);
+			boardDisplay.getParent().repaint();
 			synchronized (moveAwaitLock) {
 				moveAwaitLock.notify();
 			}
@@ -301,6 +301,7 @@ public class BoardDisplay extends JPanel {
 		boardSize = boardViewer.getSize();
 		statusDisplay.updateStatus(boardViewer.getPoints(PlayerColor.Red),
 		                           boardViewer.getPoints(PlayerColor.Blue));
+		surrenderButton.setEnabled(false);
 		// This sets the endButton enabled if and only if there is an "End" move available.
 		endButton.setEnabled(boardViewer.possibleMovesContains(new Move(MoveType.End)));
 		// NOTE: It is very very important that the Triangles be created before the ditches and dots
@@ -526,7 +527,11 @@ public class BoardDisplay extends JPanel {
 		displayMouseHandler.reset();
 		displayMouseHandler.isRequesting = true;
 		combinableFlowers = boardViewer.getPossibleFlowers();
-		this.repaint();
+		getParent().repaint();
+
+		// This sets the endButton enabled if and only if there is an "End" move available.
+		surrenderButton.setEnabled(true);
+		endButton.setEnabled(boardViewer.possibleMovesContains(new Move(MoveType.End)));
 
 		Move result = null;
 
@@ -551,10 +556,8 @@ public class BoardDisplay extends JPanel {
 			}
 		}
 
-		// This sets the endButton enabled if and only if there is an "End" move available.
-		endButton.setEnabled(boardViewer.possibleMovesContains(new Move(MoveType.End)));
-
 		displayMouseHandler.reset();
+		surrenderButton.setEnabled(false);
 		combinableFlowers = null;
 		getParent().repaint();
 		return result;
@@ -620,6 +623,7 @@ public class BoardDisplay extends JPanel {
 	 * Updatet das interne Cache des Spielbretts dieses Displays.
 	 */
 	public synchronized void refresh() {
+		getParent().repaint();
 		if (gameEnd)
 			return;
 
