@@ -379,7 +379,13 @@ public class MainBoard implements Board {
 		HashSet<HashSet<Flower>> visitedBeds = new HashSet<>();
 		LinkedList<HashSet<Flower>> queue = new LinkedList<>();
 
-		queue.add(getFlowerBed(f));
+		HashSet<Flower> changedBed = getFlowerBed(f);
+
+		if (changedBed.size() != 4) {
+			return 0;
+		}
+
+		queue.add(changedBed);
 
 		int score = 0;
 		while (!queue.isEmpty()) {
