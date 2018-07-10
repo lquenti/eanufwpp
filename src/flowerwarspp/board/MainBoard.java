@@ -501,16 +501,42 @@ public class MainBoard implements Board {
 		return result;
 	}
 
+	/**
+	 * Gibt die Dreiecke zurück, die mit einem gegebenen Dreieck eine Kante gemeinsam haben.
+	 *
+	 * @param center Das Dreieck, dessen Nachbarn zurück gegeben werden sollen.
+	 * @return Die direkten Nachbarn
+	 */
 	private LinkedList<Flower> getDirectNeighbors(final Flower f) {
 		LinkedList<Flower> result = new LinkedList<>();
 		Position[] nodes = getPositions(f);
+
+		/* 
+		 * Die Fehlenden Punkte lassen sich als Kombinationen der Eckpunte des Gegebenen Dreiecks
+		 * darstellen:
+		 *
+		 *                    p2+p0-p1    p2    p1+p2-p0
+		 *                       x        x        x
+		 *                               / \
+		 *                              /   \
+		 *                             /     \
+		 *                            x-------x
+		 *                           p0       p1
+		 *
+		 *
+		 *                                x
+		 *                             p0+p1-p2
+		 *
+		 *
+		 * Die for-Schleife iteriert über diese Punkte.
+		 */
 		for (int i = 0; i < 3; i++) {
 			try {
 				Position third = new Position(
-						nodes[i % 3].getColumn() + nodes[(i + 1) % 3].getColumn() - nodes[(i + 2) % 3].getColumn(),
-						nodes[i % 3].getRow() + nodes[(i + 1) % 3].getRow() - nodes[(i + 2) % 3].getRow()
+					nodes[i].getColumn() + nodes[(i+1)%3].getColumn() - nodes[(i+2)%3].getColumn(),
+					nodes[i].getRow() + nodes[(i+1)%3].getRow() - nodes[(i+2)%3].getRow()
 				);
-				Flower neighbor = new Flower(nodes[i % 3], nodes[(i + 1) % 3], third);
+				Flower neighbor = new Flower(nodes[i], nodes[(i+1)%3], third);
 				if (isOnBoard(neighbor)) {
 					result.add(neighbor);
 				}
@@ -520,25 +546,59 @@ public class MainBoard implements Board {
 		return result;
 	}
 
+	/**
+	 * Gibt die Dreiecke zurück, die mit einem gegebenen Dreieck eine Ecke gemeinsam haben.
+	 *
+	 * @param center Das Dreieck, dessen Nachbarn zurück gegeben werden sollen.
+	 * @return Die Nachbarn
+	 */
 	private LinkedList<Flower> getAllNeighbors(final Flower f) {
 		LinkedList<Flower> result = getDirectNeighbors(f);
 		Position[] nodes = getPositions(f);
 		Position lastPoint = null;
-		// Über die Positionen iterieren, die das Dreieck umgeben.
+
+		/* 
+		 * Die Fehlenden Punkte lassen sich als Kombinationen der Eckpunte des Gegebenen Dreiecks
+		 * darstellen:
+		 *
+		 *                           x        x
+		 *                       p2+p2-p1   p2+p2-p0
+		 * 
+		 *
+		 *                   p2+p0-p1     p2    p1+p2-p0
+		 *                       x        x        x
+		 *                               / \
+		 *                              /   \
+		 *                p0+p0-p1     /     \      p1+p1-p0
+		 *                    x       x-------x        x
+		 *                           p0       p1
+		 *
+		 *                    p0+p0-p2         p1+p1-p2
+		 *                        x       x       x
+		 *                             p0+p1-p2
+		 *
+		 *
+		 * Die for-Schleife iteriert über diese Punkte.
+		 */
 		for (int i = 0; i <= 9; i++) {
 			try {
 				Position point = new Position(
-						nodes[i / 3 % 3].getColumn() + nodes[(i + 1) / 3 % 3].getColumn() - nodes[((i + 2) / 3 + 1) % 3].getColumn(),
-						nodes[i / 3 % 3].getRow() + nodes[(i + 1) / 3 % 3].getRow() - nodes[((i + 2) / 3 + 1) % 3].getRow()
+					nodes[i/3%3].getColumn() + nodes[(i+1)/3%3].getColumn() - nodes[((i+2)/3+1)%3].getColumn(),
+					nodes[i/3%3].getRow() + nodes[(i+1)/3%3].getRow() - nodes[((i+2)/3+1)%3].getRow()
 				);
+				// Erst eine Blume erzeugen, wenn wir 2 Punkte für die äußere Kante haben.
 				if (lastPoint != null) {
-					Flower neighbor = new Flower(nodes[i / 3 % 3], lastPoint, point);
+					Flower neighbor = new Flower(nodes[i/3%3], lastPoint, point);
 					if (isOnBoard(neighbor)) {
 						result.add(neighbor);
 					}
 				}
 				lastPoint = point;
 			} catch (IllegalArgumentException e) {
+				/*
+				 * Falls die Position ungültig war, müssen wir erst wieder zwei Positionen sammeln,
+				 * bevor wir die nächste Blume erzeugen.
+				 */
 				lastPoint = null;
 			}
 		}
@@ -596,15 +656,25 @@ public class MainBoard implements Board {
 		return result;
 	}
 
+	/**
+	 * Gibt alle Positionen zurück, die von der gegebenen Position genau eine Position entfernt
+	 * sind. Das Ergebnis ist im Uhrzeigersinn geordnet und beginnt mit dem unteren linken
+	 * Nachbarn.
+	 *
+	 * @param center Die Position in der Mitte
+	 * @result Die benachbarten Positionen
+	 */
 	private LinkedList<Position> getPositionsAround(final Position center) {
 		LinkedList<Position> result = new LinkedList<>();
-		// Im Kreis rumgehen.
+		/*
+		 * Wir verwenden die periodische Folge a_i := sgn((i%6-2)%3) und eine nach links
+		 * verschobene Version davon, um im Kreis über die Nachbarn zu iterieren (ähnlich wie
+		 * mit Sinus und Kosinus am Einheitskreis).
+		 */
 		for (int i = 0; i < 6; i++) {
 			try {
 				Position neighbor = new Position(
-					// Folge, die so ein Bisschen wie sin ist aber nicht ganz.
 					center.getColumn() + Integer.signum(((i+2)%6-2)%3),
-					// Folge, die so ein Bisschen wie -cos ist aber nicht ganz.
 					center.getRow() + Integer.signum((i%6-2)%3)
 				);
 				if (isOnBoard(neighbor)) {
