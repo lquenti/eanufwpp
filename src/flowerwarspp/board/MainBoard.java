@@ -491,9 +491,9 @@ public class MainBoard implements Board {
 	 * @param center Das Dreieck, dessen Nachbarn zurück gegeben werden sollen.
 	 * @return Die direkten Nachbarn
 	 */
-	private LinkedList<Flower> getDirectNeighbors(final Flower f) {
+	private LinkedList<Flower> getDirectNeighbors(final Flower center) {
 		LinkedList<Flower> result = new LinkedList<>();
-		Position[] nodes = getPositions(f);
+		Position[] nodes = getPositions(center);
 
 		/* 
 		 * Die Fehlenden Punkte lassen sich als Kombinationen der Eckpunte des Gegebenen Dreiecks
@@ -536,9 +536,10 @@ public class MainBoard implements Board {
 	 * @param center Das Dreieck, dessen Nachbarn zurück gegeben werden sollen.
 	 * @return Die Nachbarn
 	 */
-	private LinkedList<Flower> getAllNeighbors(final Flower f) {
-		LinkedList<Flower> result = getDirectNeighbors(f);
-		Position[] nodes = getPositions(f);
+	private LinkedList<Flower> getAllNeighbors(final Flower center) {
+		// Die Dreiecke, die eine Kante gemeinsam haben holen wir uns von der vorhandenen Methode.
+		LinkedList<Flower> result = getDirectNeighbors(center);
+		Position[] nodes = getPositions(center);
 		Position lastPoint = null;
 
 		/* 
@@ -646,7 +647,7 @@ public class MainBoard implements Board {
 	 * Nachbarn.
 	 *
 	 * @param center Die Position in der Mitte
-	 * @result Die benachbarten Positionen
+	 * @return Die benachbarten Positionen
 	 */
 	private LinkedList<Position> getPositionsAround(final Position center) {
 		LinkedList<Position> result = new LinkedList<>();
