@@ -623,22 +623,22 @@ public class BoardDisplay extends JPanel {
 		if (gameEnd)
 			return;
 
+		redFlowers = boardViewer.getFlowers(PlayerColor.Red);
+		blueFlowers = boardViewer.getFlowers(PlayerColor.Blue);
+		redDitches = boardViewer.getDitches(PlayerColor.Red);
+		blueDitches = boardViewer.getDitches(PlayerColor.Blue);
+		possibleDitchMoves = boardViewer.getPossibleDitchMoves();
+		currentPlayer = boardViewer.getTurn();
+
+		int redPlayerPoints = boardViewer.getPoints(PlayerColor.Red);
+		int bluePlayerPoints = boardViewer.getPoints(PlayerColor.Blue);
+		statusDisplay.updateStatus(redPlayerPoints, bluePlayerPoints);
+
 		if (boardViewer.getStatus() != Status.Ok) {
 			// NOTE: This is necessary to be invoked by EventQueue.
 			// Due to Swing's Threading structure, the program stalls otherwise.
 			EventQueue.invokeLater(() -> new EndPopupFrame(boardViewer.getStatus()));
 			gameEnd = true;
-		} else {
-			redFlowers = boardViewer.getFlowers(PlayerColor.Red);
-			blueFlowers = boardViewer.getFlowers(PlayerColor.Blue);
-			redDitches = boardViewer.getDitches(PlayerColor.Red);
-			blueDitches = boardViewer.getDitches(PlayerColor.Blue);
-			possibleDitchMoves = boardViewer.getPossibleDitchMoves();
-			currentPlayer = boardViewer.getTurn();
-
-			int redPlayerPoints = boardViewer.getPoints(PlayerColor.Red);
-			int bluePlayerPoints = boardViewer.getPoints(PlayerColor.Blue);
-			statusDisplay.updateStatus(redPlayerPoints, bluePlayerPoints);
 		}
 	}
 }
