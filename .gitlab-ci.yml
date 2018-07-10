@@ -13,8 +13,6 @@ compile:
         paths:
             - build
         expire_in: 5 min
-    only:
-        - master
 
 doc:
     stage: build
@@ -31,8 +29,6 @@ test:
     stage: test
     script:
         - ant test
-    only:
-        - master
     allow_failure: no
     dependencies:
         - compile
