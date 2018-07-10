@@ -43,6 +43,9 @@ public class Players {
 			case ADVANCED_AI_1:
 				player = new AdvancedAI1();
 				break;
+			case ADVANCED_AI_2:
+				player = new AdvancedAI2();
+				break;
 			default:
 				System.err.println("Unbekannter Spielertyp " + type);
 				Log.log0(LogLevel.ERROR, LogModule.PLAYER,

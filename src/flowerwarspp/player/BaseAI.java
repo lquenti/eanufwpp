@@ -1,9 +1,11 @@
 package flowerwarspp.player;
 
 import flowerwarspp.preset.Move;
+import flowerwarspp.preset.MoveType;
 import flowerwarspp.preset.Player;
 import flowerwarspp.util.log.Log;
 import flowerwarspp.util.log.LogLevel;
+import flowerwarspp.util.log.LogModule;
 
 import java.util.HashSet;
 import java.util.Random;
@@ -27,7 +29,18 @@ abstract class BaseAI extends BasePlayer {
 	 * <code>private</code> Random Number Generator, um die zufällige Auswahl eines Spielzugs mit Hilfe von
 	 * Pseudozufallszahlen leisten zu können.
 	 */
-	private static final Random aiRNG = new Random();
+	static final Random aiRNG = new Random();
+
+	/**
+	 * Globale Definition des Scores, falls ein {@link MoveType#Ditch}-Move gemacht werden kann, welcher den Score des
+	 * Spielers verbessern würde.
+	 */
+	protected static final int SCORE_DITCH = 1000;
+
+	/**
+	 * Globale Definition des Scores, falls ein {@link MoveType#End}-Move gemacht werden kann.
+	 */
+	protected static final int SCORE_END = 500;
 
 	/**
 	 * Default-Konstruktor, welcher dieses Objekt mit Standardwerten versieht.
@@ -87,7 +100,10 @@ abstract class BaseAI extends BasePlayer {
 			log(LogLevel.DUMP, "move " + move + " has score of " + score);
 
 			// If the score of the currently observed move is higher than the previously highest score, update the relevant variables.
-			if ( score > highestScore ) {
+
+			if (score >= SCORE_END) {
+				return move;
+			} else if ( score > highestScore ) {
 				highestScore = score;
 				highestScoredMoves.clear();
 				highestScoredMoves.add(move);
@@ -98,6 +114,8 @@ abstract class BaseAI extends BasePlayer {
 
 		// Manually flush the log now that the data dump is complete...
 		Log.getInstance().flush();
+
+		log(LogLevel.DEBUG, "highestScore: " + highestScore + ", highestScoredMoves: " + highestScoredMoves);
 
 		if ( highestScoredMoves.size() == 0 ) return null;
 
