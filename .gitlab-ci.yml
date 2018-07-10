@@ -50,7 +50,7 @@ build_pdf:
   stage: dist
   before_script:
     - apt-get update -y
-    - apt-get install ruby-full
+    - apt-get --assume-yes install ruby-full
     - gem install kramdown
     - gem install prawn
     - gem install prawn-table
