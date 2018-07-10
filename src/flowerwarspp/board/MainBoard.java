@@ -224,6 +224,19 @@ public class MainBoard implements Board {
 		}
 	}
 
+	// TODO: Auch hier Redundancy
+	private HashSet<HashSet<Flower>> getFlowerChain(Flower f) {
+		HashSet<HashSet<Flower>> flowerChain = new HashSet<>();
+		LinkedList<HashSet<Flower>> queue = new LinkedList<>();
+		queue.add(getFlowerBed(f));
+		while (!queue.isEmpty()) {
+			HashSet<Flower> currentBed = queue.pop();
+			flowerChain.add(currentBed);
+			getBedsConnectedToBed(currentBed).stream().filter(x -> !flowerChain.contains(x)).forEach(queue::add);
+		}
+		return flowerChain;
+	}
+
 	private void updateAfterMove(final Flower[] fs) {
 		for (Flower f : fs) {
 			// Gesetzte Flowers für alle verbieten
@@ -251,7 +264,7 @@ public class MainBoard implements Board {
 		}
 		playerData.get(currentPlayer).currentScore += updateScore(fs[0]);
 		// Scorecheck
-		if (!getFlowerBed(fs[0]).contains(fs[1])) {
+		if (!getFlowerChain(fs[0]).contains(getFlowerBed(fs[1]))) {
 			playerData.get(currentPlayer).currentScore += updateScore(fs[1]);
 		}
 	}
@@ -619,7 +632,6 @@ public class MainBoard implements Board {
 		return result;
 	}
 
-	// TODO: Datenstruktur damit nicht solchen Overhead?
 	private HashSet<HashSet<Flower>> getBedsConnectedToBed(final HashSet<Flower> bed) {
 		HashSet<HashSet<Flower>> bedsConnectedToBed = new HashSet<>();
 		for (Flower bedFlower : bed) {
