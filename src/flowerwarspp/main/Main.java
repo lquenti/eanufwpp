@@ -27,7 +27,7 @@ public class Main {
 				+ "[-delay <Verzögerung>] [-load <Spielstandname>] [-replay <Verzögerung>] [--debug] [--text] [--help]");
 		System.out.println();
 		System.out.println("Spielfeldgröße: Zahl zwischen 3 und 30");
-		System.out.println("Spielertyp:     \"human\", \"remote\", \"random\", \"simple\", oder \"adv1\"");
+		System.out.println("Spielertyp:     \"human\", \"remote\", \"random\", \"simple\", \"adv1\", oder \"adv2\"");
 		System.out.println("Verzögerung:    Zeit zwischen Zügen in Millisekunden.");
 		System.out.println("Spielstandname: Name des zu ladenden Spielstands, ohne Datei-Endung.");
 		System.out.println("Debug:          Zeigt Debug-Information im Game-Log an. Optionale Flag (hat"
