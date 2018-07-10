@@ -1,7 +1,6 @@
 package flowerwarspp.main;
 
 import java.rmi.RemoteException;
-import java.util.Iterator;
 
 import flowerwarspp.board.MainBoard;
 import flowerwarspp.io.*;
@@ -62,19 +61,19 @@ public class Game {
 
 		this.gameParameters = gameParameters;
 
-		if ( gameParameters.getDebug() )
+		if ( this.gameParameters.getDebug() )
 			Log.getInstance().setLogLevel(LogLevel.DEBUG);
 		else
 			Log.getInstance().setLogLevel(LogLevel.INFO);
 
 		Log.getInstance().setOutput(System.err);
 
-		if ( gameParameters.getText() ) {
-			TextInterface textInterface = new TextInterface();
+		if ( this.gameParameters.getText() ) {
+			final TextInterface textInterface = new TextInterface();
 			input = textInterface;
 			output = textInterface;
 		} else {
-			BoardFrame boardFrame = BoardFrame.getInstance();
+			final BoardFrame boardFrame = BoardFrame.getInstance();
 			input = boardFrame;
 			output = boardFrame;
 		}
@@ -132,6 +131,9 @@ public class Game {
 	}
 
 	private void initPlayers() {
+
+		Log.log0(LogLevel.INFO, LogModule.MAIN, "Initializing players.");
+
 		try {
 			currentPlayer.init(gameParameters.getBoardSize(), PlayerColor.Red);
 			oppositePlayer.init(gameParameters.getBoardSize(), PlayerColor.Blue);
@@ -147,6 +149,10 @@ public class Game {
 	 * Erzeugt einen Spieler und bietet ihn im Netzwerk an.
 	 */
 	private void offer() {
+
+		Log.log0(LogLevel.INFO, LogModule.MAIN, "Offering player " + gameParameters.getOfferType() + " on " +
+				"the network.");
+
 		try {
 			Player offeredPlayer = Players.createPlayer(gameParameters.getOfferType(), input);
 			Players.offerPlayer(new RemotePlayer(offeredPlayer, output));
@@ -170,6 +176,8 @@ public class Game {
 		currentPlayer = Players.createPlayer(gameParameters.getRedType(), input, new MainBoard(board));
 		oppositePlayer = Players.createPlayer(gameParameters.getBlueType(), input, new MainBoard(board));
 
+		Log.log0(LogLevel.INFO, LogModule.MAIN, "Players created.");
+
 		initPlayers();
 
 		viewer = board.viewer();
@@ -184,6 +192,9 @@ public class Game {
 	 * die nächste Iteration beginnt.
 	 */
 	private void run() {
+
+		Log.log0(LogLevel.INFO, LogModule.MAIN, "Starting main game loop.");
+
 		try {
 			while ( viewer.getStatus() == Status.Ok ) {
 				Log.log0(LogLevel.DEBUG, LogModule.MAIN, "Beginning game loop.");
@@ -235,6 +246,9 @@ public class Game {
 	private void replay( final long replayDelay ) {
 
 		if ( gameParameters.getSaveGameName() == null ) return;
+
+		Log.log0(LogLevel.INFO, LogModule.MAIN, "Starting replay of loaded savegame: "
+				+ gameParameters.getSaveGameName());
 
 		for ( final Move aSaveGame : saveGame ) {
 			board.make(aSaveGame);
