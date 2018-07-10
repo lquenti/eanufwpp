@@ -262,4 +262,8 @@ public class ArgumentParser {
     public long getReplay() throws ArgumentParserException {
         return Long.parseLong((String) getSetting("replay"));
     }
+
+    public boolean isHelp() throws ArgumentParserException {
+        return getFlag("help");
+    }
 }
