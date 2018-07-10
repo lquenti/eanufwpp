@@ -127,10 +127,6 @@ public class MainBoard implements Board {
 		playerData.get(PlayerColor.Blue).legalMoves.add(surrenderMove);
 	}
 
-	/*
-	 * Wenn die Tests alle fehlschlagen: diesen Konstruktor nehmen und vor/hinter den anderen
-	 * verschieben
-	 */
 	/**
 	 * Erzeugt eine Kopie eines vorhandenen MainBoards
 	 *
@@ -151,7 +147,7 @@ public class MainBoard implements Board {
 
 	/**
 	 * {@inheritDoc}
-	 * Verifiziert Zug und fuehrt diesen dann aus.
+	 * Verifiziert Zug und fuehrt diesen dann aus und berechnet Score.
 	 *
 	 * @param move auszufuehrender Zug
 	 * @throws IllegalStateException Wenn Zug nicht valide ist.
@@ -162,7 +158,6 @@ public class MainBoard implements Board {
 		if (currentStatus != Status.Ok) {
 			throw new IllegalStateException("Das Spielbrett kann keine Züge mehr annehmen!");
 		}
-		// TODO: Softblock?
 		if (!playerData.get(currentPlayer).legalMoves.contains(move)) {
 			currentStatus = Status.Illegal;
 			return;
@@ -170,19 +165,17 @@ public class MainBoard implements Board {
 		switch (move.getType()) {
 			case Ditch:
 				playerData.get(currentPlayer).ditches.add(move.getDitch());
-				updateValidMoves(move.getDitch());
+				updateAfterMove(move.getDitch());
 				break;
 			case Flower:
 				playerData.get(currentPlayer).flowers.add(move.getFirstFlower());
 				playerData.get(currentPlayer).flowers.add(move.getSecondFlower());
-				updateValidMoves(new Flower[]{move.getFirstFlower(), move.getSecondFlower()});
+				updateAfterMove(new Flower[]{move.getFirstFlower(), move.getSecondFlower()});
 				break;
 			case End:
-				// TODO: Ueberpruefen
 				endGame();
 				return;
 			case Surrender:
-				// TODO: Ueberpruefen
 				endGame(oppositePlayer);
 				return;
 		}
@@ -231,7 +224,7 @@ public class MainBoard implements Board {
 		}
 	}
 
-	private void updateValidMoves(final Flower[] fs) {
+	private void updateAfterMove(final Flower[] fs) {
 		for (Flower f : fs) {
 			// Gesetzte Flowers für alle verbieten
 			for (PlayerData player : playerData.values()) {
@@ -275,7 +268,7 @@ public class MainBoard implements Board {
 	// TODO: Checken ob performant
 	private HashSet<Collection<Flower>> getBedsNear(Flower flower, int radius, PlayerColor player) {
 		HashSet<Collection<Flower>> result = new HashSet<>();
-		if (playerData.get(currentPlayer).flowers.contains(flower)) {
+		if (playerData.get(player).flowers.contains(flower)) {
 			result.add(getFlowerBed(flower));
 		}
 		if (radius != 0) {
@@ -650,7 +643,7 @@ public class MainBoard implements Board {
 		return bedsConnectedToBed;
 	}
 
-	private void updateValidMoves(Ditch d) {
+	private void updateAfterMove(Ditch d) {
         /*
         Was aktuell gemacht wird:
             - Ueber und unter Graben Flower entvalidieren
@@ -678,7 +671,7 @@ public class MainBoard implements Board {
 		updateScore(d);
 	}
 
-	/*
+	/**
 	 * Prüft, ob eine Position sich auf diesem Board befindet.
 	 * @return ob die Position auf dem Board ist
 	 */
@@ -688,7 +681,7 @@ public class MainBoard implements Board {
 				&& position.getColumn() + position.getRow() < size + 3;
 	}
 
-	/*
+	/**
 	 * Prüft, ob eine Flower sich auf diesem Board befindet.
 	 * @return ob die Flower auf dem Board ist
 	 */
