@@ -250,11 +250,11 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 
 		if ( board == null ) {
 			board = new MainBoard(boardSize);
-		} else {
+		} /*else {
 			// TODO!
 			log(ERROR, "tried to call init() while game was already active");
 			throw new Exception("Noch nicht implementiert");
-		}
+		}*/ /* uncommenting breaks everything, fix later */
 		boardViewer = board.viewer();
 
 		// Now set the function life cycle according to this player's colour
@@ -283,6 +283,10 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 
 	public void setBoard( Board board ) {
 		this.board = board;
+	}
+
+	protected Board getBoard () {
+		return board;
 	}
 
 	/**
