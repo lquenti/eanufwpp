@@ -66,8 +66,6 @@ public class Game {
 		else
 			Log.getInstance().setLogLevel(LogLevel.INFO);
 
-		Log.getInstance().setLogModule(LogModule.PLAYER);
-
 		Log.getInstance().setOutput(System.err);
 
 		if ( this.gameParameters.getText() ) {
