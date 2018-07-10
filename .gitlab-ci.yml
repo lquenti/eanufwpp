@@ -45,3 +45,21 @@ dist:
             - dist
     only:
         - master
+
+build_pdf:
+  stage: dist
+  before_script:
+    - apt-get update -y
+    - gem install kramdown
+    - gem install prawn
+    - gem install prawn-table
+  after_script:
+    - git stage -A
+    - git commit -m "pdf created by pipeline"
+    - git push origin master
+  script:
+    - find . -name '*.md' -exec sh -c 'kramdown $0 --output pdf > $0.pdf' {} \;
+  artifacts:
+    untracked: true
+  only:
+    - master
