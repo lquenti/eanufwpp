@@ -248,13 +248,19 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 		// Set the colour
 		this.playerColour = playerColour;
 
+		// If the cycleState is not equal to NULL, we know for certain, that init() has already been called before.
+		// Here we have to handle starting a new game with this player, i.e. making sure we have a reset board and so
+		// on.
+		if (cycleState != PlayerFunction.NULL) {
+			// Set our board to null so that we need to create a new one. The rest (setting the correct instance
+			// variables and so on, is already handled within this method.
+			board = null;
+		}
+
 		if ( board == null ) {
 			board = new MainBoard(boardSize);
-		} /*else {
-			// TODO!
-			log(ERROR, "tried to call init() while game was already active");
-			throw new Exception("Noch nicht implementiert");
-		}*/ /* uncommenting breaks everything, fix later */
+		}
+
 		boardViewer = board.viewer();
 
 		// Now set the function life cycle according to this player's colour
