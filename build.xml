@@ -21,9 +21,11 @@
         <mkdir dir="${docdir}"/>
     </target>
     <target name="compile" depends="init" description="compile the source code">
-        <javac srcdir="${srcdir}" destdir="${builddir}" debug="true" includeantruntime="false">
+        <javac destdir="${builddir}" debug="true" includeantruntime="false">
             <classpath refid="classpath"/>
             <compilerarg value="-Xlint:unchecked"/>
+            <src path="${srcdir}"/>
+            <exclude name="**/package-info.java"/>
         </javac>
     </target>
     <target name="dist" depends="compile" description="generate the distributed jar">
