@@ -144,30 +144,17 @@ Wird noch implementiert. TODO
 Parameter           |       Optionen                        |       Beschreibung
 --------------------|---------------------------------------|----------------------
 **Notwendig**       |                                       |
-                    |                                       |
 `-size`             |Zahl zwischen 5 und 30 (inklusive)     |Die Größe des Spielbretts wird auf den gegebenen Wert gesetzt
-                    |                                       |
 `-red`              |Einer der oben genannten Spielertypen  |Setzt den Spielertypen des roten Spielers auf den gegebenen Typen
-                    |                                       |
 `-blue`             |Einer der oben genannten Spielertypen  |Setzt den Spielertypen des blauen Spielers auf den gegebenen Typen
-                    |                                       |
 **Optional**        |                                       |
-                    |                                       |
 `-delay`            |Zeit in Millisekunden                  |Verzögerung in Millisekunden zwischen Spielzügen
-                    |                                       |
 `-load`             |Name des Spielstands, ohne Dateiendung |Lädt den gegebenen Spielstand und setzt das Spiel fort
-                    |                                       |
 `-replay`           |Zeit in Millisekunden                  |Der geladene Spielzug wird Zug für Zug ausgeführt, mit der gegebenen Verzögerung zwischen den Zügen
-                    |                                       |
 **Netzwerkspiel**   |                                       |
-                    |                                       |
 `-offer`            |Einer der oben genannten Spielertypen  |Bietet den angegebenen Spielertypen im Netzwerk an
-                    |                                       |
 **Schalter**        |                                       |
-                    |                                       |
 `--debug`           |Keine                                  |Falls gesetzt, werden Debug-Informationen vom Logger aufgenommen und ausgegeben
-                    |                                       |
 `--text`            |Keine                                  |Falls gesetzt, wird das Spielgeschehen auf der Standardausgabe angezeigt, und nicht auf der graphischen Anzeige
-                    |                                       |
 `--help`            |Keine                                  |Zeigt eine kurze Hilfe an und beendet das Programm
 
