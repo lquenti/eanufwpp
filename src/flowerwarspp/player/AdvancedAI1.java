@@ -1,5 +1,6 @@
 package flowerwarspp.player;
 
+import flowerwarspp.board.MainBoard;
 import flowerwarspp.preset.*;
 
 import java.util.Collection;
@@ -54,8 +55,22 @@ public class AdvancedAI1 extends BaseAI {
 
 			case Ditch:
 				// TODO: Actually make some score calculation here. For now using ditch moves whenever possible is fine
-				return SCORE_DITCH;
 
+				// Simulate and check if ditch actually increases our points.
+				// This way we won't make duplicate/useless ditch moves.
+				// Works perfectly performance-wise, delay is close to none
+				MainBoard sim = new MainBoard((MainBoard) getBoard());
+				sim.make(move);
+
+				if ( sim.viewer().getPoints(getPlayerColour()) > boardViewer.getPoints(getPlayerColour()) )
+					return SCORE_DITCH;
+				else
+					return 0;
+
+			case End:
+				return 0;
+
+			case Surrender:
 			default:
 				return - 1;
 		}
@@ -66,7 +81,7 @@ public class AdvancedAI1 extends BaseAI {
 	 * Berechnet den Score für die Nachbarblumen beider Blumen eines Flower-Moves. Die Berechnung läuft für beide
 	 * Nachbarn glech, deshalb wurde sie in diese Methode ausgelagert.
 	 *
-	 * @param flowerNeighbors  Die Nachbarn einer Blume, dessen Score berechnet werden soll
+	 * @param flowerNeighbors Die Nachbarn einer Blume, dessen Score berechnet werden soll
 	 * @return Der Score basierend auf den Nachbarn einer Blume
 	 */
 	private int[] getNeighborScore( Collection<Flower> flowerNeighbors ) {
