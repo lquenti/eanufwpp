@@ -23,10 +23,6 @@ public class RandomAI extends BaseAI {
 	 */
 	@Override
 	protected int getMoveScore( final Move move ) {
-
-		if ( move.getType() == MoveType.Surrender )
-			return -1;
-
 		return 0;
 	}
 }

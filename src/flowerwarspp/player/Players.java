@@ -1,6 +1,7 @@
 package flowerwarspp.player;
 
 import java.rmi.Naming;
+import java.rmi.registry.LocateRegistry;
 import java.util.Scanner;
 
 import flowerwarspp.preset.*;
@@ -113,7 +114,10 @@ public class Players {
 		String name = inputScanner.nextLine();
 		Log.log0(LogLevel.INFO, LogModule.PLAYER, "Name of the remote player: " + name);
 
+		// TODO: Mit Naming.list den Namen verfügbarer Spieler anzeigen
+
 		try {
+			LocateRegistry.createRegistry(1099);
 			Naming.rebind(name, player);
 		} catch ( Exception e ) {
 			e.printStackTrace();

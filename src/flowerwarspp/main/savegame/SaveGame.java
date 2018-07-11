@@ -47,7 +47,7 @@ public class SaveGame implements Iterable<Move> {
 	 * Zeichen des Namens eines Spielstands ist immer ein Buchstabe und nie eine Zahl oder ein Underscore. Der Name darf
 	 * nicht leer sein.
 	 */
-	private static final Pattern saveGameNamePattern = Pattern.compile("\\p{Alpha}+[\\p{Alnum}|_]*");
+	private static final Pattern saveGameNamePattern = Pattern.compile("\\p{Alpha}+[\\p{Alnum}_]*");
 
 	/**
 	 * Diese {@link ArrayDeque} speichert die ausgeführten Spielzüge.
@@ -124,7 +124,7 @@ public class SaveGame implements Iterable<Move> {
 			for ( Move m
 					: madeMoves ) {
 
-				printWriter.println(m.toString() + ";" + m.hashCode() + ";" + currentPlayer
+				printWriter.println(m + ";" + m.hashCode() + ";" + currentPlayer
 						+ ", " + "#" + i);
 				currentPlayer = currentPlayer == Red ? Blue : Red;
 				i++;
