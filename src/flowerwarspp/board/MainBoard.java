@@ -347,7 +347,7 @@ public class MainBoard implements Board {
 			}
 		}
 		res.removeAll(tobeRemoved);
-		Log.log(LogLevel.DEBUG, LogModule.BOARD, "Allowing ditches: " + res);
+		Log.log(LogLevel.DUMP, LogModule.BOARD, "Allowing ditches: " + res);
 		return res;
 	}
 
@@ -738,7 +738,8 @@ public class MainBoard implements Board {
 		for (Position p : getPositions(d)) {
 			for (Ditch samePos : getDitchesAround(p)) {
 				for (PlayerData player : playerData.values()) {
-					Log.log(LogLevel.DEBUG, LogModule.BOARD, "Banning Ditch: " + samePos);
+					Log.log(LogLevel.DUMP
+							, LogModule.BOARD, "Banning Ditch: " + samePos);
 					player.legalMoves.remove(new Move(samePos));
 				}
 			}
