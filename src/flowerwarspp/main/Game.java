@@ -135,7 +135,7 @@ public class Game {
 		int draws = 0;
 
 		for ( int i = 0; i < n; i++ ) {
-			Log.log(LogLevel.INFO, LogModule.MAIN, "Spiel " + ( i + 1 ) + " von " + n + " wird gestartet...");
+			System.out.println("Spiel " + ( i + 1 ) + " von " + n + " wird gestartet...");
 
 			initLocalGame();
 			switch ( run() ) {
