@@ -241,7 +241,7 @@ public class MainBoard implements Board {
 			//  - Ditches halt checken
 			//  - Diese duerfen nicht an Blumen anliegen
 			//  - Ditch liegt noch nicht auf
-			generateNewDitches(getAdjacentDitches(f));
+			generateNewDitches(getPossibleDitches(f));
 
 			for (Ditch d : getEdgeDitches(f)) {
 				for (PlayerData player : playerData.values()) {
@@ -322,11 +322,15 @@ public class MainBoard implements Board {
 
 	private HashSet<Ditch> getAdjacentDitches(final Flower newFlower) {
 		HashSet<Ditch> res = new HashSet<>();
-		Position[] flowerPositions = getPositions(newFlower);
-		for (Position p : flowerPositions) {
+		for (Position p : getPositions(newFlower)) {
 			res.addAll(getDitchesAround(p));
 		}
+		return res;
+	}
 
+	private HashSet<Ditch> getPossibleDitches(final Flower newFlower) {
+		HashSet<Ditch> res = getAdjacentDitches(newFlower);
+		Position[] flowerPositions = getPositions(newFlower);
 		HashSet<Ditch> tobeRemoved = new HashSet<>(); // Um ConcurrentModificationException zu umgehen
 		for (Ditch d : res) {
 			// 1. Condition: Ob auf der anderen Seite eine Flower ist
@@ -694,7 +698,7 @@ public class MainBoard implements Board {
 	private HashSet<HashSet<Flower>> getBedsConnectedToBed(final HashSet<Flower> bed) {
 		HashSet<HashSet<Flower>> bedsConnectedToBed = new HashSet<>();
 		for (Flower bedFlower : bed) {
-			HashSet<Ditch> flowerDitches = getAdjacentDitches(bedFlower);
+			HashSet<Ditch> flowerDitches = getPossibleDitches(bedFlower);
 
 			for (Ditch d : flowerDitches) {
 				if (!playerData.get(currentPlayer).ditches.contains(d)) {
