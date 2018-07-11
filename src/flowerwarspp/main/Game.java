@@ -60,15 +60,20 @@ public class Game {
 	Game( final GameParameters gameParameters ) {
 
 		this.gameParameters = gameParameters;
+		init();
+	}
 
-		if ( this.gameParameters.getDebug() )
+	private void init() {
+		// Dem Logger mitteilen, ob Debug-Nachrichten angezeigt werden sollen, oder nicht.
+		if ( gameParameters.getDebug() )
 			Log.setLogLevel(LogLevel.DEBUG);
 		else
 			Log.setLogLevel(LogLevel.INFO);
 
 		Log.setOutput(System.err);
 
-		if ( this.gameParameters.getText() ) {
+		// Den Output gemäß der Kommandozeilenparameter initialisieren.
+		if ( gameParameters.getText() ) {
 			final TextInterface textInterface = new TextInterface();
 			input = textInterface;
 			output = textInterface;
@@ -78,24 +83,49 @@ public class Game {
 			output = boardFrame;
 		}
 
-		if (gameParameters.getQuiet()) {
+		if ( gameParameters.getQuiet() ) {
 			output = new DummyOutput();
 		}
 
-		if ( this.gameParameters.getOfferType() != null ) {
-			offer();
-		} else if ( this.gameParameters.getSaveGameName() != null ) {
-			loadGame();
-			run();
-		} else if (gameParameters.getNumberOfGames() > 1) {
-			runGameWithStats();
+		// Das Spiel auf Basis der Kommandozeilenparameter starten.
+		if ( gameParameters.getOfferType() != null ) {
+			try {
+				offer();
+			} catch ( RemoteException e ) {
+				Log.log(LogLevel.ERROR, LogModule.MAIN, "There was an error offering the player in the " +
+						"network: " + e.getMessage());
+				System.out.println("Der Spieler konnte nicht im Netzwerk angeboten werden.");
+			}
+		} else if ( gameParameters.getSaveGameName() != null ) {
+			try {
+				loadGame();
+				run();
+			} catch ( Exception e ) {
+				Log.log(LogLevel.ERROR, LogModule.MAIN, "There was an error loading the savegame "
+						+ gameParameters.getSaveGameName() + ": " + e.getMessage());
+				System.out.println("Der gegebene Spielstand konnte nicht geladen werden.");
+			}
+		} else if ( gameParameters.getNumberOfGames() > 1 ) {
+			try {
+				runGameWithStats();
+			} catch ( Exception e ) {
+				Log.log(LogLevel.ERROR, LogModule.MAIN, "There was an error initializing the players: "
+						+ e.getMessage());
+				System.out.println("Waehrend der Initialisierung der Spieler ist ein Fehler aufgetreten.");
+			}
 		} else {
-			init();
-			run();
+			try {
+				initLocalGame();
+				run();
+			} catch ( Exception e ) {
+				Log.log(LogLevel.ERROR, LogModule.MAIN, "There was an error initializing the players: "
+						+ e.getMessage());
+				System.out.println("Waehrend der Initialisierung der Spieler ist ein Fehler aufgetreten.");
+			}
 		}
 	}
 
-	private void runGameWithStats() {
+	private void runGameWithStats() throws Exception {
 		int n = gameParameters.getNumberOfGames();
 
 		int redWins = 0;
@@ -104,14 +134,20 @@ public class Game {
 		int bluePoints = 0;
 		int draws = 0;
 
-		for (int i = 0; i < n; i++) {
-			Log.log(LogLevel.INFO, LogModule.MAIN, "Starting game " + (i+1) + " of " + n);
+		for ( int i = 0; i < n; i++ ) {
+			Log.log(LogLevel.INFO, LogModule.MAIN, "Spiel " + ( i + 1 ) + " von " + n + " wird gestartet...");
 
-			init();
-			switch (run()) {
-				case RedWin: redWins++; break;
-				case BlueWin: blueWins++; break;
-				case Draw: draws++; break;
+			initLocalGame();
+			switch ( run() ) {
+				case RedWin:
+					redWins++;
+					break;
+				case BlueWin:
+					blueWins++;
+					break;
+				case Draw:
+					draws++;
+					break;
 			}
 
 			redPoints += viewer.getPoints(PlayerColor.Red);
@@ -119,46 +155,40 @@ public class Game {
 		}
 
 		System.out.println();
-		System.out.println("==============================================");
-		System.out.println("All games finished with the following results:");
-		System.out.println("==============================================");
+		System.out.println("=======================================");
+		System.out.println("Alle Spiele wurden beendet. Ergebnisse:");
+		System.out.println("=======================================");
 		System.out.println();
-		System.out.println("Red player wins: " + redWins + " (" + (double)redWins/n*100 + "%)");
-		System.out.println("Blue player wins: " + blueWins + " (" + (double)blueWins/n*100 + "%)");
-		System.out.println("Draws: " + draws + " (" + (double)draws/n*100 + "%)");
+		System.out.println("Gewonnene Spiele (Rot): " + redWins + " (" + (double) redWins / n * 100 + "%)");
+		System.out.println("Gewonnene Spiele (Blau): " + blueWins + " (" + (double) blueWins / n * 100 + "%)");
+		System.out.println("Unentschieden: " + draws + " (" + (double) draws / n * 100 + "%)");
 		System.out.println();
-		System.out.println("Average points for red player: " + (double)redPoints / n);
-		System.out.println("Average points for blue player: " + (double)bluePoints / n);
+		System.out.println("Durchschnittliche Punktezahl (Rot): " + (double) redPoints / n);
+		System.out.println("Durchschnittliche Punktezahl (Blue): " + (double) bluePoints / n);
 	}
 
-	private void loadGame() {
+	private void loadGame() throws Exception {
 
-		Log.log(LogLevel.DEBUG, LogModule.MAIN, "Started loading savegame " +
-				gameParameters.getSaveGameName());
+		Log.log(LogLevel.DEBUG, LogModule.MAIN, "Started loading savegame " + gameParameters.getSaveGameName());
 
-		try {
-			saveGame = SaveGame.load(gameParameters.getSaveGameName());
-		} catch ( Exception e ) {
-			Log.log(LogLevel.ERROR, LogModule.MAIN, "There was an error loading the save game:");
-			Log.log(LogLevel.ERROR, LogModule.MAIN, e.getMessage());
-			System.out.println("Der Spielstand" + gameParameters.getSaveGameName() + " konnte nicht geladen werden.");
-			return;
-		}
+		// Es wird versucht, den verlangten Spielstand zu laden. load(String) kann eine LoadException werfen, diese
+		// wird dann vom Hauptprogramm in init() vernünftig behandelt.
+		saveGame = SaveGame.load(gameParameters.getSaveGameName());
 
-		if ( gameParameters.getReplaySpeed() > 0 ) {
-			board = new MainBoard(gameParameters.getBoardSize());
-		} else {
-			board = saveGame.initBoard();
-		}
+		// Spielbrett gemäß der Kommandozeilenparameter erstellen.
+		board = new MainBoard(gameParameters.getBoardSize());
 
+		// Dem Output-Objekt wird eine Referenz auf den Viewer des neu erzeugten Spielbretts gegeben.
 		viewer = board.viewer();
 		output.setViewer(viewer);
 
-		if ( gameParameters.getReplaySpeed() > 0 )
-			replay(gameParameters.getReplaySpeed());
+		// Das Replay des Spielstands wird nun ausgeführt.
+		replay();
 
 		Log.log(LogLevel.INFO, LogModule.MAIN, "Savegame " + gameParameters.getSaveGameName() + " loaded");
 
+		// Der Spieler, welcher aktuell am Zug sein sollte und dessen Gegner werden entsprechend erstellt und
+		// initialisiert.
 		if ( board.viewer().getTurn() == PlayerColor.Red ) {
 
 			currentPlayer = Players.createPlayer(gameParameters.getRedType(), input, new MainBoard(board));
@@ -168,58 +198,53 @@ public class Game {
 			oppositePlayer = Players.createPlayer(gameParameters.getRedType(), input, new MainBoard(board));
 			currentPlayer = Players.createPlayer(gameParameters.getBlueType(), input, new MainBoard(board));
 		}
-		initPlayers();
 
+		initPlayers();
 	}
 
-	private void initPlayers() {
+	private void initPlayers() throws Exception {
 
 		Log.log(LogLevel.INFO, LogModule.MAIN, "Initializing players.");
 
-		try {
-			currentPlayer.init(gameParameters.getBoardSize(), PlayerColor.Red);
-			oppositePlayer.init(gameParameters.getBoardSize(), PlayerColor.Blue);
-		} catch ( Exception e ) {
-			Log.log(LogLevel.ERROR, LogModule.MAIN, "There was an error initializing the players: "
-					+ e.getMessage());
-			System.out.println("Waehrend der Initialisierung der Spieler ist ein Fehler aufgetreten:");
-			e.printStackTrace();
-		}
+		currentPlayer.init(gameParameters.getBoardSize(), PlayerColor.Red);
+		oppositePlayer.init(gameParameters.getBoardSize(), PlayerColor.Blue);
 	}
 
 	/**
 	 * Erzeugt einen Spieler und bietet ihn im Netzwerk an.
 	 */
-	private void offer() {
+	private void offer() throws RemoteException {
 
 		Log.log(LogLevel.INFO, LogModule.MAIN, "Offering player " + gameParameters.getOfferType() + " on " +
 				"the network.");
 
-		try {
-			Player offeredPlayer = Players.createPlayer(gameParameters.getOfferType(), input);
-			Players.offerPlayer(new RemotePlayer(offeredPlayer, output));
-		} catch ( RemoteException e ) {
-			Log.log(LogLevel.ERROR, LogModule.MAIN, "There was an error offering the player in the network.");
-		}
+		Player offeredPlayer = Players.createPlayer(gameParameters.getOfferType(), input);
+		Players.offerPlayer(new RemotePlayer(offeredPlayer, output));
 	}
 
 	/**
 	 * Initialisiert das Spiel. Das Spielbrett und die beiden Spieler werden initialisiert.
 	 */
-	private void init() {
+	private void initLocalGame() throws Exception {
 
+		// Eine neues Spielbrett wird mit der gegebenen Größe initialisiert.
 		board = new MainBoard(gameParameters.getBoardSize());
+
+		// Zum Speichern des Spiels wird ein neues Objekt der Klasse saveGame erstellt.
 		saveGame = new SaveGame(gameParameters.getBoardSize());
 
 		Log.log(LogLevel.INFO, LogModule.MAIN, "Initialized main board.");
 
+		// Roter und blauer Spieler werden auf Grundlage der Kommandozeilenparameter mit createPlayers() erstellt.
 		currentPlayer = Players.createPlayer(gameParameters.getRedType(), input, new MainBoard(board));
 		oppositePlayer = Players.createPlayer(gameParameters.getBlueType(), input, new MainBoard(board));
 
 		Log.log(LogLevel.INFO, LogModule.MAIN, "Players created.");
 
+		// Beide Spieler werden initialisiert.
 		initPlayers();
 
+		// Dem Output-Objekt wird eine Referenz auf den Viewer des neu erzeugten Spielbretts gegeben.
 		viewer = board.viewer();
 		output.setViewer(viewer);
 	}
@@ -232,6 +257,8 @@ public class Game {
 	 * die nächste Iteration beginnt.
 	 */
 	private Status run() {
+
+		// TODO: Refactor!!!
 
 		Log.log(LogLevel.INFO, LogModule.MAIN, "Starting main game loop.");
 
@@ -285,21 +312,21 @@ public class Game {
 		return viewer.getStatus();
 	}
 
-	private void replay( final long replayDelay ) {
-
-		if ( gameParameters.getSaveGameName() == null ) return;
+	private void replay() throws InterruptedException {
 
 		Log.log(LogLevel.INFO, LogModule.MAIN, "Starting replay of loaded savegame: "
 				+ gameParameters.getSaveGameName());
 
+		// Mit dem, von SaveGame implementierten, Iterator wird durch alle Züge iteriert. Diese werden jeweils auf dem
+		// Spielbrett ausgeführt.
 		for ( final Move aSaveGame : saveGame ) {
 			board.make(aSaveGame);
-			output.refresh();
-			try {
-				Thread.sleep(replayDelay);
-			} catch ( InterruptedException e ) {
-				e.printStackTrace();
+			if (gameParameters.getReplaySpeed() > 0) {
+				output.refresh();
+				Thread.sleep(gameParameters.getReplaySpeed());
 			}
 		}
+
+		output.refresh();
 	}
 }
