@@ -87,10 +87,48 @@ public class Game {
 		} else if ( this.gameParameters.getSaveGameName() != null ) {
 			loadGame();
 			run();
+		} else if (gameParameters.getNumberOfGames() > 1) {
+			runGameWithStats();
 		} else {
 			init();
 			run();
 		}
+	}
+
+	private void runGameWithStats() {
+		int n = gameParameters.getNumberOfGames();
+
+		int redWins = 0;
+		int redPoints = 0;
+		int blueWins = 0;
+		int bluePoints = 0;
+		int draws = 0;
+
+		for (int i = 0; i < n; i++) {
+			Log.log0(LogLevel.INFO, LogModule.MAIN, "Starting game " + (i+1) + " of " + n);
+
+			init();
+			switch (run()) {
+				case RedWin: redWins++; break;
+				case BlueWin: blueWins++; break;
+				case Draw: draws++; break;
+			}
+
+			redPoints += viewer.getPoints(PlayerColor.Red);
+			bluePoints += viewer.getPoints(PlayerColor.Blue);
+		}
+
+		Log.log0(LogLevel.INFO, LogModule.MAIN, "");
+		Log.log0(LogLevel.INFO, LogModule.MAIN, "==============================================");
+		Log.log0(LogLevel.INFO, LogModule.MAIN, "All games finished with the following results:");
+		Log.log0(LogLevel.INFO, LogModule.MAIN, "==============================================");
+		Log.log0(LogLevel.INFO, LogModule.MAIN, "");
+		Log.log0(LogLevel.INFO, LogModule.MAIN, "Red player wins: " + redWins + " (" + (double)redWins/n*100 + "%)");
+		Log.log0(LogLevel.INFO, LogModule.MAIN, "Blue player wins: " + blueWins + " (" + (double)blueWins/n*100 + "%)");
+		Log.log0(LogLevel.INFO, LogModule.MAIN, "Draws: " + draws + " (" + (double)draws/n*100 + "%)");
+		Log.log0(LogLevel.INFO, LogModule.MAIN, "");
+		Log.log0(LogLevel.INFO, LogModule.MAIN, "Average points for red player: " + (double)redPoints / n);
+		Log.log0(LogLevel.INFO, LogModule.MAIN, "Average points for blue player: " + (double)bluePoints / n);
 	}
 
 	private void loadGame() {
@@ -195,7 +233,7 @@ public class Game {
 	 * Player#update(Move, Status)}  übergeben, abschließend werden aktueller Spieler und Gegenspieler vertauscht und
 	 * die nächste Iteration beginnt.
 	 */
-	private void run() {
+	private Status run() {
 
 		Log.log0(LogLevel.INFO, LogModule.MAIN, "Starting main game loop.");
 
@@ -245,6 +283,8 @@ public class Game {
 		}
 
 		Log.log0(LogLevel.INFO, LogModule.MAIN, "Game ended with status " + viewer.getStatus());
+
+		return viewer.getStatus();
 	}
 
 	private void replay( final long replayDelay ) {

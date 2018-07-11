@@ -55,6 +55,11 @@ class GameParameters {
 	private boolean quiet;
 
 	/**
+	 * Anzahl der Spiele, die gespielt werden sollen.
+	 */
+	private int numberOfGames;
+
+	/**
 	 * Name des zu ladenden Spielstands (falls geladen werden soll).
 	 */
 	private String saveGameName;
@@ -92,6 +97,12 @@ class GameParameters {
 				quiet = argumentParser.isQuiet();
 			} catch ( ArgumentParserException e ) {
 				quiet = false;
+			}
+
+			try {
+				numberOfGames = argumentParser.getNumberOfGames();
+			} catch ( ArgumentParserException e ) {
+				numberOfGames = 1;
 			}
 
 			// If we want to offer the player, set that variable and return
@@ -207,6 +218,15 @@ class GameParameters {
 	 */
 	boolean getQuiet() {
 		return quiet;
+	}
+
+	/**
+	 * Gibt {@link #numberOfGames} zurück.
+	 *
+	 * @return Wert von {@link #numberOfGames}
+	 */
+	int getNumberOfGames() {
+		return numberOfGames;
 	}
 
 	/**

@@ -263,6 +263,10 @@ public class ArgumentParser {
         return getFlag("quiet");
     }
 
+    public int getNumberOfGames() throws ArgumentParserException {
+        return Integer.parseInt((String) getSetting("numberOfGames"));
+    }
+
     public long getReplay() throws ArgumentParserException {
         return Long.parseLong((String) getSetting("replay"));
     }
