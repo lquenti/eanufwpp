@@ -143,7 +143,7 @@ class GameParameters {
 			}
 
 		} catch ( ArgumentParserException e ) {
-			Log.log0(LogLevel.ERROR, LogModule.MAIN, "Invalid arguments passed: " + Arrays.toString(args));
+			Log.log(LogLevel.ERROR, LogModule.MAIN, "Invalid arguments passed: " + Arrays.toString(args));
 			Main.quitWithUsage();
 		}
 	}

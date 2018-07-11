@@ -49,7 +49,7 @@ public class Players {
 				break;
 			default:
 				System.err.println("Unbekannter Spielertyp " + type);
-				Log.log0(LogLevel.ERROR, LogModule.PLAYER,
+				Log.log(LogLevel.ERROR, LogModule.PLAYER,
 						"Players.createPlayer: Invalid PlayerType passed: " + type);
 				return null;
 		}
@@ -82,18 +82,18 @@ public class Players {
 
 		System.out.print("Adresse des entfernten Spielers: ");
 		String host = inputScanner.nextLine();
-		Log.log0(LogLevel.INFO, LogModule.PLAYER, "Address of the remote player: " + host);
+		Log.log(LogLevel.INFO, LogModule.PLAYER, "Address of the remote player: " + host);
 
 		System.out.print("Port des entfernten Spielers [1099]: ");
 		String port = inputScanner.nextLine();
 		if ( port.equals("") ) {
 			port = "1099";
 		}
-		Log.log0(LogLevel.INFO, LogModule.PLAYER, "Port of the remote player: " + port);
+		Log.log(LogLevel.INFO, LogModule.PLAYER, "Port of the remote player: " + port);
 
 		System.out.print("Name des entfernten Spielers: ");
 		String name = inputScanner.nextLine();
-		Log.log0(LogLevel.INFO, LogModule.PLAYER, "Name of the remote player: " + name);
+		Log.log(LogLevel.INFO, LogModule.PLAYER, "Name of the remote player: " + name);
 
 		Player result = null;
 		try {
@@ -112,7 +112,7 @@ public class Players {
 		Scanner inputScanner = new Scanner(System.in);
 		System.out.print("Name des entfernten Spielers: ");
 		String name = inputScanner.nextLine();
-		Log.log0(LogLevel.INFO, LogModule.PLAYER, "Name of the remote player: " + name);
+		Log.log(LogLevel.INFO, LogModule.PLAYER, "Name of the remote player: " + name);
 
 		// TODO: Mit Naming.list den Namen verfügbarer Spieler anzeigen
 

@@ -2,7 +2,6 @@ package flowerwarspp.main.savegame;
 
 import flowerwarspp.board.MainBoard;
 import flowerwarspp.preset.*;
-import flowerwarspp.util.Convert;
 import flowerwarspp.util.log.*;
 
 import java.io.*;
@@ -104,7 +103,7 @@ public class SaveGame implements Iterable<Move> {
 
 		Matcher matcher = saveGameNamePattern.matcher(saveGameName);
 		if ( ! matcher.find() ) {
-			Log.log0(LogLevel.ERROR, LogModule.MAIN, "The name of the savegame may only contain alphanumeric" +
+			Log.log(LogLevel.ERROR, LogModule.MAIN, "The name of the savegame may only contain alphanumeric" +
 					" characters and underscores");
 			throw new Exception("Der Dateiname darf nur alpahnumerische Zeichen oder Underscores enthalten, das" +
 					" erste Zeichen muss ein Buchstabe sein");
@@ -133,10 +132,10 @@ public class SaveGame implements Iterable<Move> {
 			printWriter.close();
 			System.out.println("Spielstand " + saveGameName + " wurde gespeichert unter");
 			System.out.println(getFilePath(saveGameName));
-			Log.log0(LogLevel.INFO, LogModule.MAIN, "Game was saved to: " + getFilePath(saveGameName));
+			Log.log(LogLevel.INFO, LogModule.MAIN, "Game was saved to: " + getFilePath(saveGameName));
 
 		} catch ( IOException ioe ) {
-			Log.log0(LogLevel.ERROR, LogModule.MAIN, "Saving the game failed: " + ioe.getMessage());
+			Log.log(LogLevel.ERROR, LogModule.MAIN, "Saving the game failed: " + ioe.getMessage());
 			ioe.printStackTrace();
 		}
 	}
@@ -155,7 +154,7 @@ public class SaveGame implements Iterable<Move> {
 
 		Matcher matcher = saveGameNamePattern.matcher(saveGameName);
 		if ( ! matcher.find() ) {
-			Log.log0(LogLevel.ERROR, LogModule.MAIN, "The name of the savegame may only contain alpha" +
+			Log.log(LogLevel.ERROR, LogModule.MAIN, "The name of the savegame may only contain alpha" +
 					"numeric characters and underscores");
 			return null;
 		}
@@ -173,7 +172,7 @@ public class SaveGame implements Iterable<Move> {
 				int hashCode = Integer.parseInt(currentLine.split(";", 3)[1]);
 
 				if (move.hashCode() != hashCode) {
-					Log.log0(LogLevel.ERROR, LogModule.MAIN, "The hasCode of the loaded move was not equal " +
+					Log.log(LogLevel.ERROR, LogModule.MAIN, "The hasCode of the loaded move was not equal " +
 							"to the hasCode stored in the savegame");
 					throw new Exception("Der hashCode des geladenen Spielzugs stimmt nicht mit dem hinterlegten" +
 							"hashCode überein!");

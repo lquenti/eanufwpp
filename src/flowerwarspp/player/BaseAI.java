@@ -113,7 +113,7 @@ abstract class BaseAI extends BasePlayer {
 		}
 
 		// Manually flush the log now that the data dump is complete...
-		Log.getInstance().flush();
+		Log.flush();
 
 		log(LogLevel.DEBUG, "highestScore: " + highestScore + ", highestScoredMoves: " + highestScoredMoves);
 

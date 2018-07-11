@@ -303,6 +303,6 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	 * @param message Die Nachricht des Log-Eintrags
 	 */
 	protected void log( LogLevel level, String message ) {
-		Log.getInstance().log(level, PLAYER, "Player " + playerColour + ": " + message);
+		Log.log(level, PLAYER, "Player " + playerColour + ": " + message);
 	}
 }

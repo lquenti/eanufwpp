@@ -62,11 +62,11 @@ public class Game {
 		this.gameParameters = gameParameters;
 
 		if ( this.gameParameters.getDebug() )
-			Log.getInstance().setLogLevel(LogLevel.DEBUG);
+			Log.setLogLevel(LogLevel.DEBUG);
 		else
-			Log.getInstance().setLogLevel(LogLevel.INFO);
+			Log.setLogLevel(LogLevel.INFO);
 
-		Log.getInstance().setOutput(System.err);
+		Log.setOutput(System.err);
 
 		if ( this.gameParameters.getText() ) {
 			final TextInterface textInterface = new TextInterface();
@@ -105,7 +105,7 @@ public class Game {
 		int draws = 0;
 
 		for (int i = 0; i < n; i++) {
-			Log.log0(LogLevel.INFO, LogModule.MAIN, "Starting game " + (i+1) + " of " + n);
+			Log.log(LogLevel.INFO, LogModule.MAIN, "Starting game " + (i+1) + " of " + n);
 
 			init();
 			switch (run()) {
@@ -118,31 +118,31 @@ public class Game {
 			bluePoints += viewer.getPoints(PlayerColor.Blue);
 		}
 
-		Log.log0(LogLevel.INFO, LogModule.MAIN, "");
-		Log.log0(LogLevel.INFO, LogModule.MAIN, "==============================================");
-		Log.log0(LogLevel.INFO, LogModule.MAIN, "All games finished with the following results:");
-		Log.log0(LogLevel.INFO, LogModule.MAIN, "==============================================");
-		Log.log0(LogLevel.INFO, LogModule.MAIN, "");
-		Log.log0(LogLevel.INFO, LogModule.MAIN, "Red player wins: " + redWins + " (" + (double)redWins/n*100 + "%)");
-		Log.log0(LogLevel.INFO, LogModule.MAIN, "Blue player wins: " + blueWins + " (" + (double)blueWins/n*100 + "%)");
-		Log.log0(LogLevel.INFO, LogModule.MAIN, "Draws: " + draws + " (" + (double)draws/n*100 + "%)");
-		Log.log0(LogLevel.INFO, LogModule.MAIN, "");
-		Log.log0(LogLevel.INFO, LogModule.MAIN, "Average points for red player: " + (double)redPoints / n);
-		Log.log0(LogLevel.INFO, LogModule.MAIN, "Average points for blue player: " + (double)bluePoints / n);
+		System.out.println();
+		System.out.println("==============================================");
+		System.out.println("All games finished with the following results:");
+		System.out.println("==============================================");
+		System.out.println();
+		System.out.println("Red player wins: " + redWins + " (" + (double)redWins/n*100 + "%)");
+		System.out.println("Blue player wins: " + blueWins + " (" + (double)blueWins/n*100 + "%)");
+		System.out.println("Draws: " + draws + " (" + (double)draws/n*100 + "%)");
+		System.out.println();
+		System.out.println("Average points for red player: " + (double)redPoints / n);
+		System.out.println("Average points for blue player: " + (double)bluePoints / n);
 	}
 
 	private void loadGame() {
 
-		Log.log0(LogLevel.DEBUG, LogModule.MAIN, "Started loading savegame " +
+		Log.log(LogLevel.DEBUG, LogModule.MAIN, "Started loading savegame " +
 				gameParameters.getSaveGameName());
 
 		try {
 			saveGame = SaveGame.load(gameParameters.getSaveGameName());
 		} catch ( Exception e ) {
-			Log.log0(LogLevel.ERROR, LogModule.MAIN, "There was an error loading the save game:");
-			Log.log0(LogLevel.ERROR, LogModule.MAIN, e.getMessage());
-			e.printStackTrace();
-			System.exit(Main.ERRORCODE_LOAD_FAILED);
+			Log.log(LogLevel.ERROR, LogModule.MAIN, "There was an error loading the save game:");
+			Log.log(LogLevel.ERROR, LogModule.MAIN, e.getMessage());
+			System.out.println("Der Spielstand" + gameParameters.getSaveGameName() + " konnte nicht geladen werden.");
+			return;
 		}
 
 		if ( gameParameters.getReplaySpeed() > 0 ) {
@@ -157,7 +157,7 @@ public class Game {
 		if ( gameParameters.getReplaySpeed() > 0 )
 			replay(gameParameters.getReplaySpeed());
 
-		Log.log0(LogLevel.INFO, LogModule.MAIN, "Savegame " + gameParameters.getSaveGameName() + " loaded");
+		Log.log(LogLevel.INFO, LogModule.MAIN, "Savegame " + gameParameters.getSaveGameName() + " loaded");
 
 		if ( board.viewer().getTurn() == PlayerColor.Red ) {
 
@@ -174,13 +174,13 @@ public class Game {
 
 	private void initPlayers() {
 
-		Log.log0(LogLevel.INFO, LogModule.MAIN, "Initializing players.");
+		Log.log(LogLevel.INFO, LogModule.MAIN, "Initializing players.");
 
 		try {
 			currentPlayer.init(gameParameters.getBoardSize(), PlayerColor.Red);
 			oppositePlayer.init(gameParameters.getBoardSize(), PlayerColor.Blue);
 		} catch ( Exception e ) {
-			Log.log0(LogLevel.ERROR, LogModule.MAIN, "There was an error initializing the players: "
+			Log.log(LogLevel.ERROR, LogModule.MAIN, "There was an error initializing the players: "
 					+ e.getMessage());
 			System.out.println("Waehrend der Initialisierung der Spieler ist ein Fehler aufgetreten:");
 			e.printStackTrace();
@@ -192,16 +192,14 @@ public class Game {
 	 */
 	private void offer() {
 
-		Log.log0(LogLevel.INFO, LogModule.MAIN, "Offering player " + gameParameters.getOfferType() + " on " +
+		Log.log(LogLevel.INFO, LogModule.MAIN, "Offering player " + gameParameters.getOfferType() + " on " +
 				"the network.");
 
 		try {
 			Player offeredPlayer = Players.createPlayer(gameParameters.getOfferType(), input);
 			Players.offerPlayer(new RemotePlayer(offeredPlayer, output));
 		} catch ( RemoteException e ) {
-			Log.log0(LogLevel.ERROR, LogModule.MAIN, "There was an error offering the player: "
-					+ e.getMessage());
-			e.printStackTrace();
+			Log.log(LogLevel.ERROR, LogModule.MAIN, "There was an error offering the player in the network.");
 		}
 	}
 
@@ -213,12 +211,12 @@ public class Game {
 		board = new MainBoard(gameParameters.getBoardSize());
 		saveGame = new SaveGame(gameParameters.getBoardSize());
 
-		Log.log0(LogLevel.INFO, LogModule.MAIN, "Initialized main board.");
+		Log.log(LogLevel.INFO, LogModule.MAIN, "Initialized main board.");
 
 		currentPlayer = Players.createPlayer(gameParameters.getRedType(), input, new MainBoard(board));
 		oppositePlayer = Players.createPlayer(gameParameters.getBlueType(), input, new MainBoard(board));
 
-		Log.log0(LogLevel.INFO, LogModule.MAIN, "Players created.");
+		Log.log(LogLevel.INFO, LogModule.MAIN, "Players created.");
 
 		initPlayers();
 
@@ -235,37 +233,37 @@ public class Game {
 	 */
 	private Status run() {
 
-		Log.log0(LogLevel.INFO, LogModule.MAIN, "Starting main game loop.");
+		Log.log(LogLevel.INFO, LogModule.MAIN, "Starting main game loop.");
 
 		try {
 			while ( viewer.getStatus() == Status.Ok ) {
-				Log.log0(LogLevel.DEBUG, LogModule.MAIN, "Beginning game loop.");
+				Log.log(LogLevel.DEBUG, LogModule.MAIN, "Beginning game loop.");
 				Move move = null;
 				try {
-					Log.log0(LogLevel.DEBUG, LogModule.MAIN, "Requesting move from player " + viewer.getTurn() + ".");
+					Log.log(LogLevel.DEBUG, LogModule.MAIN, "Requesting move from player " + viewer.getTurn() + ".");
 					move = currentPlayer.request();
-					Log.log0(LogLevel.DEBUG, LogModule.MAIN, "Player " + viewer.getTurn() + " returned move " + move);
+					Log.log(LogLevel.DEBUG, LogModule.MAIN, "Player " + viewer.getTurn() + " returned move " + move);
 				} catch ( Exception e ) {
-					Log.log0(LogLevel.INFO, LogModule.MAIN, "Player " + viewer.getTurn() + " didn't make a " +
+					Log.log(LogLevel.INFO, LogModule.MAIN, "Player " + viewer.getTurn() + " didn't make a " +
 							"move.");
-					Log.log0(LogLevel.DEBUG, LogModule.MAIN, "Message: " + e.getMessage());
+					Log.log(LogLevel.DEBUG, LogModule.MAIN, "Message: " + e.getMessage());
 					move = new Move(MoveType.Surrender);
 				}
 
-				Log.log0(LogLevel.DEBUG, LogModule.MAIN, "Making move on main board.");
+				Log.log(LogLevel.DEBUG, LogModule.MAIN, "Making move on main board.");
 				board.make(move);
 				saveGame.add(move);
 
 				try {
-					Log.log0(LogLevel.DEBUG, LogModule.MAIN, "Confirming status.");
+					Log.log(LogLevel.DEBUG, LogModule.MAIN, "Confirming status.");
 					currentPlayer.confirm(viewer.getStatus());
-					Log.log0(LogLevel.DEBUG, LogModule.MAIN, "Updating opposite player.");
+					Log.log(LogLevel.DEBUG, LogModule.MAIN, "Updating opposite player.");
 					oppositePlayer.update(move, viewer.getStatus());
 				} catch ( Exception e ) {
-					Log.log0(LogLevel.DEBUG, LogModule.MAIN, e.getMessage());
+					Log.log(LogLevel.DEBUG, LogModule.MAIN, e.getMessage());
 				}
 
-				Log.log0(LogLevel.DEBUG, LogModule.MAIN, "Refreshing output.");
+				Log.log(LogLevel.DEBUG, LogModule.MAIN, "Refreshing output.");
 				output.refresh();
 
 				Player t = currentPlayer;
@@ -276,13 +274,13 @@ public class Game {
 			}
 
 		} catch ( Exception e ) {
-			Log.log0(LogLevel.ERROR, LogModule.MAIN, "There was an error during the game loop: "
+			Log.log(LogLevel.ERROR, LogModule.MAIN, "There was an error during the game loop: "
 					+ e.getMessage());
 			System.out.println("Es ist ein Fehler aufgetreten:");
 			e.printStackTrace();
 		}
 
-		Log.log0(LogLevel.INFO, LogModule.MAIN, "Game ended with status " + viewer.getStatus());
+		Log.log(LogLevel.INFO, LogModule.MAIN, "Game ended with status " + viewer.getStatus());
 
 		return viewer.getStatus();
 	}
@@ -291,7 +289,7 @@ public class Game {
 
 		if ( gameParameters.getSaveGameName() == null ) return;
 
-		Log.log0(LogLevel.INFO, LogModule.MAIN, "Starting replay of loaded savegame: "
+		Log.log(LogLevel.INFO, LogModule.MAIN, "Starting replay of loaded savegame: "
 				+ gameParameters.getSaveGameName());
 
 		for ( final Move aSaveGame : saveGame ) {

@@ -154,7 +154,7 @@ public class MainBoard implements Board {
 	 */
 	@Override
 	public void make(final Move move) throws IllegalStateException {
-		Log.log0(LogLevel.DEBUG, LogModule.BOARD, "Status at beginning of make: " + currentStatus);
+		Log.log(LogLevel.DEBUG, LogModule.BOARD, "Status at beginning of make: " + currentStatus);
 		if (currentStatus != Status.Ok) {
 			throw new IllegalStateException("Das Spielbrett kann keine Züge mehr annehmen!");
 		}
@@ -188,7 +188,7 @@ public class MainBoard implements Board {
 
 		if (playerData.get(oppositePlayer).legalMoves.getFlowerMoves().isEmpty() &&
 		    playerData.get(oppositePlayer).legalMoves.getDitchMoves().isEmpty()) {
-			Log.log0(LogLevel.DEBUG, LogModule.BOARD, "Ending game because next Player can't make more moves");
+			Log.log(LogLevel.DEBUG, LogModule.BOARD, "Ending game because next Player can't make more moves");
 			endGame();
 			return;
 		}
@@ -212,9 +212,9 @@ public class MainBoard implements Board {
 
 	private void endGame() {
 		int redPoints = playerData.get(PlayerColor.Red).currentScore;
-		Log.log0(LogLevel.DEBUG, LogModule.BOARD, "Red player has " + redPoints + "points at end of game.");
+		Log.log(LogLevel.DEBUG, LogModule.BOARD, "Red player has " + redPoints + "points at end of game.");
 		int bluePoints = playerData.get(PlayerColor.Blue).currentScore;
-		Log.log0(LogLevel.DEBUG, LogModule.BOARD, "Blue player has " + bluePoints + "points at end of game.");
+		Log.log(LogLevel.DEBUG, LogModule.BOARD, "Blue player has " + bluePoints + "points at end of game.");
 		if (redPoints > bluePoints) {
 			endGame(PlayerColor.Red);
 		} else if (bluePoints > redPoints) {
@@ -347,7 +347,7 @@ public class MainBoard implements Board {
 			}
 		}
 		res.removeAll(tobeRemoved);
-		Log.log0(LogLevel.DEBUG, LogModule.BOARD, "Allowing ditches: " + res);
+		Log.log(LogLevel.DEBUG, LogModule.BOARD, "Allowing ditches: " + res);
 		return res;
 	}
 
@@ -738,7 +738,7 @@ public class MainBoard implements Board {
 		for (Position p : getPositions(d)) {
 			for (Ditch samePos : getDitchesAround(p)) {
 				for (PlayerData player : playerData.values()) {
-					Log.log0(LogLevel.DEBUG, LogModule.BOARD, "Banning Ditch: " + samePos);
+					Log.log(LogLevel.DEBUG, LogModule.BOARD, "Banning Ditch: " + samePos);
 					player.legalMoves.remove(new Move(samePos));
 				}
 			}

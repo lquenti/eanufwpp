@@ -25,63 +25,8 @@ public class Convert {
 				return "Der blaue Spieler hat das Spiel gewonnen!";
 			case Illegal:
 			default:
-				Log.log0(LogLevel.ERROR, LogModule.IO, "Invalid status passed to EndPopupFrame");
+				Log.log(LogLevel.ERROR, LogModule.IO, "Invalid status passed to EndPopupFrame");
 				return null;
 		}
 	}
-
-	/**
-	 * Gibt die {@link String}-Repräsentation eines gegebenen {@link LogModule} zurück.
-	 *
-	 * @param module Das {@link LogModule} dessen {@link String}-Repräsentation ausgegeben werden soll
-	 * @return {@link String}-Repräsentation des gegebenen Moduls.
-	 */
-	public static String logModuleToString( LogModule module ) {
-		switch ( module ) {
-			case ALL:
-			default:
-				return "(GENERIC)";
-			case MAIN:
-				return "(MAIN)";
-			case BOARD:
-				return "(BOARD)";
-			case IO:
-				return "(IO)";
-			case PLAYER:
-				return "(PLAYER)";
-		}
-	}
-
-	/**
-	 * Gibt die {@link String}-Repräsentation eines gegebenen {@link LogLevel} zurück.
-	 *
-	 * @param level Das {@link LogLevel} dessen {@link String}-Repräsentation ausgegeben werden soll
-	 * @return {@link String}-Repräsentation des gegebenen Levels.
-	 */
-	public static String logLevelToString( LogLevel level ) {
-		switch ( level ) {
-			case NONE:
-			default:
-				return "[NONE]";
-
-			case DUMP:
-				return "[DUMP]";
-
-			case DEBUG:
-				return "[DEBUG]";
-
-			case INFO:
-				return "[INFO]";
-
-			case WARNING:
-				return "[WARNING]";
-
-			case ERROR:
-				return "[ERROR]";
-
-			case CRITICAL:
-				return "[CRITICAL]";
-		}
-	}
-
 }
