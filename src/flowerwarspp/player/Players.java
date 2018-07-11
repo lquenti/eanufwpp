@@ -1,7 +1,10 @@
 package flowerwarspp.player;
 
+import java.net.MalformedURLException;
 import java.rmi.Naming;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.util.Arrays;
 import java.util.Scanner;
 
 import flowerwarspp.preset.*;
@@ -72,11 +75,14 @@ public class Players {
 
 	/**
 	 * Diese Methode versucht einen im Netzwerk angebotenen entfernten Spieler zu finden und gibt diesen dann zurück.
+	 *
 	 * @return Der im Netzwerk angebotene und gefundene entfernte Spieler
 	 */
 	public static Player findRemotePlayer() {
 
-		// TODO: Handle not finding a player!
+		// TODO: Handle not finding the remote player
+
+		Log.log(LogLevel.DEBUG, LogModule.PLAYER, "Trying to find remote player.");
 
 		Scanner inputScanner = new Scanner(System.in);
 
@@ -91,6 +97,23 @@ public class Players {
 		}
 		Log.log(LogLevel.INFO, LogModule.PLAYER, "Port of the remote player: " + port);
 
+		String[] offeredPlayers = null;
+
+		try {
+			offeredPlayers = Naming.list("rmi://" + host + ":" + port);
+		} catch ( RemoteException | MalformedURLException ignored ) {}
+
+		if ( offeredPlayers != null ) {
+			if ( offeredPlayers.length > 0 ) {
+				Log.log(LogLevel.INFO, LogModule.PLAYER, "These players could be found on the network: "
+						+ Arrays.toString(offeredPlayers));
+				System.out.println("Die folgenden Spieler konnten im Netzwerk gefunden werden:");
+				for ( String s : offeredPlayers ) {
+					System.out.println(s);
+				}
+			}
+		}
+
 		System.out.print("Name des entfernten Spielers: ");
 		String name = inputScanner.nextLine();
 		Log.log(LogLevel.INFO, LogModule.PLAYER, "Name of the remote player: " + name);
@@ -99,28 +122,36 @@ public class Players {
 		try {
 			result = (Player) Naming.lookup("rmi://" + host + ":" + port + "/" + name);
 		} catch ( Exception e ) {
-			e.printStackTrace();
+			System.out.println("Der angegebene Spieler konnte nicht im Netzwerk gefunden werden.");
+			Log.log(LogLevel.ERROR, LogModule.PLAYER, "Unable to find the specified player on the network.");
 		}
 		return result;
 	}
 
 	/**
 	 * Bietet einen Netzwerkspieler im Netzwerk an.
-	 * @param player Der im Netzwerk anzubietende Spieler
+	 *
+	 * @param player Der im Netzwerk anzubietende Spieler, verpackt als {@link RemotePlayer}.
+	 * @throws RemoteException Falls der Spieler nicht im Netzwerk angeboten werden konnte.
 	 */
-	public static void offerPlayer( RemotePlayer player ) {
+	public static void offerPlayer( RemotePlayer player ) throws RemoteException {
+
 		Scanner inputScanner = new Scanner(System.in);
+
 		System.out.print("Name des entfernten Spielers: ");
 		String name = inputScanner.nextLine();
 		Log.log(LogLevel.INFO, LogModule.PLAYER, "Name of the remote player: " + name);
 
-		// TODO: Mit Naming.list den Namen verfügbarer Spieler anzeigen
-
 		try {
+			Log.log(LogLevel.DEBUG, LogModule.PLAYER, "Trying to offer player with name " + name + " in the " +
+					"network.");
 			LocateRegistry.createRegistry(1099);
 			Naming.rebind(name, player);
-		} catch ( Exception e ) {
-			e.printStackTrace();
+		} catch ( MalformedURLException e ) {
+			throw new RemoteException("User entered an invalid URL.");
 		}
+
+		System.out.println("Der Spieler mit dem Name " + name + " ist jetzt im Netzwerk verfügbar.");
+		Log.log(LogLevel.INFO, LogModule.PLAYER, "Player has successfully been offered in the network.");
 	}
 }
