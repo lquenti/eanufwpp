@@ -50,6 +50,11 @@ class GameParameters {
 	private boolean text;
 
 	/**
+	 * Ob der Spielverlauf ausgegeben werden soll.
+	 */
+	private boolean quiet;
+
+	/**
 	 * Name des zu ladenden Spielstands (falls geladen werden soll).
 	 */
 	private String saveGameName;
@@ -81,6 +86,12 @@ class GameParameters {
 				text = argumentParser.isText();
 			} catch ( ArgumentParserException e ) {
 				text = false;
+			}
+
+			try {
+				quiet = argumentParser.isQuiet();
+			} catch ( ArgumentParserException e ) {
+				quiet = false;
 			}
 
 			// If we want to offer the player, set that variable and return
@@ -187,6 +198,15 @@ class GameParameters {
 	 */
 	boolean getText() {
 		return text;
+	}
+
+	/**
+	 * Gibt {@link #quiet} zurück.
+	 *
+	 * @return Wert von {@link #quiet}
+	 */
+	boolean getQuiet() {
+		return quiet;
 	}
 
 	/**

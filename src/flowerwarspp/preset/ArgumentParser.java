@@ -259,6 +259,10 @@ public class ArgumentParser {
         return getFlag("text");
     }
 
+    public boolean isQuiet() throws ArgumentParserException {
+        return getFlag("quiet");
+    }
+
     public long getReplay() throws ArgumentParserException {
         return Long.parseLong((String) getSetting("replay"));
     }

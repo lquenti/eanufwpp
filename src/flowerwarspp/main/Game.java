@@ -78,6 +78,10 @@ public class Game {
 			output = boardFrame;
 		}
 
+		if (gameParameters.getQuiet()) {
+			output = new DummyOutput();
+		}
+
 		if ( this.gameParameters.getOfferType() != null ) {
 			offer();
 		} else if ( this.gameParameters.getSaveGameName() != null ) {
