@@ -228,8 +228,8 @@ public class MainBoard implements Board {
 	private void updateAfterMove(final Flower[] fs) {
 		for (Flower f : fs) {
 			// Gesetzte Flowers für alle verbieten
-			for (PlayerData player : playerData.values()) {
-				player.legalMoves.removeMovesContaining(f);
+			for (PlayerData playerData : playerData.values()) {
+				playerData.legalMoves.removeMovesContaining(f);
 			}
 
 			// Gartencheck
@@ -336,7 +336,7 @@ public class MainBoard implements Board {
 			// 1. Condition: Ob auf der anderen Seite eine Flower ist
 			// 2. Condition: Ob die Blumen daneben schon eingefaerbt sind
 			Position p = (Arrays.asList(flowerPositions).contains(d.getFirst())) ? d.getSecond() : d.getFirst();
-			if (getFlowersAround(p).stream().noneMatch(f -> getFlowerColor(f) == currentPlayer)) {
+			if (getFlowersAround(p).stream().noneMatch(f -> playerData.get(currentPlayer).flowers.contains(f))) {
 				tobeRemoved.add(d);
 				continue;
 			}
@@ -405,8 +405,10 @@ public class MainBoard implements Board {
 			playerData.get(currentPlayer).currentScore -= (score*score+score)/2;
 		}
 
-		// i -> i bedeutet unboxing
-		int newScore = scores.stream().mapToInt(i -> i).sum();
+		int newScore = 0;
+		for (int score : scores) {
+			newScore += score;
+		}
 		playerData.get(currentPlayer).currentScore += (newScore*newScore+newScore)/2;
 
 		// Wieder hinzufügen
