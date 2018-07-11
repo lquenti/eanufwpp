@@ -39,16 +39,6 @@ public class SaveGame implements Iterable<Move> {
 			+ File.separator;
 
 	/**
-	 * Dieses Regex-{@link Pattern} hilft uns bei der Validierung von nutzbaren Namen für SaveGames. Die Bedigungen für
-	 * einen validen Namen sind:
-	 * <p>
-	 * Der Name des Spielstands setzt sich nur aus alphanumerischen Zeichen oder Underscores (_) zusammen. Das erste
-	 * Zeichen des Namens eines Spielstands ist immer ein Buchstabe und nie eine Zahl oder ein Underscore. Der Name darf
-	 * nicht leer sein.
-	 */
-	private static final Pattern saveGameNamePattern = Pattern.compile("\\p{Alpha}+[\\p{Alnum}_]*");
-
-	/**
 	 * Diese {@link ArrayDeque} speichert die ausgeführten Spielzüge.
 	 */
 	private ArrayDeque<Move> madeMoves;
@@ -101,14 +91,6 @@ public class SaveGame implements Iterable<Move> {
 	 */
 	public void save( String saveGameName ) throws Exception {
 
-		Matcher matcher = saveGameNamePattern.matcher(saveGameName);
-		if ( ! matcher.find() ) {
-			Log.log(LogLevel.ERROR, LogModule.MAIN, "The name of the savegame may only contain alphanumeric" +
-					" characters and underscores");
-			throw new Exception("Der Dateiname darf nur alpahnumerische Zeichen oder Underscores enthalten, das" +
-					" erste Zeichen muss ein Buchstabe sein");
-		}
-
 		try {
 			File saveDir = new File(SAVE_PATH_ROOT);
 			saveDir.mkdir();
@@ -148,16 +130,9 @@ public class SaveGame implements Iterable<Move> {
 	 *
 	 * @param saveGameName Name der zu ladenden Spielstand-Datei ohne Endung
 	 * @return Die, mit den in der Datei gespeicherten Spielzüge, intialisierte Instanz dieser Klasse
-	 * @throws Exception Falls während des Ladevorgangs ein Fehler aufgetreten ist
+	 * @throws LoadException Falls während des Ladevorgangs ein Fehler aufgetreten ist
 	 */
-	public static SaveGame load( String saveGameName ) throws Exception {
-
-		Matcher matcher = saveGameNamePattern.matcher(saveGameName);
-		if ( ! matcher.find() ) {
-			Log.log(LogLevel.ERROR, LogModule.MAIN, "The name of the savegame may only contain alpha" +
-					"numeric characters and underscores");
-			return null;
-		}
+	public static SaveGame load( String saveGameName ) throws LoadException {
 
 		try ( BufferedReader bufferedReader = new BufferedReader(new FileReader(getFilePath(saveGameName))) ) {
 
@@ -174,7 +149,7 @@ public class SaveGame implements Iterable<Move> {
 				if (move.hashCode() != hashCode) {
 					Log.log(LogLevel.ERROR, LogModule.MAIN, "The hasCode of the loaded move was not equal " +
 							"to the hasCode stored in the savegame");
-					throw new Exception("Der hashCode des geladenen Spielzugs stimmt nicht mit dem hinterlegten" +
+					throw new LoadException("Der hashCode des geladenen Spielzugs stimmt nicht mit dem hinterlegten" +
 							"hashCode überein!");
 				}
 
@@ -183,24 +158,9 @@ public class SaveGame implements Iterable<Move> {
 				currentLine = bufferedReader.readLine();
 			}
 			return saveGame;
+		} catch ( IOException e ) {
+			throw new LoadException();
 		}
-	}
-
-	/**
-	 * Initialisiert ein neues Spielbrett mit den in dieser Instanz gespeicherten Spielzügen.
-	 *
-	 * @return Ein neues Spielbrett welches mit den in dieser Instanz gespeicherten Spielzügen initialisiert worden ist
-	 */
-	public MainBoard initBoard() {
-
-		MainBoard board = new MainBoard(boardSize);
-
-		for ( Move m : madeMoves ) {
-
-			board.make(m);
-		}
-
-		return board;
 	}
 
 	/**
