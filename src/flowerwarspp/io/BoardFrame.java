@@ -19,12 +19,16 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 	 */
 	private BoardDisplay boardDisplay;
 
+	private BottomToolbarPanel bottomToolbarPanel = new BottomToolbarPanel();
+
 	/**
 	 * Konstruiert das {@link JFrame} und versetzt es in einen nutzbaren Zustand.
 	 */
 	private BoardFrame() {
 		super("Flower Wars");
 		setSize(600, 600);
+
+		add(bottomToolbarPanel, BorderLayout.SOUTH);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
@@ -51,7 +55,7 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 	 * Der {@link Viewer}, durch den auf das Spielbrett geschaut wird.
 	 */
 	public void setViewer(Viewer viewer) {
-		boardDisplay = new BoardDisplay();
+		boardDisplay = new BoardDisplay(bottomToolbarPanel);
 		boardDisplay.setBoardViewer(viewer);
 		add(boardDisplay, BorderLayout.CENTER);
 		setVisible(true);
