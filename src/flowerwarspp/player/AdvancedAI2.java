@@ -19,7 +19,7 @@ public class AdvancedAI2 extends BaseAI {
 	/**
 	 * Der Zug, ab welchem Cluster gebildet werden sollen.
 	 */
-	private static final int START_CLUSTERING_AT = 6;
+	private int startClusteringAt;
 
 	/**
 	 * Die Anzahl an Zügen, die dieser Spieler ausgeführt hat, seid Beginn des Spiels.
@@ -39,7 +39,7 @@ public class AdvancedAI2 extends BaseAI {
 	@Override
 	protected Move requestMove() throws Exception {
 
-		if (moveNr <= START_CLUSTERING_AT )
+		if (moveNr <= startClusteringAt )
 			moveNr++;
 
 		return super.requestMove();
@@ -51,6 +51,7 @@ public class AdvancedAI2 extends BaseAI {
 	@Override
 	public void init( int boardSize, PlayerColor playerColour ) throws Exception {
 		super.init(boardSize, playerColour);
+		startClusteringAt = (boardSize * boardSize) / 20;
 		moveNr = 0;
 	}
 
@@ -117,7 +118,7 @@ public class AdvancedAI2 extends BaseAI {
 				res[0]++;
 		}
 
-		if ( res[0] > 0  || moveNr <= START_CLUSTERING_AT ) return res;
+		if ( res[0] > 0  || moveNr <= startClusteringAt ) return res;
 
 		for ( final Flower neighbor : boardViewer.getAllNeighbors(flower) ) {
 
