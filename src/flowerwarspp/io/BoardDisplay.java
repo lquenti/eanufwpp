@@ -70,11 +70,11 @@ public class BoardDisplay extends JPanel {
 		private void processClick(MouseEvent mouseEvent) {
 			// Yes, both of these are supposed to be "==".
 			// We want to make sure they are the same object.
-			if (mouseEvent.getComponent() == boardDisplay.surrenderButton) {
+			if (mouseEvent.getComponent() == boardDisplay.bottomToolbarPanel.getSurrenderButton()) {
 				moveType = MoveType.Surrender;
 				return;
 			}
-			if (mouseEvent.getComponent() == boardDisplay.endButton) {
+			if (mouseEvent.getComponent() == boardDisplay.bottomToolbarPanel.getEndButton()) {
 				moveType = MoveType.End;
 				return;
 			}
@@ -186,6 +186,12 @@ public class BoardDisplay extends JPanel {
 		}
 	}
 
+	/*
+	 * These Color-Objects are basically constant.
+	 * Nowhere in the code should there be any colour equivalent to these
+	 * referred to by the right side of these declarations.
+	 */
+
 	/**
 	 * Die Farbe, die ein angewähltes {@link Triangle} hat,
 	 * bevor ein zweites für einen {@link Move} gewählt wurde.
@@ -209,8 +215,6 @@ public class BoardDisplay extends JPanel {
 	 * Die Farbe der Dreiecke, die dem {@link PlayerColor#Blue} gehören.
 	 */
 	private static final Color blueColour = Color.CYAN;
-	private static final int buttonHeight = 20;
-	private static final int buttonWidth = 200;
 
 	/**
 	 * Der {@link Viewer}, durch den dieses Display auf das {@link Board} schauen soll.
@@ -235,9 +239,13 @@ public class BoardDisplay extends JPanel {
 	 */
 	private DisplayMouseHandler displayMouseHandler = new DisplayMouseHandler(this);
 	/**
-	 * Ein {@link PlayerStatusDisplay}, das den Status der Spieler anzeigt.
+	 * Ein {@link PlayerStatusDisplay}, das den Status des {@link PlayerColor#Red} anzeigt.
 	 */
-	private PlayerStatusDisplay statusDisplay = new PlayerStatusDisplay(redColour, blueColour);
+	private PlayerStatusDisplay redStatusDisplay = new PlayerStatusDisplay(redColour, true);
+	/**
+	 * Ein {@link PlayerStatusDisplay}, das den Status des {@link PlayerColor#Blue} anzeigt.
+	 */
+	private PlayerStatusDisplay blueStatusDisplay = new PlayerStatusDisplay(blueColour, false);
 
 	// Cached information fresh (or stale) from the viewer
 	/**
@@ -274,21 +282,20 @@ public class BoardDisplay extends JPanel {
 	 */
 	private boolean gameEnd = false;
 
-	private JButton surrenderButton = new JButton("Surrender");
-	private JButton endButton = new JButton("End");
+	private BottomToolbarPanel bottomToolbarPanel;
 
 	/**
 	 * Konstruiert ein Display für die Darstellung eines {@link Board}s.
 	 */
-	public BoardDisplay() {
+	public BoardDisplay(BottomToolbarPanel bottomToolbarPanel) {
+		this.bottomToolbarPanel = bottomToolbarPanel;
+
 		Font font = getFont().deriveFont(10F);
 		setFont(font);
 		setOpaque(false);
 		setLayout(null);
-		surrenderButton.addMouseListener(displayMouseHandler);
-		endButton.addMouseListener(displayMouseHandler);
-		add(surrenderButton);
-		add(endButton);
+
+		bottomToolbarPanel.setButtonClickListener(displayMouseHandler);
 	}
 
 	/**
@@ -305,13 +312,13 @@ public class BoardDisplay extends JPanel {
 		blueDitches = boardViewer.getDitches(PlayerColor.Blue);
 		boardSize = boardViewer.getSize();
 
-		statusDisplay.updateStatus(boardViewer.getPoints(PlayerColor.Red),
-		                           boardViewer.getPoints(PlayerColor.Blue));
-		surrenderButton.setEnabled(false);
+		redStatusDisplay.updateStatus(boardViewer.getPoints(PlayerColor.Red));
+		redStatusDisplay.updateStatus(boardViewer.getPoints(PlayerColor.Blue));
+		bottomToolbarPanel.setSurrenderEnabled(false);
 		// This sets the endButton enabled if and only if there is an "End" move available.
-		endButton.setEnabled(boardViewer.possibleMovesContains(new Move(MoveType.End)));
-		// NOTE: It is very very important that the Triangles be created before the ditches and dots
+		bottomToolbarPanel.setEndEnabled(boardViewer.possibleMovesContains(new Move(MoveType.End)));
 
+		// NOTE: It is very very important that the Triangles be created before the ditches and dots
 		createTriangles();
 		createDitches();
 		createDots();
@@ -453,7 +460,6 @@ public class BoardDisplay extends JPanel {
 	public synchronized void paintComponent(Graphics g) {
 		updatePolygons();
 		updatePolygonSizes();
-		updateComponents();
 		super.paintComponent(g);
 
 		// Antialiasing makes things look good.
@@ -465,7 +471,8 @@ public class BoardDisplay extends JPanel {
 		mapTriangles.forEach(t -> t.drawPolygon(g));
 		mapEdges.forEach(e -> e.drawPolygon(g));
 		mapDots.forEach(d -> d.drawPolygon(g));
-		statusDisplay.draw(g);
+		redStatusDisplay.draw(g);
+		blueStatusDisplay.draw(g);
 	}
 
 	/**
@@ -526,8 +533,7 @@ public class BoardDisplay extends JPanel {
 	 * {@link Dimension} des Zeichenbretts anzupassen.
 	 */
 	private void updatePolygonSizes() {
-		Dimension displaySize = getParent().getSize();
-		displaySize.height -= buttonHeight;
+		Dimension displaySize = getSize();
 		setPreferredSize(displaySize);
 		int minimumSize = Math.min(displaySize.width, displaySize.height);
 
@@ -540,19 +546,8 @@ public class BoardDisplay extends JPanel {
 		mapTriangles.forEach(t -> t.recalcPoints(sideLength, drawBegin));
 		mapEdges.forEach(e -> e.recalcPoints(sideLength, drawBegin));
 		mapDots.forEach(e -> e.recalcPoints(sideLength, drawBegin));
-		statusDisplay.updateRectangleSizes(displaySize);
-	}
-
-	/**
-	 * Updatet die {@link JComponent}s (Buttons etc).
-	 */
-	private void updateComponents() {
-		Dimension size = getSize();
-		surrenderButton.setSize(buttonWidth, buttonHeight);
-		endButton.setSize(buttonWidth, buttonHeight);
-
-		surrenderButton.setLocation((size.width / 2) - buttonWidth, size.height - buttonHeight);
-		endButton.setLocation(size.width / 2, size.height - buttonHeight);
+		redStatusDisplay.updateRectangleSizes(displaySize);
+		blueStatusDisplay.updateRectangleSizes(displaySize);
 	}
 
 
@@ -587,8 +582,9 @@ public class BoardDisplay extends JPanel {
 		}
 
 		// This sets the endButton enabled if and only if there is an "End" move available.
-		surrenderButton.setEnabled(true);
-		endButton.setEnabled(boardViewer.possibleMovesContains(new Move(MoveType.End)));
+		bottomToolbarPanel.setSurrenderEnabled(true);
+		bottomToolbarPanel.setEndEnabled(boardViewer.possibleMovesContains(new Move(MoveType.End)));
+		bottomToolbarPanel.setLabelText(boardViewer.getTurn() + " ist am Zug.");
 
 		Move result = null;
 
@@ -618,8 +614,8 @@ public class BoardDisplay extends JPanel {
 
 		displayMouseHandler.reset();
 		// This sets the endButton enabled if and only if there is an "End" move available.
-		surrenderButton.setEnabled(false);
-		endButton.setEnabled(false);
+		bottomToolbarPanel.setSurrenderEnabled(false);
+		bottomToolbarPanel.setEndEnabled(false);
 		combinableFlowers = null;
 		getParent().repaint();
 		return result;
@@ -685,9 +681,8 @@ public class BoardDisplay extends JPanel {
 	 * Updatet das Display und schedulet ein Repaint.
 	 */
 	public synchronized void refresh() {
-		int redPlayerPoints = boardViewer.getPoints(PlayerColor.Red);
-		int bluePlayerPoints = boardViewer.getPoints(PlayerColor.Blue);
-		statusDisplay.updateStatus(redPlayerPoints, bluePlayerPoints);
+		redStatusDisplay.updateStatus(boardViewer.getPoints(PlayerColor.Red));
+		blueStatusDisplay.updateStatus(boardViewer.getPoints(PlayerColor.Blue));
 
 		if ((boardViewer.getStatus() != Status.Ok) && (!gameEnd)) {
 			possibleDitchMoves = null;

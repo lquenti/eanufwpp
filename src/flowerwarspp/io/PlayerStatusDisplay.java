@@ -8,43 +8,32 @@ import java.awt.geom.Rectangle2D;
  */
 public class PlayerStatusDisplay {
 	/**
-	 * Die Farbe des {@link flowerwarspp.preset.PlayerColor#Red}.
+	 * Die Farbe des {@link flowerwarspp.preset.PlayerColor}.
 	 */
-	private Color redColour;
+	private Color playerColour;
 	/**
-	 * Die Farbe des {@link flowerwarspp.preset.PlayerColor#Blue}.
+	 * Wenn <code>true</code>, wird das Display auf der linken Hälfte des Bildschirms gezeichnet.
 	 */
-	private Color blueColour;
+	private boolean left = false;
 	/**
-	 * Ein Rechteck das zur Darstellung des roten Spielers genutzt wird.
+	 * Ein Rechteck das zur Darstellung des Spielers genutzt wird.
 	 */
-	private Rectangle redPlayerArea = new Rectangle();
-	/**
-	 * Ein Rechteck das zur Darstellung des blauen Spielers genutzt wird.
-	 */
-	private Rectangle bluePlayerArea = new Rectangle();
+	private Rectangle playerArea = new Rectangle();
 
 	/**
-	 * Die aktuelle Punktzahl des {@link flowerwarspp.preset.PlayerColor#Red}.
+	 * Die aktuelle Punktzahl des {@link flowerwarspp.preset.PlayerColor}.
 	 */
-	private int redPlayerPoints = 0;
-	/**
-	 * Die aktuelle Punktzahl des {@link flowerwarspp.preset.PlayerColor#Blue}.
-	 */
-	private int bluePlayerPoints = 0;
+	private int playerPoints = 0;
 
 	/**
-	 * Konstruiert ein Display für die Stati der Spieler.
+	 * Konstruiert ein Display für den Status des Spielers.
 	 *
-	 * @param redColour
-	 * Die {@link Color} des {@link flowerwarspp.preset.PlayerColor#Red}.
-	 *
-	 * @param blueColour
-	 * Die {@link Color} des {@link flowerwarspp.preset.PlayerColor#Blue}.
+	 * @param playerColour
+	 * Die Farbe des {@link flowerwarspp.preset.PlayerColor}.
 	 */
-	public PlayerStatusDisplay(Color redColour, Color blueColour) {
-		this.redColour = redColour;
-		this.blueColour = blueColour;
+	public PlayerStatusDisplay(Color playerColour, boolean left) {
+		this.playerColour = playerColour;
+		this.left = left;
 	}
 
 	/**
@@ -57,28 +46,25 @@ public class PlayerStatusDisplay {
 		int minimumSize = Math.min(currentSize.width, currentSize.height);
 		int width = minimumSize / 5;
 		int height = width * 9 / 16;
-		int x = currentSize.width - width;
+		int x = 0;
 		int y = 0;
 
-		redPlayerArea.setSize(width, height);
-		bluePlayerArea.setSize(width, height);
+		if (!left) {
+			x = currentSize.width - width;
+		}
 
-		redPlayerArea.setLocation(x, y);
-		bluePlayerArea.setLocation(x, y + height);
+		playerArea.setSize(width, height);
+		playerArea.setLocation(x, y);
 	}
 
 	/**
 	 * Updatet den internen Status des Displays.
 	 *
-	 * @param redPlayerPoints
-	 * Die Punkte des {@link flowerwarspp.preset.PlayerColor#Red}.
-	 *
-	 * @param bluePlayerPoints
-	 * Die Punkte des {@link flowerwarspp.preset.PlayerColor#Blue}.
+	 * @param playerPoints
+	 * Die Anzahl der Punkte, die der {@link flowerwarspp.preset.PlayerColor} hat.
 	 */
-	public synchronized void updateStatus(int redPlayerPoints, int bluePlayerPoints) {
-		this.redPlayerPoints = redPlayerPoints;
-		this.bluePlayerPoints = bluePlayerPoints;
+	public synchronized void updateStatus(int playerPoints) {
+		this.playerPoints = playerPoints;
 	}
 
 	/**
@@ -88,35 +74,21 @@ public class PlayerStatusDisplay {
 	 * Das {@link Graphics}-Objekt, auf das gezeichnet werden soll.
 	 */
 	public synchronized void draw(Graphics g) {
-		drawRectangle(g, redPlayerArea, redColour, redPlayerPoints);
-		drawRectangle(g, bluePlayerArea, blueColour, bluePlayerPoints);
-	}
+		g.setColor(playerColour);
 
-	/**
-	 * Zeichnet ein Dreick für einen Spieler.
-	 *
-	 * @param g
-	 * Die {@link Graphics}, auf das gezeichnet werden soll.
-	 *
-	 * @param rectangle
-	 * Das {@link Rectangle}, das gezeichet werden soll.
-	 *
-	 * @param colour
-	 * Die {@link Color}, die zum Spieler gehört.
-	 *
-	 * @param points
-	 * Die Zahl an Punkten, die zum Spieler gehören.
-	 */
-	private void drawRectangle(Graphics g, Rectangle rectangle, Color colour, int points) {
-		g.setColor(colour);
-		g.fillRoundRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height, 10, 10);
+		int xLocation = playerArea.x;
+		int yLocation = playerArea.y;
+		int width = playerArea.width;
+		int height = playerArea.height;
+
+		g.fillRoundRect(xLocation, yLocation, width, height, 10, 10);
 		g.setColor(Color.BLACK);
-		g.drawRoundRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height, 10, 10);
+		g.drawRoundRect(xLocation, yLocation, width, height, 10, 10);
 
-		String pointCountString = Integer.toString(points);
+		String pointCountString = Integer.toString(playerPoints);
 		Rectangle2D stringBounds = g.getFontMetrics().getStringBounds(pointCountString, g);
 		Point drawPoint = new Point();
-		drawPoint.setLocation(rectangle.getCenterX(), rectangle.getCenterY());
+		drawPoint.setLocation(playerArea.getCenterX(), playerArea.getCenterY());
 		drawPoint.x -= stringBounds.getWidth() / 2;
 		drawPoint.y += stringBounds.getHeight() / 2;
 		g.setColor(Color.BLACK);
