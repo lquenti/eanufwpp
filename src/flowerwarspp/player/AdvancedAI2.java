@@ -77,7 +77,7 @@ public class AdvancedAI2 extends BaseAI {
 
 
 				// If both flowers are attached (i.e. if they're neighbors) double the score.
-				if ( firstFlowerNeighbors.contains(move.getSecondFlower()) && s1[0] + s2[0] <= 2 ) {
+				if ( firstFlowerNeighbors.contains(move.getSecondFlower()) ) {
 					score += 15;
 				}
 
@@ -96,7 +96,9 @@ public class AdvancedAI2 extends BaseAI {
 					return 0;
 
 			case End:
-				return SCORE_END;
+				if (boardViewer.getPoints(getPlayerColour()) > boardViewer.getPoints((getPlayerColour() == PlayerColor
+						.Red) ? PlayerColor.Blue : PlayerColor.Red))
+					return SCORE_END;
 
 			case Surrender:
 			default:
