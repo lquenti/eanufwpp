@@ -184,4 +184,11 @@ public interface Viewer {
 	 * @return Das Blumenbeet, zu dem die Blume gehört
 	 */
     HashSet<Flower> getFlowerBed(Flower flower);
+
+	/**
+	 * Gibt alle möglichen Blumen zurück.
+	 *
+	 * @return Alle Blumen, welche auf dem Feld liegen.
+	 */
+	ArrayList<Flower> getAllFlowers();
 }
