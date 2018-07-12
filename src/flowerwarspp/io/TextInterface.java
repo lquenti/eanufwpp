@@ -1,6 +1,7 @@
 package flowerwarspp.io;
 
 import flowerwarspp.preset.*;
+import flowerwarspp.util.Convert;
 
 import java.util.Scanner;
 
@@ -191,6 +192,11 @@ public class TextInterface implements Requestable, Output {
 		System.out.println();
 		System.out.println("Rot:  " + viewer.getPoints(PlayerColor.Red) + " Punkte");
 		System.out.println("Blau: " + viewer.getPoints(PlayerColor.Blue) + " Punkte");
+
+		if (viewer.getStatus() != Status.Ok) {
+			System.out.println();
+			System.out.println(Convert.statusToText(viewer.getStatus()));
+		}
 	}
 
 	@Override
