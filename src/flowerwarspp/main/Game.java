@@ -69,7 +69,7 @@ public class Game {
 	 *
 	 * @param gameParameters Die Parameter wie sie auf der Kommandozeile übergeben worden sind
 	 */
-	Game( final GameParameters gameParameters ) {
+	Game(final GameParameters gameParameters) {
 
 		this.gameParameters = gameParameters;
 		init();
@@ -82,7 +82,7 @@ public class Game {
 	 */
 	private void init() {
 		// Dem Logger mitteilen, ob Debug-Nachrichten angezeigt werden sollen, oder nicht.
-		if ( gameParameters.getDebug() )
+		if (gameParameters.getDebug())
 			Log.setLogLevel(LogLevel.DEBUG);
 		else
 			Log.setLogLevel(LogLevel.INFO);
@@ -90,7 +90,7 @@ public class Game {
 		Log.setOutput(System.err);
 
 		// Den Output gemäß der Kommandozeilenparameter initialisieren.
-		if ( gameParameters.getText() || gameParameters.getQuiet() || gameParameters.getNumberOfGames() > 1 ) {
+		if (gameParameters.getText() || gameParameters.getQuiet() || gameParameters.getNumberOfGames() > 1) {
 			final TextInterface textInterface = new TextInterface();
 			input = textInterface;
 			output = textInterface;
@@ -100,7 +100,7 @@ public class Game {
 			output = boardFrame;
 		}
 
-		if ( gameParameters.getQuiet() ) {
+		if (gameParameters.getQuiet()) {
 			output = new DummyOutput();
 		}
 
@@ -114,29 +114,29 @@ public class Game {
 	 */
 	private void start() {
 		// Das Spiel auf Basis der Kommandozeilenparameter starten.
-		if ( gameParameters.getOfferType() != null ) {
+		if (gameParameters.getOfferType() != null) {
 			try {
 				offer();
-			} catch ( RemoteException e ) {
+			} catch (RemoteException e) {
 				Log.log(LogLevel.ERROR, LogModule.MAIN, "There was an error offering the player in the " +
 						"network: " + e.getMessage());
 				System.out.println("Der Spieler konnte nicht im Netzwerk angeboten werden.");
 				System.exit(Main.ERRORCODE_NETWORK_ERROR);
 			}
-		} else if ( gameParameters.loadGame() ) {
+		} else if (gameParameters.loadGame()) {
 			try {
 				loadGame();
 				run();
-			} catch ( Exception e ) {
+			} catch (Exception e) {
 				Log.log(LogLevel.ERROR, LogModule.MAIN, "There was an error loading the savegame "
 						+ gameParameters.getSaveGameName() + ": " + e.getMessage());
 				System.out.println("Der gegebene Spielstand konnte nicht geladen werden.");
 				System.exit(Main.ERRORCODE_LOAD_FAILED);
 			}
-		} else if ( gameParameters.getNumberOfGames() > 1 ) {
+		} else if (gameParameters.getNumberOfGames() > 1) {
 			try {
 				runGameWithStats();
-			} catch ( Exception e ) {
+			} catch (Exception e) {
 				Log.log(LogLevel.ERROR, LogModule.MAIN, "There was an error initializing the players: "
 						+ e.getMessage());
 				System.out.println("Waehrend der Initialisierung der Spieler ist ein Fehler aufgetreten.");
@@ -146,7 +146,7 @@ public class Game {
 			try {
 				initLocalGame();
 				run();
-			} catch ( Exception e ) {
+			} catch (Exception e) {
 				Log.log(LogLevel.ERROR, LogModule.MAIN, "There was an error initializing the players: "
 						+ e.getMessage());
 				System.out.println("Waehrend der Initialisierung der Spieler ist ein Fehler aufgetreten.");
@@ -334,12 +334,11 @@ public class Game {
 	 *
 	 * @return Der Status nach Ende des aktuellen Spiels
 	 */
-	private Status run() {
-
-		// TODO: Refactor!!!
+	private Status run() throws Exception {
 
 		Log.log(LogLevel.INFO, LogModule.MAIN, "Starting main game loop.");
 
+		// Wir benutzen in der internen Game-Loop Referenzen auf den roten und den blauen Spieler.
 		Player currentPlayer = null;
 		Player oppositePlayer = null;
 		if (viewer.getTurn() == PlayerColor.Red) {
@@ -350,49 +349,53 @@ public class Game {
 			oppositePlayer = redPlayer;
 		}
 
-		try {
-			while ( viewer.getStatus() == Status.Ok ) {
-				Log.log(LogLevel.DEBUG, LogModule.MAIN, "Beginning game loop.");
-				Move move = null;
-				try {
-					Log.log(LogLevel.DEBUG, LogModule.MAIN, "Requesting move from player " + viewer.getTurn() + ".");
-					move = currentPlayer.request();
-					Log.log(LogLevel.DEBUG, LogModule.MAIN, "Player " + viewer.getTurn() + " returned move " + move);
-				} catch ( Exception e ) {
-					Log.log(LogLevel.INFO, LogModule.MAIN, "Player " + viewer.getTurn() + " didn't make a " +
-							"move.");
-					Log.log(LogLevel.DEBUG, LogModule.MAIN, "Message: " + e.getMessage());
-					move = new Move(MoveType.Surrender);
-				}
+		while (viewer.getStatus() == Status.Ok) {
 
-				Log.log(LogLevel.DEBUG, LogModule.MAIN, "Making move on main board.");
-				board.make(move);
-				saveGame.add(move);
+			Log.log(LogLevel.DEBUG, LogModule.MAIN, "Beginning game loop.");
 
-				try {
-					Log.log(LogLevel.DEBUG, LogModule.MAIN, "Confirming status.");
-					currentPlayer.confirm(viewer.getStatus());
-					Log.log(LogLevel.DEBUG, LogModule.MAIN, "Updating opposite player.");
-					oppositePlayer.update(move, viewer.getStatus());
-				} catch ( Exception e ) {
-					Log.log(LogLevel.DEBUG, LogModule.MAIN, e.getMessage());
-				}
+			// Es wird versucht, vom aktuellen Spieler einen Zug zu erhalten. Schlägt dies fehl, also wird eine
+			// Exception geworfen, dann wird dem aktuellen Spieler automatisch der Surrender-Move zugewiesen.
+			Move move = null;
 
-				Log.log(LogLevel.DEBUG, LogModule.MAIN, "Refreshing output.");
-				output.refresh();
+			try {
+				Log.log(LogLevel.DEBUG, LogModule.MAIN, "Requesting move from player " + viewer.getTurn() + ".");
+				move = currentPlayer.request();
+				Log.log(LogLevel.DEBUG, LogModule.MAIN, "Player " + viewer.getTurn() + " returned move " + move);
 
-				Player t = currentPlayer;
-				currentPlayer = oppositePlayer;
-				oppositePlayer = t;
-
-				Thread.sleep(gameParameters.getDelay());
+			} catch (Exception e) {
+				Log.log(LogLevel.INFO, LogModule.MAIN, "Player " + viewer.getTurn() + " didn't make a " +
+						"move.");
+				Log.log(LogLevel.DEBUG, LogModule.MAIN, "Message: " + e.getMessage());
+				move = new Move(MoveType.Surrender);
 			}
 
-		} catch ( Exception e ) {
-			Log.log(LogLevel.ERROR, LogModule.MAIN, "There was an error during the game loop: "
-					+ e.getMessage());
-			System.out.println("Es ist ein Fehler aufgetreten:");
-			e.printStackTrace();
+			// Der vom aktuellen Spieler übergebene Zug wird auf dem Spielbrett ausgeführt und dem eigenem saveGame-
+			// Objekt mitgeteilt.
+			Log.log(LogLevel.DEBUG, LogModule.MAIN, "Making move on main board.");
+			board.make(move);
+			saveGame.add(move);
+
+			// Falls der aktuelle Spieler nicht aufgegeben hat, werden der Status des Spielbretts des Hauptprogramms
+			// und der Status des Spielbretts des aktuellen Spielers mit confirm verglichen.
+			if (move.getType() != MoveType.Surrender) {
+				Log.log(LogLevel.DEBUG, LogModule.MAIN, "Confirming status.");
+				currentPlayer.confirm(viewer.getStatus());
+			}
+
+			// Dem Gegner werden Zug des aktuellen Spielers und Status des Spielbretts mit update mitgeteilt.
+			Log.log(LogLevel.DEBUG, LogModule.MAIN, "Updating opposite player.");
+			oppositePlayer.update(move, viewer.getStatus());
+
+			// Das Output-Objekt wirds aktualisiert um den ausgeführten Zug anzuzeigen.
+			Log.log(LogLevel.DEBUG, LogModule.MAIN, "Refreshing output.");
+			output.refresh();
+
+			// Abschließend werden die Spieler vertauscht und gewartet, falls gefordert.
+			Player t = currentPlayer;
+			currentPlayer = oppositePlayer;
+			oppositePlayer = t;
+
+			Thread.sleep(gameParameters.getDelay());
 		}
 
 		Log.log(LogLevel.INFO, LogModule.MAIN, "Game ended with status " + viewer.getStatus());
@@ -414,9 +417,9 @@ public class Game {
 
 		// Mit dem von SaveGame implementierten Iterator wird durch alle Züge iteriert. Diese werden jeweils auf dem
 		// Spielbrett ausgeführt.
-		for ( Move move : loadedSaveGame ) {
+		for (Move move : loadedSaveGame) {
 			board.make(move);
-			if ( gameParameters.getReplaySpeed() > 0 ) {
+			if (gameParameters.getReplaySpeed() > 0) {
 				output.refresh();
 				Thread.sleep(gameParameters.getReplaySpeed());
 			}

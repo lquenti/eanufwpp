@@ -33,9 +33,9 @@ public class Players {
 	 * bestimmten Board zu erzeugen.
 	 */
 	public static Player createPlayer( final PlayerType type, final Requestable input, final Board board ) throws IllegalArgumentException {
-		if (type == PlayerType.REMOTE && board != null) {
+		/*if (type == PlayerType.REMOTE && board != null) {
 			throw new IllegalArgumentException("Spielstände laden wird von Remote-Spielern nicht unterstützt.");
-		}
+		}*/ // Das funktioniert so leider nicht, da auch bei der Verwendung des Copy-Konstruktors Fehler auftreten.
 
 		BasePlayer player = null;
 		switch ( type ) {
