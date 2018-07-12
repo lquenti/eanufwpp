@@ -63,9 +63,7 @@ public class LoadingScreen extends JPanel {
 	/**
 	 * Ein {@link JLabel}, das Ladebildschirmtipps anzeigt.
 	 */
-	private JLabel loadingMessageLabel = new JLabel(loadingMessageStrings.get(
-			ThreadLocalRandom.current().nextInt(0, loadingMessageStrings.size())
-	));
+	private JLabel loadingMessageLabel = new JLabel(loadingMessageStrings.get(0));
 
 	/**
 	 * Eine Klasse, die einen Ladebildschirm implementiert.
