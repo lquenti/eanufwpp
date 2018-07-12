@@ -22,10 +22,6 @@ import static flowerwarspp.preset.PlayerColor.*;
  * Diese Datei kann zu einem späteren Zeitpunkt mit {@link #load(String)} wieder geladen werden, dabei werden die, von
  * der Datei beschriebenen, Spielzüge in der {@link ArrayDeque} einer neuen Instanz dieser Klasse gespeichert. Diese
  * Instanz wird dann zurückgegeben.
- * <p>
- * Die Methode {@link #initBoard()} erstellt ein neues Objekt der Klasse {@link MainBoard} und führt die in diesem
- * Objekt gespeicherten Züge auf diesem neuen Spielbrett in Reihenfolge aus. Das so initialisierte Spielbrett wird dann
- * zurückgegeben.
  *
  * @author Michael Merse
  */
@@ -88,8 +84,9 @@ public class SaveGame implements Iterable<Move> {
 	 * Speichert den Spielstand in einer Datei mit gegebenen Namen.
 	 *
 	 * @param saveGameName Name des Spielstands.
+	 * @throws IOException Falls während des Speicherns des Spielstands ein Fehler aufgetreten ist.
 	 */
-	public void save( String saveGameName ) throws Exception {
+	public void save( String saveGameName ) throws IOException {
 
 		try {
 			File saveDir = new File(SAVE_PATH_ROOT);
@@ -116,9 +113,9 @@ public class SaveGame implements Iterable<Move> {
 			System.out.println(getFilePath(saveGameName));
 			Log.log(LogLevel.INFO, LogModule.MAIN, "Game was saved to: " + getFilePath(saveGameName));
 
-		} catch ( IOException ioe ) {
-			Log.log(LogLevel.ERROR, LogModule.MAIN, "Saving the game failed: " + ioe.getMessage());
-			ioe.printStackTrace();
+		} catch ( IOException e ) {
+			Log.log(LogLevel.ERROR, LogModule.MAIN, "Saving the game failed: " + e.getMessage());
+			throw e;
 		}
 	}
 
