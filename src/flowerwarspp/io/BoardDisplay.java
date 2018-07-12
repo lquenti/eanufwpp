@@ -21,8 +21,8 @@ public class BoardDisplay extends JPanel {
 		private final Object moveAwaitLock = new Object();
 		/**
 		 * Der {@link MoveType}, der durch den Klick erzeugt wird.
-		 * Nur genau dann nicht {@link MoveType#Flower}, wenn entweder
-		 * der Surrender- oder der End-Button geklickt wurde.
+		 * Wichtig ist, dass {@link MoveType#Flower} nicht impliziert,
+		 * dass eine {@link Flower} geklickt wurde.
 		 */
 		private MoveType moveType = MoveType.Flower;
 		/**
@@ -81,8 +81,10 @@ public class BoardDisplay extends JPanel {
 
 			Point clickPoint = mouseEvent.getPoint();
 			Dot dot = findDot(clickPoint);
-			if (dot != null)
+			if (dot != null) {
+				moveType = MoveType.Flower;
 				return;
+			}
 
 			Edge edge = findEdge(clickPoint);
 			if (edge != null) {
@@ -106,8 +108,8 @@ public class BoardDisplay extends JPanel {
 			if (clickedFlower1 != null)
 				return;
 
-			Ditch ditch = edge.toDitch();
-			clickedDitch = ditch;
+			moveType = MoveType.Ditch;
+			clickedDitch = edge.toDitch();
 		}
 
 		/**
@@ -123,6 +125,8 @@ public class BoardDisplay extends JPanel {
 				} else {
 					clickedFlower2 = triangle.toFlower();
 				}
+
+				moveType = MoveType.Flower;
 			}
 		}
 
@@ -188,10 +192,14 @@ public class BoardDisplay extends JPanel {
 
 	/*
 	 * These Color-Objects are basically constant.
-	 * Nowhere in the code should there be any colour equivalent to these
-	 * referred to by the right side of these declarations.
+	 * Nowhere in the code should there be any colour equivalent to those
+	 * referred to on the right side of these declarations.
 	 */
 
+	/**
+	 * Die Farbe, die ein {@link Triangle} standardmäßig hat.
+	 */
+	private static final Color triangleDefaultColour = Color.LIGHT_GRAY;
 	/**
 	 * Die Farbe, die ein angewähltes {@link Triangle} hat,
 	 * bevor ein zweites für einen {@link Move} gewählt wurde.
@@ -203,10 +211,14 @@ public class BoardDisplay extends JPanel {
 	 */
 	private static final Color triangleCombinableColour = Color.GREEN;
 	/**
+	 * Die Farbe die eine {@link Edge} normalerweise hat.
+	 */
+	private static final Color edgeDefaultColour = Color.BLACK;
+	/**
 	 * Die Farbe die eine {@link Edge} hat,
 	 * wenn es einen gültigen {@link Move} gibt, der den repräsentierten {@link Ditch} enthält.
 	 */
-	private static final Color ditchClickableColour = Color.GREEN;
+	private static final Color edgeClickableColour = Color.GREEN;
 	/**
 	 * Die Farbe der Dreiecke, die dem {@link PlayerColor#Red} gehören.
 	 */
@@ -215,6 +227,10 @@ public class BoardDisplay extends JPanel {
 	 * Die Farbe der Dreiecke, die dem {@link PlayerColor#Blue} gehören.
 	 */
 	private static final Color blueColour = Color.CYAN;
+
+	/*
+	 * These objects mainly handle geometry and the like.
+	 */
 
 	/**
 	 * Der {@link Viewer}, durch den dieses Display auf das {@link Board} schauen soll.
@@ -234,10 +250,12 @@ public class BoardDisplay extends JPanel {
 	 * Eine {@link Collection} von {@link Dot}s, verwendet für kosmetische Zwecke.
 	 */
 	private Collection<Dot> mapDots = new ArrayList<>();
+
 	/**
 	 * Handhabt alle {@link MouseEvent}s, die in diesem {@link JPanel} auftreten können.
 	 */
 	private DisplayMouseHandler displayMouseHandler = new DisplayMouseHandler(this);
+
 	/**
 	 * Ein {@link PlayerStatusDisplay}, das den Status des {@link PlayerColor#Red} anzeigt.
 	 */
@@ -246,28 +264,16 @@ public class BoardDisplay extends JPanel {
 	 * Ein {@link PlayerStatusDisplay}, das den Status des {@link PlayerColor#Blue} anzeigt.
 	 */
 	private PlayerStatusDisplay blueStatusDisplay = new PlayerStatusDisplay(blueColour, false);
+	/**
+	 * Eine Referenz auf die Toolbar am unteren Rand des Bildschirms.
+	 */
+	private BottomToolbarPanel bottomToolbarPanel;
 
-	// Cached information fresh (or stale) from the viewer
-	/**
-	 * Eine {@link Collection} von {@link Flower}s, die dem {@link PlayerColor#Red} gehören.
+	/*
+	 * These objects basically only hold information about the game.
 	 */
-	private Collection<Flower> redFlowers;
-	/**
-	 * Eine {@link Collection} von {@link Flower}s, die dem {@link PlayerColor#Blue} gehören.
-	 */
-	private Collection<Flower> blueFlowers;
-	/**
-	 * Eine {@link Collection} von {@link Ditch}es, die dem {@link PlayerColor#Red} gehören.
-	 */
-	private Collection<Ditch> redDitches;
-	/**
-	 * Eine {@link Collection} von {@link Ditch}es, die dem {@link PlayerColor#Blue} gehören.
-	 */
-	private Collection<Ditch> blueDitches;
-	/**
-	 * Eine {@link Collection} von {@link Flower}s,
-	 * die mit der aktuell angewählten {@link Flower} kombinierbar sind.
-	 */
+
+
 	private Collection<Flower> combinableFlowers;
 	/**
 	 * Eine {@link Collection} möglicher {@link Move}s, die {@link Ditch}es enthalten.
@@ -281,8 +287,6 @@ public class BoardDisplay extends JPanel {
 	 * <code>true</code> genau dann, wenn das Spiel geendet hat.
 	 */
 	private boolean gameEnd = false;
-
-	private BottomToolbarPanel bottomToolbarPanel;
 
 	/**
 	 * Konstruiert ein Display für die Darstellung eines {@link Board}s.
@@ -306,10 +310,6 @@ public class BoardDisplay extends JPanel {
 	 */
 	public void setBoardViewer(Viewer boardViewer) {
 		this.boardViewer = boardViewer;
-		redFlowers = boardViewer.getFlowers(PlayerColor.Red);
-		blueFlowers = boardViewer.getFlowers(PlayerColor.Blue);
-		redDitches = boardViewer.getDitches(PlayerColor.Red);
-		blueDitches = boardViewer.getDitches(PlayerColor.Blue);
 		boardSize = boardViewer.getSize();
 
 		redStatusDisplay.updateStatus(boardViewer.getPoints(PlayerColor.Red));
@@ -344,60 +344,8 @@ public class BoardDisplay extends JPanel {
 
 		// Create the triangle at the very top of the board.
 		// It has the coordinates (1, board size + 1)
-		Triangle topTriangle = new Triangle(1, (boardSize + 1),false, getBackground());
-
-		mapTriangles.add(topTriangle);
-		createRowTriangles(topTriangle);
-	}
-
-	/**
-	 * Erstellt die Reihen von Dreiecken
-	 *
-	 * @param topTriangle
-	 * Das oberste Dreieck des Zeichenbretts.
-	 */
-	private void createRowTriangles(Triangle topTriangle) {
-		int maximumRowCount = (boardSize * 2) - 1;
-		Triangle currentTriangle = topTriangle;
-
-		for (int triangles = 2; triangles < maximumRowCount; triangles += 2) {
-			Position leftPosition = currentTriangle.getLeftBoardPosition();
-
-			int column = leftPosition.getColumn() - 1;
-			int row = leftPosition.getRow();
-			currentTriangle = new Triangle(column, row, false, getBackground());
-
-			mapTriangles.add(currentTriangle);
-
-			fillRow(currentTriangle, triangles);
-		}
-	}
-
-	/**
-	 * Fülle eine Reihe mit Dreiecken. Es wird die Annahme getroffen, dass das erste Dreieck auf dem
-	 * Kopf steht (das erste Dreieck unter dem obersten Dreieck).
-	 *
-	 * @param leftTriangle
-	 * 		Referenz auf das Dreieck ganz links.
-	 * 		Die Reihe wird nach rechts aufgefüllt mit einer Anzahl an Dreiecken,
-	 * @param triangleCount
-	 * 		Die Anzahl an Dreiecken, die in der Reihe aufgefüllt werden müssen.
-	 */
-	private void fillRow(Triangle leftTriangle, int triangleCount) {
-		Position newTopPosition = leftTriangle.getRightBoardPosition();
-
-		boolean flipped = true;
-		for (int i = 0; i < triangleCount; i++)
-		{
-			int column = newTopPosition.getColumn() + 1;
-			int row = newTopPosition.getRow();
-			Triangle newTriangle = new Triangle(column, row, flipped, getBackground());
-
-			mapTriangles.add(newTriangle);
-
-			flipped = !flipped;
-			newTopPosition = newTriangle.getRightBoardPosition();
-		}
+		Collection<Flower> flowers = boardViewer.getAllFlowers();
+		flowers.forEach(f -> mapTriangles.add(new Triangle(f, triangleDefaultColour)));
 	}
 
 	/**
@@ -407,9 +355,10 @@ public class BoardDisplay extends JPanel {
 		// for each non-flipped triangle, create the three ditches around it.
 		for (Triangle t : mapTriangles) {
 			if (!t.isFlipped()) {
-				Edge leftDitch = new Edge(t.getLeftBoardPosition(), t.getTopBoardPosition());
-				Edge rightDitch = new Edge(t.getRightBoardPosition(), t.getTopBoardPosition());
-				Edge bottomDitch = new Edge(t.getLeftBoardPosition(), t.getRightBoardPosition());
+				Flower f = t.toFlower();
+				Edge leftDitch = new Edge(f.getFirst(), f.getSecond());
+				Edge rightDitch = new Edge(f.getFirst(), f.getThird());
+				Edge bottomDitch = new Edge(f.getSecond(), f.getThird());
 
 				mapEdges.add(leftDitch);
 				mapEdges.add(rightDitch);
@@ -425,9 +374,10 @@ public class BoardDisplay extends JPanel {
 		// For each non-flipped triangle, create three dots for its edges.
 		for (Triangle t : mapTriangles) {
 			if (!t.isFlipped()) {
-				Dot leftDot = new Dot(t.getLeftBoardPosition());
-				Dot topDot = new Dot(t.getTopBoardPosition());
-				Dot rightDot = new Dot(t.getRightBoardPosition());
+				Flower f = t.toFlower();
+				Dot leftDot = new Dot(f.getFirst());
+				Dot topDot = new Dot(f.getSecond());
+				Dot rightDot = new Dot(f.getThird());
 
 				mapDots.add(leftDot);
 				mapDots.add(topDot);
@@ -457,7 +407,7 @@ public class BoardDisplay extends JPanel {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public synchronized void paintComponent(Graphics g) {
+	public void paintComponent(Graphics g) {
 		updatePolygons();
 		updatePolygonSizes();
 		super.paintComponent(g);
@@ -475,6 +425,8 @@ public class BoardDisplay extends JPanel {
 		blueStatusDisplay.draw(g);
 	}
 
+	// NOTE: NONE of the following methods may be called by anything but #paintComponent
+
 	/**
 	 * Updatet die {@link BoardPolygon}s nach einem Zug, die ein Update benötigen.
 	 */
@@ -487,6 +439,9 @@ public class BoardDisplay extends JPanel {
 	 * Updatet die {@link Triangle}s nach einem Zug.
 	 */
 	private void updateTriangles() {
+		Collection<Flower> redFlowers = boardViewer.getFlowers(PlayerColor.Red);
+		Collection<Flower> blueFlowers = boardViewer.getFlowers(PlayerColor.Blue);
+
 		for (Triangle t : mapTriangles) {
 			t.setFillColour(getBackground());
 			Flower flower = t.toFlower();
@@ -512,6 +467,9 @@ public class BoardDisplay extends JPanel {
 	 * Updatet die {@link Edge}s nach einem Zug.
 	 */
 	private void updateEdges() {
+		Collection<Ditch> redDitches = boardViewer.getDitches(PlayerColor.Red);
+		Collection<Ditch> blueDitches = boardViewer.getDitches(PlayerColor.Blue);
+
 		for (Edge e : mapEdges) {
 			Ditch ditch = e.toDitch();
 			Move move = new Move(ditch);
@@ -521,9 +479,9 @@ public class BoardDisplay extends JPanel {
 			} else if ((blueDitches != null) && (blueDitches.contains(ditch))) {
 				e.setFillColour(blueColour);
 			} else if ((possibleDitchMoves != null) && possibleDitchMoves.contains(move)) {
-				e.setFillColour(ditchClickableColour);
+				e.setFillColour(edgeClickableColour);
 			} else {
-				e.setFillColour(Color.BLACK);
+				e.setFillColour(edgeDefaultColour);
 			}
 		}
 	}
@@ -567,7 +525,7 @@ public class BoardDisplay extends JPanel {
 	 * @return
 	 * Ein {@link Move}, der von vom menschlichen User erfragt wird.
 	 */
-	public Move awaitMove() throws InterruptedException {
+	public Move requestMove() throws InterruptedException {
 		displayMouseHandler.reset();
 		displayMouseHandler.isRequesting = true;
 
@@ -586,31 +544,13 @@ public class BoardDisplay extends JPanel {
 		bottomToolbarPanel.setEndEnabled(boardViewer.possibleMovesContains(new Move(MoveType.End)));
 		bottomToolbarPanel.setLabelText(boardViewer.getTurn() + " ist am Zug.");
 
+
+		// NOTE: This is actually the most crucial method call.
 		Move result = null;
-
-		// Actually await the move itself.
 		while (result == null) {
-			synchronized (displayMouseHandler.moveAwaitLock) {
-				getParent().repaint();
-				displayMouseHandler.moveAwaitLock.wait();
-
-				if (displayMouseHandler.moveType == MoveType.Surrender) {
-					result = new Move(MoveType.Surrender);
-				} else if (displayMouseHandler.moveType == MoveType.End) {
-					result = new Move(MoveType.End);
-					if (!boardViewer.possibleMovesContains(result)) {
-						result = null;
-						displayMouseHandler.reset();
-						displayMouseHandler.isRequesting = true;
-					}
-				} else if (displayMouseHandler.clickedFlower1 != null) {
-					result = checkForFlowerMove();
-					possibleDitchMoves = null;
-				} else {
-					result = checkForDitchMove();
-				}
-			}
+			result = awaitMove();
 		}
+
 
 		displayMouseHandler.reset();
 		// This sets the endButton enabled if and only if there is an "End" move available.
@@ -618,6 +558,37 @@ public class BoardDisplay extends JPanel {
 		bottomToolbarPanel.setEndEnabled(false);
 		combinableFlowers = null;
 		getParent().repaint();
+		return result;
+	}
+
+	private Move awaitMove() throws InterruptedException {
+		Move result;
+
+		synchronized (displayMouseHandler.moveAwaitLock) {
+			getParent().repaint();
+			displayMouseHandler.moveAwaitLock.wait();
+
+			switch (displayMouseHandler.moveType) {
+				case Surrender:
+					result = new Move(MoveType.Surrender);
+					break;
+				case End:
+					result = new Move(MoveType.End);
+					if (!boardViewer.possibleMovesContains(result)) {
+						result = null;
+						displayMouseHandler.reset();
+						displayMouseHandler.isRequesting = true;
+					}
+					break;
+				case Ditch:
+					result = checkForDitchMove();
+					break;
+				default:
+					result = checkForFlowerMove();
+					break;
+			}
+		}
+
 		return result;
 	}
 
@@ -636,9 +607,15 @@ public class BoardDisplay extends JPanel {
 			displayMouseHandler.isRequesting = true;
 		} else if (displayMouseHandler.clickedFlower2 == null) {
 			combinableFlowers = boardViewer.getFlowersCombinableWith(flower1);
+			possibleDitchMoves = null;
 		} else {
 			Flower flower2 = displayMouseHandler.clickedFlower2;
-			if (!combinableFlowers.contains(flower2)) {
+			if (flower1.equals(flower2)) {
+				displayMouseHandler.reset();
+				displayMouseHandler.isRequesting = true;
+				combinableFlowers = boardViewer.getPossibleFlowers();
+				possibleDitchMoves = boardViewer.getPossibleDitchMoves();
+			} else if (!combinableFlowers.contains(flower2)) {
 				displayMouseHandler.clickedFlower2 = null;
 			} else {
 				return new Move(flower1, flower2);
@@ -658,20 +635,18 @@ public class BoardDisplay extends JPanel {
 	 */
 	private Move checkForDitchMove() {
 		Ditch ditch = displayMouseHandler.clickedDitch;
+
 		if (ditch == null) {
 			displayMouseHandler.reset();
 			displayMouseHandler.isRequesting = true;
 		} else {
-			if (((redDitches != null) && redDitches.contains(ditch) ||
-				blueDitches != null && blueDitches.contains(ditch)))
-			{
+			Move result = new Move(ditch);
+			if (boardViewer.possibleMovesContains(result))
+				return result;
+			else {
 				displayMouseHandler.reset();
 				displayMouseHandler.isRequesting = true;
 			}
-
-			Move result = new Move(ditch);
-			if ((possibleDitchMoves != null) && possibleDitchMoves.contains(result))
-				return result;
 		}
 
 		return null;
@@ -680,7 +655,7 @@ public class BoardDisplay extends JPanel {
 	/**
 	 * Updatet das Display und schedulet ein Repaint.
 	 */
-	public synchronized void refresh() {
+	public void refresh() {
 		redStatusDisplay.updateStatus(boardViewer.getPoints(PlayerColor.Red));
 		blueStatusDisplay.updateStatus(boardViewer.getPoints(PlayerColor.Blue));
 

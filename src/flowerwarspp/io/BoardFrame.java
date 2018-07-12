@@ -26,6 +26,7 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 	 */
 	private BoardFrame() {
 		super("Flower Wars");
+		setMinimumSize(new Dimension(400, 400));
 		setSize(600, 600);
 
 		add(bottomToolbarPanel, BorderLayout.SOUTH);
@@ -69,7 +70,7 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 		if (boardDisplay == null)
 			return null;
 
-		return boardDisplay.awaitMove();
+		return boardDisplay.requestMove();
 	}
 
 	/**
