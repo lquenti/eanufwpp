@@ -224,9 +224,17 @@ public class BoardDisplay extends JPanel {
 	 */
 	private static final Color redColour = Color.RED;
 	/**
+	 * Eine Farbe, die eine Blume symbolisiert, die in einem roten Garten ist.
+	 */
+	private static final Color redInGardenColour = redColour.darker();
+	/**
 	 * Die Farbe der Dreiecke, die dem {@link PlayerColor#Blue} gehören.
 	 */
 	private static final Color blueColour = Color.CYAN;
+	/**
+	 * Eine Farbe, die eine Blume symbolisiert, die in einem roten Garten ist.
+	 */
+	private static final Color blueInGardenColour = blueColour.darker();
 
 	/*
 	 * These objects mainly handle geometry and the like.
@@ -445,11 +453,18 @@ public class BoardDisplay extends JPanel {
 		for (Triangle t : mapTriangles) {
 			t.setFillColour(getBackground());
 			Flower flower = t.toFlower();
-			if ((redFlowers != null) && redFlowers.contains(flower))
-				t.setFillColour(redColour);
-			else if ((blueFlowers != null) && blueFlowers.contains(flower))
-				t.setFillColour(blueColour);
-			else {
+			if ((redFlowers != null) && redFlowers.contains(flower)) {
+				if (boardViewer.getFlowerBed(flower).size() > 3)
+					t.setFillColour(redInGardenColour);
+				else
+					t.setFillColour(redColour);
+			}
+			else if ((blueFlowers != null) && blueFlowers.contains(flower)) {
+				if (boardViewer.getFlowerBed(flower).size() > 3)
+					t.setFillColour(blueInGardenColour);
+				else
+					t.setFillColour(blueColour);
+			} else {
 				if (displayMouseHandler.clickedFlower1 != null) {
 					if (flower.equals(displayMouseHandler.clickedFlower1)) {
 						t.setFillColour(triangleClickedColour);

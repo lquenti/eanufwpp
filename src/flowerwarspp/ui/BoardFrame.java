@@ -19,6 +19,7 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 	 */
 	private BoardDisplay boardDisplay;
 
+	private LoadingScreen loadingScreen = new LoadingScreen();
 	private BottomToolbarPanel bottomToolbarPanel = new BottomToolbarPanel();
 
 	/**
@@ -29,6 +30,7 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 		setMinimumSize(new Dimension(400, 400));
 		setSize(600, 600);
 
+		add(loadingScreen, BorderLayout.CENTER);
 		add(bottomToolbarPanel, BorderLayout.SOUTH);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -58,6 +60,7 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 	public void setViewer(Viewer viewer) {
 		boardDisplay = new BoardDisplay(bottomToolbarPanel);
 		boardDisplay.setBoardViewer(viewer);
+		remove(loadingScreen);
 		add(boardDisplay, BorderLayout.CENTER);
 		setVisible(true);
 	}
