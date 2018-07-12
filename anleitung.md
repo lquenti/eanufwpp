@@ -79,9 +79,14 @@ Um ein lokales Spiel zu starten, müssen die folgenden Einstellungen gesetzt wer
 
 #### Notwendige Einstellungen (Netzwerkspiel)
 
-Um einen Spieler im Netzwerk anzubieten, wird nur die Einstellung  
+Um einen Spieler im Netzwerk anzubieten, wird die Einstellung  
 **`-offer <Spielertyp>`**  
-benötigt. `Spielertyp` beschreibt dabei den Spielertypen, welcher im Netzwerk angeboten werden soll. Es werden keine weiteren Einstellungen benötigt (oder akzeptiert).
+benötigt. `Spielertyp` beschreibt dabei den Spielertypen, welcher im Netzwerk angeboten werden soll. Außerdem muss dem Programm mit `-name <Name>` der Name des anzubietenden Spielers mitgeteilt werden.  
+Falls der anzubietende Spieler den Typ `remote` hat, muss dem Programm mit der Einstellung `-offerUrl <URL>` mitgeteilt werden, wo der anzubietende entfernte Spieler zu finden ist. Wie eine URL gestaltet ist, ist weiter unten beschrieben.
+
+#### Optionale Einstellungen (Netzwerkspiel)
+
+Mit der Einstellung `-port <Port>` kann dem Programm mitgeteilt werden, auf welchem Port der Spieler angeboten werden soll.
 
 ### Arten von Spielern
 
@@ -123,12 +128,15 @@ Ein Netzwerkspiel lässt sich in zwei distinkte Arten kategorisieren:
 #### Spieler anbieten
 
 Wenn man einen Spieler im Netzwerk anbieten möchte, dann muss dies dem Spiel mit der Einstellung `-offer <Spielertyp>` mitgeteilt werden. `Spielertyp` beschreibt dabei die Spielerart, welche einer anderen Implementation angeboten werden soll.  
-Falls ein eigener Spieler im Netzwerk angeboten wird, läuft die Verwaltung der Spiellogik beim Hauptprogramm der entfernten Implementation. Wird ein Spieler angeboten werden außerdem vom Benutzer ein Name, eine entfernte IP-Adresse und ein Port abgefragt. Der Port muss nicht explizit gesetzt werden, im Standardfall ist dieser `1099`, der RMI-Standardport.  
-Obwohl das Spiel auf einer entfernten Instanz verwaltet wird, kann das Spielgeschehen lokal mit der graphischen Benutzeroberfläche verfolgt werden.
+Falls ein eigener Spieler im Netzwerk angeboten wird, läuft die Verwaltung der Spiellogik beim Hauptprogramm der entfernten Implementation. Mit der notwendigen Einstellung `-name <Name>` wird dem Programm der zu verwendene Name des anzubietenden Spielers mitgeteilt. Mit der optionalen Einstellung `-port <Port>` kann dem Programm außerdem mitgeteilt werden, auf welchem Port der Spieler angeboten werden soll.  
+Obwohl das Spiel auf einer entfernten Instanz verwaltet wird, kann das Spielgeschehen lokal mitverfolgt werden.  
+Falls der anzubietende Spieler den Typ `remote` hat, muss dem Programm mit der Einstellung `-offerUrl <URL>` mitgeteilt werden, wo der anzubietende entfernte Spieler zu finden ist. Wie eine URL gestaltet ist, ist dem nächsten Abschnitt zu entnehmen.
 
 #### Spieler finden
 
-Wird dem Programm beim Start mitgeteilt, dass mindestens einer der beiden Spieler den Typ `remote` hat, versucht das Spiel beim Starten, einen im Netzwerk angebotenen entfernten Spieler zu finden. Dazu werden über die Standardeingabe vom Benutzer die Adresse, der Port (standardmäßig 1099) und der Name des entfernten Spielers abgefragt.  
+Wird dem Programm beim Start mitgeteilt, dass mindestens einer der beiden Spieler den Typ `remote` hat, versucht das Spiel beim Starten, einen im Netzwerk angebotenen entfernten Spieler zu finden. Je nachdem, welche Farbe der entfernte Spieler hat (es können auch durchaus beide Spiele über das Netzwerk gesucht werden), muss dem Programm mit der Einstellung `-redUrl <URL>` bzw. `-blueUrl <URL>` respektive die Adresse des entfernten Spielers mitgeteilt werden.  
+Die `URL` besteht aus drei Teilen: Dem Host, dem Port und dem Namen:  
+**`HOST:PORT/NAME`**  
 Kann kein entfernter Spieler gefunden werden, wird das Spiel beendet.
 
 ### Weiteres
@@ -149,22 +157,29 @@ Werden zum Versus-Modus noch die Schalter `--text` und `--quiet` gesetzt, kann d
 
 ## Tabellarische Referenz
 
-Parameter           |       Optionen                        |       Beschreibung
---------------------|---------------------------------------|----------------------
-**Notwendig**       |                                       |
-`-size`             |Zahl zwischen 5 und 30 (inklusive)     |Die Größe des Spielbretts wird auf den gegebenen Wert gesetzt
-`-red`              |Einer der oben genannten Spielertypen  |Setzt den Spielertypen des roten Spielers auf den gegebenen Typen
-`-blue`             |Einer der oben genannten Spielertypen  |Setzt den Spielertypen des blauen Spielers auf den gegebenen Typen
-**Optional**        |                                       |
-`-delay`            |Zeit in Millisekunden                  |Verzögerung in Millisekunden zwischen Spielzügen
-`-load`             |Name des Spielstands, ohne Dateiendung |Lädt den gegebenen Spielstand und setzt das Spiel fort
-`-replay`           |Zeit in Millisekunden                  |Der geladene Spielzug wird Zug für Zug ausgeführt, mit der gegebenen Verzögerung zwischen den Zügen
-`-games`            |Anzahl an Spielen                      |Zwei Spieler treten in der gegebenen Anzahl von Spielen gegeneinander an. Am Ende wird eine Statistik ausgegeben
-**Netzwerkspiel**   |                                       |
-`-offer`            |Einer der oben genannten Spielertypen  |Bietet den angegebenen Spielertypen im Netzwerk an
-**Schalter**        |                                       |
-`--debug`           |Keine                                  |Falls gesetzt, werden Debug-Informationen vom Logger aufgenommen und ausgegeben
-`--text`            |Keine                                  |Falls gesetzt, wird das Spielgeschehen auf der Standardausgabe angezeigt, und nicht auf der graphischen Anzeige
-`--help`            |Keine                                  |Zeigt eine kurze Hilfe an und beendet das Programm
-`--quiet`           |Keine                                  |Deaktiviert die Ausgabe des Spielbretts.
+Parameter                     |       Optionen                        |       Beschreibung
+------------------------------|---------------------------------------|----------------------
+**Notwendig (Lokales Spiel)** |                                       |
+`-size`                       |Zahl zwischen 5 und 30 (inklusive)     |Die Größe des Spielbretts wird auf den gegebenen Wert gesetzt
+`-red`                        |Einer der oben genannten Spielertypen  |Setzt den Spielertypen des roten Spielers auf den gegebenen Typen
+`-blue`                       |Einer der oben genannten Spielertypen  |Setzt den Spielertypen des blauen Spielers auf den gegebenen Typen
+*Falls Rot/Blau Remote*       |                                       |
+`-redUrl`/`-blueUrl`          |Eine URL: HOST:PORT/NAME               |Adresse unter welcher der entfernte Spieler zu finden ist
+**Optional (Lokales Spiel)**  |                                       |
+`-delay`                      |Zeit in Millisekunden                  |Verzögerung in Millisekunden zwischen Spielzügen
+`-load`                       |Name des Spielstands, ohne Dateiendung |Lädt den gegebenen Spielstand und setzt das Spiel fort
+`-replay`                     |Zeit in Millisekunden                  |Der geladene Spielzug wird Zug für Zug ausgeführt, mit der gegebenen Verzögerung zwischen den Zügen
+`-games`                      |Anzahl an Spielen                      |Zwei Spieler treten in der gegebenen Anzahl von Spielen gegeneinander an. Am Ende wird eine Statistik ausgegeben
+**Notwendig (Netzwerkspiel)** |                                       |
+`-offer`                      |Einer der oben genannten Spielertypen  |Bietet den angegebenen Spielertypen im Netzwerk an
+`-name`                       |Der Name des Spielers                  |Der Name unter welchem der Spieler angeboten werden soll
+**Optional (Netzwerkspiel)**  |                                       |
+`-port`                       |Ein valider, offener Port              |Der Port an welchem der Spieler angeboten werden soll
+*Falls Remote angeboten wird* |                                       |
+`-offerUrl`                   |Eine URL: HOST:PORT/NAME               |Adresse unter welcher der entfernte Spieler zu finden ist
+**Schalter**                  |                                       |
+`--debug`                     |Keine                                  |Falls gesetzt, werden Debug-Informationen vom Logger aufgenommen und ausgegeben
+`--text`                      |Keine                                  |Falls gesetzt, wird das Spielgeschehen auf der Standardausgabe angezeigt, und nicht auf der graphischen Anzeige
+`--help`                      |Keine                                  |Zeigt eine kurze Hilfe an und beendet das Programm
+`--quiet`                     |Keine                                  |Deaktiviert die Ausgabe des Spielbretts.
 
