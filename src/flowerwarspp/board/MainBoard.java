@@ -257,13 +257,10 @@ public class MainBoard implements Board {
 				updateValidMovesForBed(bed);
 			}
 
-			// Ditchchecks:
-			//  - Ditches halt checken
-			//  - Diese duerfen nicht an Blumen anliegen
-			//  - Ditch liegt noch nicht auf
+			// Ditchchecks
 			generateNewDitches(f);
 
-			// TODO: Irgendwohin stopfen?
+			// Entfernen der Graeben der Blume
 			for (Ditch d : getEdgeDitches(f)) {
 				for (PlayerData player : playerData.values()) {
 					player.legalMoves.remove(new Move(d));
@@ -293,8 +290,6 @@ public class MainBoard implements Board {
 		return result;
 	}
 
-	// TODO: Checken ob performant
-
 	/**
 	 * Gibt die Beete eines Spielers innerhalb einer Reichweite an Blumenabstaenden zurueck.
 	 * Hierbei ist die Reichweite nur durch direkte Verbindungen definiert.
@@ -318,7 +313,6 @@ public class MainBoard implements Board {
 	}
 
 	// TODO: Kommentieren
-
 	/**
 	 * Aktualisiert die validen Zuege des Spielers.
 	 * Hierbei werden sich alle moeglichen Zuege nahe dem modifizierten Beet angeguckt.
@@ -390,16 +384,24 @@ public class MainBoard implements Board {
 		HashSet<Ditch> tobeRemoved = new HashSet<>(); // Um ConcurrentModificationException zu umgehen
 		for (Ditch d : res) {
 			// 1. Condition: Ob auf der anderen Seite eine Flower ist
-			// 2. Condition: Ob die Blumen daneben schon eingefaerbt sind
 			Position p = (Arrays.asList(flowerPositions).contains(d.getFirst())) ? d.getSecond() : d.getFirst();
 			if (getFlowersAround(p).stream().noneMatch(f -> playerData.get(currentPlayer).flowers.contains(f))) {
 				tobeRemoved.add(d);
 				continue;
 			}
+			// 2. Condition: Ob die Blumen daneben schon eingefaerbt sind
 			for (Flower ditchNeighbor : getDirectNeighbors(d)) {
 				if ( getFlowerColor(ditchNeighbor) != null ) {
 					tobeRemoved.add(d);
 				}
+			}
+			// 3. Condition: Das keine andere Ditches
+			boolean remove = Arrays.stream(getPositions(d))
+					.map(this::getDitchesAround)
+					.flatMap(Collection::stream)
+					.anyMatch(ditchContainingPos -> getDitchColor(ditchContainingPos) != null);
+			if (remove) {
+				tobeRemoved.add(d);
 			}
 		}
 		res.removeAll(tobeRemoved);
@@ -415,29 +417,18 @@ public class MainBoard implements Board {
 	private void generateNewDitches(final Flower f) {
 		HashSet<Ditch> allDitchMoves = getPossibleDitches(f);
 		for (Ditch d : allDitchMoves) {
-			// TODO: BESPRECHEN VOR SHIPPING
-			// Check ob an einer Ditchposition bereits eine andere Ditch haengt
-			boolean remove = Arrays.stream(getPositions(d))
-					.map(this::getDitchesAround)
-					.flatMap(Collection::stream)
-					.anyMatch(ditchContainingPos -> getDitchColor(ditchContainingPos) != null);
-
-			/*
-			boolean remove = false;
-			for (Position pos : getPositions(d)) {
-				for (Ditch ditchContainingPosition : getDitchesAround(pos)) {
-					if (getDitchColor(ditchContainingPosition) != null) {
-						remove = true;
-					}
-				}
-			}
-			 */
-			if (getDitchColor(d) == null && !remove) {
+			if (getDitchColor(d) == null) {
 				playerData.get(currentPlayer).legalMoves.add(new Move(d));
 			}
 		}
 	}
 
+	/**
+	 * Inkrementiert die Punktzahl nachdem ein neuer Garten entstanden ist.
+	 *
+	 * @param f Blume welche gesetzt wurde.
+	 * @return Um wieviel sich die Punktzahl verbessert hat
+	 */
 	private int updateScore(final Flower f) {
 		if (getFlowerBed(f).size() != 4) {
 			return 0;
@@ -445,15 +436,19 @@ public class MainBoard implements Board {
 		return getBedChainScore(f);
 	}
 
+	/**
+	 * Aktualisiert den Punktestand eines Spielers nach dem Setzen eines Grabens.
+	 *
+	 * @param d der Graben welcher gesetzt wurde.
+	 */
 	private void updateScore(final Ditch d) {
 		// Temporäres entfernen der Ditch
-		Position[] ps = new Position[]{d.getFirst(), d.getSecond()};
 		LinkedList<Integer> scores = new LinkedList<>();
 		playerData.get(currentPlayer).ditches.remove(d);
 
 		HashSet<HashSet<Flower>> visitedBeds = new HashSet<>();
 
-		for (Position p : ps) {
+		for (Position p : getPositions(d)) {
 			int score = 0;
 			for (Flower flowerConnectedToPos : getFlowersAround(p)) {
 				if (playerData.get(currentPlayer).flowers.contains(flowerConnectedToPos) &&
@@ -482,22 +477,34 @@ public class MainBoard implements Board {
 		playerData.get(currentPlayer).ditches.add(d);
 	}
 
+	/**
+	 * Gibt die Kette an verbundenen Beete zurueck, welcher eine Blume zugehoert.
+	 *
+	 * @param f Blume, welche eine Kette hinzugehoert.
+	 * @return Die Kette der verbundenen Beete.
+	 */
 	private HashSet<HashSet<Flower>> getBedChain(final Flower f) {
-		HashSet<HashSet<Flower>> flowerChain = new HashSet<>();
+		HashSet<HashSet<Flower>> bedChain = new HashSet<>();
 		LinkedList<HashSet<Flower>> queue = new LinkedList<>();
 		queue.add(getFlowerBed(f));
 		while (!queue.isEmpty()) {
 			HashSet<Flower> currentBed = queue.pop();
-			flowerChain.add(currentBed);
-			getBedsConnectedToBed(currentBed).stream().filter(x -> !flowerChain.contains(x)).forEach(queue::add);
+			bedChain.add(currentBed);
+			getBedsConnectedToBed(currentBed).stream().filter(x -> !bedChain.contains(x)).forEach(queue::add);
 		}
-		return flowerChain;
+		return bedChain;
 	}
 
+	/**
+	 * Gibt den Wert einer aktuellen Beetenkette zurueck.
+	 *
+	 * @param f Blume welche der Beetenkette angehoert.
+	 * @return Der Wert an Punkten.
+	 */
 	private int getBedChainScore(final Flower f) {
-		HashSet<HashSet<Flower>> flowerChain = getBedChain(f);
+		HashSet<HashSet<Flower>> bedChain = getBedChain(f);
 		int score = 0;
-		for (HashSet<Flower> bed : flowerChain) {
+		for (HashSet<Flower> bed : bedChain) {
 			if (bed.size() == 4) {
 				score += 1;
 			}
@@ -505,20 +512,45 @@ public class MainBoard implements Board {
 		return score;
 	}
 
+	/**
+	 * Gibt die Positionen einer Blume zurueck.
+	 *
+	 * @param f Blume wessen Positionen zurueckgegeben werden.
+	 * @return Positionen der Blume.
+	 */
 	private Position[] getPositions(final Flower f) {
 		return new Position[]{f.getFirst(), f.getSecond(), f.getThird()};
 	}
 
+	/**
+	 * Gibt die Positionen eines Grabens zurueck.
+	 *
+	 * @param d Graben wessen Positionen zurueckgegeben werden.
+	 * @return Position des Grabens.
+	 */
 	private Position[] getPositions(final Ditch d) {
 		return new Position[]{d.getFirst(), d.getSecond()};
 	}
 
+	/**
+	 * Checkt ob ein Beet legal ist.
+	 *
+	 * @param bed Beet welches ueberprueft wird.
+	 * @param player Farbe des Spielers, dem das Bett gehoert.
+	 * @return Ob das Beet legal ist.
+	 */
 	private boolean isLegalBed(final Collection<Flower> bed, final PlayerColor player) {
 		return bed.size() < 4
 				|| bed.size() == 4
 				&& Collections.disjoint(getAllNeighbors(bed), playerData.get(player).flowers);
 	}
 
+	/**
+	 * Gibt die Spielerfarbe eines Grabens zurueck. Returniert null wenn Graben noch nicht gesetzt wurde.
+	 *
+	 * @param d Graben, welcher ueberprueft wird.
+	 * @return Farbe des Grabens
+	 */
 	private PlayerColor getDitchColor(final Ditch d) {
 		for (Map.Entry<PlayerColor, PlayerData> entry : playerData.entrySet()) {
 			if (entry.getValue().ditches.contains(d)) {
@@ -528,6 +560,12 @@ public class MainBoard implements Board {
 		return null;
 	}
 
+	/**
+	 * Gibt die Spielerfarbe einer Blume zurueck. Returniert null wenn Blume noch nicht gesetzt wurde.
+	 *
+	 * @param f Blume, welche ueberprueft wird.
+	 * @return Farbe der Blume
+	 */
 	private PlayerColor getFlowerColor(final Flower f) {
 		for (Map.Entry<PlayerColor, PlayerData> entry : playerData.entrySet()) {
 			if (entry.getValue().flowers.contains(f)) {
@@ -537,6 +575,12 @@ public class MainBoard implements Board {
 		return null;
 	}
 
+	/**
+	 * Gibt das dazugehoerige Beet einer Blume zurueck.
+	 *
+	 * @param f Blume, welche zu dem Beet gehoert.
+	 * @return Beet.
+	 */
 	private HashSet<Flower> getFlowerBed(final Flower f) {
 		PlayerColor flowerColor = getFlowerColor(f);
 		if (flowerColor == null) {
@@ -560,9 +604,9 @@ public class MainBoard implements Board {
 	}
 
 	/**
-	 * Gibt die Dreiecke zurück, die mit einem gegebenen Dreieck eine Kante gemeinsam haben.
+	 * Gibt die Blumen zurück, die mit einer gegebenen Blume eine Kante gemeinsam haben.
 	 *
-	 * @param center Das Dreieck, dessen Nachbarn zurück gegeben werden sollen.
+	 * @param center Die Blume, dessen Nachbarn zurück gegeben werden sollen.
 	 * @return Die direkten Nachbarn
 	 */
 	private LinkedList<Flower> getDirectNeighbors(final Flower center) {
@@ -605,13 +649,13 @@ public class MainBoard implements Board {
 	}
 
 	/**
-	 * Gibt die Dreiecke zurück, die mit einem gegebenen Dreieck eine Ecke gemeinsam haben.
+	 * Gibt die Blumen zurück, die mit einer gegebenen Blume eine Ecke gemeinsam haben.
 	 *
-	 * @param center Das Dreieck, dessen Nachbarn zurück gegeben werden sollen.
+	 * @param center Die Blume, dessen Nachbarn zurück gegeben werden sollen.
 	 * @return Die Nachbarn
 	 */
 	private LinkedList<Flower> getAllNeighbors(final Flower center) {
-		// Die Dreiecke, die eine Kante gemeinsam haben holen wir uns von der vorhandenen Methode.
+		// Die Blumen, die eine Kante gemeinsam haben holen wir uns von der vorhandenen Methode.
 		LinkedList<Flower> result = getDirectNeighbors(center);
 		Position[] nodes = getPositions(center);
 		Position lastPoint = null;
@@ -664,6 +708,12 @@ public class MainBoard implements Board {
 		return result;
 	}
 
+	/**
+	 * Returniert die Blumen, die direkt an einem Beet anliegen anliegen.
+	 *
+	 * @param bed Beet, wessen direkte Nachbarn gesucht werden.
+	 * @return die direkten Nachbarn des Beetes.
+	 */
 	private HashSet<Flower> getDirectNeighbors(final Collection<Flower> bed) {
 		HashSet<Flower> result = new HashSet<>();
 		for (Flower flower : bed) {
@@ -676,6 +726,12 @@ public class MainBoard implements Board {
 		return result;
 	}
 
+	/**
+	 * Returniert alle Blumen, welche sich mindestens eine Position mit einem Beet teilen.
+	 *
+	 * @param bed Beet, wessen Nachbarn gesucht werden.
+	 * @return die Nachbarn des Beetes.
+	 */
 	private HashSet<Flower> getAllNeighbors(final Collection<Flower> bed) {
 		HashSet<Flower> result = new HashSet<>();
 		for (Flower flower : bed) {
@@ -688,6 +744,12 @@ public class MainBoard implements Board {
 		return result;
 	}
 
+	/**
+	 * Gibt die Blumen zurück, die mit einen gegebenen Graben eine Kante gemeinsam haben.
+	 *
+	 * @param ditch Der Graben, dessen Nachbarn zurück gegeben werden sollen.
+	 * @return Die direkten Nachbarn
+	 */
 	private LinkedList<Flower> getDirectNeighbors(final Ditch ditch) {
 		LinkedList<Flower> result = new LinkedList<>();
 		Position[] nodes = {ditch.getFirst(), ditch.getSecond()};
@@ -765,10 +827,16 @@ public class MainBoard implements Board {
 		return result;
 	}
 
+	/**
+	 * Gibt alle Beete zurueck welche mit einem Beet verbunden sind.
+	 *
+	 * @param bed Beet, welches ueberprueft wird.
+	 * @return Die Menge aller verbundenen Beete.
+	 */
 	private HashSet<HashSet<Flower>> getBedsConnectedToBed(final HashSet<Flower> bed) {
 		HashSet<HashSet<Flower>> bedsConnectedToBed = new HashSet<>();
 		for (Flower bedFlower : bed) {
-			HashSet<Ditch> flowerDitches = getPossibleDitches(bedFlower);
+			HashSet<Ditch> flowerDitches = getAdjacentDitches(bedFlower);
 
 			for (Ditch d : flowerDitches) {
 				if (!playerData.get(currentPlayer).ditches.contains(d)) {
@@ -788,13 +856,13 @@ public class MainBoard implements Board {
 		return bedsConnectedToBed;
 	}
 
+	/**
+	 * Wertet das Spielbrett nach gesetzten Grabenzug aus.
+	 * Hierzu gehoeren das aktualisieren der moeglichen Graeben und der aktuellen Punktzahl.
+	 *
+	 * @param d der Graben welcher gesetzt wurde.
+	 */
 	private void updateAfterMove(final Ditch d) {
-        /*
-        Was aktuell gemacht wird:
-            - Ueber und unter Graben Flower entvalidieren
-            - Andere Graebenmoeglichkeiten entvalidieren falls diese sich eine Position teilen
-         */
-
 		// Ueber und unter Graben Flower entvalidieren
 		for (Flower f : getDirectNeighbors(d)) {
 			for (PlayerData player : playerData.values()) {
