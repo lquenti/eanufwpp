@@ -13,7 +13,7 @@ import java.awt.*;
  */
 public class Edge extends BoardPolygon {
 	private static final Color defaultDitchColor = Color.BLACK;
-	private static final int divisionFactor = 20;
+	private static final int divisionFactor = 15;
 
 	/**
 	 * Die "erste" Position (siehe {@link Position#compareTo(Position)}).

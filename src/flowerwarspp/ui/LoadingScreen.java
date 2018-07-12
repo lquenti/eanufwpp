@@ -6,7 +6,9 @@ import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+
 import javax.swing.*;
+import javax.swing.border.*;
 
 /**
  * Eine Klasse, die einen Ladebildschirm implementiert.
@@ -36,10 +38,14 @@ public class LoadingScreen extends JPanel {
 		super(new BorderLayout());
 		Random random = new Random();
 		String message = loadingMessageStrings.get(random.nextInt(loadingMessageStrings.size()));
-		add(new JLabel("<html><body>" +
-		               "<h1>Spiel wird geladen…</h1>" +
-		               "<p>Wussten sie schon?</p>" +
-		               "<p>" + message + "</p>" +
-		               "</body></html>", JLabel.CENTER));
+		JLabel content = new JLabel("<html><body>" +
+		                            "<h1>Spiel wird geladen…</h1>" +
+		                            "<p>Wussten sie schon?</p>" +
+		                            "<p>" + message + "</p>" +
+		                            "<br/><br/>" + // In die optische Mitte verschieben
+		                            "</body></html>",
+	                                JLabel.CENTER);
+		content.setBorder(new EmptyBorder(32, 32, 32, 32));
+		add(content);
 	}
 }

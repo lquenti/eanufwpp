@@ -1,10 +1,9 @@
 package flowerwarspp.ui;
 
-import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
+import javax.swing.border.*;
+import javax.swing.*;
 
 /**
  * Die Klasse, die die Toolbar an der unteren Seite des {@link BoardFrame}s hält.
@@ -40,6 +39,7 @@ public class BottomToolbarPanel extends JPanel {
 
 	public BottomToolbarPanel() {
 		setLayout(layoutManager);
+		setBorder(new MatteBorder(1, 0, 0, 0, new Color(0xCCCCCC)));
 
 		currentPlayerLabel.setBorder(playerLabelBorder);
 		add(currentPlayerLabel, BorderLayout.WEST);

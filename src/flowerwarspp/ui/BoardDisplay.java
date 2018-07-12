@@ -216,12 +216,12 @@ public class BoardDisplay extends JPanel {
 	 * Die Farbe, die ein angewähltes {@link Triangle} hat,
 	 * bevor ein zweites für einen {@link Move} gewählt wurde.
 	 */
-	private static final Color triangleClickedColour = Color.MAGENTA;
+	private static final Color triangleClickedColour = new Color(0x966BAF);
 	/**
 	 * Die Farbe, die ein {@link Triangle} hat,
 	 * wenn es mit dem aktuell angewählten kombinierbar ist.
 	 */
-	private static final Color triangleCombinableColour = Color.GREEN;
+	private static final Color triangleCombinableColour = new Color(0xB9EEA0);
 	/**
 	 * Die Farbe die eine {@link Edge} normalerweise hat.
 	 */
@@ -230,7 +230,7 @@ public class BoardDisplay extends JPanel {
 	 * Die Farbe die eine {@link Edge} hat,
 	 * wenn es einen gültigen {@link Move} gibt, der den repräsentierten {@link Ditch} enthält.
 	 */
-	private static final Color edgeClickableColour = Color.GREEN;
+	private static final Color edgeClickableColour = triangleCombinableColour;
 	/**
 	 * Die Farbe, die die {@link Dot}s standardmäßig haben.
 	 */
@@ -238,19 +238,19 @@ public class BoardDisplay extends JPanel {
 	/**
 	 * Die Farbe der Dreiecke, die dem {@link PlayerColor#Red} gehören.
 	 */
-	private static final Color redColour = Color.RED;
+	private static final Color redColour = new Color(0xFF5255);
 	/**
 	 * Eine Farbe, die eine Blume symbolisiert, die in einem roten Garten ist.
 	 */
-	private static final Color redInGardenColour = redColour.darker();
+	private static final Color redInGardenColour = new Color(0xC94143);
 	/**
 	 * Die Farbe der Dreiecke, die dem {@link PlayerColor#Blue} gehören.
 	 */
-	private static final Color blueColour = Color.CYAN;
+	private static final Color blueColour = new Color(0x00DDFF);
 	/**
 	 * Eine Farbe, die eine Blume symbolisiert, die in einem roten Garten ist.
 	 */
-	private static final Color blueInGardenColour = blueColour.darker();
+	private static final Color blueInGardenColour = new Color(0x42B7C9);
 
 	/*
 	 * Die folgenden Objekte handhaben Objekte, die mit der Zeichengeometrie zu tun haben.
@@ -289,11 +289,11 @@ public class BoardDisplay extends JPanel {
 	/**
 	 * Ein {@link PlayerStatusDisplay}, das den Status des {@link PlayerColor#Red} anzeigt.
 	 */
-	private PlayerStatusDisplay redStatusDisplay = new PlayerStatusDisplay(redColour, true);
+	private PlayerStatusDisplay redStatusDisplay = new PlayerStatusDisplay(redInGardenColour, true);
 	/**
 	 * Ein {@link PlayerStatusDisplay}, das den Status des {@link PlayerColor#Blue} anzeigt.
 	 */
-	private PlayerStatusDisplay blueStatusDisplay = new PlayerStatusDisplay(blueColour, false);
+	private PlayerStatusDisplay blueStatusDisplay = new PlayerStatusDisplay(blueInGardenColour, false);
 	/**
 	 * Eine Referenz auf die Toolbar am unteren Rand des Bildschirms.
 	 */

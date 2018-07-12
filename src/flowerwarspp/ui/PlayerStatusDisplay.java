@@ -16,6 +16,10 @@ public class PlayerStatusDisplay {
 	 */
 	private boolean left = false;
 	/**
+	 * Der Abstand zum äußeren Fensterrand.
+	 */
+	private int padding = 16;
+	/**
 	 * Ein Rechteck das zur Darstellung des Spielers genutzt wird.
 	 */
 	private Rectangle playerArea = new Rectangle();
@@ -46,11 +50,11 @@ public class PlayerStatusDisplay {
 		int minimumSize = Math.min(currentSize.width, currentSize.height);
 		int width = minimumSize / 5;
 		int height = width * 9 / 16;
-		int x = 0;
-		int y = 0;
+		int x = padding;
+		int y = padding;
 
 		if (!left) {
-			x = currentSize.width - width;
+			x = currentSize.width - width - padding;
 		}
 
 		playerArea.setSize(width, height);
@@ -85,13 +89,14 @@ public class PlayerStatusDisplay {
 		g.setColor(Color.BLACK);
 		g.drawRoundRect(xLocation, yLocation, width, height, 10, 10);
 
+		g.setFont(new Font("sans", Font.BOLD, 24));
+		g.setColor(Color.WHITE);
 		String pointCountString = Integer.toString(playerPoints);
 		Rectangle2D stringBounds = g.getFontMetrics().getStringBounds(pointCountString, g);
 		Point drawPoint = new Point();
 		drawPoint.setLocation(playerArea.getCenterX(), playerArea.getCenterY());
 		drawPoint.x -= stringBounds.getWidth() / 2;
-		drawPoint.y += stringBounds.getHeight() / 2;
-		g.setColor(Color.BLACK);
+		drawPoint.y += stringBounds.getHeight() / 2 - 5;
 		g.drawString(pointCountString, drawPoint.x, drawPoint.y);
 	}
 }
