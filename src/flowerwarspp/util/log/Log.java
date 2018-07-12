@@ -250,8 +250,8 @@ public class Log {
 				return "(MAIN)";
 			case BOARD:
 				return "(BOARD)";
-			case IO:
-				return "(IO)";
+			case UI:
+				return "(UI)";
 			case PLAYER:
 				return "(PLAYER)";
 		}

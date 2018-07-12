@@ -20,9 +20,9 @@ public enum LogModule {
 	 */
 	BOARD,
 	/**
-	 * Modul der I/O-Klasse. Log-Einträge aus I/O-Klasse sollten dieses Modul benutzen.
+	 * Modul des User Interfaces. Log-Einträge aus UI-Klassen sollten dieses Modul benutzen.
 	 */
-	IO,
+	UI,
 	/**
 	 * Modul des Spielers. Log-Einträge aus der Spieler-Klassen sollten dieses Modul benutzen.
 	 */
