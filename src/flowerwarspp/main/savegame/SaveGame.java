@@ -40,6 +40,15 @@ public class SaveGame implements Iterable<Move> {
 	private ArrayDeque<Move> madeMoves;
 
 	/**
+	 * Gibt den Wert von {@link #boardSize} zurück.
+	 *
+	 * @return Wert von {@link #boardSize}.
+	 */
+	public int getBoardSize() {
+		return boardSize;
+	}
+
+	/**
 	 * Die Größe des aktuellen Spielbretts.
 	 */
 	private int boardSize;
@@ -143,7 +152,7 @@ public class SaveGame implements Iterable<Move> {
 				Move move = Move.parseMove(currentLine.split(";", 2)[0]);
 				int hashCode = Integer.parseInt(currentLine.split(";", 3)[1]);
 
-				if (move.hashCode() != hashCode) {
+				if ( move.hashCode() != hashCode ) {
 					Log.log(LogLevel.ERROR, LogModule.MAIN, "The hasCode of the loaded move was not equal " +
 							"to the hasCode stored in the savegame");
 					throw new LoadException("Der hashCode des geladenen Spielzugs stimmt nicht mit dem hinterlegten" +

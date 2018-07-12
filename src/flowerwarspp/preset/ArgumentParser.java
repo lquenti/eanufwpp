@@ -264,7 +264,7 @@ public class ArgumentParser {
     }
 
     public int getNumberOfGames() throws ArgumentParserException {
-        return Integer.parseInt((String) getSetting("numberOfGames"));
+        return Integer.parseInt((String) getSetting("games"));
     }
 
     public long getReplay() throws ArgumentParserException {

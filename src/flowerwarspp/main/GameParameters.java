@@ -17,54 +17,56 @@ class GameParameters {
 	/**
 	 * Die Größe des Spielbretts.
 	 */
-	private int boardSize;
+	private int boardSize = 0;
 
 	/**
 	 * {@link PlayerType} des roten Spielers.
 	 */
-	private PlayerType redType;
+	private PlayerType redType = null;
 
 	/**
 	 * {@link PlayerType} des blauen Spielers.
 	 */
-	private PlayerType blueType;
+	private PlayerType blueType = null;
 
 	/**
 	 * {@link PlayerType} des im Netzwerk anzubietenden Spielers.
 	 */
-	private PlayerType offerType;
+	private PlayerType offerType = null;
 
 	/**
 	 * Verzögerung zwischen Zügen in Millisekunden.
 	 */
-	private int delay;
+	private int delay = 0;
 
 	/**
 	 * Ob Debug-Informationen im {@link Log} angezeigt werden sollen, oder nicht.
 	 */
-	private boolean debug;
+	private boolean debug = false;
 
 	/**
 	 * Ob die Texteingabe verwendet werden soll.
 	 */
-	private boolean text;
+	private boolean text = false;
 
 	/**
 	 * Ob der Spielverlauf ausgegeben werden soll.
 	 */
-	private boolean quiet;
+	private boolean quiet = false;
 
 	/**
 	 * Anzahl der Spiele, die gespielt werden sollen.
 	 */
-	private int numberOfGames;
+	private int numberOfGames = 1;
 
 	/**
 	 * Name des zu ladenden Spielstands (falls geladen werden soll).
 	 */
-	private String saveGameName;
+	private String saveGameName = null;
 
-	private long replaySpeed;
+	private boolean loadGame = false;
+
+	private long replaySpeed = -1;
 
 	/**
 	 * Erzeugt ein neues Objekt basierend auf den angegebenen Kommandozeilenparametern und versucht, diese zu parsen.
@@ -73,66 +75,49 @@ class GameParameters {
 	 */
 	public GameParameters(String[] args) {
 		try {
-			// set up
+			// Einen ArgumentParser instanziieren, damit Kommandozeilenargumente geparsed werden können.
 			ArgumentParser argumentParser = new ArgumentParser(args);
 
-			try {
-				if (argumentParser.isHelp())
-					Main.quitWithUsage();
-			} catch ( ArgumentParserException ignored ) {}
-			
-			try {
-				debug = argumentParser.isDebug();
-			} catch ( ArgumentParserException e ) {
-				debug = false;
-			}
+			// Help-Schlater überprüfen
+			if (argumentParser.isSet("help"))
+				Main.quitWithUsage();
 
-			try {
-				text = argumentParser.isText();
-			} catch ( ArgumentParserException e ) {
-				text = false;
-			}
+			// Debug-Schalter überprüfen
+			debug = argumentParser.isSet("debug");
 
-			try {
-				quiet = argumentParser.isQuiet();
-			} catch ( ArgumentParserException e ) {
-				quiet = false;
-			}
+			// Text-Schalter überprüfen
+			text = argumentParser.isSet("text");
 
-			try {
+			// Quiet-Schalter überprüfen
+			quiet = argumentParser.isSet("quiet");
+
+			// Games-Einstellung überprüfen
+			if (argumentParser.isSet("games"))
 				numberOfGames = argumentParser.getNumberOfGames();
-			} catch ( ArgumentParserException e ) {
-				numberOfGames = 1;
-			}
 
 			// If we want to offer the player, set that variable and return
-			try {
+			if (argumentParser.isSet("offer")) {
 				offerType = argumentParser.getOffer();
 				return;
-			} catch ( ArgumentParserException e ) {
-				offerType = null;
 			}
 
-			try {
-				saveGameName = argumentParser.getLoad();
-			} catch ( ArgumentParserException e ) {
-				saveGameName = null;
-			}
-
-			try {
-				replaySpeed = argumentParser.getReplay();
-			} catch ( ArgumentParserException e ) {
-				replaySpeed = -1;
-			}
-
-			boardSize = argumentParser.getSize();
 			redType = argumentParser.getRed();
 			blueType = argumentParser.getBlue();
 
-			try {
+			if (argumentParser.isSet("replay")) {
+				replaySpeed = argumentParser.getReplay();
+			}
+
+			if (argumentParser.isSet("load")) {
+				saveGameName = argumentParser.getLoad();
+				loadGame = true;
+				return;
+			}
+
+			boardSize = argumentParser.getSize();
+
+			if (argumentParser.isSet("delay")) {
 				delay = argumentParser.getDelay();
-			} catch ( ArgumentParserException e ) {
-				delay = 0;
 			}
 
 			// Validate board size
@@ -247,4 +232,13 @@ class GameParameters {
 		return replaySpeed;
 	}
 
+
+	/**
+	 * Gibt {@link #loadGame} zurück.
+	 *
+	 * @return Wert von {@link #loadGame()}
+	 */
+	public boolean loadGame() {
+		return loadGame;
+	}
 }

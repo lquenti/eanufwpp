@@ -59,6 +59,11 @@ public class Game {
 	private SaveGame saveGame;
 
 	/**
+	 * Größe des Spielbretts.
+	 */
+	private int boardSize;
+
+	/**
 	 * Startet ein neues Spiel. Das Spiel wird initialisiert und der Life-Cycle des Spiels gestartet.
 	 *
 	 * @param gameParameters Die Parameter wie sie auf der Kommandozeile übergeben worden sind
@@ -97,6 +102,8 @@ public class Game {
 		if ( gameParameters.getQuiet() ) {
 			output = new DummyOutput();
 		}
+
+		boardSize = gameParameters.getBoardSize();
 	}
 
 	/**
@@ -114,7 +121,7 @@ public class Game {
 						"network: " + e.getMessage());
 				System.out.println("Der Spieler konnte nicht im Netzwerk angeboten werden.");
 			}
-		} else if ( gameParameters.getSaveGameName() != null ) {
+		} else if ( gameParameters.loadGame() ) {
 			try {
 				loadGame();
 				run();
@@ -206,8 +213,10 @@ public class Game {
 		// wird dann vom Hauptprogramm in init() vernünftig behandelt.
 		saveGame = SaveGame.load(gameParameters.getSaveGameName());
 
+		boardSize = saveGame.getBoardSize();
+
 		// Spielbrett gemäß der Kommandozeilenparameter erstellen.
-		board = new MainBoard(gameParameters.getBoardSize());
+		board = new MainBoard(boardSize);
 
 		// Dem Output-Objekt wird eine Referenz auf den Viewer des neu erzeugten Spielbretts gegeben.
 		viewer = board.viewer();

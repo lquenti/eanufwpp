@@ -66,14 +66,16 @@ Um ein lokales Spiel zu starten, müssen die folgenden Einstellungen gesetzt wer
 #### Optionale Einstellungen (lokales Spiel)
 
 - Mit dem Setzen von **`-delay <Zeit in Millisekunden>`** wird eine Verzögerung zwischen Zügen erzwungen. So kann zum Beispiel ein Spiel zwischen zwei Computerspielen welche manchmal mehrere Spielzüge in der Sekunde machen für den menschlichen Beobachter nachvollziehbar gemacht werden.
-- Mit **`-load <Spielstandname>`** kann ein zuvor gespeicherter Spielstand wieder geladen werden. Beim Laden eines Spielstands muss die `-size`-Einstellung zwar gesetzt werden, jedoch wird bei Abweichungen die Größe des Bretts im Speicherstand verwendet.
+- Mit **`-load <Spielstandname>`** kann ein zuvor gespeicherter Spielstand wieder geladen werden. Beim Laden eines Spielstands muss die `-size`-Einstellung nicht gesetzt werden.
 - Mit der Einstellung `-replay <Zeit in Millisekunden>` kann ein geladener Spielstand rudimentär Schritt für Schritt abgespielt werden, bis zu dem Punkt, an dem gespeichert worden ist. Die übergebene Zeit in Millisekunden beschreibt die Zeit zwischen den Zügen. Nachdem das Replay durchgelaufen ist, wird das Spiel an dem Punkt fortgesetzt, welcher durch den Spielstand beschrieben wird.
+- Mit der Einstellung `-games <Anzahl Spiele>` wird der Versus-Mode gestartet. Zwei Spieler nehmen dabei an der gegebenen Anzahl an Spielen gegeneinander an, am Ende wird eine Statistik über die Anzahl der Siege und der durchschnittlichen Punktezahl ausgegeben. Ist `<Anzahl Spiele>` gleich 1 wird das Spiel wie normal gestartet.
 
 #### Schalter (global)
 
 - Mit dem Schalter `--debug` kann dem Logger angezeigt werden, dass auch Debug-Informationen mit aufgenommen und angezeigt werden sollen.
 - Mit dem Schalter `--text` wird das Spiel nicht auf der graphischen Ausgabe angezeigt, sondern per ASCII auf der Standardausgabe.
 - Mit dem Schalter `--help` wird eine verkürzte Hilfe zur Benutzung des Programms auf der Standardausgabe zurückgegeben. Das Programm wird dann sofort beendet, es ist also nicht möglich, die Hilfe aufzurufen und ein Spiel zu starten
+- Mit dem Schalter `--quiet` wird der Output deaktiviert. Das Spielgeschehen kann dann nicht mehr mitverfolgt werden, jedoch kann ein interaktiver Spieler immer noch Züge eingeben, wenn der Input über die Standardeingabe abgefragt wird.
 
 #### Notwendige Einstellungen (Netzwerkspiel)
 
@@ -139,6 +141,12 @@ Der menschliche Spieler kann zu jedem Zeitpunkt während seines eigenen Spielzug
 
 Wird noch implementiert. TODO
 
+#### Versus-Mode mit Statistik
+
+Mit der Einstellung `-games <Anzahl Spiele>` wird der Versus-Mode gestartet. Zwei Spieler nehmen dabei an der gegebenen Anzahl an Spielen gegeneinander an, am Ende wird eine Statistik über die Anzahl der Siege und der durchschnittlichen Punktezahl ausgegeben. Ist `<Anzahl Spiele>` gleich 1 wird das Spiel wie normal gestartet.
+
+Werden zum Versus-Modus noch die Schalter `--text` und `--quiet` gesetzt, kann der Versus-Mode zum einfachen Benchmarken von Computerspielern verwendet werden.
+
 ## Tabellarische Referenz
 
 Parameter           |       Optionen                        |       Beschreibung
@@ -151,10 +159,12 @@ Parameter           |       Optionen                        |       Beschreibung
 `-delay`            |Zeit in Millisekunden                  |Verzögerung in Millisekunden zwischen Spielzügen
 `-load`             |Name des Spielstands, ohne Dateiendung |Lädt den gegebenen Spielstand und setzt das Spiel fort
 `-replay`           |Zeit in Millisekunden                  |Der geladene Spielzug wird Zug für Zug ausgeführt, mit der gegebenen Verzögerung zwischen den Zügen
+`-games`            |Anzahl an Spielen                      |Zwei Spieler treten in der gegebenen Anzahl von Spielen gegeneinander an. Am Ende wird eine Statistik ausgegeben
 **Netzwerkspiel**   |                                       |
 `-offer`            |Einer der oben genannten Spielertypen  |Bietet den angegebenen Spielertypen im Netzwerk an
 **Schalter**        |                                       |
 `--debug`           |Keine                                  |Falls gesetzt, werden Debug-Informationen vom Logger aufgenommen und ausgegeben
 `--text`            |Keine                                  |Falls gesetzt, wird das Spielgeschehen auf der Standardausgabe angezeigt, und nicht auf der graphischen Anzeige
 `--help`            |Keine                                  |Zeigt eine kurze Hilfe an und beendet das Programm
+`--quiet`           |Keine                                  |Deaktiviert die Ausgabe des Spielbretts.
 
