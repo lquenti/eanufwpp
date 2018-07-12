@@ -279,8 +279,8 @@ public class Game {
 		Log.log(LogLevel.INFO, LogModule.MAIN, "Offering player " + gameParameters.getOfferType() + " on " +
 				"the network.");
 
-		Player offeredPlayer = Players.createPlayer(gameParameters.getOfferType(), input);
-		Players.offerPlayer(new RemotePlayer(offeredPlayer, output));
+		Player offeredPlayer = Players.createPlayer(gameParameters.getOfferType(), input, gameParameters.getOfferUrl());
+		Players.offerPlayer(new RemotePlayer(offeredPlayer, output), gameParameters.getOfferName(), gameParameters.getOfferPort());
 	}
 
 	/**
@@ -303,11 +303,11 @@ public class Game {
 	private void createPlayers() {
 		// Roter und blauer Spieler werden auf Grundlage der Kommandozeilenparameter erstellt.
 		if (board == null) {
-			redPlayer = Players.createPlayer(gameParameters.getRedType(), input);
-			bluePlayer = Players.createPlayer(gameParameters.getBlueType(), input);
+			redPlayer = Players.createPlayer(gameParameters.getRedType(), input, gameParameters.getRedUrl());
+			bluePlayer = Players.createPlayer(gameParameters.getBlueType(), input, gameParameters.getBlueUrl());
 		} else {
-			redPlayer = Players.createPlayer(gameParameters.getRedType(), input, new MainBoard(board));
-			bluePlayer = Players.createPlayer(gameParameters.getBlueType(), input, new MainBoard(board));
+			redPlayer = Players.createPlayer(gameParameters.getRedType(), input, gameParameters.getRedUrl(), new MainBoard(board));
+			bluePlayer = Players.createPlayer(gameParameters.getBlueType(), input, gameParameters.getBlueUrl(), new MainBoard(board));
 		}
 
 		Log.log(LogLevel.INFO, LogModule.MAIN, "Players created.");

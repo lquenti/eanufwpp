@@ -25,14 +25,39 @@ class GameParameters {
 	private PlayerType redType = null;
 
 	/**
+	 * Url des roten Spielers im Fall eines Netzwerspiels.
+	 */
+	private String redUrl = null;
+
+	/**
 	 * {@link PlayerType} des blauen Spielers.
 	 */
 	private PlayerType blueType = null;
 
 	/**
+	 * Url des blauen Spielers im Fall eines Netzwerspiels.
+	 */
+	private String blueUrl = null;
+
+	/**
 	 * {@link PlayerType} des im Netzwerk anzubietenden Spielers.
 	 */
 	private PlayerType offerType = null;
+
+	/**
+	 * Url des angebotenen Spielers im Fall, dass ein Netzwerkspieler angeboten wird.
+	 */
+	private String offerUrl = null;
+
+	/**
+	 * Name des im Netzwerk anzubietenden Spielers.
+	 */
+	private String offerName = null;
+
+	/**
+	 * Port, unter dem der Spieler im Netzwerk angeboten werden soll.
+	 */
+	private int offerPort = 1099;
 
 	/**
 	 * Verzögerung zwischen Zügen in Millisekunden.
@@ -95,6 +120,13 @@ class GameParameters {
 			if (argumentParser.isSet("offer")) {
 				System.out.println("Biete Netzwerkspieler an, andere Argumente werden ignoriert.");
 				offerType = argumentParser.getOffer();
+				offerName = argumentParser.getOfferName();
+				if (argumentParser.isSet("port")) {
+					offerPort = argumentParser.getOfferPort();
+				}
+				if (offerType == PlayerType.REMOTE) {
+					offerUrl = argumentParser.getOfferUrl();
+				}
 				return;
 			}
 
@@ -103,7 +135,14 @@ class GameParameters {
 				numberOfGames = argumentParser.getNumberOfGames();
 
 			redType = argumentParser.getRed();
+			if (redType == PlayerType.REMOTE) {
+				redUrl = argumentParser.getRedUrl();
+			}
+
 			blueType = argumentParser.getBlue();
+			if (blueType == PlayerType.REMOTE) {
+				blueUrl = argumentParser.getBlueUrl();
+			}
 
 			if (argumentParser.isSet("replay")) {
 				replaySpeed = argumentParser.getReplay();
@@ -153,12 +192,30 @@ class GameParameters {
 	}
 
 	/**
+	 * Gibt {@link #redUrl} zurück.
+	 *
+	 * @return Wert von {@link #redUrl}
+	 */
+	String getRedUrl() {
+		return redUrl;
+	}
+
+	/**
 	 * Gibt {@link #blueType} zurück.
 	 *
 	 * @return Wert von {@link #blueType}
 	 */
 	PlayerType getBlueType() {
 		return blueType;
+	}
+
+	/**
+	 * Gibt {@link #blueUrl} zurück.
+	 *
+	 * @return Wert von {@link #blueUrl}
+	 */
+	String getBlueUrl() {
+		return blueUrl;
 	}
 
 	/**
@@ -169,6 +226,34 @@ class GameParameters {
 	PlayerType getOfferType() {
 		return offerType;
 	}
+
+	/**
+	 * Gibt {@link #offerUrl} zurück.
+	 *
+	 * @return Wert von {@link #offerUrl}
+	 */
+	String getOfferUrl() {
+		return offerUrl;
+	}
+
+	/**
+	 * Gibt {@link #offerName} zurück.
+	 *
+	 * @return Wert von {@link #offerName}
+	 */
+	String getOfferName() {
+		return offerName;
+	}
+
+	/**
+	 * Gibt {@link #offerPort} zurück.
+	 *
+	 * @return Wert von {@link #offerPort}
+	 */
+	int getOfferPort() {
+		return offerPort;
+	}
+
 
 	/**
 	 * Gibt {@link #delay} zurück.

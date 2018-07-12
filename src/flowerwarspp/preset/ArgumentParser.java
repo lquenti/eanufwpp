@@ -255,6 +255,26 @@ public class ArgumentParser {
         return (String) getSetting("load");
     }
 
+    public String getOfferName() throws ArgumentParserException {
+        return (String) getSetting("name");
+    }
+
+    public String getRedUrl() throws ArgumentParserException {
+        return (String) getSetting("redUrl");
+    }
+
+    public String getBlueUrl() throws ArgumentParserException {
+        return (String) getSetting("blueUrl");
+    }
+
+    public String getOfferUrl() throws ArgumentParserException {
+        return (String) getSetting("offerUrl");
+    }
+
+	public int getOfferPort() throws ArgumentParserException {
+		return Integer.parseInt((String) getSetting("port"));
+	}
+
     public boolean isText() throws ArgumentParserException {
         return getFlag("text");
     }

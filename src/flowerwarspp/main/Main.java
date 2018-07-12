@@ -17,21 +17,22 @@ public class Main {
 	 */
 	public static void quitWithUsage() {
 		System.out.println("Verwendung:");
-		System.out.println("flowerwarspp.main.Main (-offer <Spielertyp> | -size <Spielfeldgröße> -red <Spielertyp> -blue <Spielertyp>) "
-				+ "[-delay <Verzögerung>] [-load <Spielstandname>] [-replay <Verzögerung>] [-games <Anzahl Spiele>] " +
-				"[--debug] [--text] [--quiet] [--help]");
+		System.out.println("flowerwarspp.main.Main (-offer <Spielertyp> -name <Name> [-offerUrl <URL>] [-port <Port>] | -size <Spielfeldgröße> -red <Spielertyp> [-redUrl <URL>] -blue <Spielertyp> [-blueUrl <URL>]) [-delay <Verzögerung>] [-load <Spielstandname>] [-replay <Verzögerung>] [-games <Anzahl Spiele>] [--debug] [--text] [--quiet] [--help]");
 		System.out.println();
 		System.out.println("Spielfeldgröße: Zahl zwischen 3 und 30");
 		System.out.println("Spielertyp:     \"human\", \"remote\", \"random\", \"simple\", \"adv1\", oder \"adv2\"");
+		System.out.println("URL:            Adresse eines Netzwerkspielers.");
+		System.out.println("Name:           Name, unter dem ein angebotener Spieler erreichbar sein soll.");
+		System.out.println("Port:           Port, unter dem ein angebotener Spieler erreichbar sein soll. Der Standardwert ist 1099.");
 		System.out.println("Verzögerung:    Zeit zwischen Zügen in Millisekunden.");
 		System.out.println("Spielstandname: Name des zu ladenden Spielstands, ohne Datei-Endung.");
 		System.out.println("Anzahl Spiele:  Anzahl der Spiele, welche nacheinander ausgeführt werden sollen.");
 		System.out.println("Debug:          Zeigt Debug-Information im Log an. Optionale Flag (hat keine " +
 				"Argumente)");
 		System.out.println("Text:           Die Texteingabe wird verwendet. Optionale Flag (hat keine Argumente)");
-		System.out.println("Hilfe:          Das Programm gibt keine Informationen über den Spielablauf. Optionale Flag " +
+		System.out.println("Quiet:          Das Programm gibt keine Informationen über den Spielablauf. Optionale Flag " +
 				"(hat keine Argumente)");
-		System.out.println("Hilfe:          Zeigt diese Hilfe an. Das Programm wird dann beendet. Optionale Flag " +
+		System.out.println("Help:           Zeigt diese Hilfe an. Das Programm wird dann beendet. Optionale Flag " +
 				"(hat keine Argumente)");
 		System.exit(ERRORCODE_INVALID_ARGS);
 	}
