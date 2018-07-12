@@ -295,6 +295,8 @@ public class Game {
 	 * {@link Player#confirm(Status)} validiert, der validierte Zug und Status werden dem Gegenspieler mit {@link
 	 * Player#update(Move, Status)}  übergeben, abschließend werden aktueller Spieler und Gegenspieler vertauscht und
 	 * die nächste Iteration beginnt.
+	 *
+	 * @return Der Status nach Ende des aktuellen Spiels
 	 */
 	private Status run() {
 

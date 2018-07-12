@@ -29,6 +29,10 @@ public class RemotePlayer
     /**
      * Default-Konstruktor, welcher einen neuen Netzwerkspieler mit einem bestehenden Objekt einer Klasse, welche das
      * Interface {@link Player} implementiert, initialisiert.
+     *
+     * @param player Der Spieler, welcher dem Server durch dieses Objekt Züge mitteilen soll.
+     * @param output Das Objekt, auf welchem das aktuelle Spielgeschehen lokal angezeigt wird.
+     * @throws RemoteException Falls während der Netzwerkkommunikation ein Fehler aufgetreten ist.
      */
     public RemotePlayer( final Player player, final Output output ) throws RemoteException {
         this.player = player;
