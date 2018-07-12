@@ -54,6 +54,9 @@ public class BoardDisplay extends JPanel {
 			if (!isRequesting)
 				return;
 
+			// processClick verarbeitet den Klick selbst,
+			// Sonst soll alles neu gezeichnet und der Wartende benachrichtigt werden,
+			// dass er die Zustandsänderung verarbeiten kann.
 			processClick(mouseEvent);
 			boardDisplay.getParent().repaint();
 			synchronized (moveAwaitLock) {
@@ -68,8 +71,8 @@ public class BoardDisplay extends JPanel {
 		 * Das {@link MouseEvent}, das die Ausführung verursacht hat.
 		 */
 		private void processClick(MouseEvent mouseEvent) {
-			// Yes, both of these are supposed to be "==".
-			// We want to make sure they are the same object.
+			// In den beiden folgenden Fällen wird == verwendet.
+			// Es soll sichergestellt werden, dass sie dieselben Objekte sind.
 			if (mouseEvent.getComponent() == boardDisplay.bottomToolbarPanel.getSurrenderButton()) {
 				moveType = MoveType.Surrender;
 				return;
@@ -79,6 +82,8 @@ public class BoardDisplay extends JPanel {
 				return;
 			}
 
+			// Versuche einen der Punkte zu finden, die auf dem Brett liegen.
+			// Solche Klicks sollen ignoriert werden.
 			Point clickPoint = mouseEvent.getPoint();
 			Dot dot = findDot(clickPoint);
 			if (dot != null) {
@@ -86,12 +91,16 @@ public class BoardDisplay extends JPanel {
 				return;
 			}
 
+			// Versuche eine Edge zu finden. Edges sollen den Triangles bevorzugt werden,
+			// um Ditches anklicken zu können.
 			Edge edge = findEdge(clickPoint);
 			if (edge != null) {
 				onEdgeClick(edge);
 				return;
 			}
 
+			// Versuche ein Triangle zu finden. Dreiecke sind am größten
+			// und werden deswegen zuletzt in Betracht gezogen.
 			Triangle triangle = findTriangle(clickPoint);
 			if (triangle != null) {
 				onTriangleClick(triangle);
@@ -183,6 +192,9 @@ public class BoardDisplay extends JPanel {
 		 * und kein {@link Move} mehr gehalten wird.
 		 */
 		private void reset() {
+			// Setzt den MouseHandler auf den Ausgangszustand zurück.
+			// Insbesondere ist keine Blume gewählt
+			// und es wurde kein Move angefragt.
 			clickedFlower1 = null;
 			clickedFlower2 = null;
 			clickedDitch = null;
@@ -191,9 +203,9 @@ public class BoardDisplay extends JPanel {
 	}
 
 	/*
-	 * These Color-Objects are basically constant.
-	 * Nowhere in the code should there be any colour equivalent to those
-	 * referred to on the right side of these declarations.
+	 * Die folgenden Color-Objekte sind konstant.
+	 * Es soll keine Farbe, die auf der rechten Seite der folgenden Deklarationen steht
+	 * irgenwdo im Code referenziert werden, außer durch diese Deklarationen.
 	 */
 
 	/**
@@ -220,6 +232,10 @@ public class BoardDisplay extends JPanel {
 	 */
 	private static final Color edgeClickableColour = Color.GREEN;
 	/**
+	 * Die Farbe, die die {@link Dot}s standardmäßig haben.
+	 */
+	private static final Color dotDefaultColor = Color.BLACK;
+	/**
 	 * Die Farbe der Dreiecke, die dem {@link PlayerColor#Red} gehören.
 	 */
 	private static final Color redColour = Color.RED;
@@ -237,7 +253,7 @@ public class BoardDisplay extends JPanel {
 	private static final Color blueInGardenColour = blueColour.darker();
 
 	/*
-	 * These objects mainly handle geometry and the like.
+	 * Die folgenden Objekte handhaben Objekte, die mit der Zeichengeometrie zu tun haben.
 	 */
 
 	/**
@@ -259,10 +275,16 @@ public class BoardDisplay extends JPanel {
 	 */
 	private Collection<Dot> mapDots = new ArrayList<>();
 
+
 	/**
 	 * Handhabt alle {@link MouseEvent}s, die in diesem {@link JPanel} auftreten können.
 	 */
 	private DisplayMouseHandler displayMouseHandler = new DisplayMouseHandler(this);
+
+	/*
+	 * Die folgenden Objekte stellen neben dem Spielbrett selbst andere UI-Elemente zur Verfügung.
+	 * Die Toolbar liegt nicht auf diesem Objekt.
+	 */
 
 	/**
 	 * Ein {@link PlayerStatusDisplay}, das den Status des {@link PlayerColor#Red} anzeigt.
@@ -277,20 +299,26 @@ public class BoardDisplay extends JPanel {
 	 */
 	private BottomToolbarPanel bottomToolbarPanel;
 
+
 	/*
-	 * These objects basically only hold information about the game.
+	 * Diese Objekte halten Informationen über den Spielstand.
+	 * Außer boardSize ändern sich alle diese Objekte regelmäßig
+	 * (i.d.R. nach jedem Zug).
 	 */
 
 
+	/**
+	 * Die Größe des {@link Board}s.
+	 */
+	private int boardSize;
+	/**
+	 * Die {@link Flower}s, die mit einer bestimmten Blume kombinierbar sind.
+	 */
 	private Collection<Flower> combinableFlowers;
 	/**
 	 * Eine {@link Collection} möglicher {@link Move}s, die {@link Ditch}es enthalten.
 	 */
 	private Collection<Move> possibleDitchMoves;
-	/**
-	 * Die Größe des {@link Board}s.
-	 */
-	private int boardSize;
 	/**
 	 * <code>true</code> genau dann, wenn das Spiel geendet hat.
 	 */
@@ -302,10 +330,14 @@ public class BoardDisplay extends JPanel {
 	public BoardDisplay(BottomToolbarPanel bottomToolbarPanel) {
 		this.bottomToolbarPanel = bottomToolbarPanel;
 
+		// deriveFont leitet aus dem aktuellen Font einen Font mit anderen Eigenschaften ab.
+		// Hier wird die Größe des Fonts geändert.
 		Font font = getFont().deriveFont(10F);
 		setFont(font);
+
+		// Laut Javadocs muss ein Component setOpaque mit false aufrufen,
+		// wenn es nicht die ganze Fläche bezeichnet (d.h. teilweise durchsichtig ist)
 		setOpaque(false);
-		setLayout(null);
 
 		bottomToolbarPanel.setButtonClickListener(displayMouseHandler);
 	}
@@ -319,14 +351,14 @@ public class BoardDisplay extends JPanel {
 	public void setBoardViewer(Viewer boardViewer) {
 		this.boardViewer = boardViewer;
 		boardSize = boardViewer.getSize();
+		gameEnd = (boardViewer.getStatus() == Status.Ok);
 
 		redStatusDisplay.updateStatus(boardViewer.getPoints(PlayerColor.Red));
-		redStatusDisplay.updateStatus(boardViewer.getPoints(PlayerColor.Blue));
+		blueStatusDisplay.updateStatus(boardViewer.getPoints(PlayerColor.Blue));
 		bottomToolbarPanel.setSurrenderEnabled(false);
-		// This sets the endButton enabled if and only if there is an "End" move available.
-		bottomToolbarPanel.setEndEnabled(boardViewer.possibleMovesContains(new Move(MoveType.End)));
+		bottomToolbarPanel.setEndEnabled(false);
 
-		// NOTE: It is very very important that the Triangles be created before the ditches and dots
+		// NOTE: Es ist sehr wichtig, dass die Dreiecke zuerst erstellt werden.
 		createTriangles();
 		createDitches();
 		createDots();
@@ -337,10 +369,10 @@ public class BoardDisplay extends JPanel {
 
 
 	/*
-	 * Post-viewersetting, the board display requires initialisation.
-	 * The following code section fills the display with Triangles
-	 * representing Flowers, with Edges representing Ditches and
-	 * other Polynomiæ.
+	 * Nach dem Setzen des Viewers benötigt das Spielbrettdisplay Initialisierung.
+	 * Die folgende Codesektion füllt das Display mit Triangles,
+	 * die Flowers repräsentieren. Außerdem werden Edges erstellt,
+	 * die Ditches repräsentieren.
 	 */
 
 
@@ -348,10 +380,10 @@ public class BoardDisplay extends JPanel {
 	 * Erstellt {@link Triangle}-Objekte, die die Dreiecke auf dem Spiel repräsentieren.
 	 */
 	private void createTriangles() {
+		// Wenn der Viewer gesetzt wird ist es möglich, dass das Spielbrett eine andere Größe hat.
 		mapTriangles.clear();
 
-		// Create the triangle at the very top of the board.
-		// It has the coordinates (1, board size + 1)
+		// Für jede Blume vom Spielbrett soll ein Triangle erstellt werden.
 		Collection<Flower> flowers = boardViewer.getAllFlowers();
 		flowers.forEach(f -> mapTriangles.add(new Triangle(f, triangleDefaultColour)));
 	}
@@ -360,7 +392,9 @@ public class BoardDisplay extends JPanel {
 	 * Konstruiert die {@link Edge}s, die {@link Ditch}es repräsentieren werden.
 	 */
 	private void createDitches() {
-		// for each non-flipped triangle, create the three ditches around it.
+		mapEdges.clear();
+
+		// Für jedes Triangle, das nicht auf dem Kopf steht, sollen drei Edges erstellt werden.
 		for (Triangle t : mapTriangles) {
 			if (!t.isFlipped()) {
 				Flower f = t.toFlower();
@@ -379,13 +413,15 @@ public class BoardDisplay extends JPanel {
 	 * Konstruiert die {@link Dot}s. Sie dienen als Orientierung für den Spieler und Zuschaue
 	 */
 	private void createDots() {
-		// For each non-flipped triangle, create three dots for its edges.
+		mapDots.clear();
+
+		// Für jedes Triangle, das nicht auf dem Kopf steht, sollen drei Dots erstellt werden.
 		for (Triangle t : mapTriangles) {
 			if (!t.isFlipped()) {
 				Flower f = t.toFlower();
-				Dot leftDot = new Dot(f.getFirst());
-				Dot topDot = new Dot(f.getSecond());
-				Dot rightDot = new Dot(f.getThird());
+				Dot leftDot = new Dot(f.getFirst(), dotDefaultColor);
+				Dot topDot = new Dot(f.getSecond(), dotDefaultColor);
+				Dot rightDot = new Dot(f.getThird(), dotDefaultColor);
 
 				mapDots.add(leftDot);
 				mapDots.add(topDot);
@@ -396,18 +432,16 @@ public class BoardDisplay extends JPanel {
 
 
 	/*
-	 * When drawing, three substantial actions need to be taken:
-	 * a) Ask the crucial BoardPolygons to update themselves.
-	 *    They may colouring, recolouring or de-colouring.
-	 * b) Ask the crucial BoardPolygons to update their sizes.
-	 *    They may get smaller or bigger, they may not resize at all.
-	 * c) Ask the Swing components to update themselves.
-	 * d) Ask the Swing environment to cover general drawage.
-	 *    That will take care of drawing the Swing components
-	 *    and the clear the canvas for us
-	 * e) Begin drawing onto the panel (that is, into the buffer).
+	 * Beim Zeichnen müssen drei wichtige Aktionen passieren:
+	 * a) Fordere die BoardPolygons auf, sich zu updaten.
+	 *    Sie können die Farbe wechseln oder sich entfärben.
+	 * b) Fordere die BoardPolygons auf, ihre Größe zu ändern.
+	 *    Sie können größer oder kleiner werden, oder ihre Größe beibehalten.
+	 * c) Fordere die Swing-Umgebung auf, alle JComponents neu zu zeichnen.
+	 *    Insbesondere wird hierbei der Bildschirm gecleart.
+	 * d) Beginne mit dem Zeichnen auf das Panel (d.h. in den Buffer)
 	 *
-	 * All of these actions take place in the following section of code.
+	 * Diese Aktionen passieren im folgenden Codeabteil.
 	 */
 
 
@@ -416,16 +450,18 @@ public class BoardDisplay extends JPanel {
 	 */
 	@Override
 	public void paintComponent(Graphics g) {
-		updatePolygons();
+		updateTriangles();
+		updateEdges();
 		updatePolygonSizes();
 		super.paintComponent(g);
 
-		// Antialiasing makes things look good.
+		// Antialiasing macht Kanten unpixelig.
 		if (g instanceof Graphics2D) {
 			((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 			                                  RenderingHints.VALUE_ANTIALIAS_ON);
 		}
 
+		// Die Triangles werden unter allen anderen Polygons gezeichnet.
 		mapTriangles.forEach(t -> t.drawPolygon(g));
 		mapEdges.forEach(e -> e.drawPolygon(g));
 		mapDots.forEach(d -> d.drawPolygon(g));
@@ -433,15 +469,7 @@ public class BoardDisplay extends JPanel {
 		blueStatusDisplay.draw(g);
 	}
 
-	// NOTE: NONE of the following methods may be called by anything but #paintComponent
-
-	/**
-	 * Updatet die {@link BoardPolygon}s nach einem Zug, die ein Update benötigen.
-	 */
-	private void updatePolygons() {
-		updateTriangles();
-		updateEdges();
-	}
+	// NOTE: Keine der folgenden Methoden sollte außer durch #paintComponent aufgeruft werden.
 
 	/**
 	 * Updatet die {@link Triangle}s nach einem Zug.
@@ -451,20 +479,26 @@ public class BoardDisplay extends JPanel {
 		Collection<Flower> blueFlowers = boardViewer.getFlowers(PlayerColor.Blue);
 
 		for (Triangle t : mapTriangles) {
+			// Jedes Dreieck soll zuerst die Hintergrundfarbe dieses Displays bekommen.
 			t.setFillColour(getBackground());
 			Flower flower = t.toFlower();
+
 			if ((redFlowers != null) && redFlowers.contains(flower)) {
+				// Für den Fall, dass die aktuelle Blume dem roten Spieler gehört...
 				if (boardViewer.getFlowerBed(flower).size() > 3)
 					t.setFillColour(redInGardenColour);
 				else
 					t.setFillColour(redColour);
 			}
 			else if ((blueFlowers != null) && blueFlowers.contains(flower)) {
+				// oder dem blauen Spieler gehört, färbe das Dreieck entsprechend.
 				if (boardViewer.getFlowerBed(flower).size() > 3)
 					t.setFillColour(blueInGardenColour);
 				else
 					t.setFillColour(blueColour);
 			} else {
+				// Andererseits, überprüfe, ob der Spieler gerade einen Flower-Move macht
+				// und diese Blume als erstes ausgewählt hat.
 				if (displayMouseHandler.clickedFlower1 != null) {
 					if (flower.equals(displayMouseHandler.clickedFlower1)) {
 						t.setFillColour(triangleClickedColour);
@@ -475,6 +509,8 @@ public class BoardDisplay extends JPanel {
 					t.setFillColour(triangleCombinableColour);
 				}
 			}
+
+			// Sonst behält das Triangle die Hintergrundfarbe dieses Displays.
 		}
 	}
 
@@ -489,13 +525,17 @@ public class BoardDisplay extends JPanel {
 			Ditch ditch = e.toDitch();
 			Move move = new Move(ditch);
 
+			// Färbe die Edge in der Farbe, die den Spieler repräsentiert, dem sie gehört.
 			if ((redDitches != null) && (redDitches.contains(ditch))) {
 				e.setFillColour(redColour);
 			} else if ((blueDitches != null) && (blueDitches.contains(ditch))) {
 				e.setFillColour(blueColour);
 			} else if ((possibleDitchMoves != null) && possibleDitchMoves.contains(move)) {
+				// Wenn sie niemandem gehört, aber der Spieler gerade spielen soll,
+				// färbe sie, um das darzustellen.
 				e.setFillColour(edgeClickableColour);
 			} else {
+				// Sonst, färbe sie in der Standardfarbe.
 				e.setFillColour(edgeDefaultColour);
 			}
 		}
@@ -506,11 +546,13 @@ public class BoardDisplay extends JPanel {
 	 * {@link Dimension} des Zeichenbretts anzupassen.
 	 */
 	private void updatePolygonSizes() {
+		// Teile die Höhe dieses Dreiecks auf die verschiedenen Triangles auf.
 		Dimension displaySize = getSize();
 		setPreferredSize(displaySize);
 		int minimumSize = Math.min(displaySize.width, displaySize.height);
 
-		// The triangles may not be larger than a fraction percentage of the shortest side.
+		// Triangles sollen etwas kleiner sein als maximal möglich,
+		// um einen gesicherten Abstand zum JFrame-Rand sicherzustellen.
 		int sideLength = minimumSize / (boardSize + 1);
 		Point drawBegin = new Point();
 		drawBegin.x = (displaySize.width / 2) - sideLength * (boardSize + 2) / 2;
@@ -525,12 +567,14 @@ public class BoardDisplay extends JPanel {
 
 
 	/*
-	 * The display needs to take care of general clickage.
-	 * The following portion of code:
-	 * 1.1) waits for clicks from the Swing environment.
-	 * 1.2) evaluates the click that has happened:
-	 *      a) If it is a click on a triangle, eligibility for flowerage must be ensured.
-	 *      b) If it is a click on an edge, eligibility for ditcherage must be ensured.
+	 * Das Display muss sich um Klicks auf sich selbst kümmern.
+	 * Dabei:
+	 * 1.1) wartet es auf einen Klick (gemeldet von der Swing-Umgebung)
+	 * 1.2) evaluiert es den Klick und:
+	 *      a) wenn es ein Klick auf ein Triangle ist, wird sichergestellt,
+	 *         dass dadurch kein ungültiger Move entsteht.
+	 *      b) wenn es ein Klick auf eine Edge ist, wird sichergestellt,
+	 *         dass dadurch kein ungültiger Move entsteht.
 	 */
 
 
@@ -541,11 +585,15 @@ public class BoardDisplay extends JPanel {
 	 * Ein {@link Move}, der von vom menschlichen User erfragt wird.
 	 */
 	public Move requestMove() throws InterruptedException {
+		// Es ist notwendig, den MouseHandler zurückzusetzen,
+		// um sicherzustellen, Klicks, die der Nutzer seit dem letzten request gemacht hat,
+		// das Spielverhalten nicht beeinflussen.
 		displayMouseHandler.reset();
 		displayMouseHandler.isRequesting = true;
 
-		// If the game has ended already, no moves should be drawn
-		// even if there might still be moves available.
+		// Wenn das Spiel bereits zuende ist,
+		// sollen keine weiteren möglichen Moves mehr angezeigt werden,
+		// selbst wenn es noch welche gäbe.
 		if ((boardViewer.getStatus() != Status.Ok) && (!gameEnd)) {
 			possibleDitchMoves = null;
 			combinableFlowers = null;
@@ -554,21 +602,28 @@ public class BoardDisplay extends JPanel {
 			combinableFlowers = boardViewer.getPossibleFlowers();
 		}
 
-		// This sets the endButton enabled if and only if there is an "End" move available.
+		// Ändert den Status der Buttons in der Toolbar.
+		// Insbesondere setzt es den End-Button auf enabled genau dann,
+		// wenn es einen "End"-Move gibt.
 		bottomToolbarPanel.setSurrenderEnabled(true);
 		bottomToolbarPanel.setEndEnabled(boardViewer.possibleMovesContains(new Move(MoveType.End)));
 		bottomToolbarPanel.setLabelText(boardViewer.getTurn() + " ist am Zug.");
 
 
-		// NOTE: This is actually the most crucial method call.
+		getParent().repaint();
+		// Erwartet einen Move.
+		// NOTE: Laut Javadoc ist es wichtig, Object#wait in einer Schleife aufzurufen.
+		// Da #awaitMove Object#wait aufruft, muss hier synchronised werden
 		Move result = null;
-		while (result == null) {
-			result = awaitMove();
+		synchronized (displayMouseHandler.moveAwaitLock) {
+			while (result == null) {
+				result = awaitMove();
+			}
 		}
 
 
 		displayMouseHandler.reset();
-		// This sets the endButton enabled if and only if there is an "End" move available.
+		// Wenn der Spieler nicht am Zug ist, soll er auch keinen machen.
 		bottomToolbarPanel.setSurrenderEnabled(false);
 		bottomToolbarPanel.setEndEnabled(false);
 		combinableFlowers = null;
@@ -576,32 +631,41 @@ public class BoardDisplay extends JPanel {
 		return result;
 	}
 
+	/**
+	 * Erwartet einen Move vom {@link DisplayMouseHandler}.
+	 *
+	 * @return
+	 * Einen {@link Move}, oder <code>null</code>,
+	 * wenn der Spieler seinen Zug noch nicht beendet hat.
+	 *
+	 * @throws InterruptedException
+	 * Wenn {@link Object#wait()} eine {@link InterruptedException} wirft.
+	 */
 	private Move awaitMove() throws InterruptedException {
+		displayMouseHandler.moveAwaitLock.wait();
+
 		Move result;
-
-		synchronized (displayMouseHandler.moveAwaitLock) {
-			getParent().repaint();
-			displayMouseHandler.moveAwaitLock.wait();
-
-			switch (displayMouseHandler.moveType) {
-				case Surrender:
-					result = new Move(MoveType.Surrender);
-					break;
-				case End:
-					result = new Move(MoveType.End);
-					if (!boardViewer.possibleMovesContains(result)) {
-						result = null;
-						displayMouseHandler.reset();
-						displayMouseHandler.isRequesting = true;
-					}
-					break;
-				case Ditch:
-					result = checkForDitchMove();
-					break;
-				default:
-					result = checkForFlowerMove();
-					break;
-			}
+		switch (displayMouseHandler.moveType) {
+			case Surrender:
+				// Man darf immer aufgeben, also soll ein Surrender-Move zurückgegeben werden.
+				result = new Move(MoveType.Surrender);
+				break;
+			case End:
+				// Man darf das Spiel nicht immer beenden.
+				// Es wird ein Move-Objekt benötigt, um prüfen zu können, ob das möglich ist.
+				result = new Move(MoveType.End);
+				if (!boardViewer.possibleMovesContains(result)) {
+					result = null;
+					displayMouseHandler.reset();
+					displayMouseHandler.isRequesting = true;
+				}
+				break;
+			case Ditch:
+				result = checkForDitchMove();
+				break;
+			default:
+				result = checkForFlowerMove();
+				break;
 		}
 
 		return result;
@@ -617,13 +681,22 @@ public class BoardDisplay extends JPanel {
 	 */
 	private Move checkForFlowerMove() {
 		Flower flower1 = displayMouseHandler.clickedFlower1;
+
 		if (!boardViewer.possibleMovesContainsMovesContaining(flower1)) {
+			// Wenn die Blume in keinem möglichen Zug gültig ist,
+			// soll der Klick (effektiv) ignoriert werden.
 			displayMouseHandler.reset();
 			displayMouseHandler.isRequesting = true;
 		} else if (displayMouseHandler.clickedFlower2 == null) {
+			// Wenn die geklickte Flower erst die erste war,
+			// sollen die möglichen Kombinationen gefärbt werden.
+			// Außerdem darf dann kein Ditch-Move mehr gewählt werden.
 			combinableFlowers = boardViewer.getFlowersCombinableWith(flower1);
 			possibleDitchMoves = null;
 		} else {
+			// Wenn schon eine zweite Flower geklickt wurde, muss sichergestellt werden,
+			// dass die entstehende Kombination gültig ist.
+			// Sonst soll der Klick (effektiv) ignoriert werden.
 			Flower flower2 = displayMouseHandler.clickedFlower2;
 			if (flower1.equals(flower2)) {
 				displayMouseHandler.reset();
@@ -651,17 +724,14 @@ public class BoardDisplay extends JPanel {
 	private Move checkForDitchMove() {
 		Ditch ditch = displayMouseHandler.clickedDitch;
 
-		if (ditch == null) {
+		// Wenn der durch den Ditch-Klick resultierende Move ungültig ist,
+		// soll der Klick (effektiv) ignoriert werden.
+		Move result = new Move(ditch);
+		if (boardViewer.possibleMovesContains(result))
+			return result;
+		else {
 			displayMouseHandler.reset();
 			displayMouseHandler.isRequesting = true;
-		} else {
-			Move result = new Move(ditch);
-			if (boardViewer.possibleMovesContains(result))
-				return result;
-			else {
-				displayMouseHandler.reset();
-				displayMouseHandler.isRequesting = true;
-			}
 		}
 
 		return null;
@@ -674,11 +744,12 @@ public class BoardDisplay extends JPanel {
 		redStatusDisplay.updateStatus(boardViewer.getPoints(PlayerColor.Red));
 		blueStatusDisplay.updateStatus(boardViewer.getPoints(PlayerColor.Blue));
 
-		if ((boardViewer.getStatus() != Status.Ok) && (!gameEnd)) {
+		// Wenn das Spiel zuende ist, soll ein Dialog das anzeigen.
+		if ((boardViewer.getStatus() != Status.Ok) && (gameEnd)) {
 			possibleDitchMoves = null;
 
-			// NOTE: This is necessary to be invoked by EventQueue.
-			// Due to Swing's Threading structure, the program stalls otherwise.
+			// NOTE: Es ist wichtig, dass der Konstruktor durch EventQueue aufgerufen wird,
+			// da das Programm aufgrund Swings Threading-Struktur sonst blockiert.
 			EventQueue.invokeLater(() -> new EndPopupFrame(boardViewer.getStatus()));
 			gameEnd = true;
 		}

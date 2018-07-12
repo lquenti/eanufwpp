@@ -6,8 +6,17 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
 public class Dot extends BoardPolygon {
+	/**
+	 * Die {@link Position} dieses Punkts auf dem Spielbrett.
+	 */
 	private Position position;
+	/**
+	 * Die Position dieses Points auf dem Swing-Zeichenbrett.
+	 */
 	private Point currentLocation;
+	/**
+	 * Der aktuelle Durchmesser in Pixeln.
+	 */
 	private int currentDiameter = 1;
 
 	/**
@@ -18,7 +27,7 @@ public class Dot extends BoardPolygon {
 	 * @param position
 	 * Die {@link Position}, an der dieser Punkt liegen soll.
 	 */
-	public Dot(Position position) {
+	public Dot(Position position, Color fillColour) {
 		super(Color.WHITE, Color.BLACK);
 		this.position = position;
 		currentLocation = new Point();

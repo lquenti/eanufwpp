@@ -15,8 +15,9 @@ public class BottomToolbarPanel extends JPanel {
 	 */
 	private JLabel currentPlayerLabel = new JLabel();
 	/**
-	 *
+	 * Der Border der um das {@link #currentPlayerLabel} gelegt wird.
 	 */
+	// NOTE: Oben, links, unten, rechts.
 	private Border playerLabelBorder = new EmptyBorder(0, 10, 0, 10);
 	/**
 	 * Das {@link JPanel}, das die Buttons containt.

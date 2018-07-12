@@ -19,7 +19,14 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 	 */
 	private BoardDisplay boardDisplay;
 
+	/**
+	 * Das {@link LoadingScreen}-Objekt, das den Ladebildschirm darstellt.
+	 */
 	private LoadingScreen loadingScreen = new LoadingScreen();
+
+	/**
+	 * Das {@link BottomToolbarPanel}, das die Toolbar am unteren Bildschirmrand darstellt.
+	 */
 	private BottomToolbarPanel bottomToolbarPanel = new BottomToolbarPanel();
 
 	/**
@@ -37,6 +44,7 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 		setVisible(true);
 	}
 
+	// NOTE: synchronized, da ggf. ein Singleton gesetzt wird.
 	/**
 	 * Gibt einen Verweis auf die singuläre Instanz dieser Singleton-Klasse zurück. Falls noch keine Instanz existiert,
 	 * wird eine neue erzeugt.

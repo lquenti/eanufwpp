@@ -124,9 +124,12 @@ public abstract class BoardPolygon extends Polygon {
 	public Point positionToPoint(Position position, int triangleSideLength, Point referencePoint) {
 		int column = position.getColumn();
 		int row = position.getRow();
+
+		// Geometrie
 		Point point = new Point(referencePoint);
 		point.x += (int) (((row - 1) / 2.0) * triangleSideLength) + column * triangleSideLength;
 		point.y -= ((row - 1) * (triangleSideLength * triangleSideHeightFactor));
+
 		return point;
 	}
 }
