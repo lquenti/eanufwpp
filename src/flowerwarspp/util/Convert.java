@@ -25,7 +25,7 @@ public class Convert {
 				return "Der blaue Spieler hat das Spiel gewonnen!";
 			case Illegal:
 			default:
-				Log.log(LogLevel.ERROR, LogModule.IO, "Invalid status passed to EndPopupFrame");
+				Log.log(LogLevel.ERROR, LogModule.IO, "Invalid status passed to statusToText");
 				return null;
 		}
 	}

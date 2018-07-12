@@ -8,6 +8,7 @@ import flowerwarspp.main.savegame.SaveGame;
 import flowerwarspp.player.*;
 import flowerwarspp.preset.*;
 import flowerwarspp.util.log.*;
+import flowerwarspp.util.*;
 
 /**
  * Diese Klasse realisiert das Hauptprogramm. Ein neues Spiel wird auf Basis der an {@link Main} übergebenen Argumente
@@ -21,32 +22,32 @@ public class Game {
 	private MainBoard board;
 
 	/**
-	 * Referenz auf eine Klasse welche das Interface {@link Viewer} implementiert, um auf den {@link Status} des
+	 * Referenz auf ein Objekt, welches das Interface {@link Viewer} implementiert, um auf den {@link Status} des
 	 * Spielbretts zugreifen zu können.
 	 */
 	private Viewer viewer;
 
 	/**
-	 * Eine Referenz auf eine Klasse welche das Interface {@link Requestable} implementiert, um Züge von einem {@link
+	 * Eine Referenz auf ein Objekt, welches das Interface {@link Requestable} implementiert, um Züge von einem {@link
 	 * InteractivePlayer} anzufordern.
 	 */
 	private Requestable input;
 
 	/**
-	 * Eine Referenz auf eine Klasse welche das Interface {@link Output} implementiert, um das Spiel für den Benutzer
+	 * Eine Referenz auf ein Objekt, welches das Interface {@link Output} implementiert, um das Spiel für den Benutzer
 	 * sichtbar und nachvollziehbar zu machen.
 	 */
 	private Output output;
 
 	/**
-	 * Eine Referenz auf den Spieler, der in der aktuellen Iteration der Game-Loop am Zug ist.
+	 * Der rote Spieler.
 	 */
-	private Player currentPlayer;
+	private Player redPlayer;
 
 	/**
-	 * Eine Referenz auf den Spieler, der in der aktuellen Iteration der Game-Loop nicht am Zug ist.
+	 * Der blaue Spieler.
 	 */
-	private Player oppositePlayer;
+	private Player bluePlayer;
 
 	/**
 	 * Die von der Kommandezeile gelesenen und gesetzten Parameter für das Starten eines neuen Spiels.
@@ -166,24 +167,49 @@ public class Game {
 		int bluePoints = 0;
 		int draws = 0;
 
-		for ( int i = 0; i < n; i++ ) {
+		createPlayers();
+
+		for (int i = 0; i < n; i++) {
 			System.out.println("Spiel " + ( i + 1 ) + " von " + n + " wird gestartet...");
 
-			initLocalGame();
-			switch ( run() ) {
+			initBoard();
+			initPlayers();
+			output.setViewer(viewer);
+
+			switch (run()) {
 				case RedWin:
-					redWins++;
+					if (i % 2 == 0) {
+						redWins++;
+					} else {
+						blueWins++;
+					}
 					break;
 				case BlueWin:
-					blueWins++;
+					if (i % 2 == 0) {
+						blueWins++;
+					} else {
+						redWins++;
+					}
 					break;
 				case Draw:
 					draws++;
 					break;
 			}
 
-			redPoints += viewer.getPoints(PlayerColor.Red);
-			bluePoints += viewer.getPoints(PlayerColor.Blue);
+			if (i % 2 == 0) {
+				redPoints += viewer.getPoints(PlayerColor.Red);
+				bluePoints += viewer.getPoints(PlayerColor.Blue);
+			} else {
+				redPoints += viewer.getPoints(PlayerColor.Blue);
+				bluePoints += viewer.getPoints(PlayerColor.Red);
+			}
+
+			System.out.println(Convert.statusToText(viewer.getStatus()));
+			System.out.println("Wechsle die Seiten...");
+			// Spieler tauschen die Seiten
+			Player t = redPlayer;
+			redPlayer = bluePlayer;
+			bluePlayer = t;
 		}
 
 		System.out.println();
@@ -211,34 +237,20 @@ public class Game {
 
 		// Es wird versucht, den verlangten Spielstand zu laden. load(String) kann eine LoadException werfen, diese
 		// wird dann vom Hauptprogramm in init() vernünftig behandelt.
-		saveGame = SaveGame.load(gameParameters.getSaveGameName());
+		SaveGame loadedSaveGame = SaveGame.load(gameParameters.getSaveGameName());
 
 		boardSize = saveGame.getBoardSize();
 
-		// Spielbrett gemäß der Kommandozeilenparameter erstellen.
-		board = new MainBoard(boardSize);
+		initBoard();
 
-		// Dem Output-Objekt wird eine Referenz auf den Viewer des neu erzeugten Spielbretts gegeben.
-		viewer = board.viewer();
 		output.setViewer(viewer);
 
 		// Das Replay des Spielstands wird nun ausgeführt.
-		replay();
+		replay(loadedSaveGame);
 
 		Log.log(LogLevel.INFO, LogModule.MAIN, "Savegame " + gameParameters.getSaveGameName() + " loaded");
 
-		// Der Spieler, welcher aktuell am Zug sein sollte und dessen Gegner werden entsprechend erstellt und
-		// initialisiert.
-		if ( board.viewer().getTurn() == PlayerColor.Red ) {
-
-			currentPlayer = Players.createPlayer(gameParameters.getRedType(), input, new MainBoard(board));
-			oppositePlayer = Players.createPlayer(gameParameters.getBlueType(), input, new MainBoard(board));
-		} else {
-
-			oppositePlayer = Players.createPlayer(gameParameters.getRedType(), input, new MainBoard(board));
-			currentPlayer = Players.createPlayer(gameParameters.getBlueType(), input, new MainBoard(board));
-		}
-
+		createPlayers();
 		initPlayers();
 	}
 
@@ -251,8 +263,8 @@ public class Game {
 
 		Log.log(LogLevel.INFO, LogModule.MAIN, "Initializing players.");
 
-		currentPlayer.init(gameParameters.getBoardSize(), PlayerColor.Red);
-		oppositePlayer.init(gameParameters.getBoardSize(), PlayerColor.Blue);
+		redPlayer.init(boardSize, PlayerColor.Red);
+		bluePlayer.init(boardSize, PlayerColor.Blue);
 	}
 
 	/**
@@ -270,31 +282,44 @@ public class Game {
 	}
 
 	/**
+	 * Initialisiert das Spielbrett.
+	 */
+	private void initBoard() {
+		// Eine neues Spielbrett wird mit der gegebenen Größe initialisiert.
+		board = new MainBoard(boardSize);
+		viewer = board.viewer();
+
+		// Zum Speichern des Spiels wird ein neues Objekt der Klasse saveGame erstellt.
+		saveGame = new SaveGame(boardSize);
+
+		Log.log(LogLevel.INFO, LogModule.MAIN, "Initialized main board.");
+	}
+
+	/**
+	 * Initialisiert die Spieler.
+	 */
+	private void createPlayers() {
+		// Roter und blauer Spieler werden auf Grundlage der Kommandozeilenparameter erstellt.
+		if (board == null) {
+			redPlayer = Players.createPlayer(gameParameters.getRedType(), input);
+			bluePlayer = Players.createPlayer(gameParameters.getBlueType(), input);
+		} else {
+			redPlayer = Players.createPlayer(gameParameters.getRedType(), input, new MainBoard(board));
+			bluePlayer = Players.createPlayer(gameParameters.getBlueType(), input, new MainBoard(board));
+		}
+
+		Log.log(LogLevel.INFO, LogModule.MAIN, "Players created.");
+	}
+
+	/**
 	 * Initialisiert das Spiel. Das Spielbrett und die beiden Spieler werden initialisiert.
 	 *
 	 * @throws Exception Falls während der Initialisierung der Spieler oder des Spielbretts Fehler aufgetreten sind.
 	 */
 	private void initLocalGame() throws Exception {
-
-		// Eine neues Spielbrett wird mit der gegebenen Größe initialisiert.
-		board = new MainBoard(gameParameters.getBoardSize());
-
-		// Zum Speichern des Spiels wird ein neues Objekt der Klasse saveGame erstellt.
-		saveGame = new SaveGame(gameParameters.getBoardSize());
-
-		Log.log(LogLevel.INFO, LogModule.MAIN, "Initialized main board.");
-
-		// Roter und blauer Spieler werden auf Grundlage der Kommandozeilenparameter mit createPlayers() erstellt.
-		currentPlayer = Players.createPlayer(gameParameters.getRedType(), input, new MainBoard(board));
-		oppositePlayer = Players.createPlayer(gameParameters.getBlueType(), input, new MainBoard(board));
-
-		Log.log(LogLevel.INFO, LogModule.MAIN, "Players created.");
-
-		// Beide Spieler werden initialisiert.
+		initBoard();
+		createPlayers();
 		initPlayers();
-
-		// Dem Output-Objekt wird eine Referenz auf den Viewer des neu erzeugten Spielbretts gegeben.
-		viewer = board.viewer();
 		output.setViewer(viewer);
 	}
 
@@ -312,6 +337,16 @@ public class Game {
 		// TODO: Refactor!!!
 
 		Log.log(LogLevel.INFO, LogModule.MAIN, "Starting main game loop.");
+
+		Player currentPlayer = null;
+		Player oppositePlayer = null;
+		if (viewer.getTurn() == PlayerColor.Red) {
+			currentPlayer = redPlayer;
+			oppositePlayer = bluePlayer;
+		} else {
+			currentPlayer = bluePlayer;
+			oppositePlayer = redPlayer;
+		}
 
 		try {
 			while ( viewer.getStatus() == Status.Ok ) {
@@ -370,15 +405,15 @@ public class Game {
 	 *
 	 * @throws InterruptedException Falls der {@link Thread} während des Wartens unterbrochen worden ist.
 	 */
-	private void replay() throws InterruptedException {
+	private void replay(SaveGame loadedSaveGame) throws InterruptedException {
 
 		Log.log(LogLevel.INFO, LogModule.MAIN, "Starting replay of loaded savegame: "
 				+ gameParameters.getSaveGameName());
 
-		// Mit dem, von SaveGame implementierten, Iterator wird durch alle Züge iteriert. Diese werden jeweils auf dem
+		// Mit dem von SaveGame implementierten Iterator wird durch alle Züge iteriert. Diese werden jeweils auf dem
 		// Spielbrett ausgeführt.
-		for ( final Move aSaveGame : saveGame ) {
-			board.make(aSaveGame);
+		for ( Move move : loadedSaveGame ) {
+			board.make(move);
 			if ( gameParameters.getReplaySpeed() > 0 ) {
 				output.refresh();
 				Thread.sleep(gameParameters.getReplaySpeed());
