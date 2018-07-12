@@ -515,13 +515,13 @@ public class MainBoard implements Board {
 	}
 
 	/**
-	 * Gibt den Wert einer aktuellen Beetenkette zurueck.
+	 * Gibt den Wert einer aktuellen Beetenkette zurück.
 	 *
-	 * @param f Blume welche der Beetenkette angehoert.
+	 * @param flower Blume, welche der Beetenkette angehoert.
 	 * @return Der Wert an Punkten.
 	 */
-	private int getBedChainScore(final Flower f) {
-		HashSet<HashSet<Flower>> bedChain = getBedChain(f);
+	private int getBedChainScore(final Flower flower) {
+		HashSet<HashSet<Flower>> bedChain = getBedChain(flower);
 		int score = 0;
 		for (HashSet<Flower> bed : bedChain) {
 			if (bed.size() == 4) {
@@ -534,28 +534,28 @@ public class MainBoard implements Board {
 	/**
 	 * Gibt die Positionen einer Blume zurueck.
 	 *
-	 * @param f Blume wessen Positionen zurueckgegeben werden.
+	 * @param flower Blume, wessen Positionen zurueckgegeben werden.
 	 * @return Positionen der Blume.
 	 */
-	private Position[] getPositions(final Flower f) {
-		return new Position[]{f.getFirst(), f.getSecond(), f.getThird()};
+	private Position[] getPositions(final Flower flower) {
+		return new Position[]{flower.getFirst(), flower.getSecond(), flower.getThird()};
 	}
 
 	/**
 	 * Gibt die Positionen eines Grabens zurueck.
 	 *
-	 * @param d Graben wessen Positionen zurueckgegeben werden.
+	 * @param ditch Graben wessen Positionen zurueckgegeben werden.
 	 * @return Position des Grabens.
 	 */
-	private Position[] getPositions(final Ditch d) {
-		return new Position[]{d.getFirst(), d.getSecond()};
+	private Position[] getPositions(final Ditch ditch) {
+		return new Position[]{ditch.getFirst(), ditch.getSecond()};
 	}
 
 	/**
-	 * Checkt ob ein Beet legal ist.
+	 * Überprüft ob ein Beet legal ist.
 	 *
-	 * @param bed Beet welches ueberprueft wird.
-	 * @param player Farbe des Spielers, dem das Beet gehoert.
+	 * @param bed Beet, welches überprueft wird.
+	 * @param player Farbe des Spielers, dem das Beet gehört.
 	 * @return Ob das Beet legal ist.
 	 */
 	private boolean isLegalBed(final Collection<Flower> bed, final PlayerColor player) {
@@ -567,12 +567,12 @@ public class MainBoard implements Board {
 	/**
 	 * Gibt die Spielerfarbe eines Grabens zurueck. Returniert null wenn Graben noch nicht gesetzt wurde.
 	 *
-	 * @param d Graben, welcher ueberprueft wird.
-	 * @return Farbe des Grabens
+	 * @param ditch Graben, welcher überprueft wird.
+	 * @return Farbe des Grabens.
 	 */
-	private PlayerColor getDitchColor(final Ditch d) {
+	private PlayerColor getDitchColor(final Ditch ditch) {
 		for (Map.Entry<PlayerColor, PlayerData> entry : playerData.entrySet()) {
-			if (entry.getValue().ditches.contains(d)) {
+			if (entry.getValue().ditches.contains(ditch)) {
 				return entry.getKey();
 			}
 		}
@@ -580,14 +580,14 @@ public class MainBoard implements Board {
 	}
 
 	/**
-	 * Gibt die Spielerfarbe einer Blume zurueck. Returniert null wenn Blume noch nicht gesetzt wurde.
+	 * Gibt die Spielerfarbe einer Blume zurück. Returniert null wenn Blume noch nicht gesetzt wurde.
 	 *
-	 * @param f Blume, welche ueberprueft wird.
+	 * @param flower Blume, welche überprueft wird.
 	 * @return Farbe der Blume
 	 */
-	private PlayerColor getFlowerColor(final Flower f) {
+	private PlayerColor getFlowerColor(final Flower flower) {
 		for (Map.Entry<PlayerColor, PlayerData> entry : playerData.entrySet()) {
-			if (entry.getValue().flowers.contains(f)) {
+			if (entry.getValue().flowers.contains(flower)) {
 				return entry.getKey();
 			}
 		}
@@ -597,18 +597,18 @@ public class MainBoard implements Board {
 	/**
 	 * Gibt das dazugehoerige Beet einer Blume zurueck.
 	 *
-	 * @param f Blume, welche zu dem Beet gehoert.
-	 * @return Beet.
+	 * @param flower Blume, welche zu dem Beet gehoert.
+	 * @return Beet
 	 */
-	private HashSet<Flower> getFlowerBed(final Flower f) {
-		PlayerColor flowerColor = getFlowerColor(f);
+	private HashSet<Flower> getFlowerBed(final Flower flower) {
+		PlayerColor flowerColor = getFlowerColor(flower);
 		if (flowerColor == null) {
 			return null;
 		}
 
 		HashSet<Flower> result = new HashSet<>();
 		Stack<Flower> toVisit = new Stack<>();
-		toVisit.add(f);
+		toVisit.add(flower);
 
 		while (!toVisit.empty()) {
 			Flower visiting = toVisit.pop();
@@ -728,9 +728,9 @@ public class MainBoard implements Board {
 	}
 
 	/**
-	 * Returniert die Blumen, die direkt an einem Beet anliegen anliegen.
+	 * Returniert die Blumen, die direkt an einem Beet anliegen.
 	 *
-	 * @param bed Beet, wessen direkte Nachbarn gesucht werden.
+	 * @param bed Beet, wessen direkten Nachbarn gesucht werden.
 	 * @return die direkten Nachbarn des Beetes.
 	 */
 	private HashSet<Flower> getDirectNeighbors(final Collection<Flower> bed) {
@@ -825,6 +825,12 @@ public class MainBoard implements Board {
 		return result;
 	}
 
+	/**
+	 * Gibt alle Blumen im Uhrzeigersinn zurück welche eine bestimmte Position teilen.
+	 *
+	 * @param center Position welche sich in jeder Blume befindet
+	 * @return Alle Blumen mit dieser Position
+	 */
 	private LinkedList<Flower> getFlowersAround(final Position center) {
 		LinkedList<Flower> result = new LinkedList<>();
 		Deque<Position> positions = getPositionsAround(center);
@@ -838,6 +844,12 @@ public class MainBoard implements Board {
 		return result;
 	}
 
+	/**
+	 * Gibt alle Gräben im Uhrzeigersinn zurück welche eine bestimmte Position teilen.
+	 *
+	 * @param center Position welche sich in jedem Graben befindet
+	 * @return Alle Gräben mit dieser Position
+	 */
 	private LinkedList<Ditch> getDitchesAround(final Position center) {
 		LinkedList<Ditch> result = new LinkedList<>();
 		for (Position position : getPositionsAround(center)) {
@@ -847,9 +859,9 @@ public class MainBoard implements Board {
 	}
 
 	/**
-	 * Gibt alle Beete zurueck welche mit einem Beet verbunden sind.
+	 * Gibt alle Beete zurück welche mit einem Beet verbunden sind.
 	 *
-	 * @param bed Beet, welches ueberprueft wird.
+	 * @param bed Beet, welches ueberprüft wird.
 	 * @return Die Menge aller verbundenen Beete.
 	 */
 	private HashSet<HashSet<Flower>> getBedsConnectedToBed(final HashSet<Flower> bed) {
@@ -877,46 +889,46 @@ public class MainBoard implements Board {
 
 	/**
 	 * Wertet das Spielbrett nach gesetzten Grabenzug aus.
-	 * Hierzu gehoeren das aktualisieren der moeglichen Graeben und der aktuellen Punktzahl.
+	 * Hierzu gehören das Aktualisieren der möglichen Graeben und der aktuellen Punktzahl.
 	 *
-	 * @param d der Graben welcher gesetzt wurde.
+	 * @param ditch der Graben der gesetzt wurde.
 	 */
-	private void updateAfterMove(final Ditch d) {
+	private void updateAfterMove(final Ditch ditch) {
 		// Ueber und unter Graben Flower entvalidieren
-		for (Flower f : getDirectNeighbors(d)) {
+		for (Flower ditchNeighbor : getDirectNeighbors(ditch)) {
 			for (PlayerData player : playerData.values()) {
-				player.legalMoves.removeMovesContaining(f);
+				player.legalMoves.removeMovesContaining(ditchNeighbor);
 			}
 		}
 
 		// Andere Grabenmoeglichkeiten entvalidieren falls diese sich eine Position teilen
-		for (Position p : getPositions(d)) {
-			for (Ditch samePos : getDitchesAround(p)) {
+		for (Position pos : getPositions(ditch)) {
+			for (Ditch ditchContainingPos : getDitchesAround(pos)) {
 				for (PlayerData player : playerData.values()) {
 					Log.log(LogLevel.DUMP
-							, LogModule.BOARD, "Banning Ditch: " + samePos);
-					player.legalMoves.remove(new Move(samePos));
+							, LogModule.BOARD, "Banning Ditch: " + ditchContainingPos);
+					player.legalMoves.remove(new Move(ditchContainingPos));
 				}
 			}
 		}
 
 		// Scorecheck
-		updateScore(d);
+		updateScore(ditch);
 	}
 
 	/**
 	 * Prüft, ob eine Position sich auf diesem Board befindet.
 	 * @return ob die Position auf dem Board ist
 	 */
-	private boolean isOnBoard(final Position position) {
-		return position != null
-				&& position.getColumn() > 0 && position.getRow() > 0
-				&& position.getColumn() + position.getRow() < size + 3;
+	private boolean isOnBoard(final Position pos) {
+		return pos != null
+				&& pos.getColumn() > 0 && pos.getRow() > 0
+				&& pos.getColumn() + pos.getRow() < size + 3;
 	}
 
 	/**
-	 * Prüft, ob eine Flower sich auf diesem Board befindet.
-	 * @return ob die Flower auf dem Board ist
+	 * Prüft, ob eine Blume sich auf diesem Board befindet.
+	 * @return ob die Blume auf dem Board ist
 	 */
 	private boolean isOnBoard(final Flower flower) {
 		return flower != null && isOnBoard(flower.getThird());
@@ -925,7 +937,7 @@ public class MainBoard implements Board {
 	/**
 	 * Gibt den dazugehoerigen Viewer der Klasse BoardViewer zurueck.
 	 *
-	 * @return den dazugehoerigen Viewer
+	 * @return den dazugehoerigen Viewer.
 	 */
 	@Override
 	public Viewer viewer() {
