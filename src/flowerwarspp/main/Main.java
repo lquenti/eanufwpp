@@ -17,7 +17,7 @@ public class Main {
 	 */
 	public static void quitWithUsage() {
 		System.out.println("Verwendung:");
-		System.out.println("flowerwarspp.main.Main -size <Spielfeldgröße> -red <Spielertyp> -blue <Spielertyp> "
+		System.out.println("flowerwarspp.main.Main (-offer <Spielertyp> | -size <Spielfeldgröße> -red <Spielertyp> -blue <Spielertyp>) "
 				+ "[-delay <Verzögerung>] [-load <Spielstandname>] [-replay <Verzögerung>] [-games <Anzahl Spiele>] " +
 				"[--debug] [--text] [--quiet] [--help]");
 		System.out.println();

@@ -29,8 +29,14 @@ public class Players {
 	 *              verwenden soll
 	 * @param board Bestehendes Spielbrett, welches dem Spieler zugewiesen wird
 	 * @return Ein nach den gegebenen Parametern erstellter neuer Spieler
+	 * @throes IllegalArgumentException falls versucht wird, einen Remote-Spieler mit vorhandenen
+	 * bestimmten Board zu erzeugen.
 	 */
-	public static Player createPlayer( final PlayerType type, final Requestable input, final Board board ) {
+	public static Player createPlayer( final PlayerType type, final Requestable input, final Board board ) throws IllegalArgumentException {
+		if (type == PlayerType.REMOTE && board != null) {
+			throw new IllegalArgumentException("Spielstände laden wird von Remote-Spielern nicht unterstützt.");
+		}
+
 		BasePlayer player = null;
 		switch ( type ) {
 			case REMOTE:

@@ -121,6 +121,7 @@ public class Game {
 				Log.log(LogLevel.ERROR, LogModule.MAIN, "There was an error offering the player in the " +
 						"network: " + e.getMessage());
 				System.out.println("Der Spieler konnte nicht im Netzwerk angeboten werden.");
+				System.exit(2);
 			}
 		} else if ( gameParameters.loadGame() ) {
 			try {
@@ -130,6 +131,7 @@ public class Game {
 				Log.log(LogLevel.ERROR, LogModule.MAIN, "There was an error loading the savegame "
 						+ gameParameters.getSaveGameName() + ": " + e.getMessage());
 				System.out.println("Der gegebene Spielstand konnte nicht geladen werden.");
+				System.exit(2);
 			}
 		} else if ( gameParameters.getNumberOfGames() > 1 ) {
 			try {
@@ -138,6 +140,7 @@ public class Game {
 				Log.log(LogLevel.ERROR, LogModule.MAIN, "There was an error initializing the players: "
 						+ e.getMessage());
 				System.out.println("Waehrend der Initialisierung der Spieler ist ein Fehler aufgetreten.");
+				System.exit(2);
 			}
 		} else {
 			try {
@@ -147,6 +150,7 @@ public class Game {
 				Log.log(LogLevel.ERROR, LogModule.MAIN, "There was an error initializing the players: "
 						+ e.getMessage());
 				System.out.println("Waehrend der Initialisierung der Spieler ist ein Fehler aufgetreten.");
+				System.exit(2);
 			}
 		}
 	}
@@ -231,7 +235,6 @@ public class Game {
 	 * @throws Exception Falls während des Ladens des Spielstands oder der Initialisierung des Spiels Fehler auftreten.
 	 */
 	private void loadGame() throws Exception {
-
 		Log.log(LogLevel.DEBUG, LogModule.MAIN, "Started loading savegame " + gameParameters.getSaveGameName());
 
 		// Es wird versucht, den verlangten Spielstand zu laden. load(String) kann eine LoadException werfen, diese

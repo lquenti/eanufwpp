@@ -91,15 +91,16 @@ class GameParameters {
 			// Quiet-Schalter überprüfen
 			quiet = argumentParser.isSet("quiet");
 
-			// Games-Einstellung überprüfen
-			if (argumentParser.isSet("games"))
-				numberOfGames = argumentParser.getNumberOfGames();
-
 			// If we want to offer the player, set that variable and return
 			if (argumentParser.isSet("offer")) {
+				System.out.println("Biete Netzwerkspieler an, andere Argumente werden ignoriert.");
 				offerType = argumentParser.getOffer();
 				return;
 			}
+
+			// Games-Einstellung überprüfen
+			if (argumentParser.isSet("games"))
+				numberOfGames = argumentParser.getNumberOfGames();
 
 			redType = argumentParser.getRed();
 			blueType = argumentParser.getBlue();
