@@ -82,6 +82,7 @@ public class Players {
 	/**
 	 * Diese Methode versucht einen im Netzwerk angebotenen entfernten Spieler zu finden und gibt diesen dann zurück.
 	 *
+	 * @param url Die URL des zu suchenden entfernten Spielers
 	 * @return Der im Netzwerk angebotene und gefundene entfernte Spieler
 	 */
 	public static Player findRemotePlayer(String url) {
@@ -100,6 +101,8 @@ public class Players {
 	 * Bietet einen Netzwerkspieler im Netzwerk an.
 	 *
 	 * @param player Der im Netzwerk anzubietende Spieler, verpackt als {@link RemotePlayer}.
+	 * @param name   Der Name des anzubietenden Netzwerkspielers.
+	 * @param port   Der Port des anzubietenden Netzwerkspielers.
 	 * @throws RemoteException Falls der Spieler nicht im Netzwerk angeboten werden konnte.
 	 */
 	public static void offerPlayer(RemotePlayer player, String name, int port) throws RemoteException {

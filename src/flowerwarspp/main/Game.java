@@ -332,6 +332,7 @@ public class Game {
 	 * die nächste Iteration beginnt.
 	 *
 	 * @return Der Status nach Ende des aktuellen Spiels
+	 * @throws Exception Falls während des Spiels ein Fehler aufgetreten ist.
 	 */
 	private Status run() throws Exception {
 
@@ -407,6 +408,7 @@ public class Game {
 	 * Kommandozeilenparameter verlangt worden ist, wird zwischen den einzelnen Züge eine bestimmte Zeit gewartet und
 	 * der Output aktualisiert, damit das Spielgeschehen Schritt für Schritt nachvollzogen werden kann.
 	 *
+	 * @param loadedSaveGame Der geladene Spielstand, welcher mit replay() wiedergegeben werden soll.
 	 * @throws InterruptedException Falls der {@link Thread} während des Wartens unterbrochen worden ist.
 	 */
 	private void replay(SaveGame loadedSaveGame) throws InterruptedException {
