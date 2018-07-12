@@ -1,5 +1,6 @@
 package flowerwarspp.util;
 
+import flowerwarspp.preset.PlayerType;
 import flowerwarspp.preset.Status;
 import flowerwarspp.util.log.Log;
 import flowerwarspp.util.log.LogLevel;
@@ -27,6 +28,31 @@ public class Convert {
 			default:
 				Log.log(LogLevel.ERROR, LogModule.IO, "Invalid status passed to statusToText");
 				return null;
+		}
+	}
+
+	public static String playerTypeToString(PlayerType playerType) {
+		switch (playerType) {
+			case HUMAN:
+				return "Human";
+			case RANDOM_AI:
+				return "Random AI";
+			case SIMPLE_AI:
+				return "Simple AI";
+			case ADVANCED_AI_1:
+				return "Advanced AI 1";
+			case ADVANCED_AI_2:
+				return "Advanced AI 2";
+			case ADVANCED_AI_3:
+				return "Advanced AI 3";
+			case ADVANCED_AI_4:
+				return "Advanced AI 4";
+			case ADVANCED_AI_5:
+				return "Advanced AI 5";
+			case REMOTE:
+				return "Remote player";
+			default:
+				return "ILLEGAL VALUE";
 		}
 	}
 }
