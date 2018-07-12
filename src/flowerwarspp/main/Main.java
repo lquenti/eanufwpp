@@ -19,7 +19,7 @@ public class Main {
 		System.out.println("Verwendung:");
 		System.out.println("flowerwarspp.main.Main -size <Spielfeldgröße> -red <Spielertyp> -blue <Spielertyp> "
 				+ "[-delay <Verzögerung>] [-load <Spielstandname>] [-replay <Verzögerung>] [-games <Anzahl Spiele>] " +
-				"[--debug] [--text] [--help]");
+				"[--debug] [--text] [--quiet] [--help]");
 		System.out.println();
 		System.out.println("Spielfeldgröße: Zahl zwischen 3 und 30");
 		System.out.println("Spielertyp:     \"human\", \"remote\", \"random\", \"simple\", \"adv1\", oder \"adv2\"");
@@ -29,6 +29,8 @@ public class Main {
 		System.out.println("Debug:          Zeigt Debug-Information im Log an. Optionale Flag (hat keine " +
 				"Argumente)");
 		System.out.println("Text:           Die Texteingabe wird verwendet. Optionale Flag (hat keine Argumente)");
+		System.out.println("Hilfe:          Das Programm gibt keine Informationen über den Spielablauf. Optionale Flag " +
+				"(hat keine Argumente)");
 		System.out.println("Hilfe:          Zeigt diese Hilfe an. Das Programm wird dann beendet. Optionale Flag " +
 				"(hat keine Argumente)");
 		System.exit(ERRORCODE_INVALID_ARGS);

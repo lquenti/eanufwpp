@@ -90,7 +90,7 @@ public class Game {
 		Log.setOutput(System.err);
 
 		// Den Output gemäß der Kommandozeilenparameter initialisieren.
-		if ( gameParameters.getText() || gameParameters.getNumberOfGames() > 1 ) {
+		if ( gameParameters.getText() || gameParameters.getQuiet() || gameParameters.getNumberOfGames() > 1 ) {
 			final TextInterface textInterface = new TextInterface();
 			input = textInterface;
 			output = textInterface;
@@ -204,7 +204,6 @@ public class Game {
 				bluePoints += viewer.getPoints(PlayerColor.Red);
 			}
 
-			System.out.println(Convert.statusToText(viewer.getStatus()));
 			System.out.println("Wechsle die Seiten...");
 			// Spieler tauschen die Seiten
 			Player t = redPlayer;
