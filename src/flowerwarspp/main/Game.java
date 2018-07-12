@@ -48,12 +48,18 @@ public class Game {
 	 */
 	private Player oppositePlayer;
 
+	/**
+	 * Die von der Kommandezeile gelesenen und gesetzten Parameter für das Starten eines neuen Spiels.
+	 */
 	private GameParameters gameParameters;
 
+	/**
+	 * Ein Objekt der Klasse {@link SaveGame}, welche das Laden und Speichern von Spielen ermöglicht.
+	 */
 	private SaveGame saveGame;
 
 	/**
-	 * Startet ein neues Spiel. Das Spiel wird initialisiert und der Life-Cycle des Spiel gestartet.
+	 * Startet ein neues Spiel. Das Spiel wird initialisiert und der Life-Cycle des Spiels gestartet.
 	 *
 	 * @param gameParameters Die Parameter wie sie auf der Kommandozeile übergeben worden sind
 	 */
@@ -61,8 +67,13 @@ public class Game {
 
 		this.gameParameters = gameParameters;
 		init();
+		start();
 	}
 
+	/**
+	 * Diese private Instanzmethode initialisiert ein neues Spiel. Dabei werden die nötigen Instanzvariablen und
+	 * Einstellungen gesetzt.
+	 */
 	private void init() {
 		// Dem Logger mitteilen, ob Debug-Nachrichten angezeigt werden sollen, oder nicht.
 		if ( gameParameters.getDebug() )
@@ -86,7 +97,14 @@ public class Game {
 		if ( gameParameters.getQuiet() ) {
 			output = new DummyOutput();
 		}
+	}
 
+	/**
+	 * Startet das Spiel abhängig von den Kommandozeilenparametern. In dieser Methode werden die, von den anderen
+	 * Methoden nach oben propagierten, {@link Exception}s aufgefangen und behandelt. Dadurch ist gewährleistet, dass
+	 * das Spiel im Falle von auftretenden Fehlern korrekt terminiert wird.
+	 */
+	private void start() {
 		// Das Spiel auf Basis der Kommandozeilenparameter starten.
 		if ( gameParameters.getOfferType() != null ) {
 			try {
@@ -125,6 +143,13 @@ public class Game {
 		}
 	}
 
+	/**
+	 * Startet die auf der Kommandezeile verlangte Anzahl von Spielen hintereinander und speichert die Anzahl der Siege
+	 * beider Spieler und der Unentschieden, sowie der durchschnittlichen Anzahl von Punkten beider Spieler nach Ende
+	 * eines Spiels.
+	 *
+	 * @throws Exception Falls während der Initialisierung der Spieler oder während des Spielverlaufs Fehler auftreten.
+	 */
 	private void runGameWithStats() throws Exception {
 		int n = gameParameters.getNumberOfGames();
 
@@ -167,6 +192,12 @@ public class Game {
 		System.out.println("Durchschnittliche Punktezahl (Blue): " + (double) bluePoints / n);
 	}
 
+	/**
+	 * Lädt den angegebenen Spielstand und startet mit diesen ein Spiel ab dem Punkt, an dem der Spielstand gespeichert
+	 * wurde.
+	 *
+	 * @throws Exception Falls während des Ladens des Spielstands oder der Initialisierung des Spiels Fehler auftreten.
+	 */
 	private void loadGame() throws Exception {
 
 		Log.log(LogLevel.DEBUG, LogModule.MAIN, "Started loading savegame " + gameParameters.getSaveGameName());
@@ -202,6 +233,11 @@ public class Game {
 		initPlayers();
 	}
 
+	/**
+	 * Initialisiert die beiden Spieler.
+	 *
+	 * @throws Exception Falls während der Initialisierung ein Fehler aufgetreten ist.
+	 */
 	private void initPlayers() throws Exception {
 
 		Log.log(LogLevel.INFO, LogModule.MAIN, "Initializing players.");
@@ -212,6 +248,8 @@ public class Game {
 
 	/**
 	 * Erzeugt einen Spieler und bietet ihn im Netzwerk an.
+	 *
+	 * @throws RemoteException Falls der Spieler nicht im Netzwerk angeboten werden konnte.
 	 */
 	private void offer() throws RemoteException {
 
@@ -224,6 +262,8 @@ public class Game {
 
 	/**
 	 * Initialisiert das Spiel. Das Spielbrett und die beiden Spieler werden initialisiert.
+	 *
+	 * @throws Exception Falls während der Initialisierung der Spieler oder des Spielbretts Fehler aufgetreten sind.
 	 */
 	private void initLocalGame() throws Exception {
 
@@ -312,6 +352,13 @@ public class Game {
 		return viewer.getStatus();
 	}
 
+	/**
+	 * Führt die in {@link #saveGame} gespeicherten Spielzüge auf dem Spielbrett aus. Falls dies vom Benutzer via der
+	 * Kommandozeilenparameter verlangt worden ist, wird zwischen den einzelnen Züge eine bestimmte Zeit gewartet und
+	 * der Output aktualisiert, damit das Spielgeschehen Schritt für Schritt nachvollzogen werden kann.
+	 *
+	 * @throws InterruptedException Falls der {@link Thread} während des Wartens unterbrochen worden ist.
+	 */
 	private void replay() throws InterruptedException {
 
 		Log.log(LogLevel.INFO, LogModule.MAIN, "Starting replay of loaded savegame: "
@@ -321,7 +368,7 @@ public class Game {
 		// Spielbrett ausgeführt.
 		for ( final Move aSaveGame : saveGame ) {
 			board.make(aSaveGame);
-			if (gameParameters.getReplaySpeed() > 0) {
+			if ( gameParameters.getReplaySpeed() > 0 ) {
 				output.refresh();
 				Thread.sleep(gameParameters.getReplaySpeed());
 			}
