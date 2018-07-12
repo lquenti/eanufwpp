@@ -102,8 +102,8 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	 * @throws RemoteException falls bei der Netzwerkkommunikation etwas schief gelaufen ist
 	 */
 	@Override
-	public Move request() throws Exception, RemoteException {
-		// State validation
+	public final Move request() throws Exception, RemoteException {
+		// Den Status des Spieler-Lifecycles validieren.
 		if (cycleState == PlayerFunction.NULL) {
 			log(ERROR, "request() was called before player was initialized");
 			throw new Exception(exception_NoInit);
@@ -113,15 +113,15 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 			throw new Exception(exception_CycleRequest);
 		}
 
+		// Ein Zug wird über die abstrakte Methode requestMove() angefordert.
 		final Move move = requestMove();
 
 		log(DEBUG, "move of type " + move.getType() + " returned from player through request(): " + move);
 
-		// We just assume the move is valid, might need to check later on
-		// For now we just make the move as returned by requestMove
+		// Dieser angeforderte Zug wird auf dem eigenen Spielbrett ausgeführt.
 		board.make(move);
 
-		// Update state
+		// Spieler-Lifecycle aktualisieren.
 		cycleState = PlayerFunction.CONFIRM;
 
 		return move;
@@ -148,8 +148,8 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	 * @throws RemoteException falls bei der Netzwerkkommunikation etwas schief gelaufen ist
 	 */
 	@Override
-	public void confirm(Status status) throws Exception, RemoteException {
-		// State validation
+	public final void confirm(Status status) throws Exception, RemoteException {
+		// Den Status des Spieler-Lifecycles validieren.
 		if (cycleState == PlayerFunction.NULL) {
 			log(ERROR, "confirm() was called before player was initialized");
 			throw new Exception(exception_NoInit);
@@ -159,7 +159,7 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 			throw new Exception(exception_CycleConfirm);
 		}
 
-		// Verify that player's status and main program's status are equal
+		// Validieren der Status der Bretter des Hauptprogramms und diesen Spielers.
 		final Status playerBoardState = boardViewer.getStatus();
 
 		log(DEBUG, "board status on confirm() = " + playerBoardState);
@@ -169,7 +169,7 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 			throw new Exception(exception_StatusError);
 		}
 
-		// Update state
+		// Spieler-Lifecycle aktualisieren.
 		cycleState = PlayerFunction.UPDATE;
 	}
 
@@ -185,8 +185,8 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	 * @throws RemoteException falls bei der Netzwerkkommunikation etwas schief gelaufen ist
 	 */
 	@Override
-	public void update(Move opponentMove, Status status) throws Exception, RemoteException {
-		// State validation
+	public final void update(Move opponentMove, Status status) throws Exception, RemoteException {
+		// Den Status des Spieler-Lifecycles validieren.
 		if (cycleState == PlayerFunction.NULL) {
 			log(ERROR, "update() was called before player was initialized");
 			throw new Exception(exception_NoInit);
@@ -198,10 +198,10 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 
 		log(DEBUG, "received enemy move " + opponentMove + " and status " + status);
 
-		// Process the opponent's move on this player's own board
+		// Den Spielzug des Gegners auf dem eigenen Spielbrett ausführen.
 		board.make(opponentMove);
 
-		// Verify the status
+		// Validieren der Status der Bretter des Hauptprogramms und diesen Spielers.
 		final Status playerBoardStatus = boardViewer.getStatus();
 
 		if (! playerBoardStatus.equals(status)) {
@@ -209,7 +209,7 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 			throw new Exception(exception_StatusError);
 		}
 
-		// Update state
+		// Spieler-Lifecycle aktualisieren.
 		cycleState = PlayerFunction.REQUEST;
 	}
 
@@ -227,33 +227,29 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	@Override
 	public void init(int boardSize, PlayerColor playerColour) throws Exception, RemoteException {
 
-		// Set the colour
+		// Instanzvariablen der Spielerfarben setzen.
 		this.playerColour = playerColour;
 
-		// If the cycleState is not equal to NULL, we know for certain, that init() has already been called before.
-		// Here we have to handle starting a new game with this player, i.e. making sure we have a reset board and so
-		// on.
+		// Falls der cycleState schon gesetzt worden ist (also nicht mehr gleich NULL ist), wird das Spielbrett zurück
+		// gesetzt, um ein neues Spiel zu starten.
 		if (cycleState != PlayerFunction.NULL) {
-			// Set our board to null so that we need to create a new one. The rest (setting the correct instance
-			// variables and so on, is already handled within this method.
 			board = null;
 		}
 
+		// Falls des Spielbrett noch nicht gesetzt worden ist, wird ein neues Brett gegebener Größe erzeugt und der
+		// zugehörige Viewer gesetzt.
 		if (board == null) {
 			board = new MainBoard(boardSize);
 		}
 
 		boardViewer = board.viewer();
 
-		// Now set the function life cycle according to this player's colour
+		// Der Status des Spieler-Lifecycles wird entsprechend der Spielerfarbe gesetzt. Der rote Spieler beginnt mit
+		// request(), der Blaue mit update().
 		if (playerColour == PlayerColor.Red) {
-
-			// If we have a Red player, first move is request()
 			cycleState = PlayerFunction.REQUEST;
 
 		} else {
-
-			// The Blue player has to process the Red player's move first
 			cycleState = PlayerFunction.UPDATE;
 		}
 
@@ -269,10 +265,18 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 		return playerColour;
 	}
 
+	/**
+	 * Getter-Methode für das Spielbrett dieser Klasse. Wird nur von erbenden Klassen verwendet.
+	 * @return Das Spielbrett des Spielers.
+	 */
 	protected Board getBoard() {
 		return board;
 	}
 
+	/**
+	 * Setzt das Spielbrett des Spielers.
+	 * @param board Das neue zu verwendene Spielbrett.
+	 */
 	public void setBoard(Board board) {
 		this.board = board;
 	}

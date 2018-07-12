@@ -30,34 +30,40 @@ public class SimpleAI extends BaseAI {
 	 */
 	protected int getMoveScore(final Move move) {
 
-		// We are only concerned with moves that actually make flowers.
+		// Es werden nur Blumen-Züge bewertet, Ditch-Züge werden genau dann zufällig ausgewählt, wenn es keine möglichen
+		// Blumen-Züge mehr gibt.
 		if (move.getType().equals(MoveType.Ditch)) return 0;
+
+		// Der einfache Computer-Spieler gibt niemals auf und beendet niemals das Spiel.
 		if (! move.getType().equals(MoveType.Flower)) return - 1;
 
 		int n1 = 0;
 		int n2 = 0;
 		int score;
 
-		// Obtain the direct neighbors of both flowers.
+		// Die direkten Nachbarn der ersten Zugblume aus dem Viewer abrufen. Diese werden benötigt, um zu
+		// überprüfen, ob die beiden zu setzenden Blumen nebeneinander liegen und um den Score auf Basis der
+		// Nachbarn zu berechnen.
 		final Collection<Flower> firstFlowerNeighbors = boardViewer.getDirectNeighbors(move.getFirstFlower());
 		final Collection<Flower> secondFlowerNeighbors = boardViewer.getDirectNeighbors(move.getSecondFlower());
 
-		// Iterate through all the first flower's neighbours and calculate the score.
+		// Iterieren durch alle Nachbarn beider Zug-Blumen. Die Zählvariable wird nur genau dann inkrementiert, wenn
+		// unter den Nachbarn Blumen eigener Farbe existieren.
 		for (final Flower neighbor : firstFlowerNeighbors) {
 			if (boardViewer.getFlowerColor(neighbor) == getPlayerColour())
 				n1++;
 		}
 
-		// Iterate through all the second flower's neighbours and calculate the score.
 		for (final Flower neighbor : secondFlowerNeighbors) {
 			if (boardViewer.getFlowerColor(neighbor) == getPlayerColour())
 				n2++;
 		}
 
-		// Calculate the score as indicated by the strategy.
+		// Score nach der vorgegebenen Strategie berechnen.
 		score = ( n1 + 1 ) * ( n2 + 1 );
 
-		// If both flowers are attached (i.e. if they're neighbors) double the score.
+		// Falls die beiden zu setzenden Blumen nebeneinander liegen, soll der Score verdoppelt werden.
+		// So werden Züge mit einzeln gesetzten Blumen immer nur dann gemacht, wenn es nicht anders geht.
 		if (firstFlowerNeighbors.contains(move.getSecondFlower()))
 			score *= 2;
 

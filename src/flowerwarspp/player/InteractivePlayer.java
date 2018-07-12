@@ -14,13 +14,6 @@ import flowerwarspp.preset.Requestable;
 public class InteractivePlayer extends BasePlayer {
 
 	/**
-	 * Eine vordefinierte Nachricht einer {@link Exception}, welche geworfen wird, wenn der interaktive Spieler keinen
-	 * Spielzug angeben konnte.
-	 */
-	private static final String exception_NoMove =
-			"Es konnte kein Zug vom interaktiven Spieler angefordert werden.";
-
-	/**
 	 * Wird genutzt, um Spielzüge vom Spieler anzufordern.
 	 */
 	private final Requestable input;
@@ -40,9 +33,10 @@ public class InteractivePlayer extends BasePlayer {
 	/**
 	 * Fordert einen Zug an, nach den Vorgaben der Interface-Methode {@link Player#request()}. Das Anfordern eines Zuges
 	 * wird geleistet durch ein Objekt einer Klasse welches die Schnittstelle {@link flowerwarspp.preset.Requestable}
-	 * implementiert.
+	 * implementiert. Es wird solange versucht, einen Spielzug vom Spieler anzufordern, bis ein valider und möglicher
+	 * Zug zurück gegeben wird.
 	 *
-	 * @return Der vom Spieler angeforderte Zug
+	 * @return Der vom Spieler zurück gegebene Zug
 	 * @throws Exception Falls der Spieler nicht in der Lage war, einen Zug zu liefern oder falls diese Methode zum
 	 *                   falschen Zeitpunkt innerhalb des Zyklus aufgerufen worden ist
 	 * @see Requestable

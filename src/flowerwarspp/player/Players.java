@@ -7,8 +7,6 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
-import java.util.Arrays;
-import java.util.Scanner;
 
 /**
  * Diese Klasse ermöglicht das Instanzieren von beiden Spielern, welche am aktuellen Spiel teilnehmen.
@@ -29,12 +27,14 @@ public class Players {
 	 * @throws IllegalArgumentException falls versucht wird, einen Remote-Spieler mit vorhandenen
 	 * bestimmten Board zu erzeugen.
 	 */
-	public static Player createPlayer(PlayerType type, Requestable input, String url, Board board) throws IllegalArgumentException {
-		// Falls auf dem Brett schon züge gemacht wurden, geht Netzwerkspiel nicht.
+	public static Player createPlayer(PlayerType type, Requestable input, String url, Board board)
+			throws IllegalArgumentException {
+		// Falls auf dem Brett schon Züge gemacht wurden, geht Netzwerkspiel nicht.
 		if (type == PlayerType.REMOTE && !board.viewer().getFlowers(PlayerColor.Red).isEmpty()) {
 			throw new IllegalArgumentException("Spielstände laden wird von Remote-Spielern nicht unterstützt.");
 		}
 
+		// Einen neuen Spieler gemäß des geforderten Typs erstellen.
 		BasePlayer player = null;
 		switch (type) {
 			case REMOTE:
@@ -60,6 +60,7 @@ public class Players {
 						"Players.createPlayer: Invalid PlayerType passed: " + type);
 				return null;
 		}
+		// Das gegebene Spielbrett dem Spieler zuweisen.
 		player.setBoard(board);
 		return player;
 	}

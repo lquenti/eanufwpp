@@ -36,7 +36,7 @@ abstract class BaseAI extends BasePlayer {
 	 * <code>private</code> Random Number Generator, um die zufällige Auswahl eines Spielzugs mit Hilfe von
 	 * Pseudozufallszahlen leisten zu können.
 	 */
-	static final Random random = new Random();
+	protected static final Random random = new Random();
 
 	/**
 	 * Default-Konstruktor, welcher dieses Objekt mit Standardwerten versieht.
@@ -58,7 +58,7 @@ abstract class BaseAI extends BasePlayer {
 
 		final Move move = getMove();
 
-		// If we do not have a highest scored move, we throw.
+		// Falls getMove() keinen Zug liefern konnte, wird eine Exception geworfen.
 		if (move == null) {
 			log(LogLevel.ERROR, "AI was unable to return a move");
 			throw new Exception(exception_NoMove);
@@ -88,34 +88,47 @@ abstract class BaseAI extends BasePlayer {
 		int highestScore = 0;
 		HashSet<Move> highestScoredMoves = new HashSet<>();
 
-		// Iterate through all the possible moves...
+		// Durch alle möglichen Züge iterieren...
 		for (final Move move :
 				boardViewer.getPossibleMoves()) {
 
+			// Den Score eines Zuges mit der abstrakten Methode berechnen.
 			final int score = getMoveScore(move);
 			log(LogLevel.DUMP, "move " + move + " has score of " + score);
 
-			// If the score of the currently observed move is higher than the previously highest score, update the relevant variables.
-
 			if (score >= SCORE_END) {
+				// Falls getMoveScore() einen Wert größer gleich der statischen Werte SCORE_END und SCORE_DITCH
+				// zurückgegeben hat, wird dieser Zug sofort verwendet.
 				return move;
+
 			} else if (score > highestScore) {
+				// Falls der zurück gegebene Zug einen höheren Score hat als alle Züge davor, wird dieser Zug zum höchst
+				// bewerteten Zug.
 				highestScore = score;
 				highestScoredMoves.clear();
 				highestScoredMoves.add(move);
+
 			} else if (score == highestScore) {
+				// Falls der zurück gegebene Zug einen Score gleich dem bisher höchsten Score hat, wird der aktuell
+				// betrachtete Zug der Collection der höchst bewerteten Züge hinzugefügt.
 				highestScoredMoves.add(move);
 			}
 		}
 
-		// Manually flush the log now that the data dump is complete...
+		// Nach dem Daten-Dump wird der Log manuell geflushed.
 		Log.flush();
 
 		log(LogLevel.DEBUG, "highestScore: " + highestScore + ", highestScoredMoves: " + highestScoredMoves);
 
+		// Falls die Collection der höchste bewerteten Züge leer ist wird null zurück gegeben.
 		if (highestScoredMoves.size() == 0) return null;
 
-		// Since we are using
+		// Es wird aus der Collection der am höchsten bewerteten Züge zufällig ein Zug ausgewählt.
+		// skip(int n) gibt einen neuen Stream zurück, mit den verbleibenden Elementen des Streams nachdem die ersten n
+		// Elemente übersprungen worden sind.
+		// findFirst() gibt entweder das erste Element dieses Streams als Optional zurück, oder ein Optional mit dem
+		// Wert null. Mit orElse() wird entweder dieses erste Element zurück gegeben, oder null, falls das Optional
+		// diesen Wert hat.
 		return highestScoredMoves
 				.stream()
 				.skip(( random.nextInt(highestScoredMoves.size()) ))
