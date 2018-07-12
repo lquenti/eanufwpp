@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Eine Klasse, die einen Ladebildschirm implementiert.
@@ -62,7 +63,9 @@ public class LoadingScreen extends JPanel {
 	/**
 	 * Ein {@link JLabel}, das Ladebildschirmtipps anzeigt.
 	 */
-	private JLabel loadingMessageLabel = new JLabel(loadingMessageStrings.get(0));
+	private JLabel loadingMessageLabel = new JLabel(loadingMessageStrings.get(
+			ThreadLocalRandom.current().nextInt(0, loadingMessageStrings.size())
+	));
 
 	/**
 	 * Eine Klasse, die einen Ladebildschirm implementiert.
