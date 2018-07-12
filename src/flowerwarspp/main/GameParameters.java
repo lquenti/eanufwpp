@@ -103,7 +103,7 @@ class GameParameters {
 			// Einen ArgumentParser instanziieren, damit Kommandozeilenargumente geparsed werden können.
 			ArgumentParser argumentParser = new ArgumentParser(args);
 
-			// Help-Schlater überprüfen
+			// Help-Schalter überprüfen
 			if (argumentParser.isSet("help"))
 				Main.quitWithUsage();
 
@@ -116,7 +116,8 @@ class GameParameters {
 			// Quiet-Schalter überprüfen
 			quiet = argumentParser.isSet("quiet");
 
-			// If we want to offer the player, set that variable and return
+			// Wenn ein Spieler im Netzwerk angeboten werden soll, werden die notwendigen Einstellungen geparsed und
+			// dann die Methode verlassen.
 			if (argumentParser.isSet("offer")) {
 				System.out.println("Biete Netzwerkspieler an, andere Argumente werden ignoriert.");
 				offerType = argumentParser.getOffer();

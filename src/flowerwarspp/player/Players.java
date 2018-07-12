@@ -108,14 +108,16 @@ public class Players {
 	public static void offerPlayer(RemotePlayer player, String name, int port) throws RemoteException {
 		try {
 			Log.log(LogLevel.DEBUG, LogModule.PLAYER, "Trying to offer player with name " + name + " in the " +
-					"network.");
+					"network on port " + port + ".");
 			LocateRegistry.createRegistry(port);
 			Naming.rebind(name, player);
 		} catch (MalformedURLException e) {
-			throw new RemoteException("User entered an invalid player Name.");
+			throw new RemoteException("Der Name des anzubietenden Spielers ist nicht gültig.");
 		}
 
-		System.out.println("Der Spieler mit dem Namen " + name + " ist jetzt im Netzwerk verfügbar.");
-		Log.log(LogLevel.INFO, LogModule.PLAYER, "Player has successfully been offered in the network.");
+		System.out.println("Der Spieler mit dem Namen " + name + " ist jetzt im Netzwerk auf diesem Host am Port "
+				+ port + " verfügbar.");
+		Log.log(LogLevel.INFO, LogModule.PLAYER, "Remote player " + name + " has successfully been offered" +
+				" on port " + port + " in the network.");
 	}
 }
