@@ -90,7 +90,7 @@ public class Game {
 		Log.setOutput(System.err);
 
 		// Den Output gemäß der Kommandozeilenparameter initialisieren.
-		if ( gameParameters.getText() ) {
+		if ( gameParameters.getText() || gameParameters.getNumberOfGames() > 1 ) {
 			final TextInterface textInterface = new TextInterface();
 			input = textInterface;
 			output = textInterface;
