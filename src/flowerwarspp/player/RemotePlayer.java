@@ -1,7 +1,7 @@
 package flowerwarspp.player;
 
 import flowerwarspp.board.MainBoard;
-import flowerwarspp.io.Output;
+import flowerwarspp.ui.Output;
 import flowerwarspp.preset.*;
 
 import java.rmi.RemoteException;

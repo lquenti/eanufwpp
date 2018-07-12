@@ -1,4 +1,4 @@
-package flowerwarspp.io;
+package flowerwarspp.ui;
 
 public class AnsiColors {
 	public static final String BLACK                     = "\u001B[30m";

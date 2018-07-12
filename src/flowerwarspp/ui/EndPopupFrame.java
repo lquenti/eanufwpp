@@ -1,4 +1,4 @@
-package flowerwarspp.io;
+package flowerwarspp.ui;
 
 import flowerwarspp.preset.Status;
 import flowerwarspp.util.Convert;

@@ -1,4 +1,4 @@
-package flowerwarspp.io;
+package flowerwarspp.ui;
 
 import flowerwarspp.preset.Ditch;
 import flowerwarspp.preset.Position;

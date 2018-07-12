@@ -3,12 +3,11 @@ package flowerwarspp.main;
 import java.rmi.RemoteException;
 
 import flowerwarspp.board.MainBoard;
-import flowerwarspp.io.*;
+import flowerwarspp.ui.*;
 import flowerwarspp.main.savegame.SaveGame;
 import flowerwarspp.player.*;
 import flowerwarspp.preset.*;
 import flowerwarspp.util.log.*;
-import flowerwarspp.util.*;
 
 /**
  * Diese Klasse realisiert das Hauptprogramm. Ein neues Spiel wird auf Basis der an {@link Main} übergebenen Argumente

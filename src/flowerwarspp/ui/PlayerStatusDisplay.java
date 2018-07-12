@@ -1,4 +1,4 @@
-package flowerwarspp.io;
+package flowerwarspp.ui;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;

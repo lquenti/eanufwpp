@@ -1,4 +1,4 @@
-package flowerwarspp.main;
+package flowerwarspp.ui.start;
 
 import flowerwarspp.preset.PlayerType;
 

@@ -1,7 +1,6 @@
-package flowerwarspp.io;
+package flowerwarspp.ui;
 
 import flowerwarspp.preset.Flower;
-import flowerwarspp.preset.Position;
 
 import java.awt.*;
 

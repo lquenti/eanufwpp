@@ -1,4 +1,4 @@
-package flowerwarspp.io;
+package flowerwarspp.ui;
 
 import javax.swing.*;
 import javax.swing.border.Border;
