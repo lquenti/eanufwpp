@@ -210,8 +210,8 @@ public class Log {
 						.append(' ').append(module)
 						.append(' ').append(message).append('\n');
 
-			// We don't want to flush on data dumps, since they amass a good amount of messages in short time.
-			// Not flushing while the dump is in progress saves a lot of performance.
+			// Falls das geloggte Level einen Daten-Dump beschreibt, oder falls das automatische Flushen explizit
+			// deaktiviert ist, wird der Log nicht auf die Ausgabe geschrieben.
 			if ( flushOnLog && level != DUMP ) flush();
 		}
 	}
