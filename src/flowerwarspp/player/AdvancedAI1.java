@@ -1,7 +1,9 @@
 package flowerwarspp.player;
 
 import flowerwarspp.board.MainBoard;
-import flowerwarspp.preset.*;
+import flowerwarspp.preset.Flower;
+import flowerwarspp.preset.Move;
+import flowerwarspp.preset.PlayerColor;
 
 import java.util.Collection;
 
@@ -28,9 +30,9 @@ public class AdvancedAI1 extends BaseAI {
 	 * immer zuerst genommen, da diese potentiell mehr Punkte bringen.
 	 */
 	@Override
-	protected int getMoveScore( final Move move ) {
+	protected int getMoveScore(final Move move) {
 
-		switch ( move.getType() ) {
+		switch (move.getType()) {
 			case Flower:
 				// Obtain the direct neighbors of both flowers.
 				final Collection<Flower> firstFlowerNeighbors = boardViewer.getDirectNeighbors(move.getFirstFlower());
@@ -43,7 +45,7 @@ public class AdvancedAI1 extends BaseAI {
 				int score = 4 * ( s1[0] + 1 ) * ( s2[0] + 1 ) - ( s1[1] + 1 ) * ( s2[1] + 1 );
 
 				// If both flowers are attached (i.e. if they're neighbors) double the score.
-				if ( firstFlowerNeighbors.contains(move.getSecondFlower()) )
+				if (firstFlowerNeighbors.contains(move.getSecondFlower()))
 					score *= 2;
 
 				return score;
@@ -55,7 +57,7 @@ public class AdvancedAI1 extends BaseAI {
 				MainBoard sim = new MainBoard((MainBoard) getBoard());
 				sim.make(move);
 
-				if ( sim.viewer().getPoints(getPlayerColour()) > boardViewer.getPoints(getPlayerColour()) )
+				if (sim.viewer().getPoints(getPlayerColour()) > boardViewer.getPoints(getPlayerColour()))
 					return SCORE_DITCH;
 				else
 					return 0;
@@ -76,15 +78,15 @@ public class AdvancedAI1 extends BaseAI {
 	 * @param flowerNeighbors Die Nachbarn einer Blume, dessen Score berechnet werden soll
 	 * @return Der Score basierend auf den Nachbarn einer Blume
 	 */
-	private int[] getNeighborScore( Collection<Flower> flowerNeighbors ) {
+	private int[] getNeighborScore(Collection<Flower> flowerNeighbors) {
 		int[] res = new int[2];
 
-		for ( final Flower neighbor : flowerNeighbors ) {
-			if ( boardViewer.getFlowerColor(neighbor) == getPlayerColour() )
+		for (final Flower neighbor : flowerNeighbors) {
+			if (boardViewer.getFlowerColor(neighbor) == getPlayerColour())
 				res[0]++;
 
-			if ( boardViewer.getFlowerColor(neighbor) == ( getPlayerColour() == PlayerColor.Red ? PlayerColor.Blue
-					: PlayerColor.Red ) )
+			if (boardViewer.getFlowerColor(neighbor) == ( getPlayerColour() == PlayerColor.Red ? PlayerColor.Blue
+					: PlayerColor.Red ))
 				res[1]++;
 		}
 		return res;

@@ -53,7 +53,7 @@ public class Main {
 		System.exit(ERRORCODE_INVALID_ARGS);
 	}
 
-	public static void main( String[] args ) {
+	public static void main(String[] args) {
 		new Game(new GameParameters(args));
 	}
 }

@@ -1,6 +1,8 @@
 package flowerwarspp.player;
 
-import flowerwarspp.preset.*;
+import flowerwarspp.preset.Flower;
+import flowerwarspp.preset.Move;
+import flowerwarspp.preset.MoveType;
 
 import java.util.Collection;
 
@@ -26,11 +28,11 @@ public class SimpleAI extends BaseAI {
 	 * @param move Der {@link Move} dessen Score berechnet werden soll
 	 * @return Der Score des Spielzugs
 	 */
-	protected int getMoveScore( final Move move ) {
+	protected int getMoveScore(final Move move) {
 
 		// We are only concerned with moves that actually make flowers.
-		if ( move.getType().equals(MoveType.Ditch) ) return 0;
-		if (! move.getType().equals(MoveType.Flower)) return -1;
+		if (move.getType().equals(MoveType.Ditch)) return 0;
+		if (! move.getType().equals(MoveType.Flower)) return - 1;
 
 		int n1 = 0;
 		int n2 = 0;
@@ -41,14 +43,14 @@ public class SimpleAI extends BaseAI {
 		final Collection<Flower> secondFlowerNeighbors = boardViewer.getDirectNeighbors(move.getSecondFlower());
 
 		// Iterate through all the first flower's neighbours and calculate the score.
-		for ( final Flower neighbor : firstFlowerNeighbors ) {
-			if ( boardViewer.getFlowerColor(neighbor) == getPlayerColour() )
+		for (final Flower neighbor : firstFlowerNeighbors) {
+			if (boardViewer.getFlowerColor(neighbor) == getPlayerColour())
 				n1++;
 		}
 
 		// Iterate through all the second flower's neighbours and calculate the score.
-		for ( final Flower neighbor : secondFlowerNeighbors ) {
-			if ( boardViewer.getFlowerColor(neighbor) == getPlayerColour() )
+		for (final Flower neighbor : secondFlowerNeighbors) {
+			if (boardViewer.getFlowerColor(neighbor) == getPlayerColour())
 				n2++;
 		}
 
@@ -56,7 +58,7 @@ public class SimpleAI extends BaseAI {
 		score = ( n1 + 1 ) * ( n2 + 1 );
 
 		// If both flowers are attached (i.e. if they're neighbors) double the score.
-		if ( firstFlowerNeighbors.contains(move.getSecondFlower()) )
+		if (firstFlowerNeighbors.contains(move.getSecondFlower()))
 			score *= 2;
 
 		return score;

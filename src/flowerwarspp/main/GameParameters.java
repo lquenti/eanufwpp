@@ -66,7 +66,7 @@ class GameParameters {
 
 	private boolean loadGame = false;
 
-	private long replaySpeed = -1;
+	private long replaySpeed = - 1;
 
 	/**
 	 * Erzeugt ein neues Objekt basierend auf den angegebenen Kommandozeilenparametern und versucht, diese zu parsen.
@@ -122,13 +122,13 @@ class GameParameters {
 			}
 
 			// Validate board size
-			if ( getBoardSize() < 3
+			if (getBoardSize() < 3
 					|| getBoardSize() > 30
-					|| getBoardSize() < 0 ) {
+					|| getBoardSize() < 0) {
 				throw new ArgumentParserException("Groeße des Spielfelds ist nicht gueltig.");
 			}
 
-		} catch ( ArgumentParserException e ) {
+		} catch (ArgumentParserException e) {
 			Log.log(LogLevel.ERROR, LogModule.MAIN, "Invalid arguments passed: " + Arrays.toString(args));
 			Main.quitWithUsage();
 		}

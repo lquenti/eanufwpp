@@ -1,16 +1,19 @@
 package flowerwarspp.player;
 
+import flowerwarspp.preset.Board;
+import flowerwarspp.preset.Player;
+import flowerwarspp.preset.PlayerType;
+import flowerwarspp.preset.Requestable;
+import flowerwarspp.util.log.Log;
+import flowerwarspp.util.log.LogLevel;
+import flowerwarspp.util.log.LogModule;
+
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.util.Arrays;
 import java.util.Scanner;
-
-import flowerwarspp.preset.*;
-import flowerwarspp.util.log.Log;
-import flowerwarspp.util.log.LogLevel;
-import flowerwarspp.util.log.LogModule;
 
 /**
  * Diese Klasse ermöglicht das Instanzieren von beiden Spielern, welche am aktuellen Spiel teilnehmen.
@@ -29,16 +32,16 @@ public class Players {
 	 *              verwenden soll
 	 * @param board Bestehendes Spielbrett, welches dem Spieler zugewiesen wird
 	 * @return Ein nach den gegebenen Parametern erstellter neuer Spieler
-	 * @throes IllegalArgumentException falls versucht wird, einen Remote-Spieler mit vorhandenen
-	 * bestimmten Board zu erzeugen.
+	 * @throes IllegalArgumentException falls versucht wird, einen Remote-Spieler mit vorhandenen bestimmten Board zu
+	 * erzeugen.
 	 */
-	public static Player createPlayer( final PlayerType type, final Requestable input, final Board board ) throws IllegalArgumentException {
+	public static Player createPlayer(final PlayerType type, final Requestable input, final Board board) throws IllegalArgumentException {
 		/*if (type == PlayerType.REMOTE && board != null) {
 			throw new IllegalArgumentException("Spielstände laden wird von Remote-Spielern nicht unterstützt.");
 		}*/ // Das funktioniert so leider nicht, da auch bei der Verwendung des Copy-Konstruktors Fehler auftreten.
 
 		BasePlayer player = null;
-		switch ( type ) {
+		switch (type) {
 			case REMOTE:
 				return findRemotePlayer();
 			case HUMAN:
@@ -75,7 +78,7 @@ public class Players {
 	 *              verwenden soll
 	 * @return Der erzeugte Player
 	 */
-	public static Player createPlayer( final PlayerType type, final Requestable input ) {
+	public static Player createPlayer(final PlayerType type, final Requestable input) {
 		return createPlayer(type, input, null);
 	}
 
@@ -98,7 +101,7 @@ public class Players {
 
 		System.out.print("Port des entfernten Spielers [1099]: ");
 		String port = inputScanner.nextLine();
-		if ( port.equals("") ) {
+		if (port.equals("")) {
 			port = "1099";
 		}
 		Log.log(LogLevel.INFO, LogModule.PLAYER, "Port of the remote player: " + port);
@@ -107,14 +110,15 @@ public class Players {
 
 		try {
 			offeredPlayers = Naming.list("rmi://" + host + ":" + port);
-		} catch ( RemoteException | MalformedURLException ignored ) {}
+		} catch (RemoteException | MalformedURLException ignored) {
+		}
 
-		if ( offeredPlayers != null ) {
-			if ( offeredPlayers.length > 0 ) {
+		if (offeredPlayers != null) {
+			if (offeredPlayers.length > 0) {
 				Log.log(LogLevel.INFO, LogModule.PLAYER, "These players could be found on the network: "
 						+ Arrays.toString(offeredPlayers));
 				System.out.println("Die folgenden Spieler konnten im Netzwerk gefunden werden:");
-				for ( String s : offeredPlayers ) {
+				for (String s : offeredPlayers) {
 					System.out.println(s);
 				}
 			}
@@ -127,7 +131,7 @@ public class Players {
 		Player result = null;
 		try {
 			result = (Player) Naming.lookup("rmi://" + host + ":" + port + "/" + name);
-		} catch ( Exception e ) {
+		} catch (Exception e) {
 			System.out.println("Der angegebene Spieler konnte nicht im Netzwerk gefunden werden.");
 			Log.log(LogLevel.ERROR, LogModule.PLAYER, "Unable to find the specified player on the network.");
 		}
@@ -140,7 +144,7 @@ public class Players {
 	 * @param player Der im Netzwerk anzubietende Spieler, verpackt als {@link RemotePlayer}.
 	 * @throws RemoteException Falls der Spieler nicht im Netzwerk angeboten werden konnte.
 	 */
-	public static void offerPlayer( RemotePlayer player ) throws RemoteException {
+	public static void offerPlayer(RemotePlayer player) throws RemoteException {
 
 		Scanner inputScanner = new Scanner(System.in);
 
@@ -153,7 +157,7 @@ public class Players {
 					"network.");
 			LocateRegistry.createRegistry(1099);
 			Naming.rebind(name, player);
-		} catch ( MalformedURLException e ) {
+		} catch (MalformedURLException e) {
 			throw new RemoteException("User entered an invalid URL.");
 		}
 

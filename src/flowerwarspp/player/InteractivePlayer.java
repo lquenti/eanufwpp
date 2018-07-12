@@ -32,7 +32,7 @@ public class InteractivePlayer extends BasePlayer {
 	 * @param input Ein Objekt einer Klasse welche {@link Requestable} implementiert, welches genutzt wird um einen
 	 *              Spielzug vom Spieler anzufordern.
 	 */
-	public InteractivePlayer( Requestable input ) {
+	public InteractivePlayer(Requestable input) {
 		super();
 		this.input = input;
 	}
@@ -49,7 +49,7 @@ public class InteractivePlayer extends BasePlayer {
 	 */
 	protected Move requestMove() throws Exception {
 		Move playerMove = null;
-		while ((playerMove == null) || (!boardViewer.possibleMovesContains(playerMove))) {
+		while (( playerMove == null ) || ( ! boardViewer.possibleMovesContains(playerMove) )) {
 			playerMove = input.request();
 		}
 
