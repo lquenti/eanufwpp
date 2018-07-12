@@ -24,6 +24,7 @@ public class LoadingScreen extends JPanel {
 	        // NOTE: The characters are FIRE emoji (U+1F525).
 		    // They needn't be escaped because java uses UTF16 for strings.
 	        "🔥🔥🔥CHNGS.7Z🔥🔥🔥",
+	        "Und 0 ist eindeutig kleiner als Unendlich",
 	        "Chinesische Schreibmaschinen sind echt nicht so gut.",
 			"Siehe e5e4daf4 (das hier ist kein Ladebildschirmtipp)..."
 	    );
