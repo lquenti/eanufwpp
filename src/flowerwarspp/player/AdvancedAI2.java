@@ -1,9 +1,10 @@
 package flowerwarspp.player;
 
 import flowerwarspp.board.MainBoard;
-import flowerwarspp.preset.*;
+import flowerwarspp.preset.Flower;
+import flowerwarspp.preset.Move;
+import flowerwarspp.preset.PlayerColor;
 
-import java.rmi.RemoteException;
 import java.util.Collection;
 
 /**
@@ -39,7 +40,7 @@ public class AdvancedAI2 extends BaseAI {
 	@Override
 	protected Move requestMove() throws Exception {
 
-		if (moveNr <= startClusteringAt )
+		if (moveNr <= startClusteringAt)
 			moveNr++;
 
 		return super.requestMove();
@@ -49,9 +50,9 @@ public class AdvancedAI2 extends BaseAI {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void init( int boardSize, PlayerColor playerColour ) throws Exception {
+	public void init(int boardSize, PlayerColor playerColour) throws Exception {
 		super.init(boardSize, playerColour);
-		startClusteringAt = (boardSize * boardSize) / 20;
+		startClusteringAt = ( boardSize * boardSize ) / 20;
 		moveNr = 0;
 	}
 
@@ -63,8 +64,8 @@ public class AdvancedAI2 extends BaseAI {
 	 * Clustern anzulegen, sodass möglichst lange kontinuierliche Verbindungen zwischen Gärten entstehen.
 	 */
 	@Override
-	protected int getMoveScore( final Move move ) {
-		switch ( move.getType() ) {
+	protected int getMoveScore(final Move move) {
+		switch (move.getType()) {
 			case Flower:
 				// Obtain the direct neighbors of both flowers.
 				final Collection<Flower> firstFlowerNeighbors = boardViewer.getDirectNeighbors(move.getFirstFlower());
@@ -77,7 +78,7 @@ public class AdvancedAI2 extends BaseAI {
 
 
 				// If both flowers are attached (i.e. if they're neighbors) double the score.
-				if ( firstFlowerNeighbors.contains(move.getSecondFlower()) ) {
+				if (firstFlowerNeighbors.contains(move.getSecondFlower())) {
 					score += 15;
 				}
 
@@ -90,14 +91,14 @@ public class AdvancedAI2 extends BaseAI {
 				MainBoard sim = new MainBoard((MainBoard) getBoard());
 				sim.make(move);
 
-				if ( sim.viewer().getPoints(getPlayerColour()) > boardViewer.getPoints(getPlayerColour()) )
+				if (sim.viewer().getPoints(getPlayerColour()) > boardViewer.getPoints(getPlayerColour()))
 					return SCORE_DITCH;
 				else
 					return 0;
 
 			case End:
-				if (boardViewer.getPoints(getPlayerColour()) > boardViewer.getPoints((getPlayerColour() == PlayerColor
-						.Red) ? PlayerColor.Blue : PlayerColor.Red))
+				if (boardViewer.getPoints(getPlayerColour()) > boardViewer.getPoints(( getPlayerColour() == PlayerColor
+						.Red ) ? PlayerColor.Blue : PlayerColor.Red))
 					return SCORE_END;
 
 			case Surrender:
@@ -113,24 +114,24 @@ public class AdvancedAI2 extends BaseAI {
 	 * @param flower Die Blume, dessen Score berechnet werden soll
 	 * @return Der Score basierend auf den Nachbarn einer Blume
 	 */
-	private int[] getNeighborScore( Flower flower ) {
+	private int[] getNeighborScore(Flower flower) {
 		int[] res = new int[2];
-		for ( final Flower neighbor : boardViewer.getDirectNeighbors(flower) ) {
-			if ( boardViewer.getFlowerColor(neighbor) == getPlayerColour() )
+		for (final Flower neighbor : boardViewer.getDirectNeighbors(flower)) {
+			if (boardViewer.getFlowerColor(neighbor) == getPlayerColour())
 				res[0]++;
 		}
 
-		if ( res[0] > 0  || moveNr <= startClusteringAt ) return res;
+		if (res[0] > 0 || moveNr <= startClusteringAt) return res;
 
-		for ( final Flower neighbor : boardViewer.getAllNeighbors(flower) ) {
+		for (final Flower neighbor : boardViewer.getAllNeighbors(flower)) {
 
 			if (boardViewer.getFlowerColor(neighbor) == getPlayerColour()) {
 				res[1] = - 2;
 				return res;
 			}
 
-			for ( Flower f1 : boardViewer.getDirectNeighbors(neighbor) ) {
-				if ( boardViewer.getFlowerColor(f1) == getPlayerColour())
+			for (Flower f1 : boardViewer.getDirectNeighbors(neighbor)) {
+				if (boardViewer.getFlowerColor(f1) == getPlayerColour())
 					res[1]++;
 			}
 		}

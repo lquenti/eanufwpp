@@ -2,12 +2,14 @@ package flowerwarspp.player;
 
 import flowerwarspp.board.MainBoard;
 import flowerwarspp.preset.*;
-import flowerwarspp.util.log.*;
+import flowerwarspp.util.log.Log;
+import flowerwarspp.util.log.LogLevel;
+import flowerwarspp.util.log.LogModule;
 
 import java.rmi.RemoteException;
 
-import static flowerwarspp.util.log.LogModule.*;
 import static flowerwarspp.util.log.LogLevel.*;
+import static flowerwarspp.util.log.LogModule.PLAYER;
 
 
 /**
@@ -62,43 +64,25 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	 */
 	private static final String exception_StatusError =
 			"Der Status des Hauptprogramms und der Status des Spielbretts dieses Spielers stimmen nicht ueberein!";
-
-	/**
-	 * Ein unterstützender enum um die Ausführung der durch das Interface {@link flowerwarspp.preset.Player} verlangten
-	 * Methoden in der korrekten Reihenfolge zu sichern.
-	 *
-	 * @see flowerwarspp.preset.Player
-	 */
-	protected enum PlayerFunction {
-		NULL,
-		REQUEST,
-		CONFIRM,
-		UPDATE
-	}
-
 	/**
 	 * Stellt diesem Objekt ein eigenes {@link Board} zur Verfügung, um die Durchführung der eigenen und gegnerischen
 	 * Züge nachbilden zu können.
 	 */
 	protected Board board;
-
 	/**
 	 * Ermöglicht den Zugriff auf relevante Daten des Spielbretts, welche für die Verifikation und die Ausarbeitung von
 	 * Spielzügen benötigt werden.
 	 */
 	protected Viewer boardViewer;
-
 	/**
 	 * Die Farbe dieses Spielers, nach den Vorgaben des enums {@link PlayerColor}.
 	 */
 	private PlayerColor playerColour;
-
 	/**
 	 * Wird genutzt, um den aktuellen Status des Spieler-Lebenszyklus (also der Zyklus, welcher im Interface {@link
 	 * flowerwarspp.preset.Player} diktiert wird) darzustellen.
 	 */
 	private PlayerFunction cycleState;
-
 
 	/**
 	 * Ein <code>default</code>-Konstruktor, welcher die Instanzvariablen mit Basiswerten initialisiert.
@@ -108,7 +92,6 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 		this.board = null;
 		this.cycleState = PlayerFunction.NULL;
 	}
-
 
 	/**
 	 * Methode zum Anfordern eines Zugs.
@@ -121,11 +104,11 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	@Override
 	public Move request() throws Exception, RemoteException {
 		// State validation
-		if ( cycleState == PlayerFunction.NULL ) {
+		if (cycleState == PlayerFunction.NULL) {
 			log(ERROR, "request() was called before player was initialized");
 			throw new Exception(exception_NoInit);
 		}
-		if ( cycleState != PlayerFunction.REQUEST ) {
+		if (cycleState != PlayerFunction.REQUEST) {
 			log(ERROR, "request() was called at the wrong time");
 			throw new Exception(exception_CycleRequest);
 		}
@@ -165,13 +148,13 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	 * @throws RemoteException falls bei der Netzwerkkommunikation etwas schief gelaufen ist
 	 */
 	@Override
-	public void confirm( Status status ) throws Exception, RemoteException {
+	public void confirm(Status status) throws Exception, RemoteException {
 		// State validation
-		if ( cycleState == PlayerFunction.NULL ) {
+		if (cycleState == PlayerFunction.NULL) {
 			log(ERROR, "confirm() was called before player was initialized");
 			throw new Exception(exception_NoInit);
 		}
-		if ( cycleState != PlayerFunction.CONFIRM ) {
+		if (cycleState != PlayerFunction.CONFIRM) {
 			log(ERROR, "confirm() was called at the wrong time");
 			throw new Exception(exception_CycleConfirm);
 		}
@@ -181,7 +164,7 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 
 		log(DEBUG, "board status on confirm() = " + playerBoardState);
 
-		if ( ! playerBoardState.equals(status) ) {
+		if (! playerBoardState.equals(status)) {
 			log(ERROR, "confirm(): status of player board and main program are not the same");
 			throw new Exception(exception_StatusError);
 		}
@@ -202,13 +185,13 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	 * @throws RemoteException falls bei der Netzwerkkommunikation etwas schief gelaufen ist
 	 */
 	@Override
-	public void update( Move opponentMove, Status status ) throws Exception, RemoteException {
+	public void update(Move opponentMove, Status status) throws Exception, RemoteException {
 		// State validation
-		if ( cycleState == PlayerFunction.NULL ) {
+		if (cycleState == PlayerFunction.NULL) {
 			log(ERROR, "update() was called before player was initialized");
 			throw new Exception(exception_NoInit);
 		}
-		if ( cycleState != PlayerFunction.UPDATE ) {
+		if (cycleState != PlayerFunction.UPDATE) {
 			log(ERROR, "update() was called at the wrong time");
 			throw new Exception(exception_CycleUpdate);
 		}
@@ -221,7 +204,7 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 		// Verify the status
 		final Status playerBoardStatus = boardViewer.getStatus();
 
-		if ( ! playerBoardStatus.equals(status) ) {
+		if (! playerBoardStatus.equals(status)) {
 			log(ERROR, "update(): status of player board and main program are not the same");
 			throw new Exception(exception_StatusError);
 		}
@@ -229,7 +212,6 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 		// Update state
 		cycleState = PlayerFunction.REQUEST;
 	}
-
 
 	/**
 	 * Initialisiert einen Spieler, indem dieser mit einem neuen Spielbrett passender Größe und der gewünschten Farbe
@@ -243,7 +225,7 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	 */
 	/* TODO: Properly handle beginning a new game (i.e. calling init() in the middle of a running game) */
 	@Override
-	public void init( int boardSize, PlayerColor playerColour ) throws Exception, RemoteException {
+	public void init(int boardSize, PlayerColor playerColour) throws Exception, RemoteException {
 
 		// Set the colour
 		this.playerColour = playerColour;
@@ -257,14 +239,14 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 			board = null;
 		}
 
-		if ( board == null ) {
+		if (board == null) {
 			board = new MainBoard(boardSize);
 		}
 
 		boardViewer = board.viewer();
 
 		// Now set the function life cycle according to this player's colour
-		if ( playerColour == PlayerColor.Red ) {
+		if (playerColour == PlayerColor.Red) {
 
 			// If we have a Red player, first move is request()
 			cycleState = PlayerFunction.REQUEST;
@@ -287,12 +269,12 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 		return playerColour;
 	}
 
-	public void setBoard( Board board ) {
-		this.board = board;
+	protected Board getBoard() {
+		return board;
 	}
 
-	protected Board getBoard () {
-		return board;
+	public void setBoard(Board board) {
+		this.board = board;
 	}
 
 	/**
@@ -302,7 +284,20 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	 * @param level   Der Log-Level der Nachricht
 	 * @param message Die Nachricht des Log-Eintrags
 	 */
-	protected void log( LogLevel level, String message ) {
+	protected void log(LogLevel level, String message) {
 		Log.log(level, PLAYER, "Player " + playerColour + ": " + message);
+	}
+
+	/**
+	 * Ein unterstützender enum um die Ausführung der durch das Interface {@link flowerwarspp.preset.Player} verlangten
+	 * Methoden in der korrekten Reihenfolge zu sichern.
+	 *
+	 * @see flowerwarspp.preset.Player
+	 */
+	protected enum PlayerFunction {
+		NULL,
+		REQUEST,
+		CONFIRM,
+		UPDATE
 	}
 }

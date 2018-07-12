@@ -41,9 +41,9 @@ public class TextInterface implements Requestable, Output {
 	 */
 	@Override
 	public Move request() {
-		try {
-			Move move = null;
-			while (move == null) {
+		Move move = null;
+		while (move == null) {
+			try {
 				System.out.print(moveRequestPrompt);
 				move = Move.parseMove(inputScanner.nextLine());
 
@@ -51,12 +51,12 @@ public class TextInterface implements Requestable, Output {
 					System.out.println(exception_InvalidMove);
 					move = null;
 				}
+			} catch (MoveFormatException e) {
+				return null;
 			}
+		}
 
 			return move;
-		} catch (MoveFormatException e) {
-			return null;
-		}
 	}
 
 	/**

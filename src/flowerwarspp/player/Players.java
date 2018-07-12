@@ -1,16 +1,14 @@
 package flowerwarspp.player;
 
+import flowerwarspp.preset.*;
+import flowerwarspp.util.log.*;
+
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.util.Arrays;
 import java.util.Scanner;
-
-import flowerwarspp.preset.*;
-import flowerwarspp.util.log.Log;
-import flowerwarspp.util.log.LogLevel;
-import flowerwarspp.util.log.LogModule;
 
 /**
  * Diese Klasse ermöglicht das Instanzieren von beiden Spielern, welche am aktuellen Spiel teilnehmen.
@@ -31,14 +29,14 @@ public class Players {
 	 * @throws IllegalArgumentException falls versucht wird, einen Remote-Spieler mit vorhandenen
 	 * bestimmten Board zu erzeugen.
 	 */
-	public static Player createPlayer( PlayerType type, Requestable input, String url, Board board) throws IllegalArgumentException {
+	public static Player createPlayer(PlayerType type, Requestable input, String url, Board board) throws IllegalArgumentException {
 		// Falls auf dem Brett schon züge gemacht wurden, geht Netzwerkspiel nicht.
 		if (type == PlayerType.REMOTE && !board.viewer().getFlowers(PlayerColor.Red).isEmpty()) {
 			throw new IllegalArgumentException("Spielstände laden wird von Remote-Spielern nicht unterstützt.");
 		}
 
 		BasePlayer player = null;
-		switch ( type ) {
+		switch (type) {
 			case REMOTE:
 				return findRemotePlayer(url);
 			case HUMAN:
@@ -76,7 +74,7 @@ public class Players {
 	 * @param url Die URL im Fall eines Remote-Spielers
 	 * @return Der erzeugte Spieler
 	 */
-	public static Player createPlayer( PlayerType type, Requestable input, String url ) {
+	public static Player createPlayer(PlayerType type, Requestable input, String url) {
 		return createPlayer(type, input, url, null);
 	}
 
@@ -103,14 +101,14 @@ public class Players {
 	 * @param player Der im Netzwerk anzubietende Spieler, verpackt als {@link RemotePlayer}.
 	 * @throws RemoteException Falls der Spieler nicht im Netzwerk angeboten werden konnte.
 	 */
-	public static void offerPlayer( RemotePlayer player, String name, int port ) throws RemoteException {
+	public static void offerPlayer(RemotePlayer player, String name, int port) throws RemoteException {
 		try {
 			Log.log(LogLevel.DEBUG, LogModule.PLAYER, "Trying to offer player with name " + name + " in the " +
 					"network.");
 			LocateRegistry.createRegistry(port);
 			Naming.rebind(name, player);
-		} catch ( MalformedURLException e ) {
-			throw new RemoteException("User entered an invalid Player Name.");
+		} catch (MalformedURLException e) {
+			throw new RemoteException("User entered an invalid player Name.");
 		}
 
 		System.out.println("Der Spieler mit dem Namen " + name + " ist jetzt im Netzwerk verfügbar.");

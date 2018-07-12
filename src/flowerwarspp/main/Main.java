@@ -12,6 +12,23 @@ public class Main {
 	private static final int ERRORCODE_INVALID_ARGS = 1;
 
 	/**
+	 * Dieser Error-Code wird vom Programm zurück gegeben, falls während der Initialsierung der Spieler ein Fehler
+	 * aufgetreten ist.
+	 */
+	static final int ERRORCODE_INIT_FAILED = 2;
+
+	/**
+	 * Dieser Error-Code wird vom Programm zurück gegeben, falls während des Ladens eines Spielstands Fehler aufgetreten
+	 * sind.
+	 */
+	static final int ERRORCODE_LOAD_FAILED = 3;
+
+	/**
+	 * Dieser Error-Code wird vom Programm zurück gegeben, falls es Fehler bei der Netzwerkkommunikation gegeben hat.
+	 */
+	static final int ERRORCODE_NETWORK_ERROR = 4;
+
+	/**
 	 * Gibt Informationen zur Verwendendung des Programms auf der Standardausgabe aus und beendet das Programm mit dem
 	 * Exit-Code {@link #ERRORCODE_INVALID_ARGS}.
 	 */
@@ -37,7 +54,7 @@ public class Main {
 		System.exit(ERRORCODE_INVALID_ARGS);
 	}
 
-	public static void main( String[] args ) {
+	public static void main(String[] args) {
 		new Game(new GameParameters(args));
 	}
 }

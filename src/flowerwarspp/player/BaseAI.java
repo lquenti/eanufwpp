@@ -5,7 +5,6 @@ import flowerwarspp.preset.MoveType;
 import flowerwarspp.preset.Player;
 import flowerwarspp.util.log.Log;
 import flowerwarspp.util.log.LogLevel;
-import flowerwarspp.util.log.LogModule;
 
 import java.util.HashSet;
 import java.util.Random;
@@ -24,23 +23,20 @@ abstract class BaseAI extends BasePlayer {
 	 */
 	protected static final String exception_NoMove =
 			"Die KI konnte keinen Zug auswaehlen.";
-
-	/**
-	 * <code>private</code> Random Number Generator, um die zufällige Auswahl eines Spielzugs mit Hilfe von
-	 * Pseudozufallszahlen leisten zu können.
-	 */
-	static final Random aiRNG = new Random();
-
 	/**
 	 * Globale Definition des Scores, falls ein {@link MoveType#Ditch}-Move gemacht werden kann, welcher den Score des
 	 * Spielers verbessern würde.
 	 */
 	protected static final int SCORE_DITCH = 1000;
-
 	/**
 	 * Globale Definition des Scores, falls ein {@link MoveType#End}-Move gemacht werden kann.
 	 */
 	protected static final int SCORE_END = 500;
+	/**
+	 * <code>private</code> Random Number Generator, um die zufällige Auswahl eines Spielzugs mit Hilfe von
+	 * Pseudozufallszahlen leisten zu können.
+	 */
+	static final Random random = new Random();
 
 	/**
 	 * Default-Konstruktor, welcher dieses Objekt mit Standardwerten versieht.
@@ -63,7 +59,7 @@ abstract class BaseAI extends BasePlayer {
 		final Move move = getMove();
 
 		// If we do not have a highest scored move, we throw.
-		if ( move == null ) {
+		if (move == null) {
 			log(LogLevel.ERROR, "AI was unable to return a move");
 			throw new Exception(exception_NoMove);
 		}
@@ -78,7 +74,7 @@ abstract class BaseAI extends BasePlayer {
 	 * @param move Der {@link Move} dessen Score berechnet werden soll
 	 * @return Der Score des Spielzugs
 	 */
-	abstract protected int getMoveScore( final Move move );
+	abstract protected int getMoveScore(final Move move);
 
 	/**
 	 * Gibt einen Spielzug zurück, per default wird dieser Spielzug nach einem implementierten Bewertungsalgorithmus
@@ -93,8 +89,8 @@ abstract class BaseAI extends BasePlayer {
 		HashSet<Move> highestScoredMoves = new HashSet<>();
 
 		// Iterate through all the possible moves...
-		for ( final Move move :
-				boardViewer.getPossibleMoves() ) {
+		for (final Move move :
+				boardViewer.getPossibleMoves()) {
 
 			final int score = getMoveScore(move);
 			log(LogLevel.DUMP, "move " + move + " has score of " + score);
@@ -103,11 +99,11 @@ abstract class BaseAI extends BasePlayer {
 
 			if (score >= SCORE_END) {
 				return move;
-			} else if ( score > highestScore ) {
+			} else if (score > highestScore) {
 				highestScore = score;
 				highestScoredMoves.clear();
 				highestScoredMoves.add(move);
-			} else if ( score == highestScore ) {
+			} else if (score == highestScore) {
 				highestScoredMoves.add(move);
 			}
 		}
@@ -117,12 +113,12 @@ abstract class BaseAI extends BasePlayer {
 
 		log(LogLevel.DEBUG, "highestScore: " + highestScore + ", highestScoredMoves: " + highestScoredMoves);
 
-		if ( highestScoredMoves.size() == 0 ) return null;
+		if (highestScoredMoves.size() == 0) return null;
 
 		// Since we are using
 		return highestScoredMoves
 				.stream()
-				.skip((aiRNG.nextInt(highestScoredMoves.size())))
+				.skip(( random.nextInt(highestScoredMoves.size()) ))
 				.findFirst()
 				.orElse(null);
 	}

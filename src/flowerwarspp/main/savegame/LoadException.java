@@ -9,7 +9,7 @@ public class LoadException extends Exception {
 		super();
 	}
 
-	public LoadException (String message) {
+	public LoadException(String message) {
 		super(message);
 	}
 }

@@ -1,6 +1,9 @@
 package flowerwarspp.io;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 
 /**
@@ -12,6 +15,14 @@ public class BottomToolbarPanel extends JPanel {
 	 */
 	private JLabel currentPlayerLabel = new JLabel();
 	/**
+	 *
+	 */
+	private Border playerLabelBorder = new EmptyBorder(0, 10, 0, 10);
+	/**
+	 * Das {@link JPanel}, das die Buttons containt.
+	 */
+	private JPanel buttonContainer = new JPanel();
+	/**
 	 * Der {@link JButton}, der geklickt werden kann, wenn der Spieler aufgeben möchte.
 	 */
 	private JButton surrenderButton = new JButton("Surrender");
@@ -21,10 +32,20 @@ public class BottomToolbarPanel extends JPanel {
 	 */
 	private JButton endButton = new JButton("End");
 
+	/**
+	 * Der {@link LayoutManager}, der für das Layout dieses {@link JPanel}s verantwortlich ist.
+	 */
+	private BorderLayout layoutManager = new BorderLayout();
+
 	public BottomToolbarPanel() {
-		add(currentPlayerLabel);
-		add(surrenderButton);
-		add(endButton);
+		setLayout(layoutManager);
+
+		currentPlayerLabel.setBorder(playerLabelBorder);
+		add(currentPlayerLabel, BorderLayout.WEST);
+
+		buttonContainer.add(surrenderButton);
+		buttonContainer.add(endButton);
+		add(buttonContainer, BorderLayout.EAST);
 	}
 
 	/**

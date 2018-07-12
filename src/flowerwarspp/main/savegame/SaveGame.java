@@ -1,16 +1,14 @@
 package flowerwarspp.main.savegame;
 
-import flowerwarspp.board.MainBoard;
 import flowerwarspp.preset.*;
 import flowerwarspp.util.log.*;
 
 import java.io.*;
 import java.util.ArrayDeque;
 import java.util.Iterator;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import static flowerwarspp.preset.PlayerColor.*;
+import static flowerwarspp.preset.PlayerColor.Blue;
+import static flowerwarspp.preset.PlayerColor.Red;
 
 /**
  * Diese Klasse erlaubt das Speichern und Laden des aktuellen Status des Spiels. Dies wird ermöglicht durch das
@@ -38,16 +36,6 @@ public class SaveGame implements Iterable<Move> {
 	 * Diese {@link ArrayDeque} speichert die ausgeführten Spielzüge.
 	 */
 	private ArrayDeque<Move> madeMoves;
-
-	/**
-	 * Gibt den Wert von {@link #boardSize} zurück.
-	 *
-	 * @return Wert von {@link #boardSize}.
-	 */
-	public int getBoardSize() {
-		return boardSize;
-	}
-
 	/**
 	 * Die Größe des aktuellen Spielbretts.
 	 */
@@ -58,7 +46,7 @@ public class SaveGame implements Iterable<Move> {
 	 *
 	 * @param boardSize Die Spielbrettgröße des aktuellen Spiels
 	 */
-	public SaveGame( int boardSize ) {
+	public SaveGame(int boardSize) {
 
 		this.madeMoves = new ArrayDeque<>();
 		this.boardSize = boardSize;
@@ -73,59 +61,9 @@ public class SaveGame implements Iterable<Move> {
 	 * @param saveGameName Name des Spielstands
 	 * @return Der gesamte absolute Pfad zu der Spielstand-Datei.
 	 */
-	private static String getFilePath( String saveGameName ) {
+	private static String getFilePath(String saveGameName) {
 
 		return SAVE_PATH_ROOT + saveGameName + ".sav";
-	}
-
-	/**
-	 * Fügt den gegeben Zug der Liste der gespeicherten Spielzüge hinzu.
-	 *
-	 * @param move Spielzug, welcher der {@link ArrayDeque} hinzugefügt werden soll
-	 */
-	public void add( Move move ) {
-		if ( move == null ) return;
-
-		madeMoves.add(move);
-	}
-
-	/**
-	 * Speichert den Spielstand in einer Datei mit gegebenen Namen.
-	 *
-	 * @param saveGameName Name des Spielstands.
-	 * @throws IOException Falls während des Speicherns des Spielstands ein Fehler aufgetreten ist.
-	 */
-	public void save( String saveGameName ) throws IOException {
-
-		try {
-			File saveDir = new File(SAVE_PATH_ROOT);
-			saveDir.mkdir();
-
-			PrintWriter printWriter = new PrintWriter(getFilePath(saveGameName), "UTF-8");
-
-			printWriter.println(boardSize);
-			PlayerColor currentPlayer = Red;
-
-			int i = 0;
-
-			for ( Move m
-					: madeMoves ) {
-
-				printWriter.println(m + ";" + m.hashCode() + ";" + currentPlayer
-						+ ", " + "#" + i);
-				currentPlayer = currentPlayer == Red ? Blue : Red;
-				i++;
-			}
-
-			printWriter.close();
-			System.out.println("Spielstand " + saveGameName + " wurde gespeichert unter");
-			System.out.println(getFilePath(saveGameName));
-			Log.log(LogLevel.INFO, LogModule.MAIN, "Game was saved to: " + getFilePath(saveGameName));
-
-		} catch ( IOException e ) {
-			Log.log(LogLevel.ERROR, LogModule.MAIN, "Saving the game failed: " + e.getMessage());
-			throw e;
-		}
 	}
 
 	/**
@@ -138,21 +76,21 @@ public class SaveGame implements Iterable<Move> {
 	 * @return Die, mit den in der Datei gespeicherten Spielzüge, intialisierte Instanz dieser Klasse
 	 * @throws LoadException Falls während des Ladevorgangs ein Fehler aufgetreten ist
 	 */
-	public static SaveGame load( String saveGameName ) throws LoadException {
+	public static SaveGame load(String saveGameName) throws LoadException {
 
-		try ( BufferedReader bufferedReader = new BufferedReader(new FileReader(getFilePath(saveGameName))) ) {
+		try (BufferedReader bufferedReader = new BufferedReader(new FileReader(getFilePath(saveGameName)))) {
 
 			int boardSize = Integer.parseInt(bufferedReader.readLine());
 			SaveGame saveGame = new SaveGame(boardSize);
 
 			String currentLine = bufferedReader.readLine();
 
-			while ( currentLine != null ) {
+			while (currentLine != null) {
 
 				Move move = Move.parseMove(currentLine.split(";", 2)[0]);
 				int hashCode = Integer.parseInt(currentLine.split(";", 3)[1]);
 
-				if ( move.hashCode() != hashCode ) {
+				if (move.hashCode() != hashCode) {
 					Log.log(LogLevel.ERROR, LogModule.MAIN, "The hasCode of the loaded move was not equal " +
 							"to the hasCode stored in the savegame");
 					throw new LoadException("Der hashCode des geladenen Spielzugs stimmt nicht mit dem hinterlegten" +
@@ -164,8 +102,67 @@ public class SaveGame implements Iterable<Move> {
 				currentLine = bufferedReader.readLine();
 			}
 			return saveGame;
-		} catch ( IOException e ) {
+		} catch (IOException e) {
 			throw new LoadException();
+		}
+	}
+
+	/**
+	 * Gibt den Wert von {@link #boardSize} zurück.
+	 *
+	 * @return Wert von {@link #boardSize}.
+	 */
+	public int getBoardSize() {
+		return boardSize;
+	}
+
+	/**
+	 * Fügt den gegeben Zug der Liste der gespeicherten Spielzüge hinzu.
+	 *
+	 * @param move Spielzug, welcher der {@link ArrayDeque} hinzugefügt werden soll
+	 */
+	public void add(Move move) {
+		if (move == null) return;
+
+		madeMoves.add(move);
+	}
+
+	/**
+	 * Speichert den Spielstand in einer Datei mit gegebenen Namen.
+	 *
+	 * @param saveGameName Name des Spielstands.
+	 * @throws IOException Falls während des Speicherns des Spielstands ein Fehler aufgetreten ist.
+	 */
+	public void save(String saveGameName) throws IOException {
+
+		try {
+			File saveDir = new File(SAVE_PATH_ROOT);
+			saveDir.mkdir();
+
+			PrintWriter printWriter = new PrintWriter(getFilePath(saveGameName), "UTF-8");
+
+			printWriter.println(boardSize);
+			PlayerColor currentPlayer = Red;
+
+			int i = 0;
+
+			for (Move m
+					: madeMoves) {
+
+				printWriter.println(m + ";" + m.hashCode() + ";" + currentPlayer
+						+ ", " + "#" + i);
+				currentPlayer = currentPlayer == Red ? Blue : Red;
+				i++;
+			}
+
+			printWriter.close();
+			System.out.println("Spielstand " + saveGameName + " wurde gespeichert unter");
+			System.out.println(getFilePath(saveGameName));
+			Log.log(LogLevel.INFO, LogModule.MAIN, "Game was saved to: " + getFilePath(saveGameName));
+
+		} catch (IOException e) {
+			Log.log(LogLevel.ERROR, LogModule.MAIN, "Saving the game failed: " + e.getMessage());
+			throw e;
 		}
 	}
 

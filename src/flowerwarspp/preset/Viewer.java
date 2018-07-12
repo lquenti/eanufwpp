@@ -183,5 +183,12 @@ public interface Viewer {
 	 * @param flower Die Blume, deren Blumenbeet zurückgegeben werden soll
 	 * @return Das Blumenbeet, zu dem die Blume gehört
 	 */
-    HashSet<Flower> getFlowerBed(Flower flower);
+    Collection<Flower> getFlowerBed(Flower flower);
+
+	/**
+	 * Gibt alle möglichen Blumen zurück.
+	 *
+	 * @return Alle Blumen, welche auf dem Feld liegen.
+	 */
+	Collection<Flower> getAllFlowers();
 }

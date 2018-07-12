@@ -5,8 +5,13 @@ import flowerwarspp.preset.Position;
 
 import java.awt.*;
 
-public class Edge extends BoardPolygon {
+// Welcome to Microsoft Windows 10
 
+/**
+ * Eine Klasse, die Kanten darstellt.
+ * Diese Kanten stellen die {@link Ditch}es des Spielbretts dar.
+ */
+public class Edge extends BoardPolygon {
 	private static final Color defaultDitchColor = Color.BLACK;
 	private static final int divisionFactor = 20;
 
