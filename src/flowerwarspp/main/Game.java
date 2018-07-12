@@ -121,7 +121,7 @@ public class Game {
 				Log.log(LogLevel.ERROR, LogModule.MAIN, "There was an error offering the player in the " +
 						"network: " + e.getMessage());
 				System.out.println("Der Spieler konnte nicht im Netzwerk angeboten werden.");
-				System.exit(2);
+				System.exit(Main.ERRORCODE_NETWORK_ERROR);
 			}
 		} else if ( gameParameters.loadGame() ) {
 			try {
@@ -131,7 +131,7 @@ public class Game {
 				Log.log(LogLevel.ERROR, LogModule.MAIN, "There was an error loading the savegame "
 						+ gameParameters.getSaveGameName() + ": " + e.getMessage());
 				System.out.println("Der gegebene Spielstand konnte nicht geladen werden.");
-				System.exit(2);
+				System.exit(Main.ERRORCODE_LOAD_FAILED);
 			}
 		} else if ( gameParameters.getNumberOfGames() > 1 ) {
 			try {
@@ -140,7 +140,7 @@ public class Game {
 				Log.log(LogLevel.ERROR, LogModule.MAIN, "There was an error initializing the players: "
 						+ e.getMessage());
 				System.out.println("Waehrend der Initialisierung der Spieler ist ein Fehler aufgetreten.");
-				System.exit(2);
+				System.exit(Main.ERRORCODE_INIT_FAILED);
 			}
 		} else {
 			try {
@@ -150,7 +150,7 @@ public class Game {
 				Log.log(LogLevel.ERROR, LogModule.MAIN, "There was an error initializing the players: "
 						+ e.getMessage());
 				System.out.println("Waehrend der Initialisierung der Spieler ist ein Fehler aufgetreten.");
-				System.exit(2);
+				System.exit(Main.ERRORCODE_INIT_FAILED);
 			}
 		}
 	}
