@@ -66,7 +66,7 @@ public class BoardDisplay extends JPanel {
 		 * @param mouseEvent Das durchgereichte {@link MouseEvent}.
 		 */
 		@Override
-		public void mouseMoved(final MouseEvent mouseEvent) {
+		public void mouseMoved(MouseEvent mouseEvent) {
 
 			for (Dot dot : mapDots) {
 

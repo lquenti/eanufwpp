@@ -50,7 +50,7 @@ public class RemotePlayer
 	 * @param output Das Objekt, auf welchem das aktuelle Spielgeschehen lokal angezeigt wird.
 	 * @throws RemoteException Falls während der Netzwerkkommunikation ein Fehler aufgetreten ist.
 	 */
-	public RemotePlayer(final Player player, final Output output) throws RemoteException {
+	public RemotePlayer(Player player, Output output) throws RemoteException {
 		this.player = player;
 		this.output = output;
 	}
@@ -64,7 +64,7 @@ public class RemotePlayer
 	 * @param saveGame Referenz auf ein {@link SaveGame}-Objekt zum Speichern des Spiels.
 	 * @throws RemoteException Falls während der Netzwerkkommunikation ein Fehler aufgetreten ist.
 	 */
-	public RemotePlayer(final Player player, final Output output, final SaveGame saveGame) throws RemoteException {
+	public RemotePlayer(Player player, Output output, SaveGame saveGame) throws RemoteException {
 		this(player, output);
 		this.saveGame = saveGame;
 	}
@@ -88,7 +88,7 @@ public class RemotePlayer
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void confirm(final Status status) throws Exception, RemoteException {
+	public void confirm(Status status) throws Exception, RemoteException {
 		player.confirm(status);
 	}
 
@@ -96,7 +96,7 @@ public class RemotePlayer
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void update(final Move opponentMove, final Status status) throws Exception, RemoteException {
+	public void update(Move opponentMove, Status status) throws Exception, RemoteException {
 		player.update(opponentMove, status);
 		board.make(opponentMove);
 
@@ -110,7 +110,7 @@ public class RemotePlayer
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void init(final int boardSize, final PlayerColor color) throws Exception, RemoteException {
+	public void init(int boardSize, PlayerColor color) throws Exception, RemoteException {
 		board = new MainBoard(boardSize);
 		final Viewer boardViewer = board.viewer();
 		output.setViewer(boardViewer);

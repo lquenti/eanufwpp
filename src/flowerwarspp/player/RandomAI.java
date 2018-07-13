@@ -22,7 +22,7 @@ public class RandomAI extends BaseAI {
 	 * @return <code>0</code> für alle Moves, außer der <code>Surrender</code>-Spielzug, mit <code>-1</code>
 	 */
 	@Override
-	protected int getMoveScore(final Move move) {
+	protected int getMoveScore(Move move) {
 		return 0;
 	}
 }

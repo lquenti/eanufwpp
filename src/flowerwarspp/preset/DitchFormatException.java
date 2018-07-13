@@ -6,11 +6,11 @@ package flowerwarspp.preset;
  * @author Dominick Leppich
  */
 public class DitchFormatException extends IllegalArgumentException {
-    public DitchFormatException(final String msg) {
+    public DitchFormatException(String msg) {
         super(msg);
     }
 
-    public DitchFormatException(final String msg, final Throwable e) {
+    public DitchFormatException(String msg, Throwable e) {
         super(msg, e);
     }
 }

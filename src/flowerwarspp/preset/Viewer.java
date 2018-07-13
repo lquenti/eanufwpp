@@ -43,7 +43,7 @@ public interface Viewer {
      *
      * @return die Menge der gepflanzten Blumen dieses Spielers als {@link Collection}
      */
-    Collection<Flower> getFlowers(final PlayerColor color);
+    Collection<Flower> getFlowers(PlayerColor color);
 
     /**
      * Gib alle gebauten Graeben eines bestimmten Spielers (durch seine Farbe) zurueck.
@@ -53,7 +53,7 @@ public interface Viewer {
      *
      * @return die Menge der gebauten Graeben dieses Spielers als {@link Collection}
      */
-    Collection<Ditch> getDitches(final PlayerColor color);
+    Collection<Ditch> getDitches(PlayerColor color);
 
     /**
      * Gib alle moeglichen Zuege des aktuellen Spielers zurueck.
@@ -70,7 +70,7 @@ public interface Viewer {
      *
      * @return der aktuelle Punktestand des Spielers
      */
-    int getPoints(final PlayerColor color);
+    int getPoints(PlayerColor color);
 
     // ********************************************************************
     //  Hier koennen weitere Funktionen ergaenzt werden...

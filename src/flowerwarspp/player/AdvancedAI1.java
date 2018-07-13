@@ -30,7 +30,7 @@ public class AdvancedAI1 extends BaseAI {
 	 * immer zuerst genommen, da diese potentiell mehr Punkte bringen.
 	 */
 	@Override
-	protected int getMoveScore(final Move move) {
+	protected int getMoveScore(Move move) {
 
 		switch (move.getType()) {
 			case Flower:
@@ -98,7 +98,7 @@ public class AdvancedAI1 extends BaseAI {
 		// dann inkrementieren, wenn einer dieser direkten Nachbarn der eigenen Farbe gehört.
 		// So werden Beete und Gärten gebildet.
 		// Nachbarn, welche dem Gegner gehören, inkremementieren das zweite Element des Arrays.
-		for (final Flower neighbor : flowerNeighbors) {
+		for (Flower neighbor : flowerNeighbors) {
 			if (boardViewer.getFlowerColor(neighbor) == getPlayerColour())
 				res[0]++;
 

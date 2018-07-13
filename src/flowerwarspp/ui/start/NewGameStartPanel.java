@@ -133,7 +133,7 @@ public class NewGameStartPanel extends JPanel {
 	 * Der Abstand zwischen der Mitte des {@link JFrame}s und der {@link SpringLayout#WEST}-Seite
 	 * der Eingabe-{@link JComponent}s.
 	 */
-	private void setupConstraints(final int distanceFromCentre) {
+	private void setupConstraints(int distanceFromCentre) {
 		// Lay out the board size label and spinner
 		springLayout.putConstraint(SpringLayout.WEST, boardSizeLabel, -distanceFromCentre,
 		                           SpringLayout.HORIZONTAL_CENTER, this);

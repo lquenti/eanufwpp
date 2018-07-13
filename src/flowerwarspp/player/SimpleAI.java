@@ -28,7 +28,7 @@ public class SimpleAI extends BaseAI {
 	 * @param move Der {@link Move} dessen Score berechnet werden soll
 	 * @return Der Score des Spielzugs
 	 */
-	protected int getMoveScore(final Move move) {
+	protected int getMoveScore(Move move) {
 
 		// Es werden nur Blumen-Züge bewertet, Ditch-Züge werden genau dann zufällig ausgewählt, wenn es keine möglichen
 		// Blumen-Züge mehr gibt.
@@ -49,12 +49,12 @@ public class SimpleAI extends BaseAI {
 
 		// Iterieren durch alle Nachbarn beider Zug-Blumen. Die Zählvariable wird nur genau dann inkrementiert, wenn
 		// unter den Nachbarn Blumen eigener Farbe existieren.
-		for (final Flower neighbor : firstFlowerNeighbors) {
+		for (Flower neighbor : firstFlowerNeighbors) {
 			if (boardViewer.getFlowerColor(neighbor) == getPlayerColour())
 				n1++;
 		}
 
-		for (final Flower neighbor : secondFlowerNeighbors) {
+		for (Flower neighbor : secondFlowerNeighbors) {
 			if (boardViewer.getFlowerColor(neighbor) == getPlayerColour())
 				n2++;
 		}

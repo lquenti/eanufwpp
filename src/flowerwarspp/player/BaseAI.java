@@ -74,7 +74,7 @@ abstract class BaseAI extends BasePlayer {
 	 * @param move Der {@link Move} dessen Score berechnet werden soll
 	 * @return Der Score des Spielzugs
 	 */
-	abstract protected int getMoveScore(final Move move);
+	abstract protected int getMoveScore(Move move);
 
 	/**
 	 * Gibt einen Spielzug zurück, per default wird dieser Spielzug nach einem implementierten Bewertungsalgorithmus
@@ -89,7 +89,7 @@ abstract class BaseAI extends BasePlayer {
 		HashSet<Move> highestScoredMoves = new HashSet<>();
 
 		// Durch alle möglichen Züge iterieren...
-		for (final Move move :
+		for (Move move :
 				boardViewer.getPossibleMoves()) {
 
 			// Den Score eines Zuges mit der abstrakten Methode berechnen.

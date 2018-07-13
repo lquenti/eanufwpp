@@ -22,5 +22,5 @@ public interface Board extends Viewable {
      * @throws IllegalStateException
      *         falls das Spielbrett aufgrund der Spielsituation keine Zuege mehr entgegennehmen kann.
      */
-    void make(final Move move) throws IllegalStateException;
+    void make(Move move) throws IllegalStateException;
 }

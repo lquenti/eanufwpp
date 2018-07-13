@@ -71,7 +71,7 @@ public class AdvancedAI2 extends BaseAI {
 	 * Clustern anzulegen, sodass möglichst lange kontinuierliche Verbindungen zwischen Gärten entstehen.
 	 */
 	@Override
-	protected int getMoveScore(final Move move) {
+	protected int getMoveScore(Move move) {
 		switch (move.getType()) {
 			case Flower:
 				// Die direkten Nachbarn der ersten Zugblume aus dem Viewer abrufen. Diese werden benötigt, um zu
@@ -137,7 +137,7 @@ public class AdvancedAI2 extends BaseAI {
 		// Durch die direkten Nachbarn der betrachteten Blume iterieren und das erste Element des Rückgabearrays immer
 		// dann inkrementieren, wenn einer dieser direkten Nachbarn der eigenen Farbe gehört.
 		// So werden Beete und Gärten gebildet.
-		for (final Flower neighbor : boardViewer.getDirectNeighbors(flower)) {
+		for (Flower neighbor : boardViewer.getDirectNeighbors(flower)) {
 			if (boardViewer.getFlowerColor(neighbor) == getPlayerColour())
 				res[0]++;
 		}
@@ -153,7 +153,7 @@ public class AdvancedAI2 extends BaseAI {
 		// dann wird die Methode sofort verlassen.
 		// Dadurch werden Blumen in der Nähe von bestehenden Beeten gesetzt, sodass sie sich mit Ditches verbinden
 		// lassen.
-		for (final Flower neighbor : boardViewer.getAllNeighbors(flower)) {
+		for (Flower neighbor : boardViewer.getAllNeighbors(flower)) {
 
 			if (boardViewer.getFlowerColor(neighbor) == getPlayerColour()) {
 				res[1] = - 2;

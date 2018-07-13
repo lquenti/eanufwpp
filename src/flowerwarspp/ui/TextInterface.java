@@ -68,7 +68,7 @@ public class TextInterface implements Requestable, Output {
 	 * @return
 	 * Der zur {@link PlayerColor} gehörende Vordergrundfarbe.
 	 */
-	private String fgColor(final PlayerColor color) {
+	private String fgColor(PlayerColor color) {
 		if (color == null) {
 			return "";
 		}
@@ -88,7 +88,7 @@ public class TextInterface implements Requestable, Output {
 	 * @return
 	 * Der zur {@link PlayerColor} gehörende Hintergrundfarbe.
 	 */
-	private String bgColor(final PlayerColor color) {
+	private String bgColor(PlayerColor color) {
 		if (color == null) {
 			return "";
 		}
@@ -108,7 +108,7 @@ public class TextInterface implements Requestable, Output {
 	 * @return
 	 * Ein {@link StringBuilder}, der das Dreieck enthält.
 	 */
-	private StringBuilder drawTriangle(final Flower flower) {
+	private StringBuilder drawTriangle(Flower flower) {
 		StringBuilder triangle = new StringBuilder();
 		if (flower.getFirst().getRow() == flower.getSecond().getRow()) {
 			triangle.append(fgColor(viewer.getDitchColor(new Ditch (
