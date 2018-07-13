@@ -421,7 +421,7 @@ public class BoardDisplay extends JPanel {
 	}
 
 	/**
-	 * Konstruiert die {@link Dot}s. Sie dienen als Orientierung für den Spieler und Zuschaue
+	 * Konstruiert die {@link Dot}s. Sie dienen als Orientierung für den Spieler und Zuschauer.
 	 */
 	private void createDots() {
 		mapDots.clear();

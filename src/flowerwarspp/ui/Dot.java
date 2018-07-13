@@ -66,12 +66,18 @@ public class Dot extends BoardPolygon {
 		return ((currentDiameter / 2) > distance);
 	}
 
+	/**
+	 * {@inhheritDoc}
+	 */
 	@Override
 	public void recalcPoints(int triangleSideLength, Point relativeStart) {
 		currentLocation = positionToPoint(position, triangleSideLength, relativeStart);
 		currentDiameter = triangleSideLength / 2;
 	}
 
+	/**
+	 * {@inhheritDoc}
+	 */
 	@Override
 	public void drawPolygon(Graphics graphics) {
 		int drawLocationX = currentLocation.x - (currentDiameter / 2);
@@ -79,12 +85,14 @@ public class Dot extends BoardPolygon {
 		graphics.setColor(getFillColour());
 		graphics.fillOval(drawLocationX, drawLocationY, currentDiameter, currentDiameter);
 
-		String text = position.getColumn() + ", " + position.getRow();
-		Rectangle2D textBounds = graphics.getFontMetrics().getStringBounds(text, graphics);
-		drawLocationX = (int) (currentLocation.x - textBounds.getWidth() / 2.0);
-		drawLocationY = (int) (currentLocation.y + textBounds.getHeight() / 2.0);
+		if (currentDiameter > 30) {
+			String text = position.getColumn() + ", " + position.getRow();
+			Rectangle2D textBounds = graphics.getFontMetrics().getStringBounds(text, graphics);
+			drawLocationX = (int) (currentLocation.x - textBounds.getWidth() / 2.0);
+			drawLocationY = (int) (currentLocation.y + textBounds.getHeight() / 2.0);
 
-		graphics.setColor(getBorderColour());
-		graphics.drawString(text, drawLocationX, drawLocationY);
+			graphics.setColor(getBorderColour());
+			graphics.drawString(text, drawLocationX, drawLocationY);
+		}
 	}
 }
