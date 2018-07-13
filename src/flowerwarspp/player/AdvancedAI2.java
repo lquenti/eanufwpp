@@ -13,7 +13,7 @@ import java.util.Collection;
  * Der zu spielende Zug wird auf Basis eines angepassten Bewertungsalgorithmus des verbesserten Computerspielers (Level
  * 1) ausgewählt.
  *
- * @author Michael Merse
+ *
  */
 public class AdvancedAI2 extends BaseAI {
 

@@ -10,7 +10,7 @@ import flowerwarspp.util.log.*;
 /**
  * Ein Daten-Konstrukt um gesammelt Parameter an die Spiel-Klassen weiterleiten zu können.
  *
- * @author Michael Merse
+ *
  */
 class GameParameters {
 

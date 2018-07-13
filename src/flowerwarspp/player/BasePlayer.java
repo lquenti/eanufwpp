@@ -18,8 +18,6 @@ import static flowerwarspp.util.log.LogModule.PLAYER;
  * des Interfaces {@link Player} erfüllt. Die einzige abstrakte Methode deren Implementation gefordert wird, ist {@link
  * #requestMove()}. Diese Methode fordert einen Zug vom jeweiligen Spieler an, und leitet diesen Zug an die Methode
  * {@link #request()} weiter.
- *
- * @author Michael Merse
  */
 abstract class BasePlayer implements flowerwarspp.preset.Player {
 
@@ -135,7 +133,6 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	 * @return Der vom Spieler zurückgegebene Zug.
 	 * @throws Exception Falls der jeweilige Spieler keinen Zug angeben konnte.
 	 */
-	/* INFO: Method is abstract because requesting a move from the player works differently with each implementation */
 	protected abstract Move requestMove() throws Exception;
 
 	/**
@@ -224,7 +221,6 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	 * @throws Exception       Falls während der Initialisierung ein Fehler auftrat
 	 * @throws RemoteException falls bei der Netzwerkkommunikation etwas schief gelaufen ist
 	 */
-	/* TODO: Properly handle beginning a new game (i.e. calling init() in the middle of a running game) */
 	@Override
 	public void init(int boardSize, PlayerColor playerColor) throws Exception, RemoteException {
 
@@ -289,12 +285,34 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	 *
 	 * @see flowerwarspp.preset.Player
 	 */
-	// TODO: Javadoc
 	protected enum PlayerFunction {
+		/**
+		 * Dieser Status signalisiert, dass der Spieler noch nicht mit init() initialisiert worden ist. {@link #NULL}
+		 * ist demnach der Standartwert des {@link #cycleState} nach Aufrufen des Konstruktors.
+		 */
 		NULL,
+		/**
+		 * Dieser Status signalisiert, dass als nächstes die Funktion {@link #request()} aufgerufen werden soll.
+		 */
 		REQUEST,
+		/**
+		 * Dieser Status signalisiert, dass als nächstes die Funktion {@link #confirm(Status)}aufgerufen werden
+		 * soll.
+		 */
 		CONFIRM,
+		/**
+		 * Dieser Status signalisiert, dass als nächstes die Funktion {@link #update(Move, Status)} aufgerufen werden
+		 * soll.
+		 */
 		UPDATE,
+		/**
+		 * Dieser Status signalisiert, dass der Spieler mit {@link #init(int, PlayerColor)} initialisiert worden ist. Da
+		 * es durchaus sein kann, dass der blaue Spieler ein Spiel mit {@link #request()} eröffnet (zum Beispiel wenn
+		 * das Spiel geladen worden ist und in dem Spielstand, Rot den letzten Zug gemacht hat). Der Status
+		 * <code>INITIAL</code> erlaubt sowohl das Aufrufen von {@link #request()} also auch von
+		 * {@link #update(Move, Status)}. Nach dieser anfänglichen Ausnahme ist der {@link #cycleState} jedoch fest
+		 * vorgegeben.
+		 */
 		INITIAL
 	}
 }

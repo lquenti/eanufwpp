@@ -12,13 +12,11 @@ import java.rmi.server.UnicastRemoteObject;
  * Mit diesem Netzwerk-Spieler kann jede Implementation der Schnittstelle {@link Player} einer anderen Implementation
  * von FlowerWarsPP angeboten werden.
  *
- * @author Michael Merse
+ *
  */
 public class RemotePlayer
 		extends UnicastRemoteObject
 		implements Player {
-
-	// TODO: Javadoc
 
 	/**
 	 * Referenz auf ein Objekt welches {@link Output} implementiert. Mit diesem Objekt kann lokal das entfernt

@@ -21,7 +21,7 @@ import static flowerwarspp.preset.PlayerColor.Red;
  * der Datei beschriebenen, Spielzüge in der {@link ArrayDeque} einer neuen Instanz dieser Klasse gespeichert. Diese
  * Instanz wird dann zurückgegeben.
  *
- * @author Michael Merse
+ *
  */
 public class SaveGame implements Iterable<Move> {
 
