@@ -239,14 +239,18 @@ public class Game {
 		// wird dann vom Hauptprogramm in init() vernünftig behandelt.
 		SaveGame loadedSaveGame = SaveGame.load(gameParameters.getSaveGameName());
 
-		boardSize = saveGame.getBoardSize();
+		boardSize = loadedSaveGame.getBoardSize();
 
 		initBoard();
 
-		output.setViewer(viewer);
-
 		// Das Replay des Spielstands wird nun ausgeführt.
-		replay(loadedSaveGame);
+		if (gameParameters.getReplaySpeed() > 0) {
+			output.setViewer(viewer);
+			replay(loadedSaveGame);
+		} else {
+			replay(loadedSaveGame);
+			output.setViewer(viewer);
+		}
 
 		Log.log(LogLevel.INFO, LogModule.MAIN, "Savegame " + gameParameters.getSaveGameName() + " loaded");
 
@@ -377,6 +381,7 @@ public class Game {
 
 			// Falls der aktuelle Spieler nicht aufgegeben hat, werden der Status des Spielbretts des Hauptprogramms
 			// und der Status des Spielbretts des aktuellen Spielers mit confirm verglichen.
+			// TODO
 			if (move.getType() != MoveType.Surrender) {
 				Log.log(LogLevel.DEBUG, LogModule.MAIN, "Confirming status.");
 				currentPlayer.confirm(viewer.getStatus());
@@ -421,12 +426,11 @@ public class Game {
 		// Spielbrett ausgeführt.
 		for (Move move : loadedSaveGame) {
 			board.make(move);
+			saveGame.add(move);
 			if (gameParameters.getReplaySpeed() > 0) {
 				output.refresh();
 				Thread.sleep(gameParameters.getReplaySpeed());
 			}
 		}
-
-		output.refresh();
 	}
 }

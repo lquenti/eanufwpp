@@ -8,6 +8,7 @@ import flowerwarspp.util.log.LogModule;
 
 import java.rmi.RemoteException;
 
+import static flowerwarspp.player.BasePlayer.PlayerFunction.*;
 import static flowerwarspp.util.log.LogLevel.*;
 import static flowerwarspp.util.log.LogModule.PLAYER;
 
@@ -90,7 +91,7 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	protected BasePlayer() {
 		this.playerColour = PlayerColor.Red;
 		this.board = null;
-		this.cycleState = PlayerFunction.NULL;
+		this.cycleState = NULL;
 	}
 
 	/**
@@ -104,11 +105,11 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	@Override
 	public final Move request() throws Exception, RemoteException {
 		// Den Status des Spieler-Lifecycles validieren.
-		if (cycleState == PlayerFunction.NULL) {
+		if (cycleState == NULL) {
 			log(ERROR, "request() was called before player was initialized");
 			throw new Exception(exception_NoInit);
 		}
-		if (cycleState != PlayerFunction.REQUEST) {
+		if (cycleState != REQUEST && cycleState != INITIAL) {
 			log(ERROR, "request() was called at the wrong time");
 			throw new Exception(exception_CycleRequest);
 		}
@@ -122,7 +123,7 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 		board.make(move);
 
 		// Spieler-Lifecycle aktualisieren.
-		cycleState = PlayerFunction.CONFIRM;
+		cycleState = CONFIRM;
 
 		return move;
 	}
@@ -150,11 +151,11 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	@Override
 	public final void confirm(Status status) throws Exception, RemoteException {
 		// Den Status des Spieler-Lifecycles validieren.
-		if (cycleState == PlayerFunction.NULL) {
+		if (cycleState == NULL) {
 			log(ERROR, "confirm() was called before player was initialized");
 			throw new Exception(exception_NoInit);
 		}
-		if (cycleState != PlayerFunction.CONFIRM) {
+		if (cycleState != CONFIRM && cycleState != INITIAL) {
 			log(ERROR, "confirm() was called at the wrong time");
 			throw new Exception(exception_CycleConfirm);
 		}
@@ -170,7 +171,7 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 		}
 
 		// Spieler-Lifecycle aktualisieren.
-		cycleState = PlayerFunction.UPDATE;
+		cycleState = UPDATE;
 	}
 
 	/**
@@ -187,11 +188,11 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	@Override
 	public final void update(Move opponentMove, Status status) throws Exception, RemoteException {
 		// Den Status des Spieler-Lifecycles validieren.
-		if (cycleState == PlayerFunction.NULL) {
+		if (cycleState == NULL) {
 			log(ERROR, "update() was called before player was initialized");
 			throw new Exception(exception_NoInit);
 		}
-		if (cycleState != PlayerFunction.UPDATE) {
+		if (cycleState != UPDATE && cycleState != INITIAL) {
 			log(ERROR, "update() was called at the wrong time");
 			throw new Exception(exception_CycleUpdate);
 		}
@@ -210,7 +211,7 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 		}
 
 		// Spieler-Lifecycle aktualisieren.
-		cycleState = PlayerFunction.REQUEST;
+		cycleState = REQUEST;
 	}
 
 	/**
@@ -234,20 +235,14 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 		// gesetzt, um ein neues Spiel zu starten.
 		// Falls des Spielbrett noch nicht gesetzt worden ist, wird ein neues Brett gegebener Größe erzeugt und der
 		// zugehörige Viewer gesetzt.
-		if (board == null || cycleState != PlayerFunction.NULL) {
+		if (board == null || cycleState != NULL) {
 			board = new MainBoard(boardSize);
 		}
 
 		boardViewer = board.viewer();
 
-		// Der Status des Spieler-Lifecycles wird entsprechend der Spielerfarbe gesetzt. Der rote Spieler beginnt mit
-		// request(), der Blaue mit update().
-		if (playerColour == PlayerColor.Red) {
-			cycleState = PlayerFunction.REQUEST;
-
-		} else {
-			cycleState = PlayerFunction.UPDATE;
-		}
+		// Der Status des Spieler-Lifecycles wird gesetzt.
+		cycleState = INITIAL;
 
 		log(INFO, "Initialized new player with colour " + playerColour + " on a board with size " + boardSize);
 	}
@@ -294,10 +289,12 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	 *
 	 * @see flowerwarspp.preset.Player
 	 */
+	// TODO: Javadoc
 	protected enum PlayerFunction {
 		NULL,
 		REQUEST,
 		CONFIRM,
-		UPDATE
+		UPDATE,
+		INITIAL
 	}
 }

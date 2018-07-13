@@ -1,6 +1,7 @@
 package flowerwarspp.player;
 
 import flowerwarspp.board.MainBoard;
+import flowerwarspp.main.savegame.SaveGame;
 import flowerwarspp.ui.Output;
 import flowerwarspp.preset.*;
 
@@ -17,8 +18,23 @@ public class RemotePlayer
 		extends UnicastRemoteObject
 		implements Player {
 
+	// TODO: Javadoc
+
+	/**
+	 * Referenz auf ein Objekt welches {@link Output} implementiert. Mit diesem Objekt kann lokal das entfernt
+	 * stattfindene Spiel mitverfolgt werden.
+	 */
 	private Output output;
+
+	/**
+	 * Das Spielbrett des Spielers.
+	 */
 	private Board board;
+
+	/**
+	 * Ein {@link SaveGame}-Objekt, mit welchem der entfernte Spieler das Spiel speichern kann.
+	 */
+	private SaveGame saveGame = null;
 
 	/**
 	 * Referenz auf ein Objekt einer Klasse welche das Interface {@link Player} implementiert. Diese Referenz wird
@@ -27,8 +43,8 @@ public class RemotePlayer
 	private Player player;
 
 	/**
-	 * Default-Konstruktor, welcher einen neuen Netzwerkspieler mit einem bestehenden Objekt einer Klasse, welche das
-	 * Interface {@link Player} implementiert, initialisiert.
+	 * Default-Konstruktor, welcher einen neuen übergebenen Spieler als Netzwerkspieler mit einem bestehenden Objekt
+	 * einer Klasse, welche das Interface {@link Player} implementiert, initialisiert.
 	 *
 	 * @param player Der Spieler, welcher dem Server durch dieses Objekt Züge mitteilen soll.
 	 * @param output Das Objekt, auf welchem das aktuelle Spielgeschehen lokal angezeigt wird.
@@ -40,12 +56,30 @@ public class RemotePlayer
 	}
 
 	/**
+	 * Konstruktor, welcher zusätzlich zu {@link RemotePlayer#RemotePlayer(Player, Output)} auch noch eine
+	 * Referenz auf ein {@link SaveGame}-Objekt zum Speichern des Spielstands.
+	 *
+	 * @param player   Der Spieler, welcher dem Server durch dieses Objekt Züge mitteilen soll.
+	 * @param output   Das Objekt, auf welchem das aktuelle Spielgeschehen lokal angezeigt wird.
+	 * @param saveGame Referenz auf ein {@link SaveGame}-Objekt zum Speichern des Spiels.
+	 * @throws RemoteException Falls während der Netzwerkkommunikation ein Fehler aufgetreten ist.
+	 */
+	public RemotePlayer(final Player player, final Output output, final SaveGame saveGame) throws RemoteException {
+		this(player, output);
+		this.saveGame = saveGame;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public Move request() throws Exception, RemoteException {
 		final Move result = player.request();
 		board.make(result);
+
+		if (saveGame != null)
+			saveGame.add(result);
+
 		output.refresh();
 		return result;
 	}
@@ -65,6 +99,10 @@ public class RemotePlayer
 	public void update(final Move opponentMove, final Status status) throws Exception, RemoteException {
 		player.update(opponentMove, status);
 		board.make(opponentMove);
+
+		if (saveGame != null)
+			saveGame.add(opponentMove);
+
 		output.refresh();
 	}
 

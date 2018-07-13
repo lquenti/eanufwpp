@@ -10,6 +10,7 @@ public class Dot extends BoardPolygon {
 	 * Die {@link Position} dieses Punkts auf dem Spielbrett.
 	 */
 	private Position position;
+
 	/**
 	 * Die Position dieses Points auf dem Swing-Zeichenbrett.
 	 */
@@ -20,6 +21,14 @@ public class Dot extends BoardPolygon {
 	private int currentDiameter = 1;
 
 	/**
+	 * Gibt den Wert von {@link #position} zurück.
+	 * @return Wert von {@link #position}.
+	 */
+	public Position getPosition() {
+		return position;
+	}
+
+	/**
 	 * Konstruiert einen Punkt im Koordinatensystem des {@link flowerwarspp.preset.Board}s.
 	 * Wichtig: Der Text, der die Position schreibt wird als Teil des Borders gesehen
 	 * (siehe {@link BoardPolygon#getBorderColour()}).
@@ -28,7 +37,7 @@ public class Dot extends BoardPolygon {
 	 * Die {@link Position}, an der dieser Punkt liegen soll.
 	 */
 	public Dot(Position position, Color fillColour) {
-		super(Color.WHITE, Color.BLACK);
+		super(Color.WHITE, fillColour);
 		this.position = position;
 		currentLocation = new Point();
 	}

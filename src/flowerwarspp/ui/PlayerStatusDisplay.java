@@ -1,29 +1,13 @@
 package flowerwarspp.ui;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
 /**
  * Ein Display, das die Punktzahl der Spieler anzeigt.
  */
-public class PlayerStatusDisplay {
-	/**
-	 * Die Farbe des {@link flowerwarspp.preset.PlayerColor}.
-	 */
-	private Color playerColour;
-	/**
-	 * Wenn <code>true</code>, wird das Display auf der linken Hälfte des Bildschirms gezeichnet.
-	 */
-	private boolean left = false;
-	/**
-	 * Der Abstand zum äußeren Fensterrand.
-	 */
-	private int padding = 16;
-	/**
-	 * Ein Rechteck das zur Darstellung des Spielers genutzt wird.
-	 */
-	private Rectangle playerArea = new Rectangle();
-
+public class PlayerStatusDisplay extends JPanel {
 	/**
 	 * Die aktuelle Punktzahl des {@link flowerwarspp.preset.PlayerColor}.
 	 */
@@ -35,30 +19,8 @@ public class PlayerStatusDisplay {
 	 * @param playerColour
 	 * Die Farbe des {@link flowerwarspp.preset.PlayerColor}.
 	 */
-	public PlayerStatusDisplay(Color playerColour, boolean left) {
-		this.playerColour = playerColour;
-		this.left = left;
-	}
-
-	/**
-	 * Updatet die Größe der Rechtecke, die die Punkte der Spieler anzeigt.
-	 *
-	 * @param currentSize
-	 * Die Größe des Zeichenbretts.
-	 */
-	public synchronized void updateRectangleSizes(Dimension currentSize) {
-		int minimumSize = Math.min(currentSize.width, currentSize.height);
-		int width = minimumSize / 5;
-		int height = width * 9 / 16;
-		int x = padding;
-		int y = padding;
-
-		if (!left) {
-			x = currentSize.width - width - padding;
-		}
-
-		playerArea.setSize(width, height);
-		playerArea.setLocation(x, y);
+	public PlayerStatusDisplay(Color playerColour) {
+		setBackground(playerColour);
 	}
 
 	/**
@@ -77,26 +39,35 @@ public class PlayerStatusDisplay {
 	 * @param g
 	 * Das {@link Graphics}-Objekt, auf das gezeichnet werden soll.
 	 */
-	public synchronized void draw(Graphics g) {
-		g.setColor(playerColour);
-
-		int xLocation = playerArea.x;
-		int yLocation = playerArea.y;
-		int width = playerArea.width;
-		int height = playerArea.height;
-
-		g.fillRoundRect(xLocation, yLocation, width, height, 10, 10);
-		g.setColor(Color.BLACK);
-		g.drawRoundRect(xLocation, yLocation, width, height, 10, 10);
-
+	@Override
+	public synchronized void paintComponent(Graphics g) {
 		g.setFont(new Font("sans", Font.BOLD, 24));
-		g.setColor(Color.WHITE);
+
 		String pointCountString = Integer.toString(playerPoints);
 		Rectangle2D stringBounds = g.getFontMetrics().getStringBounds(pointCountString, g);
+
+		Dimension dimension = new Dimension();
+		int dimensionHeight = (int) (stringBounds.getHeight() * 1.5) ;
+		int dimensionWidth = (int) (stringBounds.getHeight() / 6 * 16); // (h * 1.5) / (9.0 * 16)
+		dimension.setSize(dimensionWidth, dimensionHeight);
+		setPreferredSize(dimension);
+
+		Rectangle drawRect = g.getClipBounds();
+		int x = drawRect.x + 2;
+		int y = drawRect.y + 2;
+		int width = dimension.width - 4;
+		int height = dimension.height - 4;
+
+		g.setColor(getBackground());
+		g.fillRoundRect(x, y, width, height, 5, 5);
+		g.setColor(Color.BLACK);
+		g.drawRoundRect(x, y, width, height,5, 5);
+
+		g.setColor(Color.BLACK);
 		Point drawPoint = new Point();
-		drawPoint.setLocation(playerArea.getCenterX(), playerArea.getCenterY());
-		drawPoint.x -= stringBounds.getWidth() / 2;
-		drawPoint.y += stringBounds.getHeight() / 2 - 5;
+		drawPoint.setLocation(drawRect.getCenterX(), drawRect.getCenterY());
+		drawPoint.x -= stringBounds.getWidth() / 2 - 2;
+		drawPoint.y += stringBounds.getHeight() / 2 - stringBounds.getHeight() / 6;
 		g.drawString(pointCountString, drawPoint.x, drawPoint.y);
 	}
 }

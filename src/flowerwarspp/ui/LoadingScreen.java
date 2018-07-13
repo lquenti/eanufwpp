@@ -29,7 +29,10 @@ public class LoadingScreen extends JPanel {
 			"🔥🔥🔥CHNGS.7Z🔥🔥🔥",
 			"Null ist eindeutig kleiner als Unendlich.",
 			"Chinesische Schreibmaschinen sind echt nicht so gut.",
-			"Siehe e5e4daf4 (das hier ist kein Ladebildschirmtipp)..."
+			"Siehe e5e4daf4 (das hier ist kein Ladebildschirmtipp)...",
+			"main(s){printf(s=\"main(s){printf(s=%c%s%1$c,34,s);}\",34,s);} ist eine C-Quine",
+			"Rosa Pilze sind giftig!",
+			"~/\uD83C\uDF6C/\uD83C\uDFE0 = \"home/sweet/home\""
 		);
 
 	/**
