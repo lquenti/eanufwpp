@@ -20,8 +20,20 @@ public class RemotePlayer
 
 	// TODO: Javadoc
 
+	/**
+	 * Referenz auf ein Objekt welches {@link Output} implementiert. Mit diesem Objekt kann lokal das entfernt
+	 * stattfindene Spiel mitverfolgt werden.
+	 */
 	private Output output;
+
+	/**
+	 * Das Spielbrett des Spielers.
+	 */
 	private Board board;
+
+	/**
+	 * Ein {@link SaveGame}-Objekt, mit welchem der entfernte Spieler das Spiel speichern kann.
+	 */
 	private SaveGame saveGame = null;
 
 	/**
@@ -31,8 +43,8 @@ public class RemotePlayer
 	private Player player;
 
 	/**
-	 * Default-Konstruktor, welcher einen neuen Netzwerkspieler mit einem bestehenden Objekt einer Klasse, welche das
-	 * Interface {@link Player} implementiert, initialisiert.
+	 * Default-Konstruktor, welcher einen neuen übergebenen Spieler als Netzwerkspieler mit einem bestehenden Objekt
+	 * einer Klasse, welche das Interface {@link Player} implementiert, initialisiert.
 	 *
 	 * @param player Der Spieler, welcher dem Server durch dieses Objekt Züge mitteilen soll.
 	 * @param output Das Objekt, auf welchem das aktuelle Spielgeschehen lokal angezeigt wird.
@@ -44,11 +56,12 @@ public class RemotePlayer
 	}
 
 	/**
-	 * Default-Konstruktor, welcher einen neuen Netzwerkspieler mit einem bestehenden Objekt einer Klasse, welche das
-	 * Interface {@link Player} implementiert, initialisiert.
+	 * Konstruktor, welcher zusätzlich zu {@link RemotePlayer#RemotePlayer(Player, Output)} auch noch eine
+	 * Referenz auf ein {@link SaveGame}-Objekt zum Speichern des Spielstands.
 	 *
-	 * @param player Der Spieler, welcher dem Server durch dieses Objekt Züge mitteilen soll.
-	 * @param output Das Objekt, auf welchem das aktuelle Spielgeschehen lokal angezeigt wird.
+	 * @param player   Der Spieler, welcher dem Server durch dieses Objekt Züge mitteilen soll.
+	 * @param output   Das Objekt, auf welchem das aktuelle Spielgeschehen lokal angezeigt wird.
+	 * @param saveGame Referenz auf ein {@link SaveGame}-Objekt zum Speichern des Spiels.
 	 * @throws RemoteException Falls während der Netzwerkkommunikation ein Fehler aufgetreten ist.
 	 */
 	public RemotePlayer(final Player player, final Output output, final SaveGame saveGame) throws RemoteException {
