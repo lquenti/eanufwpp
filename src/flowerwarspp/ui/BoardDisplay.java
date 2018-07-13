@@ -607,7 +607,6 @@ public class BoardDisplay extends JPanel {
 		// wenn es einen "End"-Move gibt.
 		bottomToolbarPanel.setSurrenderEnabled(true);
 		bottomToolbarPanel.setEndEnabled(boardViewer.possibleMovesContains(new Move(MoveType.End)));
-		bottomToolbarPanel.setLabelText(boardViewer.getTurn() + " ist am Zug.");
 
 
 		getParent().repaint();
@@ -743,6 +742,7 @@ public class BoardDisplay extends JPanel {
 	public void refresh() {
 		redStatusDisplay.updateStatus(boardViewer.getPoints(PlayerColor.Red));
 		blueStatusDisplay.updateStatus(boardViewer.getPoints(PlayerColor.Blue));
+		bottomToolbarPanel.setLabelText(boardViewer.getTurn() + " ist am Zug.");
 
 		// Wenn das Spiel zuende ist, soll ein Dialog das anzeigen.
 		if ((boardViewer.getStatus() != Status.Ok) && (gameEnd)) {
