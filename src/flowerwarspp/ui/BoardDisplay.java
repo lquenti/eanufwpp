@@ -322,7 +322,7 @@ public class BoardDisplay extends JPanel {
 	/**
 	 * <code>true</code> genau dann, wenn das Spiel geendet hat.
 	 */
-	private boolean gameEnd = false;
+	private boolean gameHasEnded = false;
 
 	/**
 	 * Konstruiert ein Display für die Darstellung eines {@link Board}s.
@@ -351,7 +351,7 @@ public class BoardDisplay extends JPanel {
 	public void setBoardViewer(Viewer boardViewer) {
 		this.boardViewer = boardViewer;
 		boardSize = boardViewer.getSize();
-		gameEnd = (boardViewer.getStatus() == Status.Ok);
+		gameHasEnded = (boardViewer.getStatus() != Status.Ok);
 
 		redStatusDisplay.updateStatus(boardViewer.getPoints(PlayerColor.Red));
 		blueStatusDisplay.updateStatus(boardViewer.getPoints(PlayerColor.Blue));
@@ -594,7 +594,7 @@ public class BoardDisplay extends JPanel {
 		// Wenn das Spiel bereits zuende ist,
 		// sollen keine weiteren möglichen Moves mehr angezeigt werden,
 		// selbst wenn es noch welche gäbe.
-		if ((boardViewer.getStatus() != Status.Ok) && (!gameEnd)) {
+		if ((boardViewer.getStatus() != Status.Ok) && (! gameHasEnded )) {
 			possibleDitchMoves = null;
 			combinableFlowers = null;
 		} else {
@@ -745,13 +745,13 @@ public class BoardDisplay extends JPanel {
 		bottomToolbarPanel.setLabelText(boardViewer.getTurn() + " ist am Zug.");
 
 		// Wenn das Spiel zuende ist, soll ein Dialog das anzeigen.
-		if ((boardViewer.getStatus() != Status.Ok) && (gameEnd)) {
+		if ((boardViewer.getStatus() != Status.Ok) && (!gameHasEnded)) {
 			possibleDitchMoves = null;
 
 			// NOTE: Es ist wichtig, dass der Konstruktor durch EventQueue aufgerufen wird,
 			// da das Programm aufgrund Swings Threading-Struktur sonst blockiert.
 			EventQueue.invokeLater(() -> new EndPopupFrame(boardViewer.getStatus()));
-			gameEnd = true;
+			gameHasEnded = true;
 		}
 
 		getParent().repaint();
