@@ -270,7 +270,7 @@ public class MoveSet extends AbstractSet<Move> {
 		/**
 		 * Die Iteratoren der einzelnen Unterkategorien.
 		 */
-		ArrayList<Iterator<Move>> iterators;
+		List<Iterator<Move>> iterators;
 
 		/**
 		 * Der Iterator, der zuletzt ein Element zurückgegeben hat.
@@ -281,10 +281,11 @@ public class MoveSet extends AbstractSet<Move> {
 		 * Erzeugt einen neuen MoveSetIterator.
 		 */
 		public MoveSetIterator() {
-			iterators = new ArrayList<>(3);
-			iterators.add(flowerMoves.iterator());
-			iterators.add(ditchMoves.iterator());
-			iterators.add(otherMoves.iterator());
+			iterators = Arrays.asList(
+				flowerMoves.iterator(),
+				ditchMoves.iterator(),
+				otherMoves.iterator()
+			);
 		}
 
 		/**
