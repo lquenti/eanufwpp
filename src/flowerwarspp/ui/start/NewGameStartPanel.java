@@ -130,7 +130,7 @@ public class NewGameStartPanel extends JPanel {
 	 * dieses {@link JFrame}s.
 	 *
 	 * @param distanceFromCentre
-	 * Der Abstand zwischen der Mitte des {@link JFrame}s und der {@link SpringLayout#WEST)-Seite
+	 * Der Abstand zwischen der Mitte des {@link JFrame}s und der {@link SpringLayout#WEST}-Seite
 	 * der Eingabe-{@link JComponent}s.
 	 */
 	private void setupConstraints(final int distanceFromCentre) {

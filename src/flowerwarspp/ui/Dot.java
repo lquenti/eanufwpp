@@ -67,7 +67,7 @@ public class Dot extends BoardPolygon {
 	}
 
 	/**
-	 * {@inhheritDoc}
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void recalcPoints(int triangleSideLength, Point relativeStart) {
@@ -76,7 +76,7 @@ public class Dot extends BoardPolygon {
 	}
 
 	/**
-	 * {@inhheritDoc}
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void drawPolygon(Graphics graphics) {

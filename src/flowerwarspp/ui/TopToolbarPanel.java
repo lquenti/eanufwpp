@@ -55,8 +55,7 @@ public class TopToolbarPanel extends JPanel implements ChangeListener {
 	/**
 	 * Ein Getter für den {@link JSlider}, der den Zoom bestimmt.
 	 *
-	 * @return
-	 *
+	 * @return Der Slider, der den Zoom bestimmt.
 	 */
 	JSlider getZoomSlider() {
 		return zoomSlider;
