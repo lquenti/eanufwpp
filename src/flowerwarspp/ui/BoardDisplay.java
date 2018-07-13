@@ -31,10 +31,18 @@ public class BoardDisplay extends JPanel {
 		 */
 		private Flower clickedFlower1 = null, clickedFlower2 = null;
 		/**
+		 * Wenn {@link Flower}s gesetzt wurden, werdern sie hier zwischengespeichert, damit es nicht zu Flackern kommt.
+		 */
+		private Flower lastClickedFlower1 = null, lastClickedFlower2 = null;
+		/**
 		 * Wenn ein {@link Ditch} gesetzt werden soll, muss dieser angeklickt werden.
 		 * Wurde einer geklickt, so ist er hierin gespeichert.
 		 */
 		private Ditch clickedDitch = null;
+		/*
+		 * Wenn ein {@link Ditch} gesetzt wurde, wird er hier zwischengespeichert, damit es nicht zu Flackern kommt.
+		 */
+		private Ditch lastClickedDitch = null;
 
 		/**
 		 * Konstruiert einen {@link DisplayMouseHandler}, der an ein {@link BoardDisplay}
@@ -90,6 +98,9 @@ public class BoardDisplay extends JPanel {
 			}
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			if (!isRequesting)
@@ -488,38 +499,37 @@ public class BoardDisplay extends JPanel {
 		Collection<Flower> blueFlowers = boardViewer.getFlowers(PlayerColor.Blue);
 
 		for (Triangle t : mapTriangles) {
-			// Jedes Dreieck soll zuerst die Hintergrundfarbe dieses Displays bekommen.
-			t.setFillColour(getBackground());
 			Flower flower = t.toFlower();
 
-			if ((redFlowers != null) && redFlowers.contains(flower)) {
+			if (redFlowers != null && redFlowers.contains(flower)) {
 				// Für den Fall, dass die aktuelle Blume dem roten Spieler gehört...
 				if (boardViewer.getFlowerBed(flower).size() > 3)
 					t.setFillColour(GameColours.redInGardenColour);
 				else
 					t.setFillColour(GameColours.redColour);
-			}
-			else if ((blueFlowers != null) && blueFlowers.contains(flower)) {
+			} else if (blueFlowers != null && blueFlowers.contains(flower)) {
 				// oder dem blauen Spieler gehört, färbe das Dreieck entsprechend.
 				if (boardViewer.getFlowerBed(flower).size() > 3)
 					t.setFillColour(GameColours.blueInGardenColour);
 				else
 					t.setFillColour(GameColours.blueColour);
-			} else {
+			} else if (flower.equals(displayMouseHandler.clickedFlower1)) {
 				// Andererseits, überprüfe, ob der Spieler gerade einen Flower-Move macht
 				// und diese Blume als erstes ausgewählt hat.
-				if (displayMouseHandler.clickedFlower1 != null) {
-					if (flower.equals(displayMouseHandler.clickedFlower1)) {
-						t.setFillColour(GameColours.triangleClickedColour);
-					} else if ((combinableFlowers != null) && (combinableFlowers.contains(flower))) {
-						t.setFillColour(GameColours.triangleCombinableColour);
-					}
-				} else if ((combinableFlowers != null) && combinableFlowers.contains(flower)) {
-					t.setFillColour(GameColours.triangleCombinableColour);
+				t.setFillColour(GameColours.triangleClickedColour);
+			} else if (flower.equals(displayMouseHandler.lastClickedFlower1) ||
+			           flower.equals(displayMouseHandler.lastClickedFlower2)) {
+				if (boardViewer.getTurn() == PlayerColor.Red) {
+					t.setFillColour(GameColours.redColour);
+				} else {
+					t.setFillColour(GameColours.blueColour);
 				}
+			} else if (combinableFlowers != null && combinableFlowers.contains(flower)) {
+				t.setFillColour(GameColours.triangleCombinableColour);
+			} else {
+				// Sonst behält das Triangle die Hintergrundfarbe dieses Displays.
+				t.setFillColour(getBackground());
 			}
-
-			// Sonst behält das Triangle die Hintergrundfarbe dieses Displays.
 		}
 	}
 
@@ -535,11 +545,13 @@ public class BoardDisplay extends JPanel {
 			Move move = new Move(ditch);
 
 			// Färbe die Edge in der Farbe, die den Spieler repräsentiert, dem sie gehört.
-			if ((redDitches != null) && (redDitches.contains(ditch))) {
+			if ((redDitches != null && redDitches.contains(ditch)) ||
+			    (boardViewer.getTurn() == PlayerColor.Red && ditch.equals(displayMouseHandler.lastClickedDitch))) {
 				e.setFillColour(GameColours.redColour);
-			} else if ((blueDitches != null) && (blueDitches.contains(ditch))) {
+			} else if ((blueDitches != null && blueDitches.contains(ditch)) ||
+			           (boardViewer.getTurn() == PlayerColor.Blue && ditch.equals(displayMouseHandler.lastClickedDitch))) {
 				e.setFillColour(GameColours.blueColour);
-			} else if ((possibleDitchMoves != null) && possibleDitchMoves.contains(move)) {
+			} else if (possibleDitchMoves != null && possibleDitchMoves.contains(move)) {
 				// Wenn sie niemandem gehört, aber der Spieler gerade spielen soll,
 				// färbe sie, um das darzustellen.
 				e.setFillColour(GameColours.edgeClickableColour);
@@ -714,6 +726,8 @@ public class BoardDisplay extends JPanel {
 			} else if (!combinableFlowers.contains(flower2)) {
 				displayMouseHandler.clickedFlower2 = null;
 			} else {
+				displayMouseHandler.lastClickedFlower1 = flower1;
+				displayMouseHandler.lastClickedFlower2 = flower2;
 				return new Move(flower1, flower2);
 			}
 		}
@@ -735,9 +749,10 @@ public class BoardDisplay extends JPanel {
 		// Wenn der durch den Ditch-Klick resultierende Move ungültig ist,
 		// soll der Klick (effektiv) ignoriert werden.
 		Move result = new Move(ditch);
-		if (boardViewer.possibleMovesContains(result))
+		if (boardViewer.possibleMovesContains(result)) {
+			displayMouseHandler.lastClickedDitch = ditch;
 			return result;
-		else {
+		} else {
 			displayMouseHandler.reset();
 			displayMouseHandler.isRequesting = true;
 		}
