@@ -1,6 +1,7 @@
 package flowerwarspp.player;
 
 import flowerwarspp.board.MainBoard;
+import flowerwarspp.main.savegame.SaveGame;
 import flowerwarspp.ui.Output;
 import flowerwarspp.preset.*;
 
@@ -17,8 +18,11 @@ public class RemotePlayer
 		extends UnicastRemoteObject
 		implements Player {
 
+	// TODO: Javadoc
+
 	private Output output;
 	private Board board;
+	private SaveGame saveGame = null;
 
 	/**
 	 * Referenz auf ein Objekt einer Klasse welche das Interface {@link Player} implementiert. Diese Referenz wird
@@ -40,12 +44,29 @@ public class RemotePlayer
 	}
 
 	/**
+	 * Default-Konstruktor, welcher einen neuen Netzwerkspieler mit einem bestehenden Objekt einer Klasse, welche das
+	 * Interface {@link Player} implementiert, initialisiert.
+	 *
+	 * @param player Der Spieler, welcher dem Server durch dieses Objekt Züge mitteilen soll.
+	 * @param output Das Objekt, auf welchem das aktuelle Spielgeschehen lokal angezeigt wird.
+	 * @throws RemoteException Falls während der Netzwerkkommunikation ein Fehler aufgetreten ist.
+	 */
+	public RemotePlayer(final Player player, final Output output, final SaveGame saveGame) throws RemoteException {
+		this(player, output);
+		this.saveGame = saveGame;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public Move request() throws Exception, RemoteException {
 		final Move result = player.request();
 		board.make(result);
+
+		if (saveGame != null)
+			saveGame.add(result);
+
 		output.refresh();
 		return result;
 	}
@@ -65,6 +86,10 @@ public class RemotePlayer
 	public void update(final Move opponentMove, final Status status) throws Exception, RemoteException {
 		player.update(opponentMove, status);
 		board.make(opponentMove);
+
+		if (saveGame != null)
+			saveGame.add(opponentMove);
+
 		output.refresh();
 	}
 
