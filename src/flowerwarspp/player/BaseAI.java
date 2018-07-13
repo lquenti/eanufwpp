@@ -21,7 +21,7 @@ abstract class BaseAI extends BasePlayer {
 	 * Eine vordefinierte Nachricht einer {@link Exception}, welche geworfen wird, wenn die KI mit ihrer Strategie
 	 * keinen Zug auswählen konnte.
 	 */
-	protected static final String exception_NoMove =
+	protected static final String noMoveMessage =
 			"Die KI konnte keinen Zug auswaehlen.";
 	/**
 	 * Globale Definition des Scores, falls ein {@link MoveType#Ditch}-Move gemacht werden kann, welcher den Score des
@@ -61,7 +61,7 @@ abstract class BaseAI extends BasePlayer {
 		// Falls getMove() keinen Zug liefern konnte, wird eine Exception geworfen.
 		if (move == null) {
 			log(LogLevel.ERROR, "AI was unable to return a move");
-			throw new Exception(exception_NoMove);
+			throw new Exception(noMoveMessage);
 		}
 
 		return move;

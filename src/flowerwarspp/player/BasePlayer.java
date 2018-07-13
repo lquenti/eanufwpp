@@ -27,7 +27,7 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	 * Eine vordefinierte Nachricht einer {@link Exception}, welche geworfen wird, wenn der Spieler noch nicht
 	 * initialisiert worden ist.
 	 */
-	private static final String exception_NoInit =
+	private static final String noInitMessage =
 			"Der Spieler muss zuerst initialisiert werden!";
 
 	/**
@@ -35,35 +35,35 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	 * #confirm(Status)}, {@link #request()} oder {@link #update(Move, Status)} zu einem unerwarteten Zeitpunkt
 	 * aufgerufen worden wird.
 	 */
-	private static final String exception_UnexpectedCall =
+	private static final String unexpectedCallMessage =
 			"Unerwarteter Methoden-Aufruf.";
 
 	/**
 	 * Eine vordefinierte Nachricht einer {@link Exception}, welche geworfen wird, wenn {@link #request()} zum falschen
 	 * Zeitpunkt aufgerufen worden ist.
 	 */
-	private static final String exception_CycleRequest =
-			exception_UnexpectedCall + " Es haette update() aufgerufen werden sollen.";
+	private static final String cycleRequestMessage =
+			unexpectedCallMessage + " Es haette update() aufgerufen werden sollen.";
 
 	/**
 	 * Eine vordefinierte Nachricht einer {@link Exception}, welche geworfen wird, wenn {@link #update(Move, Status)}
 	 * zum falschen Zeitpunkt aufgerufen worden ist.
 	 */
-	private static final String exception_CycleUpdate =
-			exception_UnexpectedCall + " Es haette confirm() aufgerufen werden sollen.";
+	private static final String cycleUpdateMessage =
+			unexpectedCallMessage + " Es haette confirm() aufgerufen werden sollen.";
 
 	/**
 	 * Eine vordefinierte Nachricht einer {@link Exception}, welche geworfen wird, wenn {@link #confirm(Status)} zum
 	 * falschen Zeitpunkt aufgerufen worden ist.
 	 */
-	private static final String exception_CycleConfirm =
-			exception_UnexpectedCall + " Es haette request() aufgerufen werden sollen.";
+	private static final String cycleConfirmMessage =
+			unexpectedCallMessage + " Es haette request() aufgerufen werden sollen.";
 
 	/**
 	 * Eine vordefinierte Nachricht einer {@link Exception}, welche geworfen wird, wenn es eine Disparität zwischen den
 	 * Status des Hauptprogramms und des eigenen Spielbretts gab.
 	 */
-	private static final String exception_StatusError =
+	private static final String statusErrorMessage =
 			"Der Status des Hauptprogramms und der Status des Spielbretts dieses Spielers stimmen nicht ueberein!";
 	/**
 	 * Stellt diesem Objekt ein eigenes {@link Board} zur Verfügung, um die Durchführung der eigenen und gegnerischen
@@ -107,11 +107,11 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 		// Den Status des Spieler-Lifecycles validieren.
 		if (cycleState == NULL) {
 			log(ERROR, "request() was called before player was initialized");
-			throw new Exception(exception_NoInit);
+			throw new Exception(noInitMessage);
 		}
 		if (cycleState != REQUEST && cycleState != INITIAL) {
 			log(ERROR, "request() was called at the wrong time");
-			throw new Exception(exception_CycleRequest);
+			throw new Exception(cycleRequestMessage);
 		}
 
 		// Ein Zug wird über die abstrakte Methode requestMove() angefordert.
@@ -153,11 +153,11 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 		// Den Status des Spieler-Lifecycles validieren.
 		if (cycleState == NULL) {
 			log(ERROR, "confirm() was called before player was initialized");
-			throw new Exception(exception_NoInit);
+			throw new Exception(noInitMessage);
 		}
 		if (cycleState != CONFIRM && cycleState != INITIAL) {
 			log(ERROR, "confirm() was called at the wrong time");
-			throw new Exception(exception_CycleConfirm);
+			throw new Exception(cycleConfirmMessage);
 		}
 
 		// Validieren der Status der Bretter des Hauptprogramms und diesen Spielers.
@@ -167,7 +167,7 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 
 		if (! playerBoardState.equals(status)) {
 			log(ERROR, "confirm(): status of player board and main program are not the same");
-			throw new Exception(exception_StatusError);
+			throw new Exception(statusErrorMessage);
 		}
 
 		// Spieler-Lifecycle aktualisieren.
@@ -190,11 +190,11 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 		// Den Status des Spieler-Lifecycles validieren.
 		if (cycleState == NULL) {
 			log(ERROR, "update() was called before player was initialized");
-			throw new Exception(exception_NoInit);
+			throw new Exception(noInitMessage);
 		}
 		if (cycleState != UPDATE && cycleState != INITIAL) {
 			log(ERROR, "update() was called at the wrong time");
-			throw new Exception(exception_CycleUpdate);
+			throw new Exception(cycleUpdateMessage);
 		}
 
 		log(DEBUG, "received enemy move " + opponentMove + " and status " + status);
@@ -207,7 +207,7 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 
 		if (! playerBoardStatus.equals(status)) {
 			log(ERROR, "update(): status of player board and main program are not the same");
-			throw new Exception(exception_StatusError);
+			throw new Exception(statusErrorMessage);
 		}
 
 		// Spieler-Lifecycle aktualisieren.
