@@ -353,6 +353,9 @@ public class Game {
 
 			Log.log(LogLevel.DEBUG, LogModule.MAIN, "Beginning game loop.");
 
+			// Startzeit wird für die spätere Berechnung des Delays bestimmt.
+			long startTime = System.currentTimeMillis();
+
 			// Es wird versucht, vom aktuellen Spieler einen Zug zu erhalten. Schlägt dies fehl, also wird eine
 			// Exception geworfen, dann wird dem aktuellen Spieler automatisch der Surrender-Move zugewiesen.
 			Move move = null;
@@ -395,7 +398,8 @@ public class Game {
 			currentPlayer = oppositePlayer;
 			oppositePlayer = t;
 
-			Thread.sleep(gameParameters.getDelay());
+			long endTime = System.currentTimeMillis();
+			Thread.sleep(Math.max(0, gameParameters.getDelay() - (endTime - startTime)));
 		}
 
 		Log.log(LogLevel.INFO, LogModule.MAIN, "Game ended with status " + viewer.getStatus());
