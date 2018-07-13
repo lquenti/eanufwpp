@@ -22,6 +22,7 @@ public class LoadingScreen extends JPanel {
 			"Dreiecke haben drei Ecken.",
 			"Wer anderen einen Graben gräbt, hat einen verbotenen Spielzug gemacht.",
 			"Blumen wurden im Jahre 1734 von Konrad Blume erfunden.",
+			"Dreiecke wurden im Jahre 2018 von Lars Quentin erfunden.",
 			"Wenn Kreise ganz viele Ecken haben, dann haben sie auch mehrere.",
 			// NOTE: The characters are FIRE emoji (U+1F525).
 			// They needn't be escaped because java uses UTF16 for strings.
