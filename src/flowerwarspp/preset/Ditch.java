@@ -52,7 +52,7 @@ public class Ditch implements Serializable, Comparable<Ditch> {
      * @throws IllegalArgumentException
      *         falls eine der Positionen {@code null} ist
      */
-    public Ditch(Position first, Position second) {
+    public Ditch(final Position first, final Position second) {
         positions = new Position[2];
 
         setFirst(first);
@@ -73,7 +73,7 @@ public class Ditch implements Serializable, Comparable<Ditch> {
      * @throws DitchFormatException
      *         falls kein gueltiger String uebergeben wird oder das Format ungueltig ist
      */
-    public static Ditch parseDitch(String string) {
+    public static Ditch parseDitch(final String string) {
         if (string == null || string.equals(""))
             throw new DitchFormatException("cannot parse empty string");
 
@@ -121,7 +121,7 @@ public class Ditch implements Serializable, Comparable<Ditch> {
      * @throws IllegalArgumentException
      *         falls die Position {@code null} ist
      */
-    private void setFirst(Position first) {
+    private void setFirst(final Position first) {
         if (first == null)
             throw new IllegalArgumentException("first cannot be null");
         positions[0] = first;
@@ -147,7 +147,7 @@ public class Ditch implements Serializable, Comparable<Ditch> {
      * @throws IllegalArgumentException
      *         falls die Position {@code null} ist
      */
-    private void setSecond(Position second) {
+    private void setSecond(final Position second) {
         if (second == null)
             throw new IllegalArgumentException("second cannot be null");
         positions[1] = second;
@@ -159,7 +159,7 @@ public class Ditch implements Serializable, Comparable<Ditch> {
     }
 
     @Override
-    public int compareTo(Ditch ditch) {
+    public int compareTo(final Ditch ditch) {
         // Due to the unique ordering it is easy to calculate
         if (!getFirst().equals(ditch.getFirst()))
             return getFirst().compareTo(ditch.getFirst());
@@ -169,7 +169,7 @@ public class Ditch implements Serializable, Comparable<Ditch> {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (o == null)
             return false;
         if (!(o instanceof Ditch))

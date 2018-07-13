@@ -20,7 +20,7 @@ import static flowerwarspp.util.log.LogModule.*;
  * gesamte Log bis dahin mit {@link #flush()} gelehrt. {@link #flush()} schreibt den gesamten Inhalt des {@link
  * #messageBuffer} mit {@link PrintStream#print(String)} des Objekts {@link #output}.
  *
- * @author Michael Merse
+ *
  */
 public class Log {
 

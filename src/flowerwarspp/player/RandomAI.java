@@ -7,7 +7,7 @@ import flowerwarspp.preset.MoveType;
  * Implementiert die abstrakte Klasse {@link BasePlayer} mit einer zufallsbasierten KI, welche zufällig einen der zur
  * Verfügung stehenden Züge auswählt und auf Anfrage ausgibt.
  *
- * @author Michael Merse
+ *
  */
 public class RandomAI extends BaseAI {
 

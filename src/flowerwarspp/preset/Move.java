@@ -81,7 +81,7 @@ public class Move implements Serializable, Comparable<Move> {
      *         falls versucht wird mit diesem Konstruktor einen Zug vom Typen {@link MoveType#Flower} oder {@link
      *         MoveType#Ditch} zu erzeugen
      */
-    public Move(MoveType type) {
+    public Move(final MoveType type) {
         if (type == MoveType.Flower || type == MoveType.Ditch)
             throw new IllegalArgumentException("flower and ditch moves have " + "separate constructors");
 
@@ -100,7 +100,7 @@ public class Move implements Serializable, Comparable<Move> {
      * @throws IllegalArgumentException
      *         falls eine der Blumen {@code null} ist
      */
-    public Move(Flower first, Flower second) {
+    public Move(final Flower first, final Flower second) {
         type = MoveType.Flower;
 
         flowers = new Flower[2];
@@ -117,7 +117,7 @@ public class Move implements Serializable, Comparable<Move> {
      * @param ditch
      *         zu bauender Graben
      */
-    public Move(Ditch ditch) {
+    public Move(final Ditch ditch) {
         type = MoveType.Ditch;
 
         this.ditch = ditch;
@@ -228,7 +228,7 @@ public class Move implements Serializable, Comparable<Move> {
      * @throws IllegalArgumentException
      *         falls die Blume {@code null} ist
      */
-    private void setFirstFlower(Flower first) {
+    private void setFirstFlower(final Flower first) {
         if (first == null)
             throw new IllegalArgumentException("first flower cannot be null");
         flowers[0] = first;
@@ -257,7 +257,7 @@ public class Move implements Serializable, Comparable<Move> {
      * @throws IllegalArgumentException
      *         falls die Blume {@code null} ist
      */
-    private void setSecondFlower(Flower second) {
+    private void setSecondFlower(final Flower second) {
         if (second == null)
             throw new IllegalArgumentException("second flower cannot be null");
         flowers[1] = second;

@@ -3,7 +3,7 @@ package flowerwarspp.util.log;
 /**
  * Die Module, aus welchen geloggt werden soll.
  *
- * @author Michael Merse
+ *
  */
 public enum LogModule {
 	/**

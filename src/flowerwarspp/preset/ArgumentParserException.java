@@ -6,11 +6,11 @@ package flowerwarspp.preset;
  * @author Dominick Leppich
  */
 public class ArgumentParserException extends Exception {
-    public ArgumentParserException(String msg) {
+    public ArgumentParserException(final String msg) {
         super(msg);
     }
 
-    public ArgumentParserException(String msg, Throwable cause) {
+    public ArgumentParserException(final String msg, final Throwable cause) {
         super(msg, cause);
     }
 }

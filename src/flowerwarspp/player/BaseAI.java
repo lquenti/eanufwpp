@@ -14,7 +14,7 @@ import java.util.Random;
  * {@link #requestMove()}-Methode für die möglichen Spielzüge ein Bewertungsalgorithmus durchlaufen, welcher einen Zug
  * nach Strategie auswählt, zurück gibt und ausführt.
  *
- * @author Michael Merse
+ *
  */
 abstract class BaseAI extends BasePlayer {
 	/**

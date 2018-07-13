@@ -56,7 +56,7 @@ public class Flower implements Serializable, Comparable<Flower> {
      * @throws IllegalArgumentException
      *         falls eine der Positionen {@code null} ist
      */
-    public Flower(Position first, Position second, Position third) {
+    public Flower(final Position first, final Position second, final Position third) {
         positions = new Position[3];
 
         setFirst(first);
@@ -78,7 +78,7 @@ public class Flower implements Serializable, Comparable<Flower> {
      * @throws FlowerFormatException
      *         falls kein gueltiger String uebergeben wird oder das Format ungueltig ist
      */
-    public static Flower parseFlower(String string) {
+    public static Flower parseFlower(final String string) {
         if (string == null || string.equals(""))
             throw new FlowerFormatException("cannot parse empty string");
 
@@ -128,7 +128,7 @@ public class Flower implements Serializable, Comparable<Flower> {
      * @throws IllegalArgumentException
      *         falls die Position {@code null} ist
      */
-    private void setFirst(Position first) {
+    private void setFirst(final Position first) {
         if (first == null)
             throw new IllegalArgumentException("first cannot be null");
         positions[0] = first;
@@ -152,7 +152,7 @@ public class Flower implements Serializable, Comparable<Flower> {
      * @throws IllegalArgumentException
      *         falls die Position {@code null} ist
      */
-    private void setSecond(Position second) {
+    private void setSecond(final Position second) {
         if (second == null)
             throw new IllegalArgumentException("second cannot be null");
         positions[1] = second;
@@ -178,7 +178,7 @@ public class Flower implements Serializable, Comparable<Flower> {
      * @throws IllegalArgumentException
      *         falls die Position {@code null} ist
      */
-    private void setThird(Position third) {
+    private void setThird(final Position third) {
         if (third == null)
             throw new IllegalArgumentException("third cannot be null");
         positions[2] = third;
@@ -193,7 +193,7 @@ public class Flower implements Serializable, Comparable<Flower> {
     }
 
     @Override
-    public int compareTo(Flower flower) {
+    public int compareTo(final Flower flower) {
         // Due to the unique ordering it is easy to calculate
         if (!getFirst().equals(flower.getFirst()))
             return getFirst().compareTo(flower.getFirst());
@@ -203,7 +203,7 @@ public class Flower implements Serializable, Comparable<Flower> {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (o == null)
             return false;
         if (!(o instanceof Flower))
