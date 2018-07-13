@@ -48,6 +48,32 @@ public class BoardDisplay extends JPanel {
 		}
 
 		/**
+		 * Handelt das Event {@link MouseAdapter#mouseMoved(MouseEvent)}.
+		 *
+		 * Es wird durch alle gezeichneten {@link Dot}s iteriert. Dann wird überprüft, ob der Mauszeiger, dessen
+		 * Position als {@link Point} vom {@link MouseEvent} durchgereicht wird, in diesem überprüften Dot liegt.
+		 * Falls dem so ist, wird der ToolTip mit der {@link String}-Repräsentation der {@link Position} des Dots
+		 * gesetzt. Liegt der Mauszeiger nicht im Dot, wird der ToolTip auf <code>null</code> gesetzt.
+		 *
+		 * @param mouseEvent Das durchgereichte {@link MouseEvent}.
+		 */
+		@Override
+		public void mouseMoved(final MouseEvent mouseEvent) {
+
+			for (Dot dot : mapDots) {
+
+				if (dot.contains(mouseEvent.getPoint())) {
+					setToolTipText(dot.getPosition().toString());
+					return;
+				} else {
+					setToolTipText(null);
+				}
+			}
+
+			ToolTipManager.sharedInstance().mouseMoved(mouseEvent);
+		}
+
+		/**
 		 * {@inheritDoc}
 		 */
 		public void mouseClicked(MouseEvent mouseEvent) {
@@ -365,6 +391,7 @@ public class BoardDisplay extends JPanel {
 
 		displayMouseHandler.reset();
 		addMouseListener(displayMouseHandler);
+		addMouseMotionListener(displayMouseHandler);
 	}
 
 
