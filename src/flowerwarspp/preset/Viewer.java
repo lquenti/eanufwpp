@@ -188,7 +188,7 @@ public interface Viewer {
 	/**
 	 * Gibt alle möglichen Blumen zurück.
 	 *
-	 * @return Alle Blumen, welche auf dem Feld liegen.
+	 * @return Alle Blumen, die auf dem Feld liegen.
 	 */
 	Collection<Flower> getAllFlowers();
 }

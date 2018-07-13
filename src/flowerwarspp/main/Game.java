@@ -69,7 +69,6 @@ public class Game {
 	 * @param gameParameters Die Parameter wie sie auf der Kommandozeile übergeben worden sind
 	 */
 	Game(final GameParameters gameParameters) {
-
 		this.gameParameters = gameParameters;
 		init();
 		start();
@@ -181,14 +180,14 @@ public class Game {
 
 			switch (run()) {
 				case RedWin:
-					if (i % 2 == 0) {
+					if (i % 2 == 0) { // Wegen Seitenwechsel
 						redWins++;
 					} else {
 						blueWins++;
 					}
 					break;
 				case BlueWin:
-					if (i % 2 == 0) {
+					if (i % 2 == 0) { // Wegen Seitenwechsel
 						blueWins++;
 					} else {
 						redWins++;
@@ -199,7 +198,7 @@ public class Game {
 					break;
 			}
 
-			if (i % 2 == 0) {
+			if (i % 2 == 0) { // Wegen Seitenwechsel
 				redPoints += viewer.getPoints(PlayerColor.Red);
 				bluePoints += viewer.getPoints(PlayerColor.Blue);
 			} else {
@@ -261,7 +260,6 @@ public class Game {
 	 * @throws Exception Falls während der Initialisierung ein Fehler aufgetreten ist.
 	 */
 	private void initPlayers() throws Exception {
-
 		Log.log(LogLevel.INFO, LogModule.MAIN, "Initializing players.");
 
 		redPlayer.init(boardSize, PlayerColor.Red);
@@ -274,7 +272,6 @@ public class Game {
 	 * @throws RemoteException Falls der Spieler nicht im Netzwerk angeboten werden konnte.
 	 */
 	private void offer() throws RemoteException {
-
 		Log.log(LogLevel.INFO, LogModule.MAIN, "Offering player " + gameParameters.getOfferType() + " on " +
 				"the network.");
 

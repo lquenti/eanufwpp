@@ -9,28 +9,28 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 
 /**
- * Diese Klasse ermöglicht das Instanzieren von beiden Spielern, welche am aktuellen Spiel teilnehmen.
- * Außerdem wird in dieser Klasse der Hauptteil der Netzwerkunterstützung implementiert.
- *
- * @author Thilo Wischmeyer
+ * Diese Klasse ermöglicht das Instanzieren von beiden Spielern, welche am aktuellen Spiel
+ * teilnehmen. Außerdem wird in dieser Klasse der Hauptteil der Netzwerkunterstützung
+ * implementiert.
  */
 public class Players {
 	/**
-	 * Diese statische Methode erstellt einen neuen Spieler gegebenen Typs und weist im eine gegebene Implementation des
-	 * Interfaces {@link Requestable} und ein bestehendes {@link Board} zu.
+	 * Erstellt einen neuen Spieler gegebenen Typs und weist im ein gegebenes 
+	 * {@link Requestable} und ein bestehendes {@link Board} zu.
 	 *
 	 * @param type  Typ des zu erstellenden Spielers
-	 * @param input Das {@link Requestable}, das der Spieler zum Abfragen von Zügen verwenden soll
+	 * @param input Das {@link Requestable}, das der Spieler zum Abfragen von Zügen verwenden
+	 *              soll
 	 * @param board Bestehendes Spielbrett, welches dem Spieler zugewiesen wird
 	 * @param url Die URL im Fall eines Remote-Spielers
-	 * @return Ein nach den gegebenen Parametern erstellter neuer Spieler
-	 * @throws IllegalArgumentException falls versucht wird, einen Remote-Spieler mit vorhandenen
-	 * bestimmten Board zu erzeugen.
+	 * @return Ein nach den gegebenen Parametern erzeugter Spieler
+	 * @throws IllegalArgumentException falls versucht wird, einen Remote-Spieler mit 
+	 *                                  vorhandenem, nichtleerem Board zu erzeugen.
 	 */
 	public static Player createPlayer(PlayerType type, Requestable input, String url, Board board)
 			throws IllegalArgumentException {
 		// Falls auf dem Brett schon Züge gemacht wurden, geht Netzwerkspiel nicht.
-		if (type == PlayerType.REMOTE && !board.viewer().getFlowers(PlayerColor.Red).isEmpty()) {
+		if (type == PlayerType.REMOTE && board != null && !board.viewer().getFlowers(PlayerColor.Red).isEmpty()) {
 			throw new IllegalArgumentException("Spielstände laden wird von Remote-Spielern nicht unterstützt.");
 		}
 
