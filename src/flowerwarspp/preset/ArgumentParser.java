@@ -53,7 +53,7 @@ public class ArgumentParser {
      * @throws ArgumentParserException
      *         wenn das Parsen der Argumente fehlschlaegt
      */
-    public ArgumentParser(String[] args) throws ArgumentParserException {
+    public ArgumentParser(final String[] args) throws ArgumentParserException {
         params = new HashMap<>();
         parseArgs(args);
     }
@@ -68,7 +68,7 @@ public class ArgumentParser {
      * @throws ArgumentParserException
      *         wenn das Parsen der Argumente fehlschlaegt
      */
-    private void parseArgs(String[] args) throws ArgumentParserException {
+    private void parseArgs(final String[] args) throws ArgumentParserException {
         // Index to parse
         int index = 0;
 
@@ -98,7 +98,7 @@ public class ArgumentParser {
      * @throws ArgumentParserException
      *         wenn der Schalter nicht existiert
      */
-    private void addFlag(String flag) throws ArgumentParserException {
+    private void addFlag(final String flag) throws ArgumentParserException {
         // Check if a param with this name already exists
         if (params.containsKey(flag))
             throw new ArgumentParserException("Param already exists: " + flag);
@@ -117,7 +117,7 @@ public class ArgumentParser {
      * @throws ArgumentParserException
      *         wenn die Einstellung nicht existiert oder der Wert ein ungueltiges Format hat
      */
-    private void addSetting(String key, String value) throws ArgumentParserException {
+    private void addSetting(final String key, final String value) throws ArgumentParserException {
         // Check if a param with this name already exists
         if (params.containsKey(key))
             throw new ArgumentParserException("Param already exists: " + key);
@@ -138,7 +138,7 @@ public class ArgumentParser {
      *
      * @return wahr, wenn der Parameter gesetzt wurde
      */
-    public boolean isSet(String parameter) {
+    public boolean isSet(final String parameter) {
         return params.containsKey(parameter);
     }
 
@@ -153,7 +153,7 @@ public class ArgumentParser {
      * @throws ArgumentParserException
      *         wenn der Schalter den falschen Typ hat (falls eine Einstellung versucht wird als Schalter auszulesen)
      */
-    protected boolean getFlag(String flag) throws ArgumentParserException {
+    protected boolean getFlag(final String flag) throws ArgumentParserException {
         if (!params.containsKey(flag))
             return false;
 
@@ -175,7 +175,7 @@ public class ArgumentParser {
      * @throws ArgumentParserException
      *         wenn die Einstellung nicht existiert
      */
-    protected Object getSetting(String key) throws ArgumentParserException {
+    protected Object getSetting(final String key) throws ArgumentParserException {
         if (!params.containsKey(key))
             throw new ArgumentParserException("Setting " + key + " not " + "defined");
 
@@ -195,7 +195,7 @@ public class ArgumentParser {
      * @throws ArgumentParserException
      *         wenn der eingelese Typ nicht passt
      */
-    protected PlayerType parsePlayerType(String type) throws ArgumentParserException {
+    protected PlayerType parsePlayerType(final String type) throws ArgumentParserException {
         switch (type) {
             case "human":
                 return PlayerType.HUMAN;

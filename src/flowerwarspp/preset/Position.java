@@ -54,7 +54,7 @@ public class Position implements Serializable, Comparable<Position> {
      * @throws IllegalArgumentException
      *         falls die Spalte oder Zeile ungueltige Werte hat
      */
-    public Position(int column, int row) {
+    public Position(final int column, final int row) {
         setColumn(column);
         setRow(row);
     }
@@ -72,7 +72,7 @@ public class Position implements Serializable, Comparable<Position> {
      * @throws PositionFormatException
      *         falls kein gueltiger String uebergeben wird oder das Format ungueltig ist
      */
-    public static Position parsePosition(String string) {
+    public static Position parsePosition(final String string) {
         if (string == null || string.equals(""))
             throw new PositionFormatException("cannot parse empty string");
 
@@ -110,7 +110,7 @@ public class Position implements Serializable, Comparable<Position> {
      * @throws IllegalArgumentException
      *         falls die Spalte einen ungueltigen Wert hat
      */
-    private void setColumn(int column) {
+    private void setColumn(final int column) {
         if (column <= 0 || column > MAX_VALUE)
             throw new IllegalArgumentException("illegal column value: " + column);
         this.column = column;
@@ -134,7 +134,7 @@ public class Position implements Serializable, Comparable<Position> {
      * @throws IllegalArgumentException
      *         falls die Zeile einen ungueltigen Wert hat
      */
-    private void setRow(int row) {
+    private void setRow(final int row) {
         if (row <= 0 || row > MAX_VALUE)
             throw new IllegalArgumentException("illegal row value: " + row);
         this.row = row;
@@ -148,7 +148,7 @@ public class Position implements Serializable, Comparable<Position> {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (o == null)
             return false;
         if (!(o instanceof Position))
@@ -163,7 +163,7 @@ public class Position implements Serializable, Comparable<Position> {
     }
 
     @Override
-    public int compareTo(Position p) {
+    public int compareTo(final Position p) {
         if (getRow() != p.getRow())
             return getRow() - p.getRow();
         return getColumn() - p.getColumn();
