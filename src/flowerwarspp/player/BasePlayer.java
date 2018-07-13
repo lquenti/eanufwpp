@@ -232,13 +232,9 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 
 		// Falls der cycleState schon gesetzt worden ist (also nicht mehr gleich NULL ist), wird das Spielbrett zurück
 		// gesetzt, um ein neues Spiel zu starten.
-		if (cycleState != PlayerFunction.NULL) {
-			board = null;
-		}
-
 		// Falls des Spielbrett noch nicht gesetzt worden ist, wird ein neues Brett gegebener Größe erzeugt und der
 		// zugehörige Viewer gesetzt.
-		if (board == null) {
+		if (board == null || cycleState != PlayerFunction.NULL) {
 			board = new MainBoard(boardSize);
 		}
 
