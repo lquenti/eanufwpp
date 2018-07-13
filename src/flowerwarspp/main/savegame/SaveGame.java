@@ -135,7 +135,10 @@ public class SaveGame implements Iterable<Move> {
 	public void add(Move move) {
 		if (move == null) return;
 
-		madeMoves.add(move);
+		synchronized (this) {
+
+			madeMoves.add(move);
+		}
 	}
 
 	/**
@@ -146,48 +149,51 @@ public class SaveGame implements Iterable<Move> {
 	 */
 	public void save(String saveGameName) throws IOException {
 
-		// Ein File-Objekt am Hauptspeicherort der Spielstände wird erstellt.
-		File saveDir = new File(SAVE_PATH_ROOT);
+		synchronized (this) {
 
-		// Falls dieser noch nicht existiert, wird das Verzeichnis mit mkdir erstellt.
-		saveDir.mkdir();
+			// Ein File-Objekt am Hauptspeicherort der Spielstände wird erstellt.
+			File saveDir = new File(SAVE_PATH_ROOT);
 
-		// Das Speichern der Züge wird mit einem try-with-resources ermöglicht. Der so erstellte PrintWriter wird
-		// automatisch geschlossen, falls während des Speicherns ein Fehler aufgetreten ist und eine Exception geworfen
-		// wurde.
-		try (PrintWriter printWriter = new PrintWriter(getFilePath(saveGameName), "UTF-8")) {
+			// Falls dieser noch nicht existiert, wird das Verzeichnis mit mkdir erstellt.
+			saveDir.mkdir();
 
-			// In der ersten Zeile wird die Größe des Spielbretts gespeichert.
-			printWriter.println(boardSize);
-			PlayerColor currentPlayer = Red;
+			// Das Speichern der Züge wird mit einem try-with-resources ermöglicht. Der so erstellte PrintWriter wird
+			// automatisch geschlossen, falls während des Speicherns ein Fehler aufgetreten ist und eine Exception geworfen
+			// wurde.
+			try (PrintWriter printWriter = new PrintWriter(getFilePath(saveGameName), "UTF-8")) {
 
-			// Hilfsvariable zum Speichern der Anzahl der gemachten Züge.
-			int i = 0;
+				// In der ersten Zeile wird die Größe des Spielbretts gespeichert.
+				printWriter.println(boardSize);
+				PlayerColor currentPlayer = Red;
 
-			// Iterieren durch die gemachten Züge. Pro Zeile wird genau ein Zug gespeichert.
-			for (Move m : madeMoves) {
+				// Hilfsvariable zum Speichern der Anzahl der gemachten Züge.
+				int i = 0;
 
-				// Ein Zug wird in folgendem Format gespeichert:
-				// String-Repräsentation des Moves;HashCode des Zugs;Aktueller Spieler, #i
-				// Das Semikolon (;) wird hier als Seperator verwendet, da es nicht in der String-Repräsentation
-				// eines Spielzugs vorkommt.
-				printWriter.println(m + ";" + m.hashCode() + ";" + currentPlayer
-						+ ", " + "#" + i);
+				// Iterieren durch die gemachten Züge. Pro Zeile wird genau ein Zug gespeichert.
+				for (Move m : madeMoves) {
 
-				// Wechseln des aktuellen Spielers mit dem Elvis-Operator.
-				currentPlayer = currentPlayer == Red ? Blue : Red;
-				i++;
+					// Ein Zug wird in folgendem Format gespeichert:
+					// String-Repräsentation des Moves;HashCode des Zugs;Aktueller Spieler, #i
+					// Das Semikolon (;) wird hier als Seperator verwendet, da es nicht in der String-Repräsentation
+					// eines Spielzugs vorkommt.
+					printWriter.println(m + ";" + m.hashCode() + ";" + currentPlayer
+							+ ", " + "#" + i);
+
+					// Wechseln des aktuellen Spielers mit dem Elvis-Operator.
+					currentPlayer = currentPlayer == Red ? Blue : Red;
+					i++;
+				}
+
+				// Den PrintWriter schließen, falls Speichern erfolgreich.
+				printWriter.close();
+				System.out.println("Spielstand " + saveGameName + " wurde gespeichert unter");
+				System.out.println(getFilePath(saveGameName));
+				Log.log(LogLevel.INFO, LogModule.MAIN, "Game was saved to: " + getFilePath(saveGameName));
+
+			} catch (IOException e) {
+				Log.log(LogLevel.ERROR, LogModule.MAIN, "Saving the game failed: " + e.getMessage());
+				throw e;
 			}
-
-			// Den PrintWriter schließen, falls Speichern erfolgreich.
-			printWriter.close();
-			System.out.println("Spielstand " + saveGameName + " wurde gespeichert unter");
-			System.out.println(getFilePath(saveGameName));
-			Log.log(LogLevel.INFO, LogModule.MAIN, "Game was saved to: " + getFilePath(saveGameName));
-
-		} catch (IOException e) {
-			Log.log(LogLevel.ERROR, LogModule.MAIN, "Saving the game failed: " + e.getMessage());
-			throw e;
 		}
 	}
 
