@@ -297,11 +297,11 @@ public class BoardDisplay extends JPanel {
 	/**
 	 * Ein {@link PlayerStatusDisplay}, das den Status des {@link PlayerColor#Red} anzeigt.
 	 */
-	private PlayerStatusDisplay redStatusDisplay = new PlayerStatusDisplay(GameColours.redColour);
+	private PlayerStatusDisplay redStatusDisplay = new PlayerStatusDisplay(GameColors.redColor);
 	/**
 	 * Ein {@link PlayerStatusDisplay}, das den Status des {@link PlayerColor#Blue} anzeigt.
 	 */
-	private PlayerStatusDisplay blueStatusDisplay = new PlayerStatusDisplay(GameColours.blueColour);
+	private PlayerStatusDisplay blueStatusDisplay = new PlayerStatusDisplay(GameColors.blueColor);
 	/**
 	 * Eine Referenz auf die Toolbar am unteren Rand des Bildschirms.
 	 */
@@ -407,7 +407,7 @@ public class BoardDisplay extends JPanel {
 
 		// Für jede Blume vom Spielbrett soll ein Triangle erstellt werden.
 		Collection<Flower> flowers = boardViewer.getAllFlowers();
-		flowers.forEach(f -> mapTriangles.add(new Triangle(f, GameColours.triangleDefaultColour)));
+		flowers.forEach(f -> mapTriangles.add(new Triangle(f, GameColors.triangleDefaultColor)));
 	}
 
 	/**
@@ -441,9 +441,9 @@ public class BoardDisplay extends JPanel {
 		for (Triangle t : mapTriangles) {
 			if (!t.isFlipped()) {
 				Flower f = t.toFlower();
-				Dot leftDot = new Dot(f.getFirst(), GameColours.dotDefaultColor);
-				Dot topDot = new Dot(f.getSecond(), GameColours.dotDefaultColor);
-				Dot rightDot = new Dot(f.getThird(), GameColours.dotDefaultColor);
+				Dot leftDot = new Dot(f.getFirst(), GameColors.dotDefaultColor);
+				Dot topDot = new Dot(f.getSecond(), GameColors.dotDefaultColor);
+				Dot rightDot = new Dot(f.getThird(), GameColors.dotDefaultColor);
 
 				mapDots.add(leftDot);
 				mapDots.add(topDot);
@@ -504,31 +504,31 @@ public class BoardDisplay extends JPanel {
 			if (redFlowers != null && redFlowers.contains(flower)) {
 				// Für den Fall, dass die aktuelle Blume dem roten Spieler gehört...
 				if (boardViewer.getFlowerBed(flower).size() > 3)
-					t.setFillColour(GameColours.redInGardenColour);
+					t.setFillColor(GameColors.redInGardenColor);
 				else
-					t.setFillColour(GameColours.redColour);
+					t.setFillColor(GameColors.redColor);
 			} else if (blueFlowers != null && blueFlowers.contains(flower)) {
 				// oder dem blauen Spieler gehört, färbe das Dreieck entsprechend.
 				if (boardViewer.getFlowerBed(flower).size() > 3)
-					t.setFillColour(GameColours.blueInGardenColour);
+					t.setFillColor(GameColors.blueInGardenColor);
 				else
-					t.setFillColour(GameColours.blueColour);
+					t.setFillColor(GameColors.blueColor);
 			} else if (flower.equals(displayMouseHandler.clickedFlower1)) {
 				// Andererseits, überprüfe, ob der Spieler gerade einen Flower-Move macht
 				// und diese Blume als erstes ausgewählt hat.
-				t.setFillColour(GameColours.triangleClickedColour);
+				t.setFillColor(GameColors.triangleClickedColor);
 			} else if (flower.equals(displayMouseHandler.lastClickedFlower1) ||
 			           flower.equals(displayMouseHandler.lastClickedFlower2)) {
 				if (boardViewer.getTurn() == PlayerColor.Red) {
-					t.setFillColour(GameColours.redColour);
+					t.setFillColor(GameColors.redColor);
 				} else {
-					t.setFillColour(GameColours.blueColour);
+					t.setFillColor(GameColors.blueColor);
 				}
 			} else if (combinableFlowers != null && combinableFlowers.contains(flower)) {
-				t.setFillColour(GameColours.triangleCombinableColour);
+				t.setFillColor(GameColors.triangleCombinableColor);
 			} else {
 				// Sonst behält das Triangle die Hintergrundfarbe dieses Displays.
-				t.setFillColour(getBackground());
+				t.setFillColor(getBackground());
 			}
 		}
 	}
@@ -547,17 +547,17 @@ public class BoardDisplay extends JPanel {
 			// Färbe die Edge in der Farbe, die den Spieler repräsentiert, dem sie gehört.
 			if ((redDitches != null && redDitches.contains(ditch)) ||
 			    (boardViewer.getTurn() == PlayerColor.Red && ditch.equals(displayMouseHandler.lastClickedDitch))) {
-				e.setFillColour(GameColours.redColour);
+				e.setFillColor(GameColors.redColor);
 			} else if ((blueDitches != null && blueDitches.contains(ditch)) ||
 			           (boardViewer.getTurn() == PlayerColor.Blue && ditch.equals(displayMouseHandler.lastClickedDitch))) {
-				e.setFillColour(GameColours.blueColour);
+				e.setFillColor(GameColors.blueColor);
 			} else if (possibleDitchMoves != null && possibleDitchMoves.contains(move)) {
 				// Wenn sie niemandem gehört, aber der Spieler gerade spielen soll,
 				// färbe sie, um das darzustellen.
-				e.setFillColour(GameColours.edgeClickableColour);
+				e.setFillColor(GameColors.edgeClickableColor);
 			} else {
 				// Sonst, färbe sie in der Standardfarbe.
-				e.setFillColour(GameColours.edgeDefaultColour);
+				e.setFillColor(GameColors.edgeDefaultColor);
 			}
 		}
 	}

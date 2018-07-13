@@ -50,12 +50,12 @@ public class AdvancedAI2 extends BaseAI {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void init(int boardSize, PlayerColor playerColour) throws Exception {
-		super.init(boardSize, playerColour);
+	public void init(int boardSize, PlayerColor playerColor) throws Exception {
+		super.init(boardSize, playerColor);
 
 		// Berechnen des Startpunkts fürs Clustern. Falls das Spielbrett bereits bespielt worden ist (zum Beispiel nach
 		// dem Laden) wird sofort geclustert.
-		if (!boardViewer.getFlowers(getPlayerColour()).isEmpty())
+		if (!boardViewer.getFlowers(getPlayerColor()).isEmpty())
 			startClusteringAt = 0;
 		else
 			startClusteringAt = ( boardSize * boardSize ) / 20;
@@ -102,7 +102,7 @@ public class AdvancedAI2 extends BaseAI {
 				MainBoard sim = new MainBoard((MainBoard) getBoard());
 				sim.make(move);
 
-				if (sim.viewer().getPoints(getPlayerColour()) > boardViewer.getPoints(getPlayerColour()))
+				if (sim.viewer().getPoints(getPlayerColor()) > boardViewer.getPoints(getPlayerColor()))
 					return SCORE_DITCH;
 				else
 					return 0;
@@ -112,7 +112,7 @@ public class AdvancedAI2 extends BaseAI {
 				// würde) wird der End-Zug nicht ausgeführt (stattdessen werden zufällig Ditches gesetzt, in der
 				// Hoffnung, dass dadurch Gärten über Beete verbunden werden).
 				// Würde dieser Spieler durch Beenden des Spiels jedoch gewinnen, tut er dies sofort.
-				if (boardViewer.getPoints(getPlayerColour()) > boardViewer.getPoints(( getPlayerColour() == PlayerColor
+				if (boardViewer.getPoints(getPlayerColor()) > boardViewer.getPoints(( getPlayerColor() == PlayerColor
 						.Red ) ? PlayerColor.Blue : PlayerColor.Red))
 					return SCORE_END;
 
@@ -138,7 +138,7 @@ public class AdvancedAI2 extends BaseAI {
 		// dann inkrementieren, wenn einer dieser direkten Nachbarn der eigenen Farbe gehört.
 		// So werden Beete und Gärten gebildet.
 		for (Flower neighbor : boardViewer.getDirectNeighbors(flower)) {
-			if (boardViewer.getFlowerColor(neighbor) == getPlayerColour())
+			if (boardViewer.getFlowerColor(neighbor) == getPlayerColor())
 				res[0]++;
 		}
 
@@ -155,13 +155,13 @@ public class AdvancedAI2 extends BaseAI {
 		// lassen.
 		for (Flower neighbor : boardViewer.getAllNeighbors(flower)) {
 
-			if (boardViewer.getFlowerColor(neighbor) == getPlayerColour()) {
+			if (boardViewer.getFlowerColor(neighbor) == getPlayerColor()) {
 				res[1] = - 2;
 				return res;
 			}
 
 			for (Flower f1 : boardViewer.getDirectNeighbors(neighbor)) {
-				if (boardViewer.getFlowerColor(f1) == getPlayerColour())
+				if (boardViewer.getFlowerColor(f1) == getPlayerColor())
 					res[1]++;
 			}
 		}

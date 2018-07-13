@@ -50,12 +50,12 @@ public class SimpleAI extends BaseAI {
 		// Iterieren durch alle Nachbarn beider Zug-Blumen. Die Zählvariable wird nur genau dann inkrementiert, wenn
 		// unter den Nachbarn Blumen eigener Farbe existieren.
 		for (Flower neighbor : firstFlowerNeighbors) {
-			if (boardViewer.getFlowerColor(neighbor) == getPlayerColour())
+			if (boardViewer.getFlowerColor(neighbor) == getPlayerColor())
 				n1++;
 		}
 
 		for (Flower neighbor : secondFlowerNeighbors) {
-			if (boardViewer.getFlowerColor(neighbor) == getPlayerColour())
+			if (boardViewer.getFlowerColor(neighbor) == getPlayerColor())
 				n2++;
 		}
 

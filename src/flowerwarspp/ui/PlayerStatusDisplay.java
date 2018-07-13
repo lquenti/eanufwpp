@@ -16,11 +16,11 @@ public class PlayerStatusDisplay extends JPanel {
 	/**
 	 * Konstruiert ein Display für den Status des Spielers.
 	 *
-	 * @param playerColour
+	 * @param playerColor
 	 * Die Farbe des {@link flowerwarspp.preset.PlayerColor}.
 	 */
-	public PlayerStatusDisplay(Color playerColour) {
-		setBackground(playerColour);
+	public PlayerStatusDisplay(Color playerColor) {
+		setBackground(playerColor);
 	}
 
 	/**

@@ -29,11 +29,11 @@ public class Triangle extends BoardPolygon {
 	 * @param flower
 	 * Die {@link Flower}, die dieses {@link Triangle} repräsentiert.
 	 *
-	 * @param currentColour
+	 * @param currentColor
 	 * Die {@link Color}, die dieses {@link Triangle} derzeit hat.
 	 */
-	public Triangle(Flower flower, Color currentColour) {
-		super(Color.BLACK, currentColour);
+	public Triangle(Flower flower, Color currentColor) {
+		super(Color.BLACK, currentColor);
 		this.flower = flower;
 		flipped = (flower.getFirst().getColumn()  == flower.getSecond().getColumn());
 	}

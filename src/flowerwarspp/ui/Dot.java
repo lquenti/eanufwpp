@@ -31,13 +31,13 @@ public class Dot extends BoardPolygon {
 	/**
 	 * Konstruiert einen Punkt im Koordinatensystem des {@link flowerwarspp.preset.Board}s.
 	 * Wichtig: Der Text, der die Position schreibt wird als Teil des Borders gesehen
-	 * (siehe {@link BoardPolygon#getBorderColour()}).
+	 * (siehe {@link BoardPolygon#getBorderColor()}).
 	 *
 	 * @param position
 	 * Die {@link Position}, an der dieser Punkt liegen soll.
 	 */
-	public Dot(Position position, Color fillColour) {
-		super(Color.WHITE, fillColour);
+	public Dot(Position position, Color fillColor) {
+		super(Color.WHITE, fillColor);
 		this.position = position;
 		currentLocation = new Point();
 	}
@@ -82,7 +82,7 @@ public class Dot extends BoardPolygon {
 	public void drawPolygon(Graphics graphics) {
 		int drawLocationX = currentLocation.x - (currentDiameter / 2);
 		int drawLocationY = currentLocation.y - (currentDiameter / 2);
-		graphics.setColor(getFillColour());
+		graphics.setColor(getFillColor());
 		graphics.fillOval(drawLocationX, drawLocationY, currentDiameter, currentDiameter);
 
 		if (currentDiameter > 30) {
@@ -91,7 +91,7 @@ public class Dot extends BoardPolygon {
 			drawLocationX = (int) (currentLocation.x - textBounds.getWidth() / 2.0);
 			drawLocationY = (int) (currentLocation.y + textBounds.getHeight() / 2.0);
 
-			graphics.setColor(getBorderColour());
+			graphics.setColor(getBorderColor());
 			graphics.drawString(text, drawLocationX, drawLocationY);
 		}
 	}

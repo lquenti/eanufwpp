@@ -78,7 +78,7 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	/**
 	 * Die Farbe dieses Spielers, nach den Vorgaben des enums {@link PlayerColor}.
 	 */
-	private PlayerColor playerColour;
+	private PlayerColor playerColor;
 	/**
 	 * Wird genutzt, um den aktuellen Status des Spieler-Lebenszyklus (also der Zyklus, welcher im Interface {@link
 	 * flowerwarspp.preset.Player} diktiert wird) darzustellen.
@@ -89,7 +89,7 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	 * Ein <code>default</code>-Konstruktor, welcher die Instanzvariablen mit Basiswerten initialisiert.
 	 */
 	protected BasePlayer() {
-		this.playerColour = PlayerColor.Red;
+		this.playerColor = PlayerColor.Red;
 		this.board = null;
 		this.cycleState = NULL;
 	}
@@ -220,16 +220,16 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	 * dem neu initialisierten Spieler wird ein neues Spiel begonnen.
 	 *
 	 * @param boardSize    Spielbrettgröße
-	 * @param playerColour Farbe des Spielers
+	 * @param playerColor Farbe des Spielers
 	 * @throws Exception       Falls während der Initialisierung ein Fehler auftrat
 	 * @throws RemoteException falls bei der Netzwerkkommunikation etwas schief gelaufen ist
 	 */
 	/* TODO: Properly handle beginning a new game (i.e. calling init() in the middle of a running game) */
 	@Override
-	public void init(int boardSize, PlayerColor playerColour) throws Exception, RemoteException {
+	public void init(int boardSize, PlayerColor playerColor) throws Exception, RemoteException {
 
 		// Instanzvariablen der Spielerfarben setzen.
-		this.playerColour = playerColour;
+		this.playerColor = playerColor;
 
 		// Falls der cycleState schon gesetzt worden ist (also nicht mehr gleich NULL ist), wird das Spielbrett zurück
 		// gesetzt, um ein neues Spiel zu starten.
@@ -244,7 +244,7 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 		// Der Status des Spieler-Lifecycles wird gesetzt.
 		cycleState = INITIAL;
 
-		log(INFO, "Initialized new player with colour " + playerColour + " on a board with size " + boardSize);
+		log(INFO, "Initialized new player with color " + playerColor + " on a board with size " + boardSize);
 	}
 
 	/**
@@ -252,8 +252,8 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	 *
 	 * @return Die Farbe des Spielers
 	 */
-	public PlayerColor getPlayerColour() {
-		return playerColour;
+	public PlayerColor getPlayerColor() {
+		return playerColor;
 	}
 
 	/**
@@ -280,7 +280,7 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	 * @param message Die Nachricht des Log-Eintrags
 	 */
 	protected void log(LogLevel level, String message) {
-		Log.log(level, PLAYER, "Player " + playerColour + ": " + message);
+		Log.log(level, PLAYER, "Player " + playerColor + ": " + message);
 	}
 
 	/**

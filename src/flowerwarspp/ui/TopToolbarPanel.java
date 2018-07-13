@@ -35,8 +35,8 @@ public class TopToolbarPanel extends JPanel implements ChangeListener {
 	public TopToolbarPanel() {
 		playerStatusDisplays = new EnumMap<>(PlayerColor.class);
 		for (PlayerColor playerColor : PlayerColor.values()) {
-			Color playerDrawColour = GameColours.getColourForPlayerColor(playerColor);
-			PlayerStatusDisplay playerStatusDisplay = new PlayerStatusDisplay(playerDrawColour);
+			Color playerDrawColor = GameColors.getColorForPlayerColor(playerColor);
+			PlayerStatusDisplay playerStatusDisplay = new PlayerStatusDisplay(playerDrawColor);
 			playerStatusDisplays.put(playerColor, playerStatusDisplay);
 			add(playerStatusDisplay);
 		}

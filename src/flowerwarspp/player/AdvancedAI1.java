@@ -63,7 +63,7 @@ public class AdvancedAI1 extends BaseAI {
 				MainBoard sim = new MainBoard((MainBoard) getBoard());
 				sim.make(move);
 
-				if (sim.viewer().getPoints(getPlayerColour()) > boardViewer.getPoints(getPlayerColour()))
+				if (sim.viewer().getPoints(getPlayerColor()) > boardViewer.getPoints(getPlayerColor()))
 					return SCORE_DITCH;
 				else
 					return 0;
@@ -73,7 +73,7 @@ public class AdvancedAI1 extends BaseAI {
 				// würde) wird der End-Zug nicht ausgeführt (stattdessen werden zufällig Ditches gesetzt, in der
 				// Hoffnung, dass dadurch Gärten über Beete verbunden werden).
 				// Würde dieser Spieler durch Beenden des Spiels jedoch gewinnen, tut er dies sofort.
-				if (boardViewer.getPoints(getPlayerColour()) > boardViewer.getPoints(( getPlayerColour() == PlayerColor
+				if (boardViewer.getPoints(getPlayerColor()) > boardViewer.getPoints(( getPlayerColor() == PlayerColor
 						.Red ) ? PlayerColor.Blue : PlayerColor.Red))
 					return SCORE_END;
 
@@ -99,10 +99,10 @@ public class AdvancedAI1 extends BaseAI {
 		// So werden Beete und Gärten gebildet.
 		// Nachbarn, welche dem Gegner gehören, inkremementieren das zweite Element des Arrays.
 		for (Flower neighbor : flowerNeighbors) {
-			if (boardViewer.getFlowerColor(neighbor) == getPlayerColour())
+			if (boardViewer.getFlowerColor(neighbor) == getPlayerColor())
 				res[0]++;
 
-			if (boardViewer.getFlowerColor(neighbor) == ( getPlayerColour() == PlayerColor.Red ? PlayerColor.Blue
+			if (boardViewer.getFlowerColor(neighbor) == ( getPlayerColor() == PlayerColor.Red ? PlayerColor.Blue
 					: PlayerColor.Red ))
 				res[1]++;
 		}

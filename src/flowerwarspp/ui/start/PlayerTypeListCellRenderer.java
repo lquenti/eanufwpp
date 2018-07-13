@@ -9,11 +9,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PlayerTypeListCellRenderer implements ListCellRenderer<PlayerType> {
-	private Color defaultColour = Color.WHITE;
+	private Color defaultColor = Color.WHITE;
 	private Map<PlayerType, JTextArea> templateComponents = new HashMap<>();
 
-	public PlayerTypeListCellRenderer(Color defaultColour) {
-		this.defaultColour = defaultColour;
+	public PlayerTypeListCellRenderer(Color defaultColor) {
+		this.defaultColor = defaultColor;
 		templateComponents.put(null, new JTextArea("NULL"));
 		for (PlayerType playerType : PlayerType.values())
 			templateComponents.put(playerType, new JTextArea(Convert.playerTypeToString(playerType)));
@@ -28,7 +28,7 @@ public class PlayerTypeListCellRenderer implements ListCellRenderer<PlayerType> 
 		else if (b1)
 			area.setBackground(Color.CYAN);
 		else
-			area.setBackground(defaultColour);
+			area.setBackground(defaultColor);
 
 		return area;
 	}

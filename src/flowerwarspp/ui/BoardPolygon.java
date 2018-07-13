@@ -16,38 +16,38 @@ public abstract class BoardPolygon extends Polygon {
 	 */
 	private static final double triangleSideHeightFactor = Math.sqrt(3.0) / 2;
 
-	private Color borderColour;
-	private Color fillColour;
+	private Color borderColor;
+	private Color fillColor;
 
 	/**
 	 * Konstruiert ein {@link Polygon}, das für die Darstellung des Spielbretts geeignet ist.
 	 *
-	 * @param borderColour
+	 * @param borderColor
 	 * Die Farbe des Rands des {@link Polygon}s.
 	 *
-	 * @param fillColour
+	 * @param fillColor
 	 * Die Füllfarbe des {@link Polygon}s.
 	 */
-	public BoardPolygon(Color borderColour, Color fillColour) {
-		this.borderColour = borderColour;
-		this.fillColour = fillColour;
+	public BoardPolygon(Color borderColor, Color fillColor) {
+		this.borderColor = borderColor;
+		this.fillColor = fillColor;
 	}
 
 	/**
 	 * Zeichnet das {@link Polygon}, indem es dieses Objekt mit der
-	 * {@link BoardPolygon#fillColour} füllt und es mit der {@link BoardPolygon#borderColour}
+	 * {@link BoardPolygon#fillColor} füllt und es mit der {@link BoardPolygon#borderColor}
 	 * umrandet.
 	 *
 	 * @param graphics
 	 * Das {@link Graphics}-Objekt, auf das dieses {@link Polygon} gezeichnet werden soll.
 	 */
 	public void drawPolygon(Graphics graphics) {
-		if (fillColour != null) {
-			graphics.setColor(fillColour);
+		if (fillColor != null) {
+			graphics.setColor(fillColor);
 			graphics.fillPolygon(this);
 		}
-		if (borderColour != null) {
-			graphics.setColor(borderColour);
+		if (borderColor != null) {
+			graphics.setColor(borderColor);
 			graphics.drawPolygon(this);
 		}
 	}
@@ -55,11 +55,11 @@ public abstract class BoardPolygon extends Polygon {
 	/**
 	 * Setter für die Farbe, mit der der Umriss dieses {@link Polygon}s gezeichnet werden soll.
 	 *
-	 * @param borderColour
+	 * @param borderColor
 	 * Die Farbe, mit der der Umriss dieses {@link Polygon}s gezeichnet werden soll.
 	 */
-	public void setBorderColour(Color borderColour) {
-		this.borderColour = borderColour;
+	public void setBorderColor(Color borderColor) {
+		this.borderColor = borderColor;
 	}
 
 	/**
@@ -68,18 +68,18 @@ public abstract class BoardPolygon extends Polygon {
 	 * @return
 	 * Die Farbe, mit der der Umriss dieses {@link Polygon} gezeichnet werden soll.
 	 */
-	public Color getBorderColour() {
-		return borderColour;
+	public Color getBorderColor() {
+		return borderColor;
 	}
 
 	/**
 	 * Setter für die Farbe, mit der dieses {@link Polygon} beim Zeichnen gefüllt werden soll.
 	 *
-	 * @param fillColour
+	 * @param fillColor
 	 * Die Farbe, mit dieses {@link Polygon} gefüllt werden soll.
 	 */
-	public void setFillColour(Color fillColour) {
-		this.fillColour = fillColour;
+	public void setFillColor(Color fillColor) {
+		this.fillColor = fillColor;
 	}
 
 	/**
@@ -88,8 +88,8 @@ public abstract class BoardPolygon extends Polygon {
 	 * @return
 	 * Die Farbe, mit dieses {@link Polygon} gefüllt werden soll.
 	 */
-	public Color getFillColour() {
-		return fillColour;
+	public Color getFillColor() {
+		return fillColor;
 	}
 
 	/**
