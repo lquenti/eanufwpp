@@ -46,13 +46,9 @@ build_pdf:
   stage: dist
   before_script:
     - apt-get update -y
-    - apt-get --assume-yes install rubygems
-    - gem install kramdown
-    - gem install prawn
-    - gem install prawn-table
+    - apt-get --assume-yes install pandoc
   script:
-    - find . -name 'anleitung.md' -exec sh -c 'kramdown $0 --output pdf > $0.pdf' {} \;
-    - mv anleitung.md.pdf anleitung.pdf
+    - pandoc anleitung.md -o anleitung.pdf
   artifacts:
     paths:
     - anleitung.pdf
