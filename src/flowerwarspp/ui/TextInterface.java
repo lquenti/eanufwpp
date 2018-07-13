@@ -26,7 +26,7 @@ public class TextInterface implements Requestable, Output {
 	 * Eine vordefinierte Nachricht einer {@link Exception}, welche geworfen wird,
 	 * wenn der Spieler einen nicht validen Zug angegeben hat.
 	 */
-	private static final String exception_InvalidMove =
+	private static final String invalidMoveMessage =
 		"Der vom Spieler uebergegebene Zug ist nicht valide.";
 
 	private Viewer viewer = null;
@@ -48,15 +48,15 @@ public class TextInterface implements Requestable, Output {
 				move = Move.parseMove(inputScanner.nextLine());
 
 				if (!this.viewer.possibleMovesContains(move)) {
-					System.out.println(exception_InvalidMove);
+					System.out.println(invalidMoveMessage);
 					move = null;
 				}
 			} catch (MoveFormatException e) {
-				return null;
+				move = null;
 			}
 		}
 
-			return move;
+		return move;
 	}
 
 	/**
