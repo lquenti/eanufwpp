@@ -410,7 +410,6 @@ public class MainBoard implements Board {
 	private HashSet<Ditch> getPossibleDitches(final Flower flower) {
 		HashSet<Ditch> result = getAdjacentDitches(flower);
 		Position[] flowerPositions = getPositions(flower);
-		HashSet<Ditch> tobeRemoved = new HashSet<>(); // Um ConcurrentModificationException zu umgehen
 		for (Iterator<Ditch> it = result.iterator(); it.hasNext(); ) {
 			Ditch ditch = it.next();
 			// Prüfen, ob auf der anderen Seite des Grabens eine Blume des aktuellen Spielers ist
