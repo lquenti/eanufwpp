@@ -28,7 +28,7 @@ public class Dot extends BoardPolygon {
 	 * Die {@link Position}, an der dieser Punkt liegen soll.
 	 */
 	public Dot(Position position, Color fillColour) {
-		super(Color.WHITE, Color.BLACK);
+		super(Color.WHITE, fillColour);
 		this.position = position;
 		currentLocation = new Point();
 	}

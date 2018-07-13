@@ -12,7 +12,6 @@ import java.awt.*;
  * Diese Kanten stellen die {@link Ditch}es des Spielbretts dar.
  */
 public class Edge extends BoardPolygon {
-	private static final Color defaultDitchColor = Color.BLACK;
 	private static final int divisionFactor = 15;
 
 	/**
@@ -41,7 +40,7 @@ public class Edge extends BoardPolygon {
 	 * ist in diesem Konstruktor egal.
 	 */
 	public Edge(Position position1, Position position2) {
-		super(Color.BLACK, defaultDitchColor);
+		super(Color.BLACK, GameColours.edgeDefaultColour);
 
 		this.position1 = position1;
 		this.position2 = position2;
