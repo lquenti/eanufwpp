@@ -3,26 +3,42 @@ package flowerwarspp.ui;
 import flowerwarspp.preset.*;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 
 /**
  * Das {@link JFrame}, das das {@link BoardDisplay} enthält.
  */
-public class BoardFrame extends JFrame implements Requestable, Output {
+public class BoardFrame extends JFrame implements Requestable, Output, ChangeListener {
+
 	/**
 	 * Private Referenz auf die singuläre Instanz dieser Klasse.
 	 */
 	private static BoardFrame instance;
-
 	/**
-	 * Das {@link BoardDisplay}, das auf das {@link Board} schaut.
+	 * Der {@link Viewer}, durch den auf das {@link Board} geschaut wird.
 	 */
-	private BoardDisplay boardDisplay;
+	private Viewer viewer;
 
 	/**
 	 * Das {@link LoadingScreen}-Objekt, das den Ladebildschirm darstellt.
 	 */
 	private LoadingScreen loadingScreen = new LoadingScreen();
+
+	/**
+	 * Das {@link JPanel}, das die obere Toolbar hält.
+	 */
+	private TopToolbarPanel topToolbarPanel = new TopToolbarPanel();
+
+	/**
+	 * Das {@link BoardDisplay}, das auf das {@link Board} schaut.
+	 */
+	private BoardDisplay boardDisplay;
+	/**
+	 * Ein {@link JScrollPane}, das das Scrollen über die Spielbrettanzeige ermöglicht.
+	 */
+	private JScrollPane boardScrollPane = new JScrollPane();
 
 	/**
 	 * Das {@link BottomToolbarPanel}, das die Toolbar am unteren Bildschirmrand darstellt.
@@ -34,6 +50,7 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 	 */
 	private BoardFrame() {
 		super("Flower Wars");
+
 		setMinimumSize(new Dimension(400, 400));
 		setSize(600, 600);
 
@@ -65,12 +82,28 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 	 * Der {@link Viewer}, durch den auf das Spielbrett geschaut wird.
 	 */
 	public void setViewer(Viewer viewer) {
+		this.viewer = viewer;
+
 		boardDisplay = new BoardDisplay(bottomToolbarPanel);
 		boardDisplay.setBoardViewer(viewer);
+		boardScrollPane.setViewportView(boardDisplay);
+
 		remove(loadingScreen);
-		add(boardDisplay, BorderLayout.CENTER);
+
+		topToolbarPanel.getZoomSlider().addChangeListener(this);
+		add(topToolbarPanel, BorderLayout.NORTH);
+		add(boardScrollPane, BorderLayout.CENTER);
 		add(bottomToolbarPanel, BorderLayout.SOUTH);
+
 		setVisible(true);
+	}
+
+	@Override
+	public void stateChanged(ChangeEvent changeEvent) {
+		if (changeEvent.getSource() == topToolbarPanel.getZoomSlider()) {
+			double newZoom = topToolbarPanel.getZoomSlider().getValue() / 100.0;
+			boardDisplay.setZoom(newZoom);
+		}
 	}
 
 	/**
@@ -91,6 +124,10 @@ public class BoardFrame extends JFrame implements Requestable, Output {
 	public void refresh() {
 		if (boardDisplay == null)
 			return;
+
+		for (PlayerColor playerColor : PlayerColor.values()) {
+			topToolbarPanel.updatePlayerStatus(playerColor, viewer.getPoints(playerColor));
+		}
 
 		boardDisplay.refresh();
 		repaint();

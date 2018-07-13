@@ -11,7 +11,7 @@ public class BoardDisplay extends JPanel {
 	/**
 	 * Eine private Klasse, die die Mausaktionen für das {@link BoardDisplay} verarbeitet.
 	 */
-	private class DisplayMouseHandler extends MouseAdapter {
+	private class DisplayMouseHandler extends MouseAdapter implements ActionListener {
 		/**
 		 * Das {@link BoardDisplay}, zu dem dieser {@link MouseAdapter} gehört.
 		 */
@@ -64,6 +64,25 @@ public class BoardDisplay extends JPanel {
 			}
 		}
 
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+			if (!isRequesting)
+				return;
+
+			// In den beiden folgenden Fällen wird == verwendet.
+			// Es soll sichergestellt werden, dass sie dieselben Objekte sind.
+			if (actionEvent.getSource() == boardDisplay.bottomToolbarPanel.getSurrenderButton()) {
+				moveType = MoveType.Surrender;
+			} else if (actionEvent.getSource() == boardDisplay.bottomToolbarPanel.getEndButton()) {
+				moveType = MoveType.End;
+			}
+
+			boardDisplay.getParent().repaint();
+			synchronized (moveAwaitLock) {
+				moveAwaitLock.notify();
+			}
+		}
+
 		/**
 		 * Reagiert auf den Klick selbst.
 		 *
@@ -71,17 +90,6 @@ public class BoardDisplay extends JPanel {
 		 * Das {@link MouseEvent}, das die Ausführung verursacht hat.
 		 */
 		private void processClick(MouseEvent mouseEvent) {
-			// In den beiden folgenden Fällen wird == verwendet.
-			// Es soll sichergestellt werden, dass sie dieselben Objekte sind.
-			if (mouseEvent.getComponent() == boardDisplay.bottomToolbarPanel.getSurrenderButton()) {
-				moveType = MoveType.Surrender;
-				return;
-			}
-			if (mouseEvent.getComponent() == boardDisplay.bottomToolbarPanel.getEndButton()) {
-				moveType = MoveType.End;
-				return;
-			}
-
 			// Versuche einen der Punkte zu finden, die auf dem Brett liegen.
 			// Solche Klicks sollen ignoriert werden.
 			Point clickPoint = mouseEvent.getPoint();
@@ -158,6 +166,16 @@ public class BoardDisplay extends JPanel {
 			return null;
 		}
 
+		/**
+		 * Findet eine {@link Edge} am spezifizierten {@link Point}.
+		 *
+		 * @param point
+		 * Der {@link Point}, an dem die Kante liegt.
+		 *
+		 * @return
+		 * Die {@link Edge}, das derzeit an der angegebenen Stelle liegt,
+		 * oder <code>null</code>, falls dort keine liegt.
+		 */
 		private Edge findEdge(Point point) {
 			for (Edge e : boardDisplay.mapEdges) {
 				if (e.contains(point))
@@ -203,56 +221,6 @@ public class BoardDisplay extends JPanel {
 	}
 
 	/*
-	 * Die folgenden Color-Objekte sind konstant.
-	 * Es soll keine Farbe, die auf der rechten Seite der folgenden Deklarationen steht
-	 * irgenwdo im Code referenziert werden, außer durch diese Deklarationen.
-	 */
-
-	/**
-	 * Die Farbe, die ein {@link Triangle} standardmäßig hat.
-	 */
-	private static final Color triangleDefaultColour = Color.LIGHT_GRAY;
-	/**
-	 * Die Farbe, die ein angewähltes {@link Triangle} hat,
-	 * bevor ein zweites für einen {@link Move} gewählt wurde.
-	 */
-	private static final Color triangleClickedColour = new Color(0x966BAF);
-	/**
-	 * Die Farbe, die ein {@link Triangle} hat,
-	 * wenn es mit dem aktuell angewählten kombinierbar ist.
-	 */
-	private static final Color triangleCombinableColour = new Color(0xB9EEA0);
-	/**
-	 * Die Farbe die eine {@link Edge} normalerweise hat.
-	 */
-	private static final Color edgeDefaultColour = Color.BLACK;
-	/**
-	 * Die Farbe die eine {@link Edge} hat,
-	 * wenn es einen gültigen {@link Move} gibt, der den repräsentierten {@link Ditch} enthält.
-	 */
-	private static final Color edgeClickableColour = triangleCombinableColour;
-	/**
-	 * Die Farbe, die die {@link Dot}s standardmäßig haben.
-	 */
-	private static final Color dotDefaultColor = Color.BLACK;
-	/**
-	 * Die Farbe der Dreiecke, die dem {@link PlayerColor#Red} gehören.
-	 */
-	private static final Color redColour = new Color(0xFF5255);
-	/**
-	 * Eine Farbe, die eine Blume symbolisiert, die in einem roten Garten ist.
-	 */
-	private static final Color redInGardenColour = new Color(0xC94143);
-	/**
-	 * Die Farbe der Dreiecke, die dem {@link PlayerColor#Blue} gehören.
-	 */
-	private static final Color blueColour = new Color(0x00DDFF);
-	/**
-	 * Eine Farbe, die eine Blume symbolisiert, die in einem roten Garten ist.
-	 */
-	private static final Color blueInGardenColour = new Color(0x42B7C9);
-
-	/*
 	 * Die folgenden Objekte handhaben Objekte, die mit der Zeichengeometrie zu tun haben.
 	 */
 
@@ -274,7 +242,10 @@ public class BoardDisplay extends JPanel {
 	 * Eine {@link Collection} von {@link Dot}s, verwendet für kosmetische Zwecke.
 	 */
 	private Collection<Dot> mapDots = new ArrayList<>();
-
+	/**
+	 * Ein Vergrößerungsfaktor für die Zeichengeometrie.
+	 */
+	private double zoom = 2.0;
 
 	/**
 	 * Handhabt alle {@link MouseEvent}s, die in diesem {@link JPanel} auftreten können.
@@ -289,11 +260,11 @@ public class BoardDisplay extends JPanel {
 	/**
 	 * Ein {@link PlayerStatusDisplay}, das den Status des {@link PlayerColor#Red} anzeigt.
 	 */
-	private PlayerStatusDisplay redStatusDisplay = new PlayerStatusDisplay(redInGardenColour, true);
+	private PlayerStatusDisplay redStatusDisplay = new PlayerStatusDisplay(GameColours.redColour);
 	/**
 	 * Ein {@link PlayerStatusDisplay}, das den Status des {@link PlayerColor#Blue} anzeigt.
 	 */
-	private PlayerStatusDisplay blueStatusDisplay = new PlayerStatusDisplay(blueInGardenColour, false);
+	private PlayerStatusDisplay blueStatusDisplay = new PlayerStatusDisplay(GameColours.blueColour);
 	/**
 	 * Eine Referenz auf die Toolbar am unteren Rand des Bildschirms.
 	 */
@@ -339,7 +310,8 @@ public class BoardDisplay extends JPanel {
 		// wenn es nicht die ganze Fläche bezeichnet (d.h. teilweise durchsichtig ist)
 		setOpaque(false);
 
-		bottomToolbarPanel.setButtonClickListener(displayMouseHandler);
+		bottomToolbarPanel.getSurrenderButton().addActionListener(displayMouseHandler);
+		bottomToolbarPanel.getEndButton().addActionListener(displayMouseHandler);
 	}
 
 	/**
@@ -365,6 +337,18 @@ public class BoardDisplay extends JPanel {
 
 		displayMouseHandler.reset();
 		addMouseListener(displayMouseHandler);
+		refresh();
+	}
+
+	/**
+	 * Setzt den Skalierungsfaktor.
+	 *
+	 * @param zoom
+	 * Der Skalierungsfaktor, der beim Zeichnen verwenden werden soll.
+	 */
+	public void setZoom(double zoom) {
+		this.zoom = zoom;
+		repaint();
 	}
 
 
@@ -385,7 +369,7 @@ public class BoardDisplay extends JPanel {
 
 		// Für jede Blume vom Spielbrett soll ein Triangle erstellt werden.
 		Collection<Flower> flowers = boardViewer.getAllFlowers();
-		flowers.forEach(f -> mapTriangles.add(new Triangle(f, triangleDefaultColour)));
+		flowers.forEach(f -> mapTriangles.add(new Triangle(f, GameColours.triangleDefaultColour)));
 	}
 
 	/**
@@ -419,9 +403,9 @@ public class BoardDisplay extends JPanel {
 		for (Triangle t : mapTriangles) {
 			if (!t.isFlipped()) {
 				Flower f = t.toFlower();
-				Dot leftDot = new Dot(f.getFirst(), dotDefaultColor);
-				Dot topDot = new Dot(f.getSecond(), dotDefaultColor);
-				Dot rightDot = new Dot(f.getThird(), dotDefaultColor);
+				Dot leftDot = new Dot(f.getFirst(), GameColours.dotDefaultColor);
+				Dot topDot = new Dot(f.getSecond(), GameColours.dotDefaultColor);
+				Dot rightDot = new Dot(f.getThird(), GameColours.dotDefaultColor);
 
 				mapDots.add(leftDot);
 				mapDots.add(topDot);
@@ -465,8 +449,6 @@ public class BoardDisplay extends JPanel {
 		mapTriangles.forEach(t -> t.drawPolygon(g));
 		mapEdges.forEach(e -> e.drawPolygon(g));
 		mapDots.forEach(d -> d.drawPolygon(g));
-		redStatusDisplay.draw(g);
-		blueStatusDisplay.draw(g);
 	}
 
 	// NOTE: Keine der folgenden Methoden sollte außer durch #paintComponent aufgeruft werden.
@@ -486,27 +468,27 @@ public class BoardDisplay extends JPanel {
 			if ((redFlowers != null) && redFlowers.contains(flower)) {
 				// Für den Fall, dass die aktuelle Blume dem roten Spieler gehört...
 				if (boardViewer.getFlowerBed(flower).size() > 3)
-					t.setFillColour(redInGardenColour);
+					t.setFillColour(GameColours.redInGardenColour);
 				else
-					t.setFillColour(redColour);
+					t.setFillColour(GameColours.redColour);
 			}
 			else if ((blueFlowers != null) && blueFlowers.contains(flower)) {
 				// oder dem blauen Spieler gehört, färbe das Dreieck entsprechend.
 				if (boardViewer.getFlowerBed(flower).size() > 3)
-					t.setFillColour(blueInGardenColour);
+					t.setFillColour(GameColours.blueInGardenColour);
 				else
-					t.setFillColour(blueColour);
+					t.setFillColour(GameColours.blueColour);
 			} else {
 				// Andererseits, überprüfe, ob der Spieler gerade einen Flower-Move macht
 				// und diese Blume als erstes ausgewählt hat.
 				if (displayMouseHandler.clickedFlower1 != null) {
 					if (flower.equals(displayMouseHandler.clickedFlower1)) {
-						t.setFillColour(triangleClickedColour);
+						t.setFillColour(GameColours.triangleClickedColour);
 					} else if ((combinableFlowers != null) && (combinableFlowers.contains(flower))) {
-						t.setFillColour(triangleCombinableColour);
+						t.setFillColour(GameColours.triangleCombinableColour);
 					}
 				} else if ((combinableFlowers != null) && combinableFlowers.contains(flower)) {
-					t.setFillColour(triangleCombinableColour);
+					t.setFillColour(GameColours.triangleCombinableColour);
 				}
 			}
 
@@ -527,16 +509,16 @@ public class BoardDisplay extends JPanel {
 
 			// Färbe die Edge in der Farbe, die den Spieler repräsentiert, dem sie gehört.
 			if ((redDitches != null) && (redDitches.contains(ditch))) {
-				e.setFillColour(redColour);
+				e.setFillColour(GameColours.redColour);
 			} else if ((blueDitches != null) && (blueDitches.contains(ditch))) {
-				e.setFillColour(blueColour);
+				e.setFillColour(GameColours.blueColour);
 			} else if ((possibleDitchMoves != null) && possibleDitchMoves.contains(move)) {
 				// Wenn sie niemandem gehört, aber der Spieler gerade spielen soll,
 				// färbe sie, um das darzustellen.
-				e.setFillColour(edgeClickableColour);
+				e.setFillColour(GameColours.edgeClickableColour);
 			} else {
 				// Sonst, färbe sie in der Standardfarbe.
-				e.setFillColour(edgeDefaultColour);
+				e.setFillColour(GameColours.edgeDefaultColour);
 			}
 		}
 	}
@@ -547,8 +529,10 @@ public class BoardDisplay extends JPanel {
 	 */
 	private void updatePolygonSizes() {
 		// Teile die Höhe dieses Dreiecks auf die verschiedenen Triangles auf.
-		Dimension displaySize = getSize();
+		Dimension displaySize = getParent().getSize();
 		setPreferredSize(displaySize);
+		displaySize.width = (int) (displaySize.width * zoom);
+		displaySize.height = (int) (displaySize.height * zoom);
 		int minimumSize = Math.min(displaySize.width, displaySize.height);
 
 		// Triangles sollen etwas kleiner sein als maximal möglich,
@@ -561,8 +545,6 @@ public class BoardDisplay extends JPanel {
 		mapTriangles.forEach(t -> t.recalcPoints(sideLength, drawBegin));
 		mapEdges.forEach(e -> e.recalcPoints(sideLength, drawBegin));
 		mapDots.forEach(e -> e.recalcPoints(sideLength, drawBegin));
-		redStatusDisplay.updateRectangleSizes(displaySize);
-		blueStatusDisplay.updateRectangleSizes(displaySize);
 	}
 
 
@@ -753,7 +735,5 @@ public class BoardDisplay extends JPanel {
 			EventQueue.invokeLater(() -> new EndPopupFrame(boardViewer.getStatus()));
 			gameHasEnded = true;
 		}
-
-		getParent().repaint();
 	}
 }

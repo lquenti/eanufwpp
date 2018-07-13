@@ -1,7 +1,6 @@
 package flowerwarspp.ui;
 
 import java.awt.*;
-import java.awt.event.MouseAdapter;
 import javax.swing.border.*;
 import javax.swing.*;
 
@@ -47,18 +46,6 @@ public class BottomToolbarPanel extends JPanel {
 		buttonContainer.add(surrenderButton);
 		buttonContainer.add(endButton);
 		add(buttonContainer, BorderLayout.EAST);
-	}
-
-	/**
-	 * Setzt den {@link MouseAdapter} der Buttons. Muss in der Lage sein,
-	 * die beiden {@link JButton}s auseinander zu halten! {@link #getSurrenderButton()}.
-	 *
-	 * @param mouseAdapter
-	 * Der {@link MouseAdapter}, der die Buttons handhaben soll.
-	 */
-	void setButtonClickListener(MouseAdapter mouseAdapter) {
-		surrenderButton.addMouseListener(mouseAdapter);
-		endButton.addMouseListener(mouseAdapter);
 	}
 
 	/**
