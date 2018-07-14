@@ -51,6 +51,7 @@ public class PlayerStatusDisplay extends JPanel {
 		int dimensionWidth = (int) (stringBounds.getHeight() / 6 * 16); // (h * 1.5) / (9.0 * 16)
 		dimension.setSize(dimensionWidth, dimensionHeight);
 		setPreferredSize(dimension);
+		revalidate();
 
 		Rectangle drawRect = g.getClipBounds();
 		int x = drawRect.x + 2;
