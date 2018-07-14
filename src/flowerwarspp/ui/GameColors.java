@@ -107,7 +107,7 @@ public final class GameColors {
 		}
 	}
 
-	/*
+	/**
 	 * Gibt den ANSI-Escape-Code für die Blumenfarbe für eine {@link PlayerColor} zurück.
 	 *
 	 * @param color
@@ -127,7 +127,7 @@ public final class GameColors {
 		return "";
 	}
 
-	/*
+	/**
 	 * Gibt den ANSI-Escape-Code für die Grabenfarbe für eine {@link PlayerColor} zurück.
 	 *
 	 * @param color

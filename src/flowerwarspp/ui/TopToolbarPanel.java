@@ -9,7 +9,7 @@ import flowerwarspp.preset.PlayerColor;
 import java.awt.*;
 import javax.swing.*;
 
-// TODO
+// TODO: Dokumentation
 public class TopToolbarPanel extends JPanel {
 
 	/**

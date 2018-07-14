@@ -178,6 +178,7 @@ public class GameParameters {
 		}
 	}
 
+	// TODO: Dokumentation
 	public GameParameters(int boardSize,
 	                      PlayerType redType,
 	                      PlayerType blueType,

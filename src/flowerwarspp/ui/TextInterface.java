@@ -29,13 +29,15 @@ public class TextInterface implements Requestable, Output {
 	 */
 	private static final String invalidMoveMessage = "Der eingegebene Zug ist nicht erlaubt.";
 
-	// TODO
+	/**
+	 * Der Viewer, der verwendet wird, um Informationen über das Spielbrett abzufragen.
+	 */
 	private Viewer viewer = null;
 
-	// TODO
+	/**
+	 * Der Scanner, der verwendet wird, um Züge vom Spieler abzufragen.
+	 */
 	private Scanner inputScanner = new Scanner(System.in);
-
-	private SaveGame saveGame;
 
 	/**
 	 * Liest einen Spielzug vom Standard Input ein.
@@ -172,10 +174,13 @@ public class TextInterface implements Requestable, Output {
 		refresh();
 	}
 
+	/**
+	 * {@inheritDoc} Diese Implementation tut nichts, da diese Ausgabe das Speichern von
+	 * Spielständen nicht unterstützt.
+	 */
 	@Override
-	public void setSaveGame(SaveGame saveGame) {
-		this.saveGame = saveGame;
-	}
+	public void setSaveGame(SaveGame saveGame) {}
+
 	/**
 	 * {@inheritDoc}
 	 */

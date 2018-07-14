@@ -12,6 +12,7 @@ import java.util.Collection;
  * Ein {@link JPanel}, das verwendet werden kann, um ein Spiel zu starten.
  */
 public class LocalPlayPanel extends GameStartPanel {
+	// TODO: Dokumentation
 	private static final Collection<PlayerType> availablePlayerTypes =
 		Arrays.asList(PlayerType.HUMAN,
 			PlayerType.RANDOM_AI,

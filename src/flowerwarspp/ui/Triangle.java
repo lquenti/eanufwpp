@@ -21,10 +21,10 @@ import java.awt.*;
  */
 public class Triangle extends BoardPolygon {
 
-	// TODO
+	// TODO: Dokumentation
 	private Flower flower;
 
-	// TODO
+	// TODO: Dokumentation
 	private boolean flipped;
 
 	/**
