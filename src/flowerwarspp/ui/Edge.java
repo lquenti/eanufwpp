@@ -42,7 +42,7 @@ public class Edge extends BoardPolygon {
 	 * ist in diesem Konstruktor egal.
 	 */
 	public Edge(Position position1, Position position2) {
-		super(Color.BLACK, GameColors.edgeDefaultColor);
+		super(Color.BLACK, GameColors.EDGE_DEFAULT);
 
 		this.position1 = position1;
 		this.position2 = position2;

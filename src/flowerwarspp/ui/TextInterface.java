@@ -20,14 +20,14 @@ public class TextInterface implements Requestable, Output {
 	 * eine Exception die geworfen wird, wenn das Format des Zuges, den der interaktive
 	 * Spieler eingegeben hat, ingültig ist.
 	 */
-	private static final String moveFormatError = "Zug konnte nicht gelesen werden.";
+	private static final String moveFormatErrorMessage = "Zug konnte nicht gelesen werden.";
 
 	/**
 	 * Eine vordefinierte Nachricht einer {@link Exception}, welche geworfen wird,
 	 * wenn der Spieler einen nicht validen Zug angegeben hat.
 	 */
 	private static final String invalidMoveMessage =
-		"Der vom Spieler uebergegebene Zug ist nicht valide.";
+		"Der vom Spieler uebergegebene Zug ist nicht erlaubt.";
 
 	// TODO
 	private Viewer viewer = null;
@@ -54,51 +54,12 @@ public class TextInterface implements Requestable, Output {
 					move = null;
 				}
 			} catch (MoveFormatException e) {
+				System.out.println(moveFormatErrorMessage);
 				move = null;
 			}
 		}
 
 		return move;
-	}
-
-	/**
-	 * Akquiriert die Vordergrundfarbe für eine {@link PlayerColor}.
-	 *
-	 * @param color
-	 * Die {@link PlayerColor}, für die der Farbstring zurückgegeben werden soll.
-	 *
-	 * @return
-	 * Der zur {@link PlayerColor} gehörende Vordergrundfarbe.
-	 */
-	private String fgColor(PlayerColor color) {
-		if (color == null) {
-			return "";
-		}
-		switch(color) {
-			case Blue: return AnsiColors.BRIGHT_BLUE;
-			case Red: return AnsiColors.BRIGHT_RED;
-			default: return "";
-		}
-	}
-
-	/**
-	 * Akquiriert die Hintergrundfarbe für eine {@link PlayerColor}.
-	 *
-	 * @param color
-	 * Die {@link PlayerColor}, für die der Farbstring zurückgegeben werden soll.
-	 *
-	 * @return
-	 * Der zur {@link PlayerColor} gehörende Hintergrundfarbe.
-	 */
-	private String bgColor(PlayerColor color) {
-		if (color == null) {
-			return "";
-		}
-		switch(color) {
-			case Blue: return AnsiColors.BACKGROUND_BLUE;
-			case Red: return AnsiColors.BACKGROUND_RED;
-			default: return "";
-		}
 	}
 
 	/**
@@ -113,29 +74,25 @@ public class TextInterface implements Requestable, Output {
 	private StringBuilder drawTriangle(Flower flower) {
 		StringBuilder triangle = new StringBuilder();
 		if (flower.getFirst().getRow() == flower.getSecond().getRow()) {
-			triangle.append(fgColor(viewer.getDitchColor(new Ditch (
-				flower.getFirst(),
-				flower.getThird()
-			))));
+			Ditch leftDitch = new Ditch(flower.getFirst(), flower.getThird());
+			triangle.append(GameColors.getAnsiDitchColor(viewer.getDitchColor(leftDitch)));
 			triangle.append('/');
-			triangle.append(AnsiColors.RESET);
-			triangle.append(bgColor(viewer.getFlowerColor(flower)));
-			triangle.append(fgColor(viewer.getDitchColor(new Ditch (
-				flower.getFirst(),
-				flower.getSecond()
-			))));
+			triangle.append(GameColors.ANSI_RESET);
+
+			triangle.append(GameColors.getAnsiFlowerColor(viewer.getFlowerColor(flower)));
+			Ditch bottomDitch = new Ditch(flower.getFirst(), flower.getSecond());
+			triangle.append(GameColors.getAnsiDitchColor(viewer.getDitchColor(bottomDitch)));
 			triangle.append('_');
-			triangle.append(AnsiColors.RESET);
-			triangle.append(fgColor(viewer.getDitchColor(new Ditch (
-				flower.getSecond(),
-				flower.getThird()
-			))));
+			triangle.append(GameColors.ANSI_RESET);
+
+			Ditch rightDitch = new Ditch(flower.getSecond(), flower.getThird());
+			triangle.append(GameColors.getAnsiDitchColor(viewer.getDitchColor(rightDitch)));
 			triangle.append('\\');
-			triangle.append(AnsiColors.RESET);
+			triangle.append(GameColors.ANSI_RESET);
 		} else {
-			triangle.append(bgColor(viewer.getFlowerColor(flower)));
+			triangle.append(GameColors.getAnsiFlowerColor(viewer.getFlowerColor(flower)));
 			triangle.append(" ");
-			triangle.append(AnsiColors.RESET);
+			triangle.append(GameColors.ANSI_RESET);
 		}
 		return triangle;
 	}
@@ -153,9 +110,9 @@ public class TextInterface implements Requestable, Output {
 			for (int j = 0; j < (size-i-1)*2; j++) {
 				board.append(' ');
 			}
-			board.append(AnsiColors.BRIGHT_BLACK);
+			board.append(GameColors.ANSI_GRID);
 			board.append(String.format("%2d", size - i));
-			board.append(AnsiColors.RESET);
+			board.append(GameColors.ANSI_RESET);
 			board.append(' ');
 			for (int j = 1; j <= i+1; j++) {
 				board.append(drawTriangle(new Flower (
@@ -173,12 +130,12 @@ public class TextInterface implements Requestable, Output {
 			}
 			board.append('\n');
 		}
-		board.append(AnsiColors.BRIGHT_BLACK);
+		board.append(GameColors.ANSI_GRID);
 		for (int i = 1; i <= size + 1; i++) {
 			board.append(String.format("%3d", i));
 			board.append(' ');
 		}
-		board.append(AnsiColors.RESET);
+		board.append(GameColors.ANSI_RESET);
 		board.append('\n');
 		return board;
 	}
