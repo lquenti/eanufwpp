@@ -9,8 +9,8 @@ import flowerwarspp.util.Convert;
 import java.awt.*;
 import javax.swing.*;
 
+// TODO
 public class EndPopupFrame extends JDialog {
-
 	public EndPopupFrame(JFrame parent, String message) {
 		super(parent, "Spiel Beendet");
 
@@ -29,12 +29,12 @@ public class EndPopupFrame extends JDialog {
 
 }
 
+// TODO
 class PopupComponentPane extends JPanel {
-
+	// TODO
 	private Status endStatus;
 	private JLabel label;
 	private JButton button;
-
 
 	PopupComponentPane(String message) {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));

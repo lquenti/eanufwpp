@@ -99,6 +99,7 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 		setVisible(true);
 	}
 
+	// TODO
 	@Override
 	public void stateChanged(ChangeEvent changeEvent) {
 		if (changeEvent.getSource() == topToolbarPanel.getZoomSpinner()) {

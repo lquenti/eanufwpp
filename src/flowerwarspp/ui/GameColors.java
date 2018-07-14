@@ -5,7 +5,7 @@ import flowerwarspp.preset.Move;
 import flowerwarspp.preset.PlayerColor;
 
 import java.awt.*;
-
+// TODO
 public final class GameColors {
 	/*
 	 * Die folgenden Color-Objekte sind konstant.

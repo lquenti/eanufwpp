@@ -68,7 +68,6 @@ public class Log {
 	 */
 	private static boolean flushOnLog = true;
 
-
 	/**
 	 * Gibt das aktuelle Log-Level aus.
 	 *
@@ -103,6 +102,14 @@ public class Log {
 	 */
 	public static boolean flushOnLog() {
 		return flushOnLog;
+	}
+
+	/**
+	 * Aktiviert oder deaktiviert den Logger.
+	 * @param isLogging <code>true</code> aktiviert den Logger, <code>false</code> deaktiviert ihn.
+	 */
+	public static void enableLogger(final boolean isLogging) {
+		Log.isLogging = isLogging;
 	}
 
 	/**

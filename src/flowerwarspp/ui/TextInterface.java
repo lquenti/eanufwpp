@@ -29,8 +29,10 @@ public class TextInterface implements Requestable, Output {
 	private static final String invalidMoveMessage =
 		"Der vom Spieler uebergegebene Zug ist nicht valide.";
 
+	// TODO
 	private Viewer viewer = null;
 
+	// TODO
 	private Scanner inputScanner = new Scanner(System.in);
 
 	/**

@@ -39,7 +39,7 @@ public class BoardDisplay extends JPanel {
 		 * Wurde einer geklickt, so ist er hierin gespeichert.
 		 */
 		private Ditch clickedDitch = null;
-		/*
+		/**
 		 * Wenn ein {@link Ditch} gesetzt wurde, wird er hier zwischengespeichert, damit es nicht zu Flackern kommt.
 		 */
 		private Ditch lastClickedDitch = null;

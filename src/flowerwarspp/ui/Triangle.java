@@ -20,7 +20,11 @@ import java.awt.*;
  * Unendlich der x-Achse des Zeichenbretts).
  */
 public class Triangle extends BoardPolygon {
+
+	// TODO
 	private Flower flower;
+
+	// TODO
 	private boolean flipped;
 
 	/**
@@ -59,6 +63,7 @@ public class Triangle extends BoardPolygon {
 		return flower;
 	}
 
+	// TODO
 	@Override
 	public void recalcPoints(int triangleSideLength, Point relativeStart) {
 		reset();

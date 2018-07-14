@@ -30,7 +30,8 @@ public class LoadingScreen extends JPanel {
 			"Siehe e5e4daf4 (das hier ist kein Ladebildschirmtipp)...",
 			"main(s){printf(s=\"main(s){printf(s=%c%s%1$c,34,s);}\",34,s);} ist eine C-Quine",
 			"Rosa Pilze sind giftig!",
-			"~/🍬/🏠 == \"home/sweet/home\""
+			"~/🍬/🏠 == \"home/sweet/home\"",
+			"Es ist nicht möglich, gegen Adv5 zu gewinnen!"
 		);
 
 	/**

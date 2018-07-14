@@ -96,13 +96,15 @@ public class Game {
 	 * Einstellungen gesetzt.
 	 */
 	private void init() {
-		// Dem Logger mitteilen, ob Debug-Nachrichten angezeigt werden sollen, oder nicht.
-		if (gameParameters.getDebug())
-			Log.setLogLevel(LogLevel.DEBUG);
-		else
-			Log.setLogLevel(LogLevel.INFO);
-
 		Log.setOutput(System.err);
+
+		// Dem Logger mitteilen, ob Debug-Nachrichten angezeigt werden sollen, oder nicht.
+		if (gameParameters.getDebug()) {
+			Log.setLogLevel(LogLevel.DEBUG);
+		}
+		else {
+			Log.enableLogger(false);
+		}
 
 		// Den Output gemäß der Kommandozeilenparameter initialisieren.
 		if (gameParameters.getText() || gameParameters.getQuiet() || gameParameters.getNumberOfGames() > 1) {

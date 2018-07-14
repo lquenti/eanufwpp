@@ -9,8 +9,6 @@ import flowerwarspp.util.log.*;
 
 /**
  * Ein Daten-Konstrukt um gesammelt Parameter an die Spiel-Klassen weiterleiten zu können.
- *
- *
  */
 class GameParameters {
 
@@ -89,8 +87,14 @@ class GameParameters {
 	 */
 	private String saveGameName = null;
 
+	/**
+	 * <code>true</code> falls ein Spielstand geladen werden soll, <code>false</code> andererseits.
+	 */
 	private boolean loadGame = false;
 
+	/**
+	 * Die Zeit in MS zwischen Zügen beim Replay eines geladenen Spielstands.
+	 */
 	private long replaySpeed = - 1;
 
 	/**

@@ -20,8 +20,6 @@ import static flowerwarspp.preset.PlayerColor.Red;
  * Diese Datei kann zu einem späteren Zeitpunkt mit {@link #load(String)} wieder geladen werden, dabei werden die, von
  * der Datei beschriebenen, Spielzüge in der {@link ArrayDeque} einer neuen Instanz dieser Klasse gespeichert. Diese
  * Instanz wird dann zurückgegeben.
- *
- *
  */
 public class SaveGame implements Iterable<Move> {
 
@@ -36,6 +34,7 @@ public class SaveGame implements Iterable<Move> {
 	 * Diese {@link ArrayDeque} speichert die ausgeführten Spielzüge.
 	 */
 	private ArrayDeque<Move> madeMoves;
+
 	/**
 	 * Die Größe des aktuellen Spielbretts.
 	 */
