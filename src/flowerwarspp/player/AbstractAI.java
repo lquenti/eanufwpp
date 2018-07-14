@@ -16,7 +16,7 @@ import java.util.Random;
  *
  *
  */
-abstract class BaseAI extends BasePlayer {
+abstract class AbstractAI extends AbstractPlayer {
 	/**
 	 * Eine vordefinierte Nachricht einer {@link Exception}, welche geworfen wird, wenn die KI mit ihrer Strategie
 	 * keinen Zug auswählen konnte.
@@ -41,7 +41,7 @@ abstract class BaseAI extends BasePlayer {
 	/**
 	 * Default-Konstruktor, welcher dieses Objekt mit Standardwerten versieht.
 	 */
-	protected BaseAI() {
+	protected AbstractAI() {
 		super();
 	}
 

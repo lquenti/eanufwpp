@@ -12,7 +12,7 @@ import java.util.Collection;
  * <p>
  * Der zu spielende Zug wird auf Basis eines angepassten Bewertungsalgorithmus des simplen Computerspielers ausgewählt.
  */
-public class AdvancedAI1 extends BaseAI {
+public class AdvancedAI1 extends AbstractAI {
 
 	/**
 	 * Daten-Struct zum Speichern und Verarbeiten von Zugbewertungen. Da nur Daten transportiert werden, und keine

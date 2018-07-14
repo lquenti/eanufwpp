@@ -35,7 +35,7 @@ public class Players {
 		}
 
 		// Einen neuen Spieler gemäß des geforderten Typs erstellen.
-		BasePlayer player = null;
+		AbstractPlayer player = null;
 		switch (type) {
 			case REMOTE:
 				return findRemotePlayer(url);

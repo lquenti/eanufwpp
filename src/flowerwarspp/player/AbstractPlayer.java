@@ -8,7 +8,7 @@ import flowerwarspp.util.log.LogModule;
 
 import java.rmi.RemoteException;
 
-import static flowerwarspp.player.BasePlayer.PlayerFunction.*;
+import static flowerwarspp.player.AbstractPlayer.PlayerFunction.*;
 import static flowerwarspp.util.log.LogLevel.*;
 import static flowerwarspp.util.log.LogModule.PLAYER;
 
@@ -19,7 +19,7 @@ import static flowerwarspp.util.log.LogModule.PLAYER;
  * #requestMove()}. Diese Methode fordert einen Zug vom jeweiligen Spieler an, und leitet diesen Zug an die Methode
  * {@link #request()} weiter.
  */
-abstract class BasePlayer implements flowerwarspp.preset.Player {
+abstract class AbstractPlayer implements flowerwarspp.preset.Player {
 
 	/**
 	 * Eine vordefinierte Nachricht einer {@link Exception}, welche geworfen wird, wenn der Spieler noch nicht
@@ -86,7 +86,7 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	/**
 	 * Ein <code>default</code>-Konstruktor, welcher die Instanzvariablen mit Basiswerten initialisiert.
 	 */
-	protected BasePlayer() {
+	protected AbstractPlayer() {
 		this.playerColor = PlayerColor.Red;
 		this.board = null;
 		this.cycleState = NULL;

@@ -6,12 +6,12 @@ import flowerwarspp.preset.Requestable;
 
 
 /**
- * Implementiert die abstrakte Klasse {@link BasePlayer} mit einem interaktiven Spieler. Über ein Objekt einer Klasse,
+ * Implementiert die abstrakte Klasse {@link AbstractPlayer} mit einem interaktiven Spieler. Über ein Objekt einer Klasse,
  * welche das Interface {@link Requestable} implementiert, wird ein Zug von einem interaktiven Spieler angefordert.
  *
  *
  */
-public class InteractivePlayer extends BasePlayer {
+public class InteractivePlayer extends AbstractPlayer {
 
 	/**
 	 * Wird genutzt, um Spielzüge vom Spieler anzufordern.
