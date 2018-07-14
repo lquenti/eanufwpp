@@ -7,12 +7,10 @@ import flowerwarspp.preset.MoveType;
 import java.util.Collection;
 
 /**
- * Implementiert die abstrakte Klasse {@link BasePlayer} mit einer simplen KI. Diese KI bedient sich einer limitierten
- * Bewertungsstrategie zur Auswahl eines Zuges und gibt diesen auf Anforderung zurück.
- *
- *
+ * Implementiert die abstrakte Klasse {@link AbstractPlayer} mit einer simplen KI. Diese KI bedient sich einer
+ * limitierten Bewertungsstrategie zur Auswahl eines Zuges und gibt diesen auf Anforderung zurück.
  */
-public class SimpleAI extends BaseAI {
+public class SimpleAI extends AbstractAI {
 
 	/**
 	 * Default-Konstruktor, welcher dieses Objekt mit Standardwerten versieht.
@@ -69,5 +67,4 @@ public class SimpleAI extends BaseAI {
 
 		return score;
 	}
-
 }

@@ -11,7 +11,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
+import flowerwarspp.ui.EndPopupFrame;
 /**
  * Das {@link JFrame}, das das {@link BoardDisplay} enthält.
  */
@@ -58,7 +61,7 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 	private BoardFrame() {
 		super("Flower Wars");
 
-		setMinimumSize(new Dimension(400, 400));
+		setMinimumSize(new Dimension(600, 600));
 		setSize(600, 600);
 
 		add(loadingScreen, BorderLayout.CENTER);
@@ -106,6 +109,7 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 		setVisible(true);
 	}
 
+	// TODO
 	@Override
 	public void actionPerformed(ActionEvent actionEvent) {
 		JFileChooser fc = new JFileChooser();
@@ -167,5 +171,14 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 	@Override
 	public void setSaveGame(SaveGame saveGame) {
 		this.saveGame = saveGame;
+	}
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void showEndMessage(String message) {
+		// NOTE: Es ist wichtig, dass der Konstruktor durch EventQueue aufgerufen wird,
+		// da das Programm aufgrund Swings Threading-Struktur sonst blockiert.
+		EventQueue.invokeLater(() -> new EndPopupFrame(this, message));
 	}
 }

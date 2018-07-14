@@ -8,7 +8,7 @@ import flowerwarspp.util.log.LogModule;
 
 import java.rmi.RemoteException;
 
-import static flowerwarspp.player.BasePlayer.PlayerFunction.*;
+import static flowerwarspp.player.AbstractPlayer.PlayerFunction.*;
 import static flowerwarspp.util.log.LogLevel.*;
 import static flowerwarspp.util.log.LogModule.PLAYER;
 
@@ -19,7 +19,7 @@ import static flowerwarspp.util.log.LogModule.PLAYER;
  * #requestMove()}. Diese Methode fordert einen Zug vom jeweiligen Spieler an, und leitet diesen Zug an die Methode
  * {@link #request()} weiter.
  */
-abstract class BasePlayer implements flowerwarspp.preset.Player {
+abstract class AbstractPlayer implements flowerwarspp.preset.Player {
 
 	/**
 	 * Eine vordefinierte Nachricht einer {@link Exception}, welche geworfen wird, wenn der Spieler noch nicht
@@ -86,7 +86,7 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	/**
 	 * Ein <code>default</code>-Konstruktor, welcher die Instanzvariablen mit Basiswerten initialisiert.
 	 */
-	protected BasePlayer() {
+	protected AbstractPlayer() {
 		this.playerColor = PlayerColor.Red;
 		this.board = null;
 		this.cycleState = NULL;
@@ -216,7 +216,7 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 	 * versehen wird. Falls diese Methode waärend eines laufenden Spiels aufgerufen wird, wird dieses beendet und mit
 	 * dem neu initialisierten Spieler wird ein neues Spiel begonnen.
 	 *
-	 * @param boardSize    Spielbrettgröße
+	 * @param boardSize   Spielbrettgröße
 	 * @param playerColor Farbe des Spielers
 	 * @throws Exception       Falls während der Initialisierung ein Fehler auftrat
 	 * @throws RemoteException falls bei der Netzwerkkommunikation etwas schief gelaufen ist
@@ -254,6 +254,7 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 
 	/**
 	 * Getter-Methode für das Spielbrett dieser Klasse. Wird nur von erbenden Klassen verwendet.
+	 *
 	 * @return Das Spielbrett des Spielers.
 	 */
 	protected Board getBoard() {
@@ -262,6 +263,7 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 
 	/**
 	 * Setzt das Spielbrett des Spielers.
+	 *
 	 * @param board Das neue zu verwendene Spielbrett.
 	 */
 	public void setBoard(Board board) {
@@ -296,8 +298,7 @@ abstract class BasePlayer implements flowerwarspp.preset.Player {
 		 */
 		REQUEST,
 		/**
-		 * Dieser Status signalisiert, dass als nächstes die Funktion {@link #confirm(Status)}aufgerufen werden
-		 * soll.
+		 * Dieser Status signalisiert, dass als nächstes die Funktion {@link #confirm(Status)}aufgerufen werden soll.
 		 */
 		CONFIRM,
 		/**

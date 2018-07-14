@@ -1,25 +1,26 @@
 package flowerwarspp.ui;
 
-import flowerwarspp.preset.Status;
-import flowerwarspp.util.Convert;
-
-import javax.swing.*;
-import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.border.EmptyBorder;
 
+import flowerwarspp.preset.Status;
+import flowerwarspp.util.Convert;
+import java.awt.*;
+import javax.swing.*;
+
+// TODO
 public class EndPopupFrame extends JDialog {
-
-	public EndPopupFrame( Status status ) {
-		super(BoardFrame.getInstance(), "Spiel Beendet");
+	public EndPopupFrame(JFrame parent, String message) {
+		super(parent, "Spiel Beendet");
 
 		// Do stuff to *this*; it needs setup.
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setLocationByPlatform(true);
-		setSize(300, 150);
 
-		add(new PopupComponentPane(status));
+		add(new PopupComponentPane(message));
 
+		pack();
 		invalidate();
 		repaint();
 		setVisible(true);
@@ -28,19 +29,17 @@ public class EndPopupFrame extends JDialog {
 
 }
 
+// TODO
 class PopupComponentPane extends JPanel {
-
+	// TODO
 	private Status endStatus;
 	private JLabel label;
 	private JButton button;
 
-
-	PopupComponentPane( Status status ) {
-		endStatus = status;
-
+	PopupComponentPane(String message) {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-		label = new JLabel(Convert.statusToText(endStatus));
+		label = new JLabel(message);
 		label.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		button = new JButton("Spiel Beenden");
@@ -57,10 +56,11 @@ class PopupComponentPane extends JPanel {
 			}
 		});
 
-		add(Box.createRigidArea(new Dimension(0, 10)));
 		add(label);
-		add(Box.createRigidArea(new Dimension(0, 50)));
+		add(Box.createRigidArea(new Dimension(0, 32)));
 		add(button);
+
+		setBorder(new EmptyBorder(8, 16, 8, 16));
 	}
 
 }

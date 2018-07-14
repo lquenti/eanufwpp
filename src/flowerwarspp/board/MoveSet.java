@@ -12,8 +12,6 @@ import java.util.*;
  * gleichzeitig auf ein MoveSet zugreifen und mindestens einer der Threads das MoveSet verändert,
  * muss es extern synchronisiert werden. Dies geht zum Beispiel mit 
  * <code>Collections.synchronizedSet</code>.<p>
- *
- * @author Thilo Wischmeyer
  */
 public class MoveSet extends AbstractSet<Move> {
 	/**

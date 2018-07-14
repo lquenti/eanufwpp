@@ -1,14 +1,15 @@
 package flowerwarspp.ui;
 
-import flowerwarspp.preset.PlayerColor;
-
-import javax.swing.*;
+import java.util.EnumMap;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.*;
-import java.util.EnumMap;
-import java.util.Hashtable;
 
+import flowerwarspp.preset.PlayerColor;
+import java.awt.*;
+import javax.swing.*;
+
+// TODO
 public class TopToolbarPanel extends JPanel {
 
 	/**
@@ -20,7 +21,7 @@ public class TopToolbarPanel extends JPanel {
 	/**
 	 * Ein {@link JButton}, der das Speichern ermöglichen soll.
 	 */
-	private JButton saveButton = new JButton("Spielstand speichern");
+	private JButton saveButton = new JButton("Spielstand speichern…");
 
 	/**
 	 * Ein {@link JSlider}, der den Skalierungsfaktor der graphischen Oberfläche bestimmt.
@@ -28,17 +29,36 @@ public class TopToolbarPanel extends JPanel {
 	 */
 	private JSpinner zoomSpinner = new JSpinner(new SpinnerNumberModel(100, 100, 300, 25));
 
+	// TODO
 	public TopToolbarPanel() {
+		setLayout(new GridLayout(1, 3));
+
+		// Mehrere Panels ineinander, damit das vertikal zentriert ist.
+		JPanel leftPanel = new JPanel(new GridBagLayout());
+		leftPanel.add(saveButton);
+		JPanel leftWrapper = new JPanel(new BorderLayout());
+		leftWrapper.setBorder(new EmptyBorder(0, 5, 0, 0));
+		leftWrapper.add(leftPanel, BorderLayout.WEST);
+		add(leftWrapper);
+
+		JPanel centerPanel = new JPanel();
 		playerStatusDisplays = new EnumMap<>(PlayerColor.class);
 		for (PlayerColor playerColor : PlayerColor.values()) {
 			Color playerDrawColor = GameColors.getColorForPlayerColor(playerColor);
 			PlayerStatusDisplay playerStatusDisplay = new PlayerStatusDisplay(playerDrawColor);
 			playerStatusDisplays.put(playerColor, playerStatusDisplay);
-			add(playerStatusDisplay);
+			centerPanel.add(playerStatusDisplay);
 		}
+		add(centerPanel);
 
-		add(saveButton, 1);
-		add(zoomSpinner, 2);
+		// Mehrere Panels ineinander, damit das vertikal zentriert ist.
+		JPanel rightPanel = new JPanel(new GridBagLayout());
+		rightPanel.add(zoomSpinner);
+		rightPanel.add(new JLabel("% Zoom"));
+		JPanel rightWrapper = new JPanel(new BorderLayout());
+		rightWrapper.setBorder(new EmptyBorder(0, 0, 0, 5));
+		rightWrapper.add(rightPanel, BorderLayout.EAST);
+		add(rightWrapper);
 	}
 
 	/**

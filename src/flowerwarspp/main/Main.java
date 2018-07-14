@@ -1,5 +1,10 @@
 package flowerwarspp.main;
 
+import flowerwarspp.ui.start.StartupFrame;
+
+import javax.swing.*;
+import java.awt.*;
+
 /**
  * Hauptklasse des Spiels. Dieses Klasse muss mit den notwendigen Kommandozeilenparametern aufgerufen werden, um das
  * Spiel zu starten.
@@ -54,7 +59,15 @@ public class Main {
 		System.exit(ERRORCODE_INVALID_ARGS);
 	}
 
+	/**
+	 * Einstiegspunkt der ausführbaren Klasse.
+	 * @param args Kommandozeilenargumente.
+	 */
 	public static void main(String[] args) {
-		new Game(new GameParameters(args));
+		if ((args.length == 0) && (!GraphicsEnvironment.isHeadless())) {
+			SwingUtilities.invokeLater(() -> new StartupFrame());
+		} else {
+			new Game(new GameParameters(args));
+		}
 	}
 }
