@@ -3,10 +3,11 @@ package flowerwarspp.main;
 import java.rmi.RemoteException;
 
 import flowerwarspp.board.MainBoard;
-import flowerwarspp.ui.*;
 import flowerwarspp.main.savegame.SaveGame;
 import flowerwarspp.player.*;
 import flowerwarspp.preset.*;
+import flowerwarspp.ui.*;
+import flowerwarspp.util.Convert;
 import flowerwarspp.util.log.*;
 
 /**
@@ -14,6 +15,22 @@ import flowerwarspp.util.log.*;
  * initialisiert, anschließend wird eine Game-Loop gestartet.
  */
 public class Game {
+	/**
+	 * Eine Nachricht, die ausgegeben wird, wenn der Brettzustand des Hauptprogramms nicht mit dem
+	 * des Spielers übereinstimmt.
+	 */
+	private static final String inconsistentStateMessage = "Fehler: Der Spielbrettzustand des Hauptprogramms stimmt nicht mit dem Spielbrettzustand eines Spielers überein.";
+
+	/**
+	 * Eine Nachricht, die ausgegeben wird, wenn die Verbindung zum entfernten Spieler verloren
+	 * wurde.
+	 */
+	private static final String connectionLostMessage = "Fehler: Verbindung zum entfernten Spieler verloren.";
+
+	/**
+	 * Eine Nachricht, die ausgegeben wird, wenn ein Spieler keinen Zug zurückgeben konnte.
+	 */
+	private static final String noMoveMessage = "Fehler: Ein Spieler konnte keinen Zug erzeugen.";
 
 	/**
 	 * Das Spielbrett des Hauptprogramms.
@@ -352,23 +369,23 @@ public class Game {
 		while (viewer.getStatus() == Status.Ok) {
 			Log.log(LogLevel.DEBUG, LogModule.MAIN, "Beginning game loop.");
 
+			// Es wird versucht, vom aktuellen Spieler einen Zug zu erhalten. Schlägt dies fehl, also wird eine
+			// Exception geworfen, dann wird dem aktuellen Spieler automatisch der Surrender-Move zugewiesen.
 			// Startzeit wird für die spätere Berechnung des Delays bestimmt.
 			long startTime = System.currentTimeMillis();
 
-			// Es wird versucht, vom aktuellen Spieler einen Zug zu erhalten. Schlägt dies fehl, also wird eine
-			// Exception geworfen, dann wird dem aktuellen Spieler automatisch der Surrender-Move zugewiesen.
 			Move move = null;
 
 			try {
 				Log.log(LogLevel.DEBUG, LogModule.MAIN, "Requesting move from player " + viewer.getTurn() + ".");
 				move = currentPlayer.request();
 				Log.log(LogLevel.DEBUG, LogModule.MAIN, "Player " + viewer.getTurn() + " returned move " + move);
-
+			} catch (RemoteException e) {
+				output.showEndMessage(connectionLostMessage);
+				return null;
 			} catch (Exception e) {
-				Log.log(LogLevel.INFO, LogModule.MAIN, "Player " + viewer.getTurn() + " didn't make a " +
-						"move.");
-				Log.log(LogLevel.DEBUG, LogModule.MAIN, "Message: " + e.getMessage());
-				move = new Move(MoveType.Surrender);
+				output.showEndMessage(noMoveMessage);
+				return null;
 			}
 
 			long endTime = System.currentTimeMillis();
@@ -377,24 +394,28 @@ public class Game {
 			    (currentPlayer == bluePlayer && gameParameters.getBlueType() != PlayerType.HUMAN)){
 				Thread.sleep(Math.max(0, gameParameters.getDelay() - (endTime - startTime)));
 			}
+
 			// Der vom aktuellen Spieler übergebene Zug wird auf dem Spielbrett ausgeführt und dem eigenem saveGame-
 			// Objekt mitgeteilt.
 			Log.log(LogLevel.DEBUG, LogModule.MAIN, "Making move on main board.");
 			board.make(move);
 			saveGame.add(move);
 
-			// Falls der aktuelle Spieler nicht aufgegeben hat, werden der Status des Spielbretts des Hauptprogramms
-			// und der Status des Spielbretts des aktuellen Spielers mit confirm verglichen.
-			if (move.getType() != MoveType.Surrender) {
+			try {
+				// Falls der aktuelle Spieler nicht aufgegeben hat, werden der Status des Spielbretts des Hauptprogramms
+				// und der Status des Spielbretts des aktuellen Spielers mit confirm verglichen.
 				Log.log(LogLevel.DEBUG, LogModule.MAIN, "Confirming status.");
 				currentPlayer.confirm(viewer.getStatus());
-			}
-
-			// Dem Gegner werden Zug des aktuellen Spielers und Status des Spielbretts mit update mitgeteilt.
-			Log.log(LogLevel.DEBUG, LogModule.MAIN, "Updating opposite player.");
-			try {
+				// Dem Gegner werden Zug des aktuellen Spielers und Status des Spielbretts mit update mitgeteilt.
+				Log.log(LogLevel.DEBUG, LogModule.MAIN, "Updating opposite player.");
 				oppositePlayer.update(move, viewer.getStatus());
-			} catch (RemoteException ignored) {}
+			} catch (RemoteException e) {
+				output.showEndMessage(connectionLostMessage);
+				return null;
+			} catch (Exception e) {
+				output.showEndMessage(inconsistentStateMessage);
+				return null;
+			}
 
 			// Das Output-Objekt wirds aktualisiert um den ausgeführten Zug anzuzeigen.
 			Log.log(LogLevel.DEBUG, LogModule.MAIN, "Refreshing output.");
@@ -407,6 +428,8 @@ public class Game {
 		}
 
 		Log.log(LogLevel.INFO, LogModule.MAIN, "Game ended with status " + viewer.getStatus());
+
+		output.showEndMessage(Convert.statusToText(viewer.getStatus()));
 
 		return viewer.getStatus();
 	}

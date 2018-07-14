@@ -1,11 +1,12 @@
 package flowerwarspp.ui;
 
-import flowerwarspp.preset.*;
-
-import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import flowerwarspp.ui.EndPopupFrame;
+import flowerwarspp.preset.*;
 import java.awt.*;
+import javax.swing.*;
 
 /**
  * Das {@link JFrame}, das das {@link BoardDisplay} enthält.
@@ -131,5 +132,15 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 
 		boardDisplay.refresh();
 		repaint();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void showEndMessage(String message) {
+		// NOTE: Es ist wichtig, dass der Konstruktor durch EventQueue aufgerufen wird,
+		// da das Programm aufgrund Swings Threading-Struktur sonst blockiert.
+		EventQueue.invokeLater(() -> new EndPopupFrame(this, message));
 	}
 }

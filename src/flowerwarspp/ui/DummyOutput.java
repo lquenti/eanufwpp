@@ -8,4 +8,7 @@ public class DummyOutput implements Output {
 
 	@Override
 	public void refresh() {}
+
+	@Override
+	public void showEndMessage(String message) {}
 }

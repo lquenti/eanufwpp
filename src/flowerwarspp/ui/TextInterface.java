@@ -181,6 +181,9 @@ public class TextInterface implements Requestable, Output {
 		return board;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void refresh() throws IllegalStateException {
 		if (viewer == null) {
@@ -199,9 +202,20 @@ public class TextInterface implements Requestable, Output {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void setViewer(Viewer viewer) {
 		this.viewer = viewer;
 		refresh();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void showEndMessage(String message) {
+		System.out.println(message);
 	}
 }

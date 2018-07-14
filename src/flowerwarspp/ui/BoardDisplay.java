@@ -772,10 +772,6 @@ public class BoardDisplay extends JPanel {
 		// Wenn das Spiel zuende ist, soll ein Dialog das anzeigen.
 		if ((boardViewer.getStatus() != Status.Ok) && (!gameHasEnded)) {
 			possibleDitchMoves = null;
-
-			// NOTE: Es ist wichtig, dass der Konstruktor durch EventQueue aufgerufen wird,
-			// da das Programm aufgrund Swings Threading-Struktur sonst blockiert.
-			EventQueue.invokeLater(() -> new EndPopupFrame(boardViewer.getStatus()));
 			gameHasEnded = true;
 		}
 	}

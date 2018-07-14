@@ -8,4 +8,5 @@ import flowerwarspp.preset.Viewer;
 public interface Output {
 	void refresh();
 	void setViewer(Viewer viewer);
+	void showEndMessage(String message);
 }

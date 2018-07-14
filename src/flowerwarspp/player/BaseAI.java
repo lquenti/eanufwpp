@@ -55,7 +55,6 @@ abstract class BaseAI extends BasePlayer {
 	 *                   falschen Zeitpunkt innerhalb des Zyklus aufgerufen worden ist
 	 */
 	protected Move requestMove() throws Exception {
-
 		final Move move = getMove();
 
 		// Falls getMove() keinen Zug liefern konnte, wird eine Exception geworfen.
