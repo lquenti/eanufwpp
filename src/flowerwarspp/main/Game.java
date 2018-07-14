@@ -373,6 +373,12 @@ public class Game {
 				move = new Move(MoveType.Surrender);
 			}
 
+			long endTime = System.currentTimeMillis();
+			// Delay wird nur angewendet, wenn der Spieler kein Mensch ist.
+			if ((currentPlayer == redPlayer && gameParameters.getRedType() != PlayerType.HUMAN) ||
+			    (currentPlayer == bluePlayer && gameParameters.getBlueType() != PlayerType.HUMAN)){
+				Thread.sleep(Math.max(0, gameParameters.getDelay() - (endTime - startTime)));
+			}
 			// Der vom aktuellen Spieler übergebene Zug wird auf dem Spielbrett ausgeführt und dem eigenem saveGame-
 			// Objekt mitgeteilt.
 			Log.log(LogLevel.DEBUG, LogModule.MAIN, "Making move on main board.");
@@ -399,9 +405,6 @@ public class Game {
 			Player t = currentPlayer;
 			currentPlayer = oppositePlayer;
 			oppositePlayer = t;
-
-			long endTime = System.currentTimeMillis();
-			Thread.sleep(Math.max(0, gameParameters.getDelay() - (endTime - startTime)));
 		}
 
 		Log.log(LogLevel.INFO, LogModule.MAIN, "Game ended with status " + viewer.getStatus());
