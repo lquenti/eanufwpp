@@ -41,7 +41,6 @@ public class BottomToolbarPanel extends JPanel {
 
 	public BottomToolbarPanel() {
 		setLayout(layoutManager);
-		setBorder(new MatteBorder(1, 0, 0, 0, new Color(0xCCCCCC)));
 
 		currentPlayerLabel.setBorder(playerLabelBorder);
 		add(currentPlayerLabel, BorderLayout.WEST);

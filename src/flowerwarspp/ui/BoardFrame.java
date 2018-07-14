@@ -52,7 +52,7 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 	private BoardFrame() {
 		super("Flower Wars");
 
-		setMinimumSize(new Dimension(400, 400));
+		setMinimumSize(new Dimension(600, 600));
 		setSize(600, 600);
 
 		add(loadingScreen, BorderLayout.CENTER);
