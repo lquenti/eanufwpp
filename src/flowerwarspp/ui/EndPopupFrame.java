@@ -1,6 +1,7 @@
 package flowerwarspp.ui;
 
-import java.awt.event.MouseAdapter;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import javax.swing.border.EmptyBorder;
 
@@ -25,8 +26,6 @@ public class EndPopupFrame extends JDialog {
 		repaint();
 		setVisible(true);
 	}
-
-
 }
 
 // TODO
@@ -42,19 +41,8 @@ class PopupComponentPane extends JPanel {
 		label = new JLabel(message);
 		label.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-		button = new JButton("Spiel Beenden");
+		button = new QuitButton();
 		button.setAlignmentX(Component.CENTER_ALIGNMENT);
-		button.addMouseListener(new MouseAdapter() {
-			/**
-			 * {@inheritDoc}
-			 *
-			 * @param e
-			 */
-			@Override
-			public void mouseClicked( MouseEvent e ) {
-				System.exit(0);
-			}
-		});
 
 		add(label);
 		add(Box.createRigidArea(new Dimension(0, 32)));
@@ -62,5 +50,15 @@ class PopupComponentPane extends JPanel {
 
 		setBorder(new EmptyBorder(8, 16, 8, 16));
 	}
+}
 
+class QuitButton extends JButton implements ActionListener {
+	QuitButton() {
+		super("Spiel beenden");
+		addActionListener(this);
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		System.exit(0);
+	}
 }
