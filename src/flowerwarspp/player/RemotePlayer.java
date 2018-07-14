@@ -16,6 +16,11 @@ import flowerwarspp.util.Convert;
 public class RemotePlayer
 		extends UnicastRemoteObject
 		implements Player {
+    /**
+	 * Serialisierungskonstante
+	 */
+    private static final long serialVersionUID = 1L;
+
 	/**
 	 * Eine Nachricht, die ausgegeben wird, wenn der zugrundeliegende Spieler keinen Zug zurückgeben
 	 * konnte.

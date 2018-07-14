@@ -10,8 +10,9 @@ import flowerwarspp.util.Convert;
 import java.awt.*;
 import javax.swing.*;
 
-// TODO
+// TODO: Dokumentation
 public class EndPopupFrame extends JDialog {
+	// TODO: Dokumentation
 	public EndPopupFrame(JFrame parent, String message) {
 		super(parent, "Spiel Beendet");
 
@@ -28,20 +29,16 @@ public class EndPopupFrame extends JDialog {
 	}
 }
 
-// TODO
+// TODO: Dokumentation
 class PopupComponentPane extends JPanel {
-	// TODO
-	private Status endStatus;
-	private JLabel label;
-	private JButton button;
-
+	// TODO: Dokumentation
 	PopupComponentPane(String message) {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-		label = new JLabel(message);
+		JLabel label = new JLabel(message);
 		label.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-		button = new QuitButton();
+		JButton button = new QuitButton();
 		button.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		add(label);
@@ -52,7 +49,9 @@ class PopupComponentPane extends JPanel {
 	}
 }
 
+// TODO: Dokumentation
 class QuitButton extends JButton implements ActionListener {
+	// TODO: Dokumentation
 	QuitButton() {
 		super("Spiel beenden");
 		addActionListener(this);

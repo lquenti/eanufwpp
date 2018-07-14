@@ -39,6 +39,7 @@ public class BottomToolbarPanel extends JPanel {
 	 */
 	private BorderLayout layoutManager = new BorderLayout();
 
+	// TODO: Dokumentation
 	public BottomToolbarPanel() {
 		setLayout(layoutManager);
 

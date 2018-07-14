@@ -5,6 +5,7 @@ import flowerwarspp.preset.Position;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
+// TODO: Dokumentation
 public class Dot extends BoardPolygon {
 	/**
 	 * Die {@link Position} dieses Punkts auf dem Spielbrett.

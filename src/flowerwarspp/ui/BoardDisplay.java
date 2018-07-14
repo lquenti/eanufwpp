@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
+// TODO: Dokumentation
 public class BoardDisplay extends JPanel {
 	/**
 	 * Eine private Klasse, die die Mausaktionen für das {@link BoardDisplay} verarbeitet.

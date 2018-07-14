@@ -53,6 +53,7 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 	 */
 	private BottomToolbarPanel bottomToolbarPanel = new BottomToolbarPanel();
 
+	// TODO: Dokumentation
 	private SaveGame saveGame;
 
 	/**
@@ -109,7 +110,7 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 		setVisible(true);
 	}
 
-	// TODO
+	// TODO: Dokumentation
 	@Override
 	public void actionPerformed(ActionEvent actionEvent) {
 		JFileChooser fc = new JFileChooser();
@@ -133,6 +134,7 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 		}
 	}
 
+	// TODO: Dokumentation
 	@Override
 	public void stateChanged(ChangeEvent changeEvent) {
 		if (changeEvent.getSource() == topToolbarPanel.getZoomSpinner()) {
@@ -168,10 +170,14 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 		repaint();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void setSaveGame(SaveGame saveGame) {
 		this.saveGame = saveGame;
 	}
+
 	/**
 	 * {@inheritDoc}
 	 */
