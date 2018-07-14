@@ -94,6 +94,8 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 		add(topToolbarPanel, BorderLayout.NORTH);
 		add(boardScrollPane, BorderLayout.CENTER);
 		add(bottomToolbarPanel, BorderLayout.SOUTH);
+
+		setVisible(true);
 	}
 
 	@Override
