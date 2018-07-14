@@ -26,8 +26,7 @@ public class TextInterface implements Requestable, Output {
 	 * Eine vordefinierte Nachricht einer {@link Exception}, welche geworfen wird,
 	 * wenn der Spieler einen nicht validen Zug angegeben hat.
 	 */
-	private static final String invalidMoveMessage =
-		"Der vom Spieler uebergegebene Zug ist nicht erlaubt.";
+	private static final String invalidMoveMessage = "Der eingegebene Zug ist nicht erlaubt.";
 
 	// TODO
 	private Viewer viewer = null;
