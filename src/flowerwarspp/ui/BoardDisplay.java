@@ -767,7 +767,7 @@ public class BoardDisplay extends JPanel {
 	public void refresh() {
 		redStatusDisplay.updateStatus(boardViewer.getPoints(PlayerColor.Red));
 		blueStatusDisplay.updateStatus(boardViewer.getPoints(PlayerColor.Blue));
-		bottomToolbarPanel.setLabelText(boardViewer.getTurn() + " ist am Zug.");
+		bottomToolbarPanel.setTurnDisplay(boardViewer.getTurn());
 
 		// Wenn das Spiel zuende ist, soll ein Dialog das anzeigen.
 		if ((boardViewer.getStatus() != Status.Ok) && (!gameHasEnded)) {

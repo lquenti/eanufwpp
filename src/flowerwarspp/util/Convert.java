@@ -1,5 +1,6 @@
 package flowerwarspp.util;
 
+import flowerwarspp.preset.PlayerColor;
 import flowerwarspp.preset.PlayerType;
 import flowerwarspp.preset.Status;
 import flowerwarspp.util.log.Log;
@@ -54,5 +55,13 @@ public class Convert {
 			default:
 				return "ILLEGAL VALUE";
 		}
+	}
+
+	public static String playerColorToString(PlayerColor color) {
+		switch (color) {
+			case Red: return "Rot";
+			case Blue: return "Blau";
+		}
+		return null;
 	}
 }

@@ -1,5 +1,8 @@
 package flowerwarspp.ui;
 
+import flowerwarspp.preset.PlayerColor;
+import flowerwarspp.util.Convert;
+
 import java.awt.*;
 import javax.swing.border.*;
 import javax.swing.*;
@@ -24,12 +27,12 @@ public class BottomToolbarPanel extends JPanel {
 	/**
 	 * Der {@link JButton}, der geklickt werden kann, wenn der Spieler aufgeben möchte.
 	 */
-	private JButton surrenderButton = new JButton("Surrender");
+	private JButton surrenderButton = new JButton("Aufgeben");
 	/**
 	 * Der {@link JButton}, der geklickt werden kann, wenn der Spieler das Spiel beenden möchte
 	 * (siehe Spielregeln, was ein Endzug ist).
 	 */
-	private JButton endButton = new JButton("End");
+	private JButton endButton = new JButton("Spiel beenden");
 
 	/**
 	 * Der {@link LayoutManager}, der für das Layout dieses {@link JPanel}s verantwortlich ist.
@@ -71,8 +74,8 @@ public class BottomToolbarPanel extends JPanel {
 	/**
 	 * Setzt den Text des {@link #currentPlayerLabel}s.
 	 */
-	public void setLabelText(String text) {
-		currentPlayerLabel.setText(text);
+	public void setTurnDisplay(PlayerColor color) {
+		currentPlayerLabel.setText(Convert.playerColorToString(color) + " ist am Zug");
 	}
 
 	/**

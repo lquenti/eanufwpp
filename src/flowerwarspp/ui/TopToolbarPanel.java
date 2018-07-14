@@ -20,7 +20,7 @@ public class TopToolbarPanel extends JPanel {
 	/**
 	 * Ein {@link JButton}, der das Speichern ermöglichen soll.
 	 */
-	private JButton saveButton = new JButton("\uD83D\uDCBESAVE!");
+	private JButton saveButton = new JButton("Spielstand speichern");
 
 	/**
 	 * Ein {@link JSlider}, der den Skalierungsfaktor der graphischen Oberfläche bestimmt.
