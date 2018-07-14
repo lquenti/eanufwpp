@@ -55,6 +55,8 @@ class PlayerData {
  * Implementation des Spielbretts.
  */
 public class MainBoard implements Board {
+	private static final int GARDEN_SIZE = 4;
+
 	/**
 	 * Größe des Boards.
 	 */
@@ -331,7 +333,7 @@ public class MainBoard implements Board {
 	 */
 	private void updateValidMovesForBed(Collection<Flower> bed) {
 		// Wenn die Größe des Beetes 4 beträgt müssen alle Nachbarn verboten werden.
-		if (bed.size() == 4) {
+		if (isGarden(bed)) {
 			for (Flower bedNeighbor : getAllNeighbors(bed)) {
 				playerDataSet.get(currentPlayer).legalMoves.removeMovesContaining(bedNeighbor);
 			}
@@ -349,7 +351,7 @@ public class MainBoard implements Board {
 			if (!isLegalBed(resultingBed, currentPlayer)) {
 				// Wenn mit diesem Nachbarn das Beet ungültig wird, müssen alle Züge mit dieser Flower verboten werden
 				playerDataSet.get(currentPlayer).legalMoves.removeMovesContaining(bedNeighbor);
-			} else if (resultingBed.size() == 4) {
+			} else if (isGarden(resultingBed)) {
 				/*
 				 * Wenn mit diesen Nachbarn das Beet Größe 4 hat, müssen alle Züge verboten werden, die die Größe des
 				 * Beets noch weiter erhöhen würden.
@@ -464,7 +466,7 @@ public class MainBoard implements Board {
 	 * @return Um wieviel sich die Punktzahl erhöht hat.
 	 */
 	private int updateScore(Flower flower) {
-		if (getFlowerBed(flower).size() != 4) {
+		if (!isGarden(getFlowerBed(flower))) {
 			return 0;
 		}
 		return getBedChainScore(flower);
@@ -539,7 +541,7 @@ public class MainBoard implements Board {
 		HashSet<HashSet<Flower>> bedChain = getBedChain(flower);
 		int score = 0;
 		for (HashSet<Flower> bed : bedChain) {
-			if (bed.size() == 4) {
+			if (isGarden(bed)) {
 				score += 1;
 			}
 		}
@@ -567,6 +569,19 @@ public class MainBoard implements Board {
 	}
 
 	/**
+	 * Überprüft, ob ein Beet ein Garten ist.
+	 *
+	 * @param bed Das Beet
+	 * @return Ob das Beet ein Garten ist.
+	 */
+	public boolean isGarden(Collection<Flower> bed) {
+		if (bed == null) {
+			return false;
+		}
+		return bed.size() == GARDEN_SIZE;
+	}
+
+	/**
 	 * Überprüft, ob ein Beet erlaubt ist.
 	 *
 	 * @param bed Beet, das überprüft werden soll
@@ -574,8 +589,8 @@ public class MainBoard implements Board {
 	 * @return Ob das Beet erlaubt ist.
 	 */
 	private boolean isLegalBed(Collection<Flower> bed, PlayerColor player) {
-		return bed.size() < 4
-		    || bed.size() == 4
+		return bed.size() < GARDEN_SIZE
+		    || isGarden(bed)
 		    && Collections.disjoint(getAllNeighbors(bed), playerDataSet.get(player).flowers);
 	}
 
@@ -1128,6 +1143,14 @@ public class MainBoard implements Board {
 		@Override
 		public ArrayList<Flower> getAllFlowers() {
 			return new ArrayList<Flower>(Arrays.asList(MainBoard.this.allFlowers));
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public boolean isGarden(Collection<Flower> bed) {
+			return MainBoard.this.isGarden(bed);
 		}
 	}
 }

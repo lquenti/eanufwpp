@@ -191,4 +191,12 @@ public interface Viewer {
 	 * @return Alle Blumen, die auf dem Feld liegen.
 	 */
 	Collection<Flower> getAllFlowers();
+
+	/**
+	 * Gibt zurück, ob ein Beet ein Garten ist.
+	 *
+	 * @param bed Das Beet
+	 * @return Ob das Beet ein Garten ist.
+	 */
+	boolean isGarden(Collection<Flower> bed);
 }

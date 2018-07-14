@@ -503,13 +503,13 @@ public class BoardDisplay extends JPanel {
 
 			if (redFlowers != null && redFlowers.contains(flower)) {
 				// Für den Fall, dass die aktuelle Blume dem roten Spieler gehört...
-				if (boardViewer.getFlowerBed(flower).size() > 3)
+				if (boardViewer.isGarden(boardViewer.getFlowerBed(flower)))
 					t.setFillColor(GameColors.RED_IN_GARDEN);
 				else
 					t.setFillColor(GameColors.RED);
 			} else if (blueFlowers != null && blueFlowers.contains(flower)) {
 				// oder dem blauen Spieler gehört, färbe das Dreieck entsprechend.
-				if (boardViewer.getFlowerBed(flower).size() > 3)
+				if (boardViewer.isGarden(boardViewer.getFlowerBed(flower)))
 					t.setFillColor(GameColors.BLUE_IN_GARDEN);
 				else
 					t.setFillColor(GameColors.BLUE);
