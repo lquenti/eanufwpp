@@ -90,7 +90,7 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 
 		remove(loadingScreen);
 
-		topToolbarPanel.getZoomSlider().addChangeListener(this);
+		topToolbarPanel.getZoomSpinner().addChangeListener(this);
 		add(topToolbarPanel, BorderLayout.NORTH);
 		add(boardScrollPane, BorderLayout.CENTER);
 		add(bottomToolbarPanel, BorderLayout.SOUTH);
@@ -100,8 +100,8 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 
 	@Override
 	public void stateChanged(ChangeEvent changeEvent) {
-		if (changeEvent.getSource() == topToolbarPanel.getZoomSlider()) {
-			double newZoom = topToolbarPanel.getZoomSlider().getValue() / 100.0;
+		if (changeEvent.getSource() == topToolbarPanel.getZoomSpinner()) {
+			double newZoom = (Integer)topToolbarPanel.getZoomSpinner().getValue() / 100.0;
 			boardDisplay.setZoom(newZoom);
 		}
 	}

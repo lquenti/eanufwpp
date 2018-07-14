@@ -7,8 +7,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.util.EnumMap;
+import java.util.Hashtable;
 
-public class TopToolbarPanel extends JPanel implements ChangeListener {
+public class TopToolbarPanel extends JPanel {
 
 	/**
 	 * Eine {@link java.util.Map}, die für jede {@link PlayerColor} ein {@link PlayerStatusDisplay}
@@ -25,12 +26,7 @@ public class TopToolbarPanel extends JPanel implements ChangeListener {
 	 * Ein {@link JSlider}, der den Skalierungsfaktor der graphischen Oberfläche bestimmt.
 	 * In Prozent.
 	 */
-	private JSlider zoomSlider = new JSlider(50, 250, 99);
-
-	/**
-	 * Ein {@link JLabel}, das den Skalierungsfaktor der graphischen Oberfläche anzeigt.
-	 */
-	private JLabel zoomLabel = new JLabel();
+	private JSpinner zoomSpinner = new JSpinner(new SpinnerNumberModel(100, 100, 300, 25));
 
 	public TopToolbarPanel() {
 		playerStatusDisplays = new EnumMap<>(PlayerColor.class);
@@ -41,15 +37,8 @@ public class TopToolbarPanel extends JPanel implements ChangeListener {
 			add(playerStatusDisplay);
 		}
 
-		int idx = 1;
-		add(saveButton, idx);
-		idx++;
-		add(zoomSlider, idx);
-
-		zoomSlider.addChangeListener(this);
-		zoomSlider.setValue(100);
-		idx++;
-		add(zoomLabel, idx);
+		add(saveButton, 1);
+		add(zoomSpinner, 2);
 	}
 
 	/**
@@ -57,14 +46,8 @@ public class TopToolbarPanel extends JPanel implements ChangeListener {
 	 *
 	 * @return Der Slider, der den Zoom bestimmt.
 	 */
-	JSlider getZoomSlider() {
-		return zoomSlider;
-	}
-
-	@Override
-	public void stateChanged(ChangeEvent changeEvent) {
-		if (changeEvent.getSource() == zoomSlider)
-			zoomLabel.setText(Double.toString(zoomSlider.getValue() / 100.0) + "x ZOOMIES");
+	JSpinner getZoomSpinner() {
+		return zoomSpinner;
 	}
 
 	/**

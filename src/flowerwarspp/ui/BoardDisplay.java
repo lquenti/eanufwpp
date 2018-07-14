@@ -282,7 +282,7 @@ public class BoardDisplay extends JPanel {
 	/**
 	 * Ein Vergrößerungsfaktor für die Zeichengeometrie.
 	 */
-	private double zoom = 2.0;
+	private double zoom = 1.0;
 
 	/**
 	 * Handhabt alle {@link MouseEvent}s, die in diesem {@link JPanel} auftreten können.
@@ -569,9 +569,10 @@ public class BoardDisplay extends JPanel {
 	private void updatePolygonSizes() {
 		// Teile die Höhe dieses Dreiecks auf die verschiedenen Triangles auf.
 		Dimension displaySize = getParent().getSize();
-		setPreferredSize(displaySize);
 		displaySize.width = (int) (displaySize.width * zoom);
 		displaySize.height = (int) (displaySize.height * zoom);
+		setPreferredSize(displaySize);
+		revalidate();
 		int minimumSize = Math.min(displaySize.width, displaySize.height);
 
 		// Triangles sollen etwas kleiner sein als maximal möglich,
