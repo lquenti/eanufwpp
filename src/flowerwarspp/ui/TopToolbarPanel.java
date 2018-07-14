@@ -42,6 +42,13 @@ public class TopToolbarPanel extends JPanel {
 	}
 
 	/**
+	 * Ein Getter fuer den {@link #saveButton}.
+	 */
+	JButton getSaveButton() {
+		return saveButton;
+	}
+
+	/**
 	 * Ein Getter für den {@link JSlider}, der den Zoom bestimmt.
 	 *
 	 * @return Der Slider, der den Zoom bestimmt.

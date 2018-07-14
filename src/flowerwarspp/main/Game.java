@@ -54,7 +54,7 @@ public class Game {
 	private GameParameters gameParameters;
 
 	/**
-	 * Ein Objekt der Klasse {@link SaveGame}, welche das Laden und Speichern von Spielen ermöglicht.
+	 * Ein Objekt der Klasse {@link SaveGame}, welche das Laden von Spielen ermöglicht.
 	 */
 	private SaveGame saveGame;
 
@@ -103,6 +103,8 @@ public class Game {
 		}
 
 		boardSize = gameParameters.getBoardSize();
+		saveGame = new SaveGame(boardSize);
+		output.setSaveGame(saveGame);
 	}
 
 	/**
@@ -339,8 +341,8 @@ public class Game {
 		Log.log(LogLevel.INFO, LogModule.MAIN, "Starting main game loop.");
 
 		// Wir benutzen in der internen Game-Loop Referenzen auf den roten und den blauen Spieler.
-		Player currentPlayer = null;
-		Player oppositePlayer = null;
+		Player currentPlayer;
+		Player oppositePlayer;
 		if (viewer.getTurn() == PlayerColor.Red) {
 			currentPlayer = redPlayer;
 			oppositePlayer = bluePlayer;

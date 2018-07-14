@@ -1,5 +1,6 @@
 package flowerwarspp.ui;
 
+import flowerwarspp.main.savegame.SaveGame;
 import flowerwarspp.preset.Viewer;
 
 /**
@@ -8,4 +9,5 @@ import flowerwarspp.preset.Viewer;
 public interface Output {
 	void refresh();
 	void setViewer(Viewer viewer);
+	void setSaveGame(SaveGame saveGame);
 }

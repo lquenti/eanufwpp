@@ -1,5 +1,6 @@
 package flowerwarspp.ui;
 
+import flowerwarspp.main.savegame.SaveGame;
 import flowerwarspp.preset.*;
 import flowerwarspp.util.Convert;
 
@@ -32,6 +33,8 @@ public class TextInterface implements Requestable, Output {
 	private Viewer viewer = null;
 
 	private Scanner inputScanner = new Scanner(System.in);
+
+	private SaveGame saveGame;
 
 	/**
 	 * Liest einen Spielzug vom Standard Input ein.
@@ -203,5 +206,10 @@ public class TextInterface implements Requestable, Output {
 	public void setViewer(Viewer viewer) {
 		this.viewer = viewer;
 		refresh();
+	}
+
+	@Override
+	public void setSaveGame(SaveGame saveGame) {
+		this.saveGame = saveGame;
 	}
 }

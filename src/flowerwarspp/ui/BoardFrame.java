@@ -1,16 +1,21 @@
 package flowerwarspp.ui;
 
+import flowerwarspp.main.savegame.SaveGame;
 import flowerwarspp.preset.*;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileFilter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 
 /**
  * Das {@link JFrame}, das das {@link BoardDisplay} enthält.
  */
-public class BoardFrame extends JFrame implements Requestable, Output, ChangeListener {
+public class BoardFrame extends JFrame implements Requestable, Output, ChangeListener, ActionListener {
 
 	/**
 	 * Private Referenz auf die singuläre Instanz dieser Klasse.
@@ -44,6 +49,8 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 	 * Das {@link BottomToolbarPanel}, das die Toolbar am unteren Bildschirmrand darstellt.
 	 */
 	private BottomToolbarPanel bottomToolbarPanel = new BottomToolbarPanel();
+
+	private SaveGame saveGame;
 
 	/**
 	 * Konstruiert das {@link JFrame} und versetzt es in einen nutzbaren Zustand.
@@ -90,12 +97,29 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 
 		remove(loadingScreen);
 
+		topToolbarPanel.getSaveButton().addActionListener(this);
 		topToolbarPanel.getZoomSpinner().addChangeListener(this);
 		add(topToolbarPanel, BorderLayout.NORTH);
 		add(boardScrollPane, BorderLayout.CENTER);
 		add(bottomToolbarPanel, BorderLayout.SOUTH);
 
 		setVisible(true);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent actionEvent) {
+		JFileChooser fc = new JFileChooser();
+		fc.setDialogTitle("Spielstand speichern");
+		add(fc);
+		if (fc.showSaveDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
+			String filename = fc.getSelectedFile().getAbsolutePath();
+			try {
+				saveGame.save(filename);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			System.out.println(fc.getSelectedFile());
+		}
 	}
 
 	@Override
@@ -131,5 +155,10 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 
 		boardDisplay.refresh();
 		repaint();
+	}
+
+	@Override
+	public void setSaveGame(SaveGame saveGame) {
+		this.saveGame = saveGame;
 	}
 }
