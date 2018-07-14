@@ -1,24 +1,18 @@
 package flowerwarspp.ui.start;
 
 import flowerwarspp.main.GameParameters;
+import flowerwarspp.preset.PlayerColor;
 import flowerwarspp.preset.PlayerType;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
-import java.util.Collection;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Ein {@link JPanel}, das verwendet werden kann, um ein Spiel zu starten.
  */
-public class LocalPlayPanel extends GameStartPanel {
-	private static final Collection<PlayerType> availablePlayerTypes =
-		Arrays.asList(PlayerType.HUMAN,
-			PlayerType.RANDOM_AI,
-			PlayerType.SIMPLE_AI,
-			PlayerType.ADVANCED_AI_1,
-			PlayerType.ADVANCED_AI_2);
-
+public class HostGamePanel extends GameStartPanel implements ActionListener {
 	/**
 	 * Der {@link LayoutManager} dieses {@link JPanel}s.
 	 */
@@ -33,7 +27,7 @@ public class LocalPlayPanel extends GameStartPanel {
 	 * Das {@link SpinnerModel}, das den Wertebereich für die Spielbrettgröße eingrenzt.
 	 * Ist von 3 bis 30 gültig, wobei 3 der Standardwert und 1 die Schrittgröße ist.
 	 */
-	private SpinnerNumberModel boardSizeSpinnerModel =
+	protected SpinnerNumberModel boardSizeSpinnerModel =
 		new SpinnerNumberModel(3, 3, 30, 1);
 	/**
 	 * Der {@link JSpinner}, der den Nutzer nach der Größe des Boards fragt.
@@ -49,7 +43,7 @@ public class LocalPlayPanel extends GameStartPanel {
 	 * Eine {@link JComboBox}, das den Nutzer nach dem {@link PlayerType}
 	 * von {@link flowerwarspp.preset.PlayerColor#Red} fragt
 	 */
-	private JComboBox<PlayerType> redPlayerTypeSelector = new JComboBox<>();
+	protected JComboBox<PlayerType> redPlayerTypeSelector = new JComboBox<>();
 
 	/**
 	 * Das {@link JLabel}, das dem Nutzer signalisiert, dass das nebenstehende Element
@@ -60,7 +54,7 @@ public class LocalPlayPanel extends GameStartPanel {
 	 * Eine {@link JComboBox}, das den Nutzer nach dem {@link PlayerType}
 	 * von {@link flowerwarspp.preset.PlayerColor#Blue} fragt
 	 */
-	private JComboBox<PlayerType> bluePlayerTypeSelector = new JComboBox<>();
+	protected JComboBox<PlayerType> bluePlayerTypeSelector = new JComboBox<>();
 
 	/**
 	 * Das {@link JLabel}, das dem Nutzer signalisiert, dass das nebenstehende Element
@@ -72,7 +66,7 @@ public class LocalPlayPanel extends GameStartPanel {
 	 * Standardmäßig auf 1000 eingestellt, wobei der Wertebereich
 	 * von 0 bis {@link Integer#MAX_VALUE} reicht und Schritte von 1ms erlaubt.
 	 */
-	private SpinnerNumberModel delaySpinnerModel =
+	protected SpinnerNumberModel delaySpinnerModel =
 		new SpinnerNumberModel(1000, 0, Integer.MAX_VALUE, 1);
 	/**
 	 * Der {@link JSpinner}, der den Nutzer nach dem Mindestdelay fragt,
@@ -81,10 +75,30 @@ public class LocalPlayPanel extends GameStartPanel {
 	private JSpinner delaySpinner = new JSpinner(delaySpinnerModel);
 
 	/**
+	 * Ein {@link RemotePlayerDataInput},
+	 * das nach Verbindungsinformationen für den {@link PlayerColor#Red} fragt.
+	 */
+	private RemotePlayerDataInput redPlayerDataInput = new RemotePlayerDataInput(PlayerColor.Red);
+	/**
+	 * Ein {@link RemotePlayerDataInput},
+	 * das nach Verbindungsinformationen für den {@link PlayerColor#Blue} fragt.
+	 */
+	private RemotePlayerDataInput bluePlayerDataInput = new RemotePlayerDataInput(PlayerColor.Blue);
+
+	/**
+	 * Das {@link JComponent}, das derzeit am weitesten unten links liegt.
+	 */
+	private JComponent southernmostLeftComponent = boardSizeLabel;
+	/**
+	 * Das {@link JComponent}, das derzeit am weitesten unten rechts liegt.
+	 */
+	private JComponent southernmostRightComponent = boardSizeSpinner;
+
+	/**
 	 * Konstruiert ein {@link JPanel}, das die notwendigen {@link JComponent}s hat, um den
 	 * menschlichen Spieler nach den notwendigen Variablen zu fragen, um ein Spiel zu starten.
 	 */
-	public LocalPlayPanel() {
+	public HostGamePanel() {
 		setLayout(springLayout);
 		setSize(400, 400);
 		setMinimumSize(getSize());
@@ -92,7 +106,7 @@ public class LocalPlayPanel extends GameStartPanel {
 		add(boardSizeLabel);
 		add(boardSizeSpinner);
 
-		for (PlayerType playerType : availablePlayerTypes) {
+		for (PlayerType playerType : GameStartPanel.availablePlayerTypes) {
 			redPlayerTypeSelector.addItem(playerType);
 			bluePlayerTypeSelector.addItem(playerType);
 		}
@@ -108,6 +122,13 @@ public class LocalPlayPanel extends GameStartPanel {
 		add(delayLabel);
 		add(delaySpinner);
 
+		redPlayerDataInput.setComponentsEnabled(false);
+		redPlayerTypeSelector.addActionListener(this);
+		bluePlayerDataInput.setComponentsEnabled(false);
+		bluePlayerTypeSelector.addActionListener(this);
+		add(redPlayerDataInput);
+		add(bluePlayerDataInput);
+
 		setupConstraints();
 		setVisible(true);
 	}
@@ -118,7 +139,19 @@ public class LocalPlayPanel extends GameStartPanel {
 		PlayerType redPlayerType = (PlayerType) redPlayerTypeSelector.getSelectedItem();
 		PlayerType bluePlayerType = (PlayerType) bluePlayerTypeSelector.getSelectedItem();
 		int moveDelay = delaySpinnerModel.getNumber().intValue();
-		return new GameParameters(boardSize, redPlayerType, bluePlayerType, moveDelay);
+
+		String redPlayerUrl = null, bluePlayerUrl = null;
+		if (redPlayerType == PlayerType.REMOTE) {
+			redPlayerUrl = redPlayerDataInput.getPlayerUrl();
+		}
+		if (bluePlayerType == PlayerType.REMOTE) {
+			bluePlayerUrl = bluePlayerDataInput.getPlayerUrl();
+		}
+
+		return new GameParameters(boardSize,
+			redPlayerType, redPlayerUrl,
+			bluePlayerType, bluePlayerUrl,
+			moveDelay);
 	}
 
 	/**
@@ -141,50 +174,58 @@ public class LocalPlayPanel extends GameStartPanel {
 		springLayout.putConstraint(SpringLayout.BASELINE, boardSizeLabel, 0,
 		                           SpringLayout.BASELINE, boardSizeSpinner);
 
-		// Auslegen des RedPlayerType-Spinners und -Labels
-		springLayout.putConstraint(SpringLayout.WEST, redPlayerTypeSelector, 0,
-		                           SpringLayout.WEST, boardSizeSpinner);
-		springLayout.putConstraint(SpringLayout.EAST, redPlayerTypeSelector, 0,
-		                           SpringLayout.EAST, boardSizeSpinner);
-		springLayout.putConstraint(SpringLayout.NORTH, redPlayerTypeSelector, 5,
-		                           SpringLayout.SOUTH, boardSizeSpinner);
-
-		springLayout.putConstraint(SpringLayout.WEST, redPlayerTypeLabel, 0,
-		                           SpringLayout.WEST, boardSizeLabel);
-		springLayout.putConstraint(SpringLayout.EAST, redPlayerTypeLabel, 0,
-		                           SpringLayout.EAST, boardSizeLabel);
-		springLayout.putConstraint(SpringLayout.BASELINE, redPlayerTypeLabel, 0,
-		                           SpringLayout.BASELINE, redPlayerTypeSelector);
-
-		// AUslegen des BluePlayerType-Spinners und -Labels
-		springLayout.putConstraint(SpringLayout.WEST, bluePlayerTypeSelector, 0,
-		                           SpringLayout.WEST, redPlayerTypeSelector);
-		springLayout.putConstraint(SpringLayout.EAST, bluePlayerTypeSelector, 0,
-		                           SpringLayout.EAST, redPlayerTypeSelector);
-		springLayout.putConstraint(SpringLayout.NORTH, bluePlayerTypeSelector, 5,
-		                           SpringLayout.SOUTH, redPlayerTypeSelector);
-
-		springLayout.putConstraint(SpringLayout.WEST, bluePlayerTypeLabel, 0,
-		                           SpringLayout.WEST, redPlayerTypeLabel);
-		springLayout.putConstraint(SpringLayout.EAST, bluePlayerTypeLabel, 0,
-		                           SpringLayout.EAST, redPlayerTypeLabel);
-		springLayout.putConstraint(SpringLayout.BASELINE, bluePlayerTypeLabel, 0,
-		                           SpringLayout.BASELINE, bluePlayerTypeSelector);
-
-		// Auslegen des Move-Delay-Spinners und -Labels
-		springLayout.putConstraint(SpringLayout.WEST, delaySpinner, 0,
-		                           SpringLayout.WEST, bluePlayerTypeSelector);
-		springLayout.putConstraint(SpringLayout.EAST, delaySpinner, 0,
-		                           SpringLayout.EAST, bluePlayerTypeSelector);
-		springLayout.putConstraint(SpringLayout.NORTH, delaySpinner, 5,
-		                           SpringLayout.SOUTH, bluePlayerTypeSelector);
-
-		springLayout.putConstraint(SpringLayout.WEST, delayLabel, 0,
-		                           SpringLayout.WEST, bluePlayerTypeLabel);
-		springLayout.putConstraint(SpringLayout.EAST, delayLabel, 0,
-		                           SpringLayout.EAST, bluePlayerTypeLabel);
-		springLayout.putConstraint(SpringLayout.BASELINE, delayLabel, 0,
-		                           SpringLayout.BASELINE, delaySpinner);
+		appendToSouth(redPlayerTypeLabel, redPlayerTypeSelector);
+		appendToSouth(bluePlayerTypeLabel, bluePlayerTypeSelector);
+		appendToSouth(delayLabel, delaySpinner);
+		appendToSouth(redPlayerDataInput, bluePlayerDataInput);
 	}
 
+	@Override
+	public void actionPerformed(ActionEvent actionEvent) {
+		if (actionEvent.getSource() == redPlayerTypeSelector) {
+			boolean shouldEnable = redPlayerTypeSelector.getSelectedItem() == PlayerType.REMOTE;
+			redPlayerDataInput.setComponentsEnabled(shouldEnable);
+		}
+		if (actionEvent.getSource() == bluePlayerTypeSelector) {
+			boolean shouldEnable = bluePlayerTypeSelector.getSelectedItem() == PlayerType.REMOTE;
+			bluePlayerDataInput.setComponentsEnabled(shouldEnable);
+		}
+	}
+
+	/**
+	 * Hängt zwei {@link JComponent}s an das Ende dieses {@link JPanel}s.
+	 * Die beiden Elemente werden so ausgelegt, dass
+	 * <list>
+	 *     <li>das linke und rechte Element in einer Reihe mit dem Element darüber ist</li>
+	 *     <li>das linke und das rechte Element auf einer Höhe liegen</li>
+	 * </list>
+	 *
+	 * @param leftComponent
+	 * Das {@link JComponent}, das auf der linken Seite liegen soll.
+	 *
+	 * @param rightComponent
+	 * Das {@link JComponent}, das auf der rechten Seite liegen soll.
+	 */
+	private void appendToSouth(JComponent leftComponent, JComponent rightComponent) {
+		// Die West- und Ostseite sollen mit dem Element darüber übereinstimmen
+		springLayout.putConstraint(SpringLayout.WEST, rightComponent, 0,
+		                           SpringLayout.WEST, southernmostRightComponent);
+		springLayout.putConstraint(SpringLayout.EAST, rightComponent, 0,
+		                           SpringLayout.EAST, southernmostRightComponent);
+		// Nordseite soll 5px unter der Südseite des darüberliegenden Elements liegen
+		springLayout.putConstraint(SpringLayout.NORTH, rightComponent, 5,
+		                           SpringLayout.SOUTH, southernmostRightComponent);
+
+		// Die West- und Ostseite sollen mit dem Element darüber übereinstimmen
+		springLayout.putConstraint(SpringLayout.WEST, leftComponent, 0,
+		                           SpringLayout.WEST, southernmostLeftComponent);
+		springLayout.putConstraint(SpringLayout.EAST, leftComponent, 0,
+		                           SpringLayout.EAST, southernmostLeftComponent);
+		// Die Baselines des linken und des rechten Components sollen übereinstimmen
+		springLayout.putConstraint(SpringLayout.BASELINE, leftComponent, 0,
+		                           SpringLayout.BASELINE, rightComponent);
+
+		southernmostLeftComponent = leftComponent;
+		southernmostRightComponent = rightComponent;
+	}
 }

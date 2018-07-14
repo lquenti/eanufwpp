@@ -16,26 +16,26 @@ public class StartupFrame extends JFrame implements ActionListener {
 	 */
 	private JButton startButton = new JButton("Spiel beginnen");
 	/**
-	 * Der {@link JButton}, der zu einem {@link LocalPlayPanel} wechselt.
+	 * Der {@link JButton}, der zu einem {@link HostGamePanel} wechselt.
 	 */
-	private JButton localPlayButton = new JButton("Lokales Spiel");
+	private JButton localPlayButton = new JButton("Spiel hosten");
 	/**
-	 * Der {@link JButton}, der zu einem {@link LocalPlayPanel} wechselt.
+	 * Der {@link JButton}, der zu einem {@link HostGamePanel} wechselt.
 	 */
-	private JButton netPlayButton = new JButton("Netzwerkspiel");
+	private JButton netPlayButton = new JButton("Spieler anbieten");
 	/**
 	 * Das {@link JPanel}, Kontrollbuttons hält.
 	 */
 	private JPanel controlButtonPanel = new JPanel();
 
-	private GameStartPanel localPlayPanel = new LocalPlayPanel();
-	private GameStartPanel netPlayPanel = new NetPlayPanel();
-	private GameStartPanel currentGameStartPanel = localPlayPanel;
+	private GameStartPanel hostGamePanel = new HostGamePanel();
+	private GameStartPanel offerPlayerPanel = new OfferPlayerPanel();
+	private GameStartPanel currentGameStartPanel = hostGamePanel;
 
 	public StartupFrame() {
 		super("eanufwpp");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setMinimumSize(new Dimension(450, 300));
+		setMinimumSize(new Dimension(500, 300));
 
 		localPlayButton.addActionListener(this);
 		netPlayButton.addActionListener(this);
@@ -55,10 +55,10 @@ public class StartupFrame extends JFrame implements ActionListener {
 
 		if (actionEvent.getSource() == localPlayButton) {
 			remove(currentGameStartPanel);
-			currentGameStartPanel = localPlayPanel;
+			currentGameStartPanel = hostGamePanel;
 			add(currentGameStartPanel, BorderLayout.CENTER);
 		} else if (actionEvent.getSource() == netPlayButton) {
-			currentGameStartPanel = netPlayPanel;
+			currentGameStartPanel = offerPlayerPanel;
 			add(currentGameStartPanel, BorderLayout.CENTER);
 		} else {
 			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -70,5 +70,6 @@ public class StartupFrame extends JFrame implements ActionListener {
 		}
 
 		repaint();
+		revalidate();
 	}
 }
