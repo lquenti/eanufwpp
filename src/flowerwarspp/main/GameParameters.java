@@ -178,15 +178,45 @@ public class GameParameters {
 		}
 	}
 
-	// TODO: Dokumentation
+	/**
+	 * Konstruiert ein {@link GameParameters}-Objekt,
+	 * das für das Hosten eines Spiels ausgelegt ist.
+	 *
+	 * @param boardSize
+	 * Die Größe des Spielbretts.
+	 *
+	 * @param redType
+	 * Der {@link PlayerType} des roten Spielers.
+	 *
+	 * @param redUrl
+	 * @param blueType
+	 * @param blueUrl
+	 * @param delay
+	 */
 	public GameParameters(int boardSize,
 	                      PlayerType redType,
+	                      String redUrl,
 	                      PlayerType blueType,
+	                      String blueUrl,
 	                      int delay) {
+		if ((redType == PlayerType.REMOTE && (redUrl == null)) ||
+			(blueType == PlayerType.REMOTE && (blueUrl == null))) {
+			Log.log(LogLevel.ERROR, LogModule.UI, "Invalid arguments were constructed.");
+			throw new IllegalArgumentException("Ein Remote-Spieler benötigt eine URL.");
+		}
+
 		this.boardSize = boardSize;
 		this.redType = redType;
 		this.blueType = blueType;
 		this.delay = delay;
+		this.redUrl = redUrl;
+		this.blueUrl = blueUrl;
+	}
+
+	public GameParameters(PlayerType offerType, String offerName, String offerUrl) {
+		this.offerType = offerType;
+		this.offerName = offerName;
+		this.offerUrl = offerUrl;
 	}
 
 	/**
