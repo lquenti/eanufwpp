@@ -139,6 +139,10 @@ public class GameParameters {
 			if (argumentParser.isSet("games"))
 				numberOfGames = argumentParser.getNumberOfGames();
 
+			if (argumentParser.isSet("delay")) {
+				delay = argumentParser.getDelay();
+			}
+
 			redType = argumentParser.getRed();
 			if (redType == PlayerType.REMOTE) {
 				redUrl = argumentParser.getRedUrl();
@@ -160,10 +164,6 @@ public class GameParameters {
 			}
 
 			boardSize = argumentParser.getSize();
-
-			if (argumentParser.isSet("delay")) {
-				delay = argumentParser.getDelay();
-			}
 
 			// Validate board size
 			if (getBoardSize() < 3
