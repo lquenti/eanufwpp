@@ -85,7 +85,7 @@ public class Game {
 	 *
 	 * @param gameParameters Die Parameter wie sie auf der Kommandozeile übergeben worden sind
 	 */
-	Game(GameParameters gameParameters) {
+	public Game(GameParameters gameParameters) {
 		this.gameParameters = gameParameters;
 		init();
 		start();
