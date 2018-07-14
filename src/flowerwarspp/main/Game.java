@@ -336,7 +336,6 @@ public class Game {
 	 * @throws Exception Falls während des Spiels ein Fehler aufgetreten ist.
 	 */
 	private Status run() throws Exception {
-
 		Log.log(LogLevel.INFO, LogModule.MAIN, "Starting main game loop.");
 
 		// Wir benutzen in der internen Game-Loop Referenzen auf den roten und den blauen Spieler.
@@ -351,7 +350,6 @@ public class Game {
 		}
 
 		while (viewer.getStatus() == Status.Ok) {
-
 			Log.log(LogLevel.DEBUG, LogModule.MAIN, "Beginning game loop.");
 
 			// Startzeit wird für die spätere Berechnung des Delays bestimmt.
@@ -421,7 +419,6 @@ public class Game {
 	 * @throws InterruptedException Falls der {@link Thread} während des Wartens unterbrochen worden ist.
 	 */
 	private void replay(SaveGame loadedSaveGame) throws InterruptedException {
-
 		Log.log(LogLevel.INFO, LogModule.MAIN, "Starting replay of loaded savegame: "
 				+ gameParameters.getSaveGameName());
 
