@@ -10,7 +10,7 @@ import flowerwarspp.util.log.*;
 /**
  * Ein Daten-Konstrukt um gesammelt Parameter an die Spiel-Klassen weiterleiten zu können.
  */
-class GameParameters {
+public class GameParameters {
 
 	/**
 	 * Die Größe des Spielbretts.
@@ -176,6 +176,16 @@ class GameParameters {
 			Log.log(LogLevel.ERROR, LogModule.MAIN, "Invalid arguments passed: " + Arrays.toString(args));
 			Main.quitWithUsage();
 		}
+	}
+
+	public GameParameters(int boardSize,
+	                      PlayerType redType,
+	                      PlayerType blueType,
+	                      int delay) {
+		this.boardSize = boardSize;
+		this.redType = redType;
+		this.blueType = blueType;
+		this.delay = delay;
 	}
 
 	/**
