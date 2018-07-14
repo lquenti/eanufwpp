@@ -385,7 +385,6 @@ public class Game {
 
 			// Falls der aktuelle Spieler nicht aufgegeben hat, werden der Status des Spielbretts des Hauptprogramms
 			// und der Status des Spielbretts des aktuellen Spielers mit confirm verglichen.
-			// TODO
 			if (move.getType() != MoveType.Surrender) {
 				Log.log(LogLevel.DEBUG, LogModule.MAIN, "Confirming status.");
 				currentPlayer.confirm(viewer.getStatus());
@@ -393,7 +392,9 @@ public class Game {
 
 			// Dem Gegner werden Zug des aktuellen Spielers und Status des Spielbretts mit update mitgeteilt.
 			Log.log(LogLevel.DEBUG, LogModule.MAIN, "Updating opposite player.");
-			oppositePlayer.update(move, viewer.getStatus());
+			try {
+				oppositePlayer.update(move, viewer.getStatus());
+			} catch (RemoteException ignored) {}
 
 			// Das Output-Objekt wirds aktualisiert um den ausgeführten Zug anzuzeigen.
 			Log.log(LogLevel.DEBUG, LogModule.MAIN, "Refreshing output.");

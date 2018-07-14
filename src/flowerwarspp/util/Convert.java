@@ -26,6 +26,7 @@ public class Convert {
 			case BlueWin:
 				return "Der blaue Spieler hat das Spiel gewonnen!";
 			case Illegal:
+				return "Ein Spieler hat einen verbotenen Zug gemacht.";
 			default:
 				Log.log(LogLevel.ERROR, LogModule.UI, "Invalid status passed to statusToText");
 				return null;
