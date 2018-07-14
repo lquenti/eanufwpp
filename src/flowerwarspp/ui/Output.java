@@ -13,7 +13,7 @@ public interface Output {
 	void refresh();
 
 	/**
-	 * Setzt den {@link Viewer}, den die Ausgabe benutzt, um Informationen über das {@link Board}
+	 * Setzt den {@link Viewer}, den die Ausgabe benutzt, um Informationen über das Board
 	 * abzufragen.
 	 *
 	 * @param viewer Der Viewer
