@@ -25,12 +25,15 @@ import static flowerwarspp.preset.PlayerColor.Red;
  */
 public class SaveGame implements Iterable<Move> {
 
+	/*
 	/**
 	 * Der Basispfad einer Spielstand-Datei. Die Spielstände werden in einem Ordner <code>SaveGames</code> im aktuellen
 	 * Verzeichnis (in welchem das Spiel ausgeführt wird) gespeichert.
 	 */
+	/*
 	private static final String SAVE_PATH_ROOT = System.getProperty("user.dir") + File.separator + "SaveGames"
 			+ File.separator;
+	*/
 
 	/**
 	 * Diese {@link ArrayDeque} speichert die ausgeführten Spielzüge.
@@ -52,6 +55,7 @@ public class SaveGame implements Iterable<Move> {
 		this.boardSize = boardSize;
 	}
 
+	/*
 	/**
 	 * Stellt den gesamten Pfad zu einer Spielstand-Datei mit gegebenen Namen zusammen und gibt diesen zurück.
 	 * <p>
@@ -61,10 +65,12 @@ public class SaveGame implements Iterable<Move> {
 	 * @param saveGameName Name des Spielstands
 	 * @return Der gesamte absolute Pfad zu der Spielstand-Datei.
 	 */
+	/*
 	private static String getFilePath(String saveGameName) {
 
 		return SAVE_PATH_ROOT + saveGameName + ".sav";
 	}
+	*/
 
 	/**
 	 * Diese Methode ermöglicht das Laden eines mit {@link #save(String)} gespeicherten Spielstands.
@@ -72,7 +78,7 @@ public class SaveGame implements Iterable<Move> {
 	 * Dabei werden die, von der Datei beschriebenen, Spielzüge in der {@link ArrayDeque} einer neuen Instanz dieser
 	 * Klasse gespeichert. Diese Instanz wird dann zurückgegeben.
 	 *
-	 * @param saveGameName Name der zu ladenden Spielstand-Datei ohne Endung
+	 * @param saveGameName Name der zu ladenden Spielstand-Datei mit Pfad
 	 * @return Die, mit den in der Datei gespeicherten Spielzüge, intialisierte Instanz dieser Klasse
 	 * @throws LoadException Falls während des Ladevorgangs ein Fehler aufgetreten ist
 	 */
@@ -80,7 +86,8 @@ public class SaveGame implements Iterable<Move> {
 
 		// Mit einem try-with-resourced wird ein neuer BufferedReader instanziiert. Falls während des Ladens ein
 		// Fehler auftritt und eine Exception geworfen wird, wird dieser BufferedReader automatisch geschlossen.
-		try (BufferedReader bufferedReader = new BufferedReader(new FileReader(getFilePath(saveGameName)))) {
+		try (BufferedReader bufferedReader = new BufferedReader(new FileReader(saveGameName))) {
+		//try (BufferedReader bufferedReader = new BufferedReader(new FileReader(getFilePath(saveGameName)))) {
 
 			// Die erste Zeile einer Savegame-Datei beinhaltet die Größe des Spielbretts. Diese wird eingelesen und
 			// damit ein neues Objekt dieser Klasse als Rückgabewert instanziiert.
@@ -144,23 +151,25 @@ public class SaveGame implements Iterable<Move> {
 	/**
 	 * Speichert den Spielstand in einer Datei mit gegebenen Namen.
 	 *
-	 * @param saveGameName Name des Spielstands.
+	 * @param saveGameName Name des Spielstands mit Pfad.
 	 * @throws IOException Falls während des Speicherns des Spielstands ein Fehler aufgetreten ist.
 	 */
 	public void save(String saveGameName) throws IOException {
 
 		synchronized (this) {
 
+			/*
 			// Ein File-Objekt am Hauptspeicherort der Spielstände wird erstellt.
 			File saveDir = new File(SAVE_PATH_ROOT);
 
 			// Falls dieser noch nicht existiert, wird das Verzeichnis mit mkdir erstellt.
 			saveDir.mkdir();
+			*/
 
 			// Das Speichern der Züge wird mit einem try-with-resources ermöglicht. Der so erstellte PrintWriter wird
 			// automatisch geschlossen, falls während des Speicherns ein Fehler aufgetreten ist und eine Exception geworfen
 			// wurde.
-			try (PrintWriter printWriter = new PrintWriter(getFilePath(saveGameName), "UTF-8")) {
+			try (PrintWriter printWriter = new PrintWriter(saveGameName, "UTF-8")) {
 
 				// In der ersten Zeile wird die Größe des Spielbretts gespeichert.
 				printWriter.println(boardSize);
@@ -187,8 +196,8 @@ public class SaveGame implements Iterable<Move> {
 				// Den PrintWriter schließen, falls Speichern erfolgreich.
 				printWriter.close();
 				System.out.println("Spielstand " + saveGameName + " wurde gespeichert unter");
-				System.out.println(getFilePath(saveGameName));
-				Log.log(LogLevel.INFO, LogModule.MAIN, "Game was saved to: " + getFilePath(saveGameName));
+				System.out.println(saveGameName);
+				Log.log(LogLevel.INFO, LogModule.MAIN, "Game was saved to: " + saveGameName);
 
 			} catch (IOException e) {
 				Log.log(LogLevel.ERROR, LogModule.MAIN, "Saving the game failed: " + e.getMessage());

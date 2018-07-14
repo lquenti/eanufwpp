@@ -103,8 +103,6 @@ public class Game {
 		}
 
 		boardSize = gameParameters.getBoardSize();
-		saveGame = new SaveGame(boardSize);
-		output.setSaveGame(saveGame);
 	}
 
 	/**
@@ -178,6 +176,7 @@ public class Game {
 
 			initBoard();
 			initPlayers();
+			output.setSaveGame(saveGame);
 			output.setViewer(viewer);
 
 			switch (run()) {
@@ -324,6 +323,7 @@ public class Game {
 		initBoard();
 		createPlayers();
 		initPlayers();
+		output.setSaveGame(saveGame);
 		output.setViewer(viewer);
 	}
 

@@ -112,7 +112,14 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 		fc.setDialogTitle("Spielstand speichern");
 		add(fc);
 		if (fc.showSaveDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
+			File file = fc.getSelectedFile();
+			if (file.exists()) {
+				fc.approveSelection();
+			}
 			String filename = fc.getSelectedFile().getAbsolutePath();
+			if (!filename.endsWith(".sav")) {
+				filename += ".sav";
+			}
 			try {
 				saveGame.save(filename);
 			} catch (Exception e) {
