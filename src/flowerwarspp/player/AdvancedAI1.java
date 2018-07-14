@@ -15,34 +15,15 @@ import java.util.Collection;
 public class AdvancedAI1 extends AbstractAI {
 
 	/**
-	 * Daten-Struct zum Speichern und Verarbeiten von Zugbewertungen. Da nur Daten transportiert werden, und keine
-	 * Operationen in Form von Methoden von dieser Klasse bereitgestellt werden, sind die Instanzvariablen der Klasse
-	 * <code>package-private</code>.
-	 */
-	private class ScoreResults {
-		/**
-		 * Bewertet das Bilden von zusammenhängenden Blumenstrukturen (also von Beeten und Gärten).
-		 */
-		int gardenScore = 0;
-
-		/**
-		 * Bewertet das Setzen von Zügen in der Nähe von Blumen die keinem Spieler gehören.
-		 */
-		int notOwnedFlowerScore = 0;
-	}
-
-	/**
 	 * Beschreibt den Faktor, mit welchem die Bewertung von Zügen, die zusammenhängende Beete bilden, multipliziert
 	 * werden soll (erstes Element des Rückgabearrays der Methode {@link #getNeighborScore(Collection)}).
 	 */
 	private static final int gardenMultiplier = 8;
-
 	/**
 	 * Beschreibt den Faktor, mit welchem die Bewertung von Zügen, die Blumen in der Nähe des Gegners anordnen,
 	 * multipliziert werden soll (zweites Element des Rückgabearrays der Methode {@link #getNeighborScore(Collection)}.
 	 */
 	private static final int notOwnedFlowerMultiplier = 1;
-
 	/**
 	 * Beschreibt den Faktor, mit welchem Züge, die Blumen in Paaren anordnen, multipliziert werden sollen.
 	 */
@@ -139,5 +120,22 @@ public class AdvancedAI1 extends AbstractAI {
 
 		}
 		return result;
+	}
+
+	/**
+	 * Daten-Struct zum Speichern und Verarbeiten von Zugbewertungen. Da nur Daten transportiert werden, und keine
+	 * Operationen in Form von Methoden von dieser Klasse bereitgestellt werden, sind die Instanzvariablen der Klasse
+	 * <code>package-private</code>.
+	 */
+	private class ScoreResults {
+		/**
+		 * Bewertet das Bilden von zusammenhängenden Blumenstrukturen (also von Beeten und Gärten).
+		 */
+		int gardenScore = 0;
+
+		/**
+		 * Bewertet das Setzen von Zügen in der Nähe von Blumen die keinem Spieler gehören.
+		 */
+		int notOwnedFlowerScore = 0;
 	}
 }

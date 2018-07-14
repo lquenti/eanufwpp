@@ -29,8 +29,10 @@ public class TextInterface implements Requestable, Output {
 	private static final String invalidMoveMessage =
 		"Der vom Spieler uebergegebene Zug ist nicht valide.";
 
+	// TODO
 	private Viewer viewer = null;
 
+	// TODO
 	private Scanner inputScanner = new Scanner(System.in);
 
 	/**
@@ -181,6 +183,7 @@ public class TextInterface implements Requestable, Output {
 		return board;
 	}
 
+	// TODO
 	@Override
 	public void refresh() throws IllegalStateException {
 		if (viewer == null) {
@@ -199,6 +202,7 @@ public class TextInterface implements Requestable, Output {
 		}
 	}
 
+	// TODO
 	@Override
 	public void setViewer(Viewer viewer) {
 		this.viewer = viewer;

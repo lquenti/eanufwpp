@@ -13,8 +13,6 @@ import java.util.Random;
  * Eine abstrakte Klasse, welche grundlegende Methoden vordefiniert um KIs zu implementieren. Dabei wird im Laufe der
  * {@link #requestMove()}-Methode für die möglichen Spielzüge ein Bewertungsalgorithmus durchlaufen, welcher einen Zug
  * nach Strategie auswählt, zurück gibt und ausführt.
- *
- *
  */
 abstract class AbstractAI extends AbstractPlayer {
 	/**

@@ -2,8 +2,8 @@ package flowerwarspp.player;
 
 import flowerwarspp.board.MainBoard;
 import flowerwarspp.main.savegame.SaveGame;
-import flowerwarspp.ui.Output;
 import flowerwarspp.preset.*;
+import flowerwarspp.ui.Output;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -11,8 +11,6 @@ import java.rmi.server.UnicastRemoteObject;
 /**
  * Mit diesem Netzwerk-Spieler kann jede Implementation der Schnittstelle {@link Player} einer anderen Implementation
  * von FlowerWarsPP angeboten werden.
- *
- *
  */
 public class RemotePlayer
 		extends UnicastRemoteObject
@@ -54,8 +52,8 @@ public class RemotePlayer
 	}
 
 	/**
-	 * Konstruktor, welcher zusätzlich zu {@link RemotePlayer#RemotePlayer(Player, Output)} auch noch eine
-	 * Referenz auf ein {@link SaveGame}-Objekt zum Speichern des Spielstands.
+	 * Konstruktor, welcher zusätzlich zu {@link RemotePlayer#RemotePlayer(Player, Output)} auch noch eine Referenz auf
+	 * ein {@link SaveGame}-Objekt zum Speichern des Spielstands.
 	 *
 	 * @param player   Der Spieler, welcher dem Server durch dieses Objekt Züge mitteilen soll.
 	 * @param output   Das Objekt, auf welchem das aktuelle Spielgeschehen lokal angezeigt wird.

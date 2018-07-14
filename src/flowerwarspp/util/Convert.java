@@ -32,6 +32,11 @@ public class Convert {
 		}
 	}
 
+	/**
+	 * Gibt einen formatierten, lesbaren {@link String} für einen gegebenen {@link PlayerType} zurück.
+	 * @param playerType Der {@link PlayerType} der als {@link String} zurück gegeben werden soll.
+	 * @return Typ des Spielers als {@link String}.
+	 */
 	public static String playerTypeToString(PlayerType playerType) {
 		switch (playerType) {
 			case HUMAN:
@@ -57,6 +62,11 @@ public class Convert {
 		}
 	}
 
+	/**
+	 * Gibt eine übersetzte {@link String}-Repräsentation einer {@link PlayerColor} zurück.
+	 * @param color Zu übersetzende Spieler-Farbe.
+	 * @return Übersetzte {@link String}-Repräsentation der Farbe
+	 */
 	public static String playerColorToString(PlayerColor color) {
 		switch (color) {
 			case Red: return "Rot";

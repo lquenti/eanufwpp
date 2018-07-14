@@ -16,61 +16,33 @@ import java.util.Collection;
 public class AdvancedAI2 extends AbstractAI {
 
 	/**
-	 * Daten-Struct zum Speichern und Verarbeiten von Zugbewertungen. Da nur Daten transportiert werden, und keine
-	 * Operationen in Form von Methoden von dieser Klasse bereitgestellt werden, sind die Instanzvariablen der Klasse
-	 * <code>package-private</code>.
-	 */
-	private class ScoreResults {
-		/**
-		 * Bewertet das Bilden von zusammenhängenden Blumenstrukturen (also von Beeten und Gärten).
-		 */
-		int gardenScore = 0;
-
-		/**
-		 * Bewertet das Setzen von Zügen in der Nähe von Blumen die keinem Spieler gehören.
-		 */
-		int notOwnedFlowerScore = 0;
-
-		/**
-		 * Bewertet das Setzen von Blumen in direkter Nähe zu bestehenden Blumen.
-		 */
-		int clusterScore = 0;
-	}
-
-	/**
-	 * Beschreibt den zur Berechnung der Nummer des Zugs ab welchem Cluster bebildet werden sollen benutzten Divisor
-	 * der {@link #init(int, PlayerColor)}-Methode.
+	 * Beschreibt den zur Berechnung der Nummer des Zugs ab welchem Cluster bebildet werden sollen benutzten Divisor der
+	 * {@link #init(int, PlayerColor)}-Methode.
 	 */
 	private static final int clusterStartDivisor = 15;
-
 	/**
-	 * Beschreibt den Faktor, mit welchem die Bewertung von Zügen die zusammenhängende Beete bilden multipliziert
-	 * werden soll (erstes Element des Rückgabearrays der Methode {@link #getNeighborScore(Flower)}).
+	 * Beschreibt den Faktor, mit welchem die Bewertung von Zügen die zusammenhängende Beete bilden multipliziert werden
+	 * soll (erstes Element des Rückgabearrays der Methode {@link #getNeighborScore(Flower)}).
 	 */
 	private static final int gardenMultiplier = 20;
-
 	/**
 	 * Beschreibt den Faktor, mit welchem die Bewertung von Zügen, die Blumen in der Nähe des Gegners anordnen,
 	 * multipliziert werden soll (zweites Element des Rückgabearrays der Methode {@link #getNeighborScore(Flower)}.
 	 */
 	private static final int notOwnedFlowerMultiplier = 1;
-
 	/**
-	 * Beschreibt den Faktor, mit welchem die Bewertung von Zügen die Blumen(-beete) in Clustern anordnen
-	 * multipliziert werden soll (zweites Element des Rückgabearrays der Methode {@link #getNeighborScore(Flower)}.
+	 * Beschreibt den Faktor, mit welchem die Bewertung von Zügen die Blumen(-beete) in Clustern anordnen multipliziert
+	 * werden soll (zweites Element des Rückgabearrays der Methode {@link #getNeighborScore(Flower)}.
 	 */
 	private static final int clusterMultiplier = 1;
-
 	/**
 	 * Beschreibt die Konstante, welche auf Züge die Blumen in Paaren anordnen aufaddiert werden soll.
 	 */
 	private static final int flowerPairSummand = 15;
-
 	/**
 	 * Der Zug, ab welchem Cluster gebildet werden sollen.
 	 */
 	private int startClusteringAt;
-
 	/**
 	 * Die Anzahl an Zügen, die dieser Spieler ausgeführt hat, seid Beginn des Spiels.
 	 */
@@ -104,7 +76,7 @@ public class AdvancedAI2 extends AbstractAI {
 
 		// Berechnen des Startpunkts fürs Clustern. Falls das Spielbrett bereits bespielt worden ist (zum Beispiel nach
 		// dem Laden) wird sofort geclustert.
-		if (!boardViewer.getFlowers(getPlayerColor()).isEmpty())
+		if (! boardViewer.getFlowers(getPlayerColor()).isEmpty())
 			startClusteringAt = 0;
 		else
 			startClusteringAt = ( boardSize * boardSize ) / clusterStartDivisor;
@@ -221,5 +193,27 @@ public class AdvancedAI2 extends AbstractAI {
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * Daten-Struct zum Speichern und Verarbeiten von Zugbewertungen. Da nur Daten transportiert werden, und keine
+	 * Operationen in Form von Methoden von dieser Klasse bereitgestellt werden, sind die Instanzvariablen der Klasse
+	 * <code>package-private</code>.
+	 */
+	private class ScoreResults {
+		/**
+		 * Bewertet das Bilden von zusammenhängenden Blumenstrukturen (also von Beeten und Gärten).
+		 */
+		int gardenScore = 0;
+
+		/**
+		 * Bewertet das Setzen von Zügen in der Nähe von Blumen die keinem Spieler gehören.
+		 */
+		int notOwnedFlowerScore = 0;
+
+		/**
+		 * Bewertet das Setzen von Blumen in direkter Nähe zu bestehenden Blumen.
+		 */
+		int clusterScore = 0;
 	}
 }

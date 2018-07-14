@@ -54,6 +54,10 @@ public class Main {
 		System.exit(ERRORCODE_INVALID_ARGS);
 	}
 
+	/**
+	 * Einstiegspunkt der ausführbaren Klasse.
+	 * @param args Kommandozeilenargumente.
+	 */
 	public static void main(String[] args) {
 		new Game(new GameParameters(args));
 	}

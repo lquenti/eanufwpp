@@ -16,6 +16,7 @@ public abstract class BoardPolygon extends Polygon {
 	 */
 	private static final double triangleSideHeightFactor = Math.sqrt(3.0) / 2;
 
+	// TODO
 	private Color borderColor;
 	private Color fillColor;
 

@@ -1,7 +1,9 @@
 package flowerwarspp.player;
 
 import flowerwarspp.preset.*;
-import flowerwarspp.util.log.*;
+import flowerwarspp.util.log.Log;
+import flowerwarspp.util.log.LogLevel;
+import flowerwarspp.util.log.LogModule;
 
 import java.net.MalformedURLException;
 import java.rmi.Naming;
@@ -9,28 +11,26 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 
 /**
- * Diese Klasse ermöglicht das Instanzieren von beiden Spielern, welche am aktuellen Spiel
- * teilnehmen. Außerdem wird in dieser Klasse der Hauptteil der Netzwerkunterstützung
- * implementiert.
+ * Diese Klasse ermöglicht das Instanzieren von beiden Spielern, welche am aktuellen Spiel teilnehmen. Außerdem wird in
+ * dieser Klasse der Hauptteil der Netzwerkunterstützung implementiert.
  */
 public class Players {
 	/**
-	 * Erstellt einen neuen Spieler gegebenen Typs und weist im ein gegebenes 
-	 * {@link Requestable} und ein bestehendes {@link Board} zu.
+	 * Erstellt einen neuen Spieler gegebenen Typs und weist im ein gegebenes {@link Requestable} und ein bestehendes
+	 * {@link Board} zu.
 	 *
 	 * @param type  Typ des zu erstellenden Spielers
-	 * @param input Das {@link Requestable}, das der Spieler zum Abfragen von Zügen verwenden
-	 *              soll
+	 * @param input Das {@link Requestable}, das der Spieler zum Abfragen von Zügen verwenden soll
 	 * @param board Bestehendes Spielbrett, welches dem Spieler zugewiesen wird
-	 * @param url Die URL im Fall eines Remote-Spielers
+	 * @param url   Die URL im Fall eines Remote-Spielers
 	 * @return Ein nach den gegebenen Parametern erzeugter Spieler
-	 * @throws IllegalArgumentException falls versucht wird, einen Remote-Spieler mit 
-	 *                                  vorhandenem, nichtleerem Board zu erzeugen.
+	 * @throws IllegalArgumentException falls versucht wird, einen Remote-Spieler mit vorhandenem, nichtleerem Board zu
+	 *                                  erzeugen.
 	 */
 	public static Player createPlayer(PlayerType type, Requestable input, String url, Board board)
 			throws IllegalArgumentException {
 		// Falls auf dem Brett schon Züge gemacht wurden, geht Netzwerkspiel nicht.
-		if (type == PlayerType.REMOTE && board != null && !board.viewer().getFlowers(PlayerColor.Red).isEmpty()) {
+		if (type == PlayerType.REMOTE && board != null && ! board.viewer().getFlowers(PlayerColor.Red).isEmpty()) {
 			throw new IllegalArgumentException("Spielstände laden wird von Remote-Spielern nicht unterstützt.");
 		}
 
@@ -66,13 +66,12 @@ public class Players {
 	}
 
 	/**
-	 * Variante von {@link #createPlayer(PlayerType, Requestable, String, Board)}, welche dem neu erstellten Spieler kein
-	 * {@link Board} zuweist.
+	 * Variante von {@link #createPlayer(PlayerType, Requestable, String, Board)}, welche dem neu erstellten Spieler
+	 * kein {@link Board} zuweist.
 	 *
 	 * @param type  Typ des zu erstellenden Spielers
-	 * @param input Das {@link Requestable}, das der Spieler zum Abfragen von Zügen verwenden soll
-	 *              verwenden soll
-	 * @param url Die URL im Fall eines Remote-Spielers
+	 * @param input Das {@link Requestable}, das der Spieler zum Abfragen von Zügen verwenden soll verwenden soll
+	 * @param url   Die URL im Fall eines Remote-Spielers
 	 * @return Der erzeugte Spieler
 	 */
 	public static Player createPlayer(PlayerType type, Requestable input, String url) {
@@ -90,7 +89,7 @@ public class Players {
 		try {
 			Log.log(LogLevel.DEBUG, LogModule.PLAYER, "Looking up player " + url);
 			result = (Player) Naming.lookup("rmi://" + url);
-		} catch ( Exception e ) {
+		} catch (Exception e) {
 			System.out.println("Der angegebene Spieler konnte nicht im Netzwerk gefunden werden.");
 			Log.log(LogLevel.ERROR, LogModule.PLAYER, "Unable to find the specified player on the network.");
 		}

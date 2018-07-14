@@ -4,10 +4,8 @@ import flowerwarspp.preset.Move;
 import flowerwarspp.preset.MoveType;
 
 /**
- * Implementiert die abstrakte Klasse {@link AbstractPlayer} mit einer zufallsbasierten KI, welche zufällig einen der zur
- * Verfügung stehenden Züge auswählt und auf Anfrage ausgibt.
- *
- *
+ * Implementiert die abstrakte Klasse {@link AbstractPlayer} mit einer zufallsbasierten KI, welche zufällig einen der
+ * zur Verfügung stehenden Züge auswählt und auf Anfrage ausgibt.
  */
 public class RandomAI extends AbstractAI {
 

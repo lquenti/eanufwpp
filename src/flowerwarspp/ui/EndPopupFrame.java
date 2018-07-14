@@ -8,8 +8,9 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+// TODO
 public class EndPopupFrame extends JDialog {
-
+	// TODO
 	public EndPopupFrame( Status status ) {
 		super(BoardFrame.getInstance(), "Spiel Beendet");
 
@@ -28,13 +29,14 @@ public class EndPopupFrame extends JDialog {
 
 }
 
+// TODO
 class PopupComponentPane extends JPanel {
-
+	// TODO
 	private Status endStatus;
 	private JLabel label;
 	private JButton button;
 
-
+	// TODO
 	PopupComponentPane( Status status ) {
 		endStatus = status;
 

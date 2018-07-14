@@ -9,6 +9,7 @@ import java.awt.*;
 import java.util.EnumMap;
 import java.util.Hashtable;
 
+// TODO
 public class TopToolbarPanel extends JPanel {
 
 	/**
@@ -28,6 +29,7 @@ public class TopToolbarPanel extends JPanel {
 	 */
 	private JSpinner zoomSpinner = new JSpinner(new SpinnerNumberModel(100, 100, 300, 25));
 
+	// TODO
 	public TopToolbarPanel() {
 		playerStatusDisplays = new EnumMap<>(PlayerColor.class);
 		for (PlayerColor playerColor : PlayerColor.values()) {
