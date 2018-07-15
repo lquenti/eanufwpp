@@ -68,6 +68,11 @@ public class Log {
 	private static boolean flushOnLog = true;
 
 	/**
+	 * Leerer privater Konstruktor zum Verhindern der Objektinitialisierung
+	 */
+	private Log() {}
+
+	/**
 	 * Gibt das aktuelle Log-Level aus.
 	 *
 	 * @return Aktuelles Log-Level

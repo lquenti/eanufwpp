@@ -19,6 +19,11 @@ import java.util.Collection;
  */
 public class Players {
 	/**
+	 * Leerer privater Konstruktor zum Verhindern der Objektinitialisierung
+	 */
+	private Players() {}
+
+	/**
 	 * Eine {@link Collection} von verfügbaren {@link PlayerType}s.
 	 */
 	public static final Collection<PlayerType> AVAILABLE_PLAYER_TYPES =

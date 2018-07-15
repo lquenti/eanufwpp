@@ -75,6 +75,11 @@ public class Main {
 	private static int boardSize;
 
 	/**
+	 * Leerer privater Konstruktor zum Verhindern der Objektinitialisierung
+	 */
+	private Main() {}
+
+	/**
 	 * Gibt Informationen zur Verwendendung des Programms auf der Standardausgabe aus und beendet
 	 * das Programm mit dem Exit-Code {@link #ERRORCODE_INVALID_ARGS}.
 	 */
