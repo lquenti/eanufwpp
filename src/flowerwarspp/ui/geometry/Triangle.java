@@ -27,9 +27,8 @@ public class Triangle extends BoardPolygon {
 	private Flower flower;
 
 	/**
-	 * <code>true</code> genau dann, wenn die erste {@link Position} der {@link Flower},
-	 * die dieses {@link Triangle} repräsentiert auf derselben Spalte liegt, wie die zweite {@link
-	 * Position}.
+	 * <code>true</code> genau dann, wenn die erste {@link Position} der {@link Flower}, die dieses
+	 * {@link Triangle} repräsentiert auf derselben Spalte liegt, wie die zweite {@link Position}.
 	 */
 	private boolean flipped;
 
@@ -50,8 +49,8 @@ public class Triangle extends BoardPolygon {
 	/**
 	 * Ein Getter für die Umgedrehtheit dieses {@link Triangle}s.
 	 *
-	 * @return <code>true</code> genau dann, wenn dieses {@link Triangle} auf dem Kopf steht,
-	 * das heißt die Spitze zeigt nach unten.
+	 * @return <code>true</code> genau dann, wenn dieses {@link Triangle} auf dem Kopf steht, das
+	 * heißt die Spitze zeigt nach unten.
 	 */
 	public boolean isFlipped() {
 		return flipped;

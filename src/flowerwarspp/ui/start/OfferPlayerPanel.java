@@ -11,20 +11,11 @@ import java.awt.*;
  * Ein {@link GameStartPanel}, mit dem ein {@link flowerwarspp.preset.Player} geoffert werden kann.
  */
 public class OfferPlayerPanel extends GameParametersPanel {
-	/**
-	 * Ein {@link JLabel}, das dem Nutzer signalisiert, dass Nutzername einzugeben ist.
-	 */
-	private JLabel playerNameLabel = new JLabel("Spielername");
 
 	/**
 	 * Ein {@link JTextField}, in welches der Nutzer einen Nutzernamen eingeben kann.
 	 */
 	private JTextField playerNameTextField = new JTextField("Peter");
-
-	/**
-	 * Ein {@link JLabel}, das dem Nutzer signalisiert, dass ein Port einzugeben ist.
-	 */
-	private JLabel playerPortLabel = new JLabel("Port");
 
 	/**
 	 * Ein {@link JTextField}, mit dem der Nutzer einen Port auswählen kann.
@@ -51,6 +42,7 @@ public class OfferPlayerPanel extends GameParametersPanel {
 		c.insets = new Insets(0, 0, 0, 8);
 		c.gridy = 0;
 		c.gridx = 0;
+		JLabel playerNameLabel = new JLabel("Spielername");
 		add(playerNameLabel, c);
 		c.insets = new Insets(0, 8, 0, 0);
 		c.gridx = 1;
@@ -59,6 +51,7 @@ public class OfferPlayerPanel extends GameParametersPanel {
 		c.insets = new Insets(0, 0, 0, 8);
 		c.gridy = 1;
 		c.gridx = 0;
+		JLabel playerPortLabel = new JLabel("Port");
 		add(playerPortLabel, c);
 		c.insets = new Insets(0, 8, 0, 0);
 		c.gridx = 1;

@@ -11,38 +11,19 @@ import java.awt.*;
  * Ein {@link JPanel}, das verwendet werden kann, um ein Spiel zu starten.
  */
 public class HostGamePanel extends GameParametersPanel {
-	/**
-	 * Das {@link JLabel}, das dem Nutzer signalisiert, dass das nebenstehende Element nach der
-	 * Größe des {@link flowerwarspp.preset.Board}s fragt.
-	 */
-	private JLabel boardSizeLabel = new JLabel("Board size");
+
 	/**
 	 * Das {@link SpinnerModel}, das den Wertebereich für die Spielbrettgröße eingrenzt. Ist von 3
 	 * bis 30 gültig, wobei 3 der Standardwert und 1 die Schrittgröße ist.
 	 */
 	private SpinnerNumberModel boardSizeSpinnerModel = new SpinnerNumberModel(3, 3, 30, 1);
-	/**
-	 * Der {@link JSpinner}, der den Nutzer nach der Größe des Boards fragt.
-	 */
-	private JSpinner boardSizeSpinner = new JSpinner(boardSizeSpinnerModel);
 
 	/**
-	 * Das {@link JLabel}, das dem Nutzer signalisiert, dass das nebenstehende Element nach dem
-	 * Delay fragt, nach dem ein neuer {@link flowerwarspp.preset.Move} erfragt wird.
-	 */
-	private JLabel delayLabel = new JLabel("Move delay (ms)");
-	/**
 	 * Das {@link SpinnerModel} für den Delay-Spinner. Standardmäßig auf 1000 eingestellt, wobei
-	 * der
-	 * Wertebereich von 0 bis {@link Integer#MAX_VALUE} reicht und Schritte von 1ms erlaubt.
+	 * der Wertebereich von 0 bis {@link Integer#MAX_VALUE} reicht und Schritte von 1ms erlaubt.
 	 */
 	private SpinnerNumberModel delaySpinnerModel =
 			new SpinnerNumberModel(1000, 0, Integer.MAX_VALUE, 1);
-	/**
-	 * Der {@link JSpinner}, der den Nutzer nach dem Mindestdelay fragt, nach dem ein neuer {@link
-	 * flowerwarspp.preset.Move} erfragt wird.
-	 */
-	private JSpinner delaySpinner = new JSpinner(delaySpinnerModel);
 
 	/**
 	 * Ein {@link PlayerDataInput}, das nach Informationen für den {@link PlayerColor#Red} fragt.
@@ -67,17 +48,21 @@ public class HostGamePanel extends GameParametersPanel {
 		c.insets = new Insets(0, 0, 0, 8);
 		c.gridy = 0;
 		c.gridx = 0;
+		JLabel boardSizeLabel = new JLabel("Board size");
 		add(boardSizeLabel, c);
 		c.insets = new Insets(0, 8, 0, 0);
 		c.gridx = 1;
+		JSpinner boardSizeSpinner = new JSpinner(boardSizeSpinnerModel);
 		add(boardSizeSpinner, c);
 
 		c.insets = new Insets(0, 0, 0, 8);
 		c.gridy = 1;
 		c.gridx = 0;
+		JLabel delayLabel = new JLabel("Move delay (ms)");
 		add(delayLabel, c);
 		c.insets = new Insets(0, 8, 0, 0);
 		c.gridx = 1;
+		JSpinner delaySpinner = new JSpinner(delaySpinnerModel);
 		add(delaySpinner, c);
 
 		c.insets = new Insets(16, 0, 0, 8);

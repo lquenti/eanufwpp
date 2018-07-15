@@ -44,11 +44,9 @@ public class Log {
 
 	/**
 	 * Das aktuell zu überwachende Modul. Hiermit lässt sich der Log-Output beschränken auf
-	 * Einträge
-	 * eines bestimmten Moduls (oder packages). Zum Beispiel möchte man nur Einträge des
+	 * Einträge eines bestimmten Moduls (oder packages). Zum Beispiel möchte man nur Einträge des
 	 * Hauptprogramms ({@link LogModule#MAIN}) angezeigt bekommen, dann würde man diese Variable
-	 * mit
-	 * dem zugehörigen Setter {@link #setLogModule(LogModule)} auf eben diesen Wert setzen.
+	 * mit dem zugehörigen Setter {@link #setLogModule(LogModule)} auf eben diesen Wert setzen.
 	 */
 	private static LogModule logModule = ALL;
 

@@ -77,7 +77,7 @@ public class MoveSet extends AbstractSet<Move> {
 		flowerMoves = new HashSet<>(original.flowerMoves);
 		flowerMap = new HashMap<>();
 		for (Map.Entry<Flower, HashSet<Flower>> entry : original.flowerMap.entrySet()) {
-			flowerMap.put(entry.getKey(), new HashSet<Flower>(entry.getValue()));
+			flowerMap.put(entry.getKey(), new HashSet<>(entry.getValue()));
 		}
 		ditchMoves = new HashSet<>(original.ditchMoves);
 		otherMoves = new HashSet<>(original.otherMoves);
@@ -253,8 +253,7 @@ public class MoveSet extends AbstractSet<Move> {
 	 * 		sollen
 	 *
 	 * @return Alle {@link Flower}s, mit denen sich die angegebene {@link Flower} kombinieren
-	 * lässt,
-	 * sodass sich {@link Move}s ergeben, die in dieser Menge enthalten sind
+	 * lässt, sodass sich {@link Move}s ergeben, die in dieser Menge enthalten sind
 	 */
 	public Set<Flower> getFlowersCombinableWith(Flower flower) {
 		return Collections.unmodifiableSet(flowerMap.get(flower));
@@ -318,7 +317,7 @@ public class MoveSet extends AbstractSet<Move> {
 		/**
 		 * Gibt true zurück, falls die Iteration noch Elemente enthält.
 		 * <p>
-		 * return true, falls die Iteration noch Elemente enthält
+		 * @return true, falls die Iteration noch Elemente enthält
 		 */
 		public boolean hasNext() {
 			for (Iterator<Move> it : iterators) {
@@ -332,7 +331,8 @@ public class MoveSet extends AbstractSet<Move> {
 		/**
 		 * Gibt das nächste Element der Iteration zurück.
 		 * <p>
-		 * return das nächste Element der Iteration throws NoSuchElementException falls es keine
+		 *
+		 * @return das nächste Element der Iteration throws NoSuchElementException falls es keine
 		 * weiteren Elemente gibt
 		 */
 		public Move next() throws NoSuchElementException {

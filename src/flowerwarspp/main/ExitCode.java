@@ -25,8 +25,7 @@ public enum ExitCode {
 		@Override
 		public String toString() {
 			return "Fehler: Der Spielbrettzustand des Hauptprogramms stimmt nicht mit dem " +
-					"Spielbrettzustand eines " +
-					"Spielers überein.";
+					"Spielbrettzustand eines Spielers überein.";
 		}
 	},
 
@@ -114,8 +113,7 @@ public enum ExitCode {
 		@Override
 		public String toString() {
 			return "Fehler: Der von der Spielsteuerung erhaltene Spielzug ist nicht mit dem " +
-					"Zustand des lokalen " +
-					"Spielbretts vereinbar.";
+					"Zustand des lokalen Spielbretts vereinbar.";
 		}
 	}
 }

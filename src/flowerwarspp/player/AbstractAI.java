@@ -27,8 +27,7 @@ abstract class AbstractAI extends AbstractPlayer {
 	protected static final int SCORE_END = 500;
 	/**
 	 * <code>private</code> Random Number Generator, um die zufällige Auswahl eines Spielzugs mit
-	 * Hilfe von
-	 * Pseudozufallszahlen leisten zu können.
+	 * Hilfe von Pseudozufallszahlen leisten zu können.
 	 */
 	protected static final Random random = new Random();
 
@@ -41,16 +40,14 @@ abstract class AbstractAI extends AbstractPlayer {
 
 	/**
 	 * Fordert einen Zug an, nach den Vorgaben der Interface-Methode {@link Player#request()}.
-	 * Diese
-	 * Methode bedient sich einer Strategie zur Bewertung und anschließend zur Auswahl eines Zuges,
-	 * welche von der Implementation der Methode {@link #getMoveScore(Move)} abhängt.
+	 * Diese Methode bedient sich einer Strategie zur Bewertung und anschließend zur Auswahl
+	 * eines Zuges, welche von der Implementation der Methode {@link #getMoveScore(Move)} abhängt.
 	 *
 	 * @return Der vom Spieler zurück gegebene Zug
 	 *
 	 * @throws Exception
 	 * 		Falls der Spieler nicht in der Lage war, einen Zug zu liefern oder falls diese Methode
-	 * 		zum
-	 * 		falschen Zeitpunkt innerhalb des Zyklus aufgerufen worden ist
+	 * 		zum falschen Zeitpunkt innerhalb des Zyklus aufgerufen worden ist
 	 */
 	protected Move requestMove() throws Exception {
 		final Move move = getMove();

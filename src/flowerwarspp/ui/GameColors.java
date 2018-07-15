@@ -26,8 +26,7 @@ public final class GameColors {
 	public static final Color TRIANGLE_DEFAULT = Color.LIGHT_GRAY;
 	/**
 	 * Die Farbe, die ein angewähltes {@link Triangle} hat, bevor ein zweites für einen
-	 * {@link Move}
-	 * gewählt wurde.
+	 * {@link Move} gewählt wurde.
 	 */
 	public static final Color TRIANGLE_CLICKED = new Color(0x966BAF);
 	/**

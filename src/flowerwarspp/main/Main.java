@@ -81,13 +81,13 @@ public class Main {
 	static void quitWithUsage() {
 		System.out.println("Verwendung:");
 		System.out.println(
-				"flowerwarspp.main.Main (-offer <Spielertyp> -name <Name> [-offerUrl <URL>] [-port" +
-						" <Port>]" +
-						" | -size <Spielfeldgröße> -red <Spielertyp> [-redUrl <URL>] -blue " +
-						"<Spielertyp> [-blueUrl <URL>])" +
-						" [-delay <Verzögerung>] [-load <Spielstandname>] [-replay <Verzögerung>] " +
-						"[-games <Anzahl Spiele>] " +
-						"[--debug] [--text] [--quiet] [--help]");
+				"flowerwarspp.main.Main (-offer <Spielertyp> -name <Name> " +
+						"[-offerUrl <URL>] [-port" +
+						" <Port>] | -size <Spielfeldgröße> -red <Spielertyp> " +
+						"[-redUrl <URL>] -blue " +
+						"<Spielertyp> [-blueUrl <URL>]) [-delay <Verzögerung>] " +
+						"[-load <Spielstandname>] [-replay <Verzögerung>] " +
+						"[-games <Anzahl Spiele>] [--debug] [--text] [--quiet] [--help]");
 		System.out.println();
 		System.out.println("Spielfeldgröße: Zahl zwischen 3 und 30");
 		System.out.println(
@@ -112,20 +112,17 @@ public class Main {
 						"Argumente)");
 		System.out.println(
 				"Quiet:          Das Programm gibt keine Informationen über den Spielablauf. " +
-						"Optionale Flag " +
-						"(hat keine Argumente)");
+						"Optionale Flag hat keine Argumente)");
 		System.out.println(
 				"Help:           Zeigt diese Hilfe an. Das Programm wird dann beendet. Optionale " +
-						"Flag " +
-						"(hat keine Argumente)");
+						"Flag (hat keine Argumente)");
 		System.exit(ERRORCODE_INVALID_ARGS);
 	}
 
 	/**
 	 * Einstiegspunkt der ausführbaren Klasse. Falls keine Kommandozeilenargumente übergeben
-	 * werden,
-	 * wird das Startmenü geöffnet, in welchem die Parameter von Hand in einer GUI gesetzt werden
-	 * können.
+	 * werden, wird das Startmenü geöffnet, in welchem die Parameter von Hand in einer GUI
+	 * gesetzt werden können.
 	 *
 	 * @param args
 	 * 		Kommandozeilenargumente.
@@ -226,8 +223,8 @@ public class Main {
 							e.getMessage());
 			output.showEndMessage(OFFER_ERROR);
 		} catch (Exception e) {
-			Log.log(LogLevel.ERROR, LogModule.MAIN, "There was an error initialising the players" +
-					".");
+			Log.log(LogLevel.ERROR, LogModule.MAIN, "There was an error initialising the" +
+					" players.");
 			output.showEndMessage(PLAYER_INIT_ERROR);
 		}
 	}
@@ -518,8 +515,7 @@ public class Main {
 
 	/**
 	 * Führt die in {@link #saveGame} gespeicherten Spielzüge auf dem Spielbrett aus. Falls dies
-	 * vom
-	 * Benutzer via der Kommandozeilenparameter verlangt worden ist, wird zwischen den einzelnen
+	 * vom Benutzer via der Kommandozeilenparameter verlangt worden ist, wird zwischen den einzelnen
 	 * Züge eine bestimmte Zeit gewartet und der Output aktualisiert, damit das Spielgeschehen
 	 * Schritt für Schritt nachvollzogen werden kann.
 	 *

@@ -7,14 +7,6 @@ import java.io.IOException;
  * auftritt.
  */
 public class LoadException extends Exception {
-
-	/**
-	 * Default-Konstruktor, welcher eine neue Instanz dieser Klasse erzeugt.
-	 */
-	public LoadException() {
-		super();
-	}
-
 	/**
 	 * Konstruktor, welche eine neue Instanz dieser Klasse mit einer Detail-Nachricht erzeugt.
 	 *
@@ -30,8 +22,7 @@ public class LoadException extends Exception {
 	 *
 	 * @param e
 	 * 		Eine Instanz der Klasse {@link IOException}, deren Daten in dieses Objekt kopiert
-	 * 		werden
-	 * 		soll.
+	 * 		werden soll.
 	 */
 	public LoadException(IOException e) {
 		super(e);

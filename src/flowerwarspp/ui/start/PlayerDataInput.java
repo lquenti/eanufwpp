@@ -17,10 +17,6 @@ import java.net.MalformedURLException;
  * als Netzwerkspieler fungieren soll.
  */
 public class PlayerDataInput extends JPanel implements ActionListener {
-	/**
-	 * Ein {@link JLabel}, das dem Nutzer signalisiert, dass ein Spielertyp einzugeben ist.
-	 */
-	private JLabel playerTypeLabel = new JLabel("Spielertyp");
 
 	/**
 	 * Eine {@link PlayerTypeComboBox}, über die der Nutzer den Spielertypen eingeben kann.
@@ -77,6 +73,7 @@ public class PlayerDataInput extends JPanel implements ActionListener {
 
 		JPanel settingsPanel = new JPanel(new GridLayout(4, 2));
 
+		JLabel playerTypeLabel = new JLabel("Spielertyp");
 		settingsPanel.add(playerTypeLabel);
 		playerTypeComboBox.addActionListener(this);
 		settingsPanel.add(playerTypeComboBox);
@@ -124,9 +121,6 @@ public class PlayerDataInput extends JPanel implements ActionListener {
 	 * <code>hostname:port/playername</code> Hat explizit <b>kein</b> <code>rmi://</code>
 	 *
 	 * @return Ein String, der eine URL repräsentiert, mit der ein Nutzer gefunden werden kann.
-	 *
-	 * @throws MalformedURLException
-	 * 		falls die URL ungültig ist.
 	 */
 	public String getPlayerUrl() {
 		StringBuilder urlBuilder = new StringBuilder();

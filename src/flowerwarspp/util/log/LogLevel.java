@@ -8,8 +8,7 @@ public enum LogLevel {
 
 	/**
 	 * Generischer Fallback-Level. Sollte nicht benutzt werden, dient lediglich zur
-	 * Fehlerbehandlung
-	 * im Logger.
+	 * Fehlerbehandlung im Logger.
 	 */
 	NONE {
 		@Override
@@ -30,7 +29,8 @@ public enum LogLevel {
 				public String toString() {
 					return "[DUMP]";
 				}
-			}, /**
+			},
+	/**
 	 * Log-Level für Debug-Nachrichten.
 	 */
 	DEBUG {
@@ -38,7 +38,8 @@ public enum LogLevel {
 				public String toString() {
 					return "[DEBUG]";
 				}
-			}, /**
+			},
+	/**
 	 * Log-Level für Informationen.
 	 */
 	INFO {
@@ -46,7 +47,8 @@ public enum LogLevel {
 				public String toString() {
 					return "[INFO]";
 				}
-			}, /**
+			},
+	/**
 	 * Log-Level für Warnungen.
 	 */
 	WARNING {
@@ -54,7 +56,8 @@ public enum LogLevel {
 				public String toString() {
 					return "[WARNING]";
 				}
-			}, /**
+			},
+	/**
 	 * Log-Level für Fehlermeldungen.
 	 */
 	ERROR {

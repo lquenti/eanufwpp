@@ -26,6 +26,7 @@ public class Dot extends BoardPolygon {
 	/**
 	 * Konstruiert einen Punkt im Koordinatensystem des {@link flowerwarspp.preset.Board}s.
 	 * Wichtig:
+	 * <p>
 	 * Der Text, der die Position schreibt wird als Teil des Borders gesehen (siehe {@link
 	 * BoardPolygon#getBorderColor()}).
 	 *
@@ -55,8 +56,8 @@ public class Dot extends BoardPolygon {
 	 * @param y
 	 * 		Die y-Koordinate.
 	 *
-	 * @return <code>true</code> genau dann, wenn der Abstand des Punkts
-	 * zum Mittelpunkt dieses {@link Dot}s kleiner ist als der Radius dieses {@link Dot}s.
+	 * @return <code>true</code> genau dann, wenn der Abstand des Punkts zum Mittelpunkt dieses
+	 * {@link Dot}s kleiner ist als der Radius dieses {@link Dot}s.
 	 */
 	@Override
 	public boolean contains(int x, int y) {

@@ -33,8 +33,7 @@ public class Players {
 	 * 		Typ des zu erstellenden Spielers
 	 * @param input
 	 * 		Das {@link Requestable}, das der Spieler zum Abfragen von Zügen verwenden soll
-	 * 		verwenden
-	 * 		soll
+	 * 		verwenden soll
 	 * @param url
 	 * 		Die URL im Fall eines Remote-Spielers
 	 *

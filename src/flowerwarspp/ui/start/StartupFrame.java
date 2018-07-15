@@ -8,11 +8,7 @@ public class StartupFrame extends JFrame {
 	 * Ein {@link HostGamePanel}, mit dem der Nutzer ein Spiel hosten kann.
 	 */
 	private GameStartPanel hostGamePanel = new GameStartPanel(this, new HostGamePanel());
-	/**
-	 * ein {@link OfferPlayerPanel}, mit dem der Nutzer einen {@link flowerwarspp.preset.Player}
-	 * anbieten kann.
-	 */
-	private GameStartPanel offerPlayerPanel = new GameStartPanel(this, new OfferPlayerPanel());
+
 	/**
 	 * Eine Referenz auf das aktuell angezeigt Panel.
 	 */
@@ -28,6 +24,7 @@ public class StartupFrame extends JFrame {
 
 		JTabbedPane tabbedPane = new JTabbedPane();
 		tabbedPane.addTab("Spiel hosten", hostGamePanel);
+		GameStartPanel offerPlayerPanel = new GameStartPanel(this, new OfferPlayerPanel());
 		tabbedPane.addTab("Spieler anbieten", offerPlayerPanel);
 		add(tabbedPane, BorderLayout.CENTER);
 

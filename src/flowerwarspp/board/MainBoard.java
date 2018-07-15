@@ -754,7 +754,7 @@ public class MainBoard implements Board {
 				if (isOnBoard(neighbor)) {
 					result.add(neighbor);
 				}
-			} catch (IllegalArgumentException e) {
+			} catch (IllegalArgumentException ignored) {
 			}
 		}
 		return result;
@@ -762,8 +762,7 @@ public class MainBoard implements Board {
 
 	/**
 	 * Gibt die {@link Flower}s zurück, die mit einer gegebenen {@link Flower} eine
-	 * {@link Position}
-	 * gemeinsam haben.
+	 * {@link Position} gemeinsam haben.
 	 *
 	 * @param center
 	 * 		Die {@link Flower}, dessen Nachbarn zurück gegeben werden sollen.
@@ -882,13 +881,13 @@ public class MainBoard implements Board {
 			result.add(new Flower(nodes[0], nodes[1],
 					new Position(nodes[1].getColumn() + nodes[1].getRow() - nodes[0].getRow(),
 							nodes[0].getRow() - nodes[1].getColumn() + nodes[0].getColumn())));
-		} catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException ignored) {
 		}
 		try {
 			result.add(new Flower(nodes[0], nodes[1],
 					new Position(nodes[0].getColumn() - nodes[1].getRow() + nodes[0].getRow(),
 							nodes[1].getRow() + nodes[1].getColumn() - nodes[0].getColumn())));
-		} catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException ignored) {
 		}
 		result.removeIf(f -> ! isOnBoard(f));
 		return result;
@@ -919,7 +918,7 @@ public class MainBoard implements Board {
 				if (isOnBoard(neighbor)) {
 					result.add(neighbor);
 				}
-			} catch (IllegalArgumentException e) {
+			} catch (IllegalArgumentException ignored) {
 			}
 		}
 		return result;
@@ -1222,7 +1221,7 @@ public class MainBoard implements Board {
 		 */
 		@Override
 		public ArrayList<Flower> getAllFlowers() {
-			return new ArrayList<Flower>(Arrays.asList(MainBoard.this.allFlowers));
+			return new ArrayList<>(Arrays.asList(MainBoard.this.allFlowers));
 		}
 
 		/**

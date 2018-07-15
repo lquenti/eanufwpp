@@ -162,8 +162,7 @@ public class AdvancedAI1 extends AbstractAI {
 	/**
 	 * Daten-Struct zum Speichern und Verarbeiten von Zugbewertungen. Da nur Daten transportiert
 	 * werden, und keine Operationen in Form von Methoden von dieser Klasse bereitgestellt werden,
-	 * sind die Instanzvariablen der Klasse
-	 * <code>package-private</code>.
+	 * sind die Instanzvariablen der Klasse <code>package-private</code>.
 	 */
 	private class ScoreResults {
 		/**

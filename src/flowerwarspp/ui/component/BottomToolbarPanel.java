@@ -16,15 +16,7 @@ public class BottomToolbarPanel extends JPanel {
 	 * Das {@link JLabel}, das einen Text enthält, der anzeigt, welcher Spieler am Zug ist.
 	 */
 	private JLabel currentPlayerLabel = new JLabel();
-	/**
-	 * Der Border der um das {@link #currentPlayerLabel} gelegt wird.
-	 */
-	// NOTE: Oben, links, unten, rechts.
-	private Border playerLabelBorder = new EmptyBorder(0, 10, 0, 10);
-	/**
-	 * Das {@link JPanel}, das die Buttons containt.
-	 */
-	private JPanel buttonContainer = new JPanel();
+
 	/**
 	 * Der {@link JButton}, der geklickt werden kann, wenn der Spieler aufgeben möchte.
 	 */
@@ -36,19 +28,17 @@ public class BottomToolbarPanel extends JPanel {
 	private JButton endButton = new JButton("Spiel beenden");
 
 	/**
-	 * Der {@link LayoutManager}, der für das Layout dieses {@link JPanel}s verantwortlich ist.
-	 */
-	private BorderLayout layoutManager = new BorderLayout();
-
-	/**
 	 * Konstruiert ein {@link JPanel}, das eine Toolbar ist, die für das Spielen verwendet wird.
 	 */
 	public BottomToolbarPanel() {
+		BorderLayout layoutManager = new BorderLayout();
 		setLayout(layoutManager);
 
+		Border playerLabelBorder = new EmptyBorder(0, 10, 0, 10);
 		currentPlayerLabel.setBorder(playerLabelBorder);
 		add(currentPlayerLabel, BorderLayout.WEST);
 
+		JPanel buttonContainer = new JPanel();
 		buttonContainer.add(surrenderButton);
 		buttonContainer.add(endButton);
 		add(buttonContainer, BorderLayout.EAST);

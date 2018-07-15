@@ -63,8 +63,7 @@ abstract class AbstractPlayer implements flowerwarspp.preset.Player {
 					"nicht ueberein!";
 	/**
 	 * Stellt diesem Objekt ein eigenes {@link Board} zur Verfügung, um die Durchführung der
-	 * eigenen
-	 * und gegnerischen Züge nachbilden zu können.
+	 * eigenen und gegnerischen Züge nachbilden zu können.
 	 */
 	protected Board board;
 	/**
@@ -99,8 +98,7 @@ abstract class AbstractPlayer implements flowerwarspp.preset.Player {
 	 *
 	 * @throws Exception
 	 * 		Falls der Spieler nicht in der Lage war, einen Zug zu liefern oder falls diese Methode
-	 * 		zum
-	 * 		falschen Zeitpunkt innerhalb des Zyklus aufgerufen worden ist
+	 * 		zum falschen Zeitpunkt innerhalb des Zyklus aufgerufen worden ist
 	 * @throws RemoteException
 	 * 		falls bei der Netzwerkkommunikation etwas schief gelaufen ist
 	 */
@@ -161,8 +159,7 @@ abstract class AbstractPlayer implements flowerwarspp.preset.Player {
 	 *
 	 * @param status
 	 * 		Status des Spielbretts des Hauptprogramms nach Ausführen des zuletzt mit
-	 * 		{@link #request()}
-	 * 		geholten Zuges
+	 * 		{@link #request()} geholten Zuges
 	 *
 	 * @throws Exception
 	 * 		Falls sich der eigene Status und der Status des Hauptprogramms unterscheiden oder falls
@@ -207,10 +204,8 @@ abstract class AbstractPlayer implements flowerwarspp.preset.Player {
 	 *
 	 * @throws Exception
 	 * 		Falls sich die Status des eigenen Spielbretts nach Ausführen des gegnerischen Zuges
-	 * 		und des
-	 * 		Hauptprogramms unterscheiden oder falls diese Methode zum falschen Zeitpunkt innerhalb
-	 * 		des
-	 * 		Zyklus aufgerufen worden ist
+	 * 		und des Hauptprogramms unterscheiden oder falls diese Methode zum falschen Zeitpunkt
+	 * 		innerhalb des Zyklus aufgerufen worden ist
 	 * @throws RemoteException
 	 * 		falls bei der Netzwerkkommunikation etwas schief gelaufen ist
 	 */
@@ -322,30 +317,34 @@ abstract class AbstractPlayer implements flowerwarspp.preset.Player {
 	protected enum PlayerFunction {
 		/**
 		 * Dieser Status signalisiert, dass der Spieler noch nicht mit init() initialisiert worden
-		 * ist. {@link #NULL} ist demnach der Standartwert des {@link #cycleState} nach Aufrufen
-		 * des
-		 * Konstruktors.
+		 * ist. <code>NULL</code> ist demnach der Standartwert des {@link #cycleState} nach Aufrufen
+		 * des Konstruktors.
 		 */
-		NULL, /**
+		NULL,
+		/**
 		 * Dieser Status signalisiert, dass als nächstes die Funktion {@link #request()} aufgerufen
 		 * werden soll.
 		 */
-		REQUEST, /**
-		 * Dieser Status signalisiert, dass als nächstes die Funktion {@link
-		 * #confirm(Status)}aufgerufen werden soll.
+		REQUEST,
+		/**
+		 * Dieser Status signalisiert, dass als nächstes die Funktion {@link #confirm(Status)}
+		 * aufgerufen werden soll.
 		 */
-		CONFIRM, /**
+		CONFIRM,
+		/**
 		 * Dieser Status signalisiert, dass als nächstes die Funktion {@link #update(Move, Status)}
 		 * aufgerufen werden soll.
 		 */
-		UPDATE, /**
+		UPDATE,
+		/**
 		 * Dieser Status signalisiert, dass der Spieler mit {@link #init(int, PlayerColor)}
-		 * initialisiert worden ist. Da es durchaus sein kann, dass der blaue Spieler ein Spiel mit
+		 * initialisiert worden ist.
+		 * <p>
+		 * Da es durchaus sein kann, dass der blaue Spieler ein Spiel mit
 		 * {@link #request()} eröffnet (zum Beispiel wenn das Spiel geladen worden ist und in dem
-		 * Spielstand, Rot den letzten Zug gemacht hat). Der Status
-		 * <code>INITIAL</code> erlaubt sowohl das Aufrufen von {@link #request()} also auch von
-		 * {@link #update(Move, Status)}. Nach dieser anfänglichen Ausnahme ist der {@link
-		 * #cycleState} jedoch fest vorgegeben.
+		 * Spielstand, Rot den letzten Zug gemacht hat). Der Status <code>INITIAL</code> erlaubt
+		 * sowohl das Aufrufen von {@link #request()} also auch von {@link #update(Move, Status)}.
+		 * Nach dieser anfänglichen Ausnahme ist der {@link #cycleState} jedoch fest vorgegeben.
 		 */
 		INITIAL
 	}

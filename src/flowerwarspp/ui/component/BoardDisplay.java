@@ -341,8 +341,7 @@ public class BoardDisplay extends JPanel {
 
 	/**
 	 * Updatet die Größe der {@link Triangle}s. Wird verwendet, um die Dreiecke der aktuellen
-	 * {@link
-	 * Dimension} des Zeichenbretts anzupassen.
+	 * {@link Dimension} des Zeichenbretts anzupassen.
 	 */
 	private void updatePolygonSizes() {
 		// Teile die Höhe dieses Dreiecks auf die verschiedenen Triangles auf.
@@ -493,8 +492,7 @@ public class BoardDisplay extends JPanel {
 	 * Ausschließlich intern benutzt. Überprüft den aktuellen Klick auf einen {@link Flower}-Move.
 	 *
 	 * @return Einen {@link Move} der die gewählten {@link Flower}s enthält, oder
-	 * <code>null</code>,
-	 * wenn kein gültiger {@link Move} gewählt ist.
+	 * <code>null</code>, wenn kein gültiger {@link Move} gewählt ist.
 	 */
 	private Move checkForFlowerMove() {
 		Flower flower1 = displayMouseHandler.clickedFlower1;
@@ -554,8 +552,7 @@ public class BoardDisplay extends JPanel {
 		private Flower clickedFlower1 = null, clickedFlower2 = null;
 		/**
 		 * Wenn {@link Flower}s gesetzt wurden, werdern sie hier zwischengespeichert, damit es
-		 * nicht
-		 * zu Flackern kommt.
+		 * nicht zu Flackern kommt.
 		 */
 		private Flower lastClickedFlower1 = null, lastClickedFlower2 = null;
 		/**
@@ -565,8 +562,7 @@ public class BoardDisplay extends JPanel {
 		private Ditch clickedDitch = null;
 		/**
 		 * Wenn ein {@link Ditch} gesetzt wurde, wird er hier zwischengespeichert, damit es
-		 * nicht zu
-		 * Flackern kommt.
+		 * nicht zu Flackern kommt.
 		 */
 		private Ditch lastClickedDitch = null;
 
@@ -774,8 +770,7 @@ public class BoardDisplay extends JPanel {
 
 		/**
 		 * Interne Methode, dieses Objekt zurücksetzt. Zurücksetzen bedeutet, dass kein Dreieck
-		 * mehr
-		 * gewählt ist, und kein {@link Move} mehr gehalten wird.
+		 * mehr gewählt ist, und kein {@link Move} mehr gehalten wird.
 		 */
 		private void reset() {
 			// Setzt den MouseHandler auf den Ausgangszustand zurück.

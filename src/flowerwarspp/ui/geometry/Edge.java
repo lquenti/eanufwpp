@@ -14,8 +14,7 @@ import java.awt.*;
 public class Edge extends BoardPolygon {
 	/**
 	 * Der Faktor, durch den die Länge des perpendikularen Vektoren geteilt wird. Ausschließlich
-	 * für
-	 * optische Zwecke benutzt.
+	 * für optische Zwecke benutzt.
 	 */
 	private static final int divisionFactor = 15;
 

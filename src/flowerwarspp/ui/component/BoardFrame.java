@@ -79,8 +79,7 @@ public class BoardFrame extends JFrame
 
 	/**
 	 * Gibt einen Verweis auf die singuläre Instanz dieser Singleton-Klasse zurück. Falls noch
-	 * keine
-	 * Instanz existiert, wird eine neue erzeugt.
+	 * keine Instanz existiert, wird eine neue erzeugt.
 	 *
 	 * @return Die singuläre Instanz des Frames
 	 */

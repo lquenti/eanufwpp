@@ -23,8 +23,7 @@ public class InteractivePlayer extends AbstractPlayer {
 	 *
 	 * @param input
 	 * 		Ein Objekt einer Klasse welche {@link Requestable} implementiert, welches genutzt
-	 * 		wird um
-	 * 		einen Spielzug vom Spieler anzufordern.
+	 * 		wird um einen Spielzug vom Spieler anzufordern.
 	 */
 	public InteractivePlayer(Requestable input) {
 		super();
@@ -41,8 +40,7 @@ public class InteractivePlayer extends AbstractPlayer {
 	 *
 	 * @throws Exception
 	 * 		Falls der Spieler nicht in der Lage war, einen Zug zu liefern oder falls diese Methode
-	 * 		zum
-	 * 		falschen Zeitpunkt innerhalb des Zyklus aufgerufen worden ist
+	 * 		zum falschen Zeitpunkt innerhalb des Zyklus aufgerufen worden ist
 	 * @see Requestable
 	 */
 	protected Move requestMove() throws Exception {

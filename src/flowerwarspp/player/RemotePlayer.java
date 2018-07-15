@@ -43,8 +43,7 @@ public class RemotePlayer extends UnicastRemoteObject implements Player {
 
 	/**
 	 * Referenz auf ein Objekt einer Klasse welche das Interface {@link Player} implementiert.
-	 * Diese
-	 * Referenz wird benutzt, um die Funktionalität des Spielers über das Netzwerk zu sichern.
+	 * Diese Referenz wird benutzt, um die Funktionalität des Spielers über das Netzwerk zu sichern.
 	 */
 	private Player player;
 

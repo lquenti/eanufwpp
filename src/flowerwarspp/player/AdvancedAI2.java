@@ -189,8 +189,7 @@ public class AdvancedAI2 extends AbstractAI {
 	 *
 	 * @return Der Score basierend auf den Nachbarn einer Blume. Das erste Element des Arrays
 	 * beschreibt den Score für zusammenhängende Blumen, das zweite Element beschreibt den Score
-	 * für
-	 * Blumen, die keinem Spieler gehören und das dritte Element beschreibt den Score für das
+	 * für Blumen, die keinem Spieler gehören und das dritte Element beschreibt den Score für das
 	 * Clustering.
 	 */
 	private ScoreResults getNeighborScore(Flower flower) {
@@ -254,8 +253,7 @@ public class AdvancedAI2 extends AbstractAI {
 	/**
 	 * Daten-Struct zum Speichern und Verarbeiten von Zugbewertungen. Da nur Daten transportiert
 	 * werden, und keine Operationen in Form von Methoden von dieser Klasse bereitgestellt werden,
-	 * sind die Instanzvariablen der Klasse
-	 * <code>package-private</code>.
+	 * sind die Instanzvariablen der Klasse <code>package-private</code>.
 	 */
 	private class ScoreResults {
 		/**

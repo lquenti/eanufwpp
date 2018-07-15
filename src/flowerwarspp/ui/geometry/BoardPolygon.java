@@ -12,8 +12,7 @@ import java.awt.*;
 public abstract class BoardPolygon extends Polygon {
 	/**
 	 * Die Quadratwurzel von 3.0. Wird zum Berechnen der Koordinaten der beiden anderen Vertices
-	 * des
-	 * Dreiecks verwendet.
+	 * des Dreiecks verwendet.
 	 */
 	private static final double triangleSideHeightFactor = Math.sqrt(3.0) / 2;
 
@@ -107,8 +106,7 @@ public abstract class BoardPolygon extends Polygon {
 
 	/**
 	 * Rechnet eine {@link Position} des Spielbretts in einen {@link Point} auf dem Zeichenbrett
-	 * um.
-	 * Dabei wird die Skalierung des Spielbretts auf dem Zeichenbrett sowie ein Referenzpunkt
+	 * um. Dabei wird die Skalierung des Spielbretts auf dem Zeichenbrett sowie ein Referenzpunkt
 	 * beachtet.
 	 *
 	 * @param position

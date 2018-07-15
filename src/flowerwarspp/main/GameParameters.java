@@ -101,8 +101,7 @@ public class GameParameters {
 
 	/**
 	 * Erzeugt ein neues Objekt basierend auf den angegebenen Kommandozeilenparametern und
-	 * versucht,
-	 * diese zu parsen.
+	 * versucht, diese zu parsen.
 	 *
 	 * @param args
 	 * 		Die Kommandozeilenparameter
@@ -386,7 +385,7 @@ public class GameParameters {
 	/**
 	 * Gibt {@link #loadGame} zurück.
 	 *
-	 * @return Wert von {@link #loadGame()}
+	 * @return Wert von {@link #loadGame}
 	 */
 	public boolean loadGame() {
 		return loadGame;
