@@ -501,9 +501,6 @@ public class MainBoard implements Board {
 	 * @return Um wieviel sich die Punktzahl erhöht hat.
 	 */
 	private int updateScore(Flower flower) {
-		if (!isGarden(getFlowerBed(flower))) {
-			return 0;
-		}
 		return getBedChainScore(flower);
 	}
 
