@@ -12,6 +12,11 @@ import flowerwarspp.util.log.LogModule;
  */
 public class Convert {
 	/**
+	 * Leerer privater Konstruktor zum Verhindern der Objektinitialisierung
+	 */
+	private Convert() {}
+
+	/**
 	 * Gibt die {@link String}-Repräsentation eines {@link Status} zurück.
 	 *
 	 * @param status
