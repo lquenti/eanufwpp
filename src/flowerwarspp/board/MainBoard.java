@@ -109,6 +109,7 @@ public class MainBoard implements Board {
 		oppositePlayer = original.oppositePlayer;
 		currentStatus = original.currentStatus;
 
+		// Legt die Spielerdaten in der EnumMap an.
 		for (Map.Entry<PlayerColor, PlayerData> entry : original.playerDataSet.entrySet()) {
 			playerDataSet.put(entry.getKey(), new PlayerData(entry.getValue()));
 		}
@@ -180,10 +181,14 @@ public class MainBoard implements Board {
 		}
 		switch (move.getType()) {
 			case Ditch:
+				// Gesetzten Graben dem Spieler zuschreiben und der updateAfterMove mitteilen, dass dieser Graben
+				// gesetzt worden ist.
 				playerDataSet.get(currentPlayer).ditches.add(move.getDitch());
 				updateAfterMove(move.getDitch());
 				break;
 			case Flower:
+				// Gesetzte Blumen dem Spieler zuschreiben und der updateAfterMove mitteilen, dass dieser Graben
+				// gesetzt worden ist.
 				playerDataSet.get(currentPlayer).flowers.add(move.getFirstFlower());
 				playerDataSet.get(currentPlayer).flowers.add(move.getSecondFlower());
 				updateAfterMove(new Flower[]{move.getFirstFlower(), move.getSecondFlower()});

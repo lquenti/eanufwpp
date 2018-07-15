@@ -68,6 +68,7 @@ public class OfferPlayerPanel extends GameStartPanel {
 		PlayerType playerType = playerTypeSelector.getItemAt(playerTypeSelector.getSelectedIndex());
 		String playerName = remotePlayerDataInput.getPlayerName();
 		String playerUrl = "rmi://" + remotePlayerDataInput.getPlayerUrl();
-		return new GameParameters(playerType, playerName, playerUrl);
+		// TODO: Port einlesen
+		return new GameParameters(playerType, playerName, 1099, playerUrl);
 	}
 }

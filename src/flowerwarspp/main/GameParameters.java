@@ -179,26 +179,21 @@ public class GameParameters {
 	}
 
 	/**
-	 * Konstruiert ein {@link GameParameters}-Objekt,
-	 * das für das Hosten eines Spiels ausgelegt ist.
+	 * Konstruiert ein neues {@link GameParameters}-Objekt, das für das Hosten eines Spiels ausgelegt ist.
 	 *
-	 * @param boardSize
-	 * Die Größe des Spielbretts.
-	 *
-	 * @param redType
-	 * Der {@link PlayerType} des roten Spielers.
-	 *
-	 * @param redUrl
-	 * @param blueType
-	 * @param blueUrl
-	 * @param delay
+	 * @param boardSize Die Größe des Spielbretts.
+	 * @param redType   Der {@link PlayerType} des roten Spielers.
+	 * @param redUrl    Die URL eines entfernten roten Spielers.
+	 * @param blueType  Der {@link PlayerType} des blauen Spielers.
+	 * @param blueUrl   Die URL eines entfernten blauen Spielers.
+	 * @param delay     Die Verzögerung in ms zwischen zwei Zügen.
 	 */
-	public GameParameters(int boardSize,
-	                      PlayerType redType,
-	                      String redUrl,
-	                      PlayerType blueType,
-	                      String blueUrl,
-	                      int delay) {
+	public GameParameters(int           boardSize,
+	                      PlayerType    redType,
+	                      String        redUrl,
+	                      PlayerType    blueType,
+	                      String        blueUrl,
+	                      int           delay) {
 		if ((redType == PlayerType.REMOTE && (redUrl == null)) ||
 			(blueType == PlayerType.REMOTE && (blueUrl == null))) {
 			Log.log(LogLevel.ERROR, LogModule.UI, "Invalid arguments were constructed.");
@@ -213,9 +208,17 @@ public class GameParameters {
 		this.blueUrl = blueUrl;
 	}
 
-	public GameParameters(PlayerType offerType, String offerName, String offerUrl) {
+	/**
+	 * Konstruiert ein neues {@link GameParameters}-Objekt, das für das Anbieten eines eigenen Spielers ausgelegt ist.
+	 * @param offerType {@link PlayerType} des anzubietenden Spielers.
+	 * @param offerName Name des anzubietenden Spielers.
+	 * @param offerPort Port des anzubietenden Spielers.
+	 * @param offerUrl  URL eines anzubietenden entfernten Spielers.
+	 */
+	public GameParameters(PlayerType offerType, String offerName, int offerPort, String offerUrl) {
 		this.offerType = offerType;
 		this.offerName = offerName;
+		this.offerPort = offerPort;
 		this.offerUrl = offerUrl;
 	}
 
