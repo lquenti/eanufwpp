@@ -120,8 +120,10 @@ public class GameParameters {
 			// Quiet-Schalter überprüfen
 			quiet = argumentParser.isSet("quiet");
 
-			// Wenn ein Spieler im Netzwerk angeboten werden soll, werden die notwendigen Einstellungen geparsed und
-			// dann die Methode verlassen.
+			/*
+			 * Wenn ein Spieler im Netzwerk angeboten werden soll, werden die notwendigen Einstellungen geparsed und
+			 * dann die Methode verlassen.
+			 */
 			if (argumentParser.isSet("offer")) {
 				System.out.println("Biete Netzwerkspieler an, andere Argumente werden ignoriert.");
 				offerType = argumentParser.getOffer();

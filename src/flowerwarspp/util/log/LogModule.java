@@ -2,8 +2,6 @@ package flowerwarspp.util.log;
 
 /**
  * Die Module, aus welchen geloggt werden soll.
- *
- *
  */
 public enum LogModule {
 	/**
@@ -20,11 +18,11 @@ public enum LogModule {
 	 */
 	BOARD,
 	/**
-	 * Modul des User Interfaces. Log-Einträge aus UI-Klassen sollten dieses Modul benutzen.
-	 */
-	UI,
-	/**
 	 * Modul des Spielers. Log-Einträge aus der Spieler-Klassen sollten dieses Modul benutzen.
 	 */
-	PLAYER
+	PLAYER,
+	/**
+	 * Modul des User Interfaces. Log-Einträge aus UI-Klassen sollten dieses Modul benutzen.
+	 */
+	UI
 }

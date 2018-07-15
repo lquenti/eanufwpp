@@ -13,6 +13,10 @@ public enum LogLevel {
 	/**
 	 * Log-Level für Daten-Dumps. Falls viele Daten auf einmal geloggt werden sollen, sollte dieser Level benutzt
 	 * werden.
+	 *
+	 * Neue Log-Einträge diesen Levels werden nicht automatisch geschrieben (geflushed), selbst wenn
+	 * {@link Log#flushOnLog} gesetzt ist, damit die Performance beibehalten wird. Als Nachteil wächst so unter
+	 * Umständen der verwendete {@link StringBuffer} an.
 	 */
 	DUMP,
 	/**

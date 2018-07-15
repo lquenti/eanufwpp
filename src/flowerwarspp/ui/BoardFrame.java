@@ -58,7 +58,9 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 	 */
 	private BottomToolbarPanel bottomToolbarPanel = new BottomToolbarPanel();
 
-	// TODO: Dokumentation
+	/**
+	 * Das vom Hauptprogramm übergebende {@link SaveGame}, mit welchem das Spiel gespeichert werden kann.
+	 */
 	private SaveGame saveGame;
 
 	/**

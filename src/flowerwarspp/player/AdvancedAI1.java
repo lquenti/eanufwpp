@@ -47,9 +47,11 @@ public class AdvancedAI1 extends AbstractAI {
 
 		switch (move.getType()) {
 			case Flower:
-				// Die direkten Nachbarn der ersten Zugblume aus dem Viewer abrufen. Diese werden benötigt, um zu
-				// überprüfen, ob die beiden zu setzenden Blumen nebeneinander liegen und um den Score auf Basis der
-				// Nachbarn zu berechnen.
+				/*
+				 * Die direkten Nachbarn der ersten Zugblume aus dem Viewer abrufen. Diese werden benötigt, um zu
+				 * überprüfen, ob die beiden zu setzenden Blumen nebeneinander liegen und um den Score auf Basis der
+				 * Nachbarn zu berechnen.
+				 */
 				final Collection<Flower> firstFlowerNeighbors = boardViewer.getDirectNeighbors(move.getFirstFlower());
 				final Collection<Flower> secondFlowerNeighbors = boardViewer.getDirectNeighbors(move.getSecondFlower());
 
@@ -57,23 +59,29 @@ public class AdvancedAI1 extends AbstractAI {
 				final ScoreResults s1 = getNeighborScore(firstFlowerNeighbors);
 				final ScoreResults s2 = getNeighborScore(secondFlowerNeighbors);
 
-				// Züge, die Beete oder Gärten schaffen, werden priorisiert, Züge die in der Nähe des Gegners liegen
-				// werden negativ bewertet.
+				/*
+				 * Züge, die Beete oder Gärten schaffen, werden priorisiert, Züge die in der Nähe des Gegners liegen
+				 * werden negativ bewertet.
+				 */
 				int score = gardenMultiplier * ( s1.gardenScore + 1 ) * ( s2.gardenScore + 1 )
 						+ notOwnedFlowerMultiplier * ( s1.notOwnedFlowerScore + 1 ) * ( s2.notOwnedFlowerScore + 1 );
 
-				// Falls die beiden zu setzenden Blumen nebeneinander liegen, soll der Score verdoppelt werden.
-				// So werden Züge mit einzeln gesetzten Blumen immer nur dann gemacht, wenn es nicht anders geht.
+				/*
+				 * Falls die beiden zu setzenden Blumen nebeneinander liegen, soll der Score verdoppelt werden.
+				 * So werden Züge mit einzeln gesetzten Blumen immer nur dann gemacht, wenn es nicht anders geht.
+				 */
 				if (firstFlowerNeighbors.contains(move.getSecondFlower()))
 					score *= flowerPairMultiplier;
 
 				return score;
 
 			case Ditch:
-				// Simulieren des Ditch-Zugs auf einem mit dem Copy-Konstruktor erstellten Spielbrett.
-				// Falls der Ditch-Move die Punktezahl erhöht, wird er sofort ausgewählt.
-				// Andernfalls haben Ditch-Züge eine Bewertung von 0, sodass sie erst ausgeführt werden, wenn keine
-				// Blumen mehr gesetzt werden können.
+				/*
+				 * Simulieren des Ditch-Zugs auf einem mit dem Copy-Konstruktor erstellten Spielbrett.
+				 * Falls der Ditch-Move die Punktezahl erhöht, wird er sofort ausgewählt.
+				 * Andernfalls haben Ditch-Züge eine Bewertung von 0, sodass sie erst ausgeführt werden, wenn keine
+				 * Blumen mehr gesetzt werden können.
+				 */
 				MainBoard sim = new MainBoard((MainBoard) getBoard());
 				sim.make(move);
 
@@ -83,10 +91,12 @@ public class AdvancedAI1 extends AbstractAI {
 					return 0;
 
 			case End:
-				// Falls dieser Spieler weniger Punkte hat als sein Gegner (also durch Beenden des Spiels verlieren
-				// würde) wird der End-Zug nicht ausgeführt (stattdessen werden zufällig Ditches gesetzt, in der
-				// Hoffnung, dass dadurch Gärten über Beete verbunden werden).
-				// Würde dieser Spieler durch Beenden des Spiels jedoch gewinnen, tut er dies sofort.
+				/*
+				 * Falls dieser Spieler weniger Punkte hat als sein Gegner (also durch Beenden des Spiels verlieren
+				 * würde) wird der End-Zug nicht ausgeführt (stattdessen werden zufällig Ditches gesetzt, in der
+				 * Hoffnung, dass dadurch Gärten über Beete verbunden werden).
+				 * Würde dieser Spieler durch Beenden des Spiels jedoch gewinnen, tut er dies sofort.
+				 */
 				if (boardViewer.getPoints(getPlayerColor()) > boardViewer.getPoints(( getPlayerColor() == PlayerColor
 						.Red ) ? PlayerColor.Blue : PlayerColor.Red))
 					return SCORE_END;
@@ -108,10 +118,12 @@ public class AdvancedAI1 extends AbstractAI {
 		// Der Rückgabewert ist ein ScoreResults Objekt.
 		ScoreResults result = new ScoreResults();
 
-		// Durch die direkten Nachbarn der betrachteten Blume iterieren und gardenScore immer genau dann
-		// inkrementieren, wenn einer dieser direkten Nachbarn der eigenen Farbe gehört.
-		// So werden Beete und Gärten gebildet.
-		// Nachbarn, welche keinem Spieler gehören, inkremementieren notOwnedFlowerScore.
+		/*
+		 * Durch die direkten Nachbarn der betrachteten Blume iterieren und gardenScore immer genau dann
+		 * inkrementieren, wenn einer dieser direkten Nachbarn der eigenen Farbe gehört.
+		 * So werden Beete und Gärten gebildet.
+		 * Nachbarn, welche keinem Spieler gehören, inkremementieren notOwnedFlowerScore.
+		 */
 		for (Flower neighbor : flowerNeighbors) {
 			if (boardViewer.getFlowerColor(neighbor) == getPlayerColor())
 				result.gardenScore++;

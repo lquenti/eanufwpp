@@ -19,8 +19,6 @@ import static flowerwarspp.util.log.LogModule.*;
  * Im Normalfall wird, falls ein Eintrag mit {@link #log(LogLevel, LogModule, String)} an den Logger geschickt wird, der
  * gesamte Log bis dahin mit {@link #flush()} gelehrt. {@link #flush()} schreibt den gesamten Inhalt des {@link
  * #messageBuffer} mit {@link PrintStream#print(String)} des Objekts {@link #output}.
- *
- *
  */
 public class Log {
 
