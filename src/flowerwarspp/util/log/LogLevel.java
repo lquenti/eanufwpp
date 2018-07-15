@@ -9,7 +9,12 @@ public enum LogLevel {
 	/**
 	 * Generischer Fallback-Level. Sollte nicht benutzt werden, dient lediglich zur Fehlerbehandlung im Logger.
 	 */
-	NONE,
+	NONE {
+		@Override
+		public String toString() {
+			return "[NONE]";
+		}
+	},
 	/**
 	 * Log-Level für Daten-Dumps. Falls viele Daten auf einmal geloggt werden sollen, sollte dieser Level benutzt
 	 * werden.
@@ -18,21 +23,46 @@ public enum LogLevel {
 	 * {@link Log#flushOnLog} gesetzt ist, damit die Performance beibehalten wird. Als Nachteil wächst so unter
 	 * Umständen der verwendete {@link StringBuffer} an.
 	 */
-	DUMP,
+	DUMP {
+		@Override
+		public String toString() {
+			return "[DUMP]";
+		}
+	},
 	/**
 	 * Log-Level für Debug-Nachrichten.
 	 */
-	DEBUG,
+	DEBUG {
+		@Override
+		public String toString() {
+			return "[DEBUG]";
+		}
+	},
 	/**
 	 * Log-Level für Informationen.
 	 */
-	INFO,
+	INFO {
+		@Override
+		public String toString() {
+			return "[INFO]";
+		}
+	},
 	/**
 	 * Log-Level für Warnungen.
 	 */
-	WARNING,
+	WARNING {
+		@Override
+		public String toString() {
+			return "[WARNING]";
+		}
+	},
 	/**
 	 * Log-Level für Fehlermeldungen.
 	 */
-	ERROR
+	ERROR {
+		@Override
+		public String toString() {
+			return "[ERROR]";
+		}
+	}
 }
