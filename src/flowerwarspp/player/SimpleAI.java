@@ -34,8 +34,7 @@ public class SimpleAI extends AbstractAI {
 
 		/*
 		 * Es werden nur Blumen-Züge bewertet, Ditch-Züge werden genau dann zufällig ausgewählt,
-		 * wenn es keine möglichen
-		 * Blumen-Züge mehr gibt.
+		 * wenn es keine möglichen Blumen-Züge mehr gibt.
 		 */
 		if (move.getType().equals(MoveType.Ditch)) {
 			return 0;
@@ -52,10 +51,8 @@ public class SimpleAI extends AbstractAI {
 
 		/*
 		 * Die direkten Nachbarn der ersten Zugblume aus dem Viewer abrufen. Diese werden
-		 * benötigt, um zu
-		 * überprüfen, ob die beiden zu setzenden Blumen nebeneinander liegen und um den Score auf
-		 * Basis der
-		 * Nachbarn zu berechnen.
+		 * benötigt, um zu überprüfen, ob die beiden zu setzenden Blumen nebeneinander liegen und
+		 * um den Score auf Basis der Nachbarn zu berechnen.
 		 */
 		final Collection<Flower> firstFlowerNeighbors =
 				boardViewer.getDirectNeighbors(move.getFirstFlower());
@@ -64,8 +61,7 @@ public class SimpleAI extends AbstractAI {
 
 		/*
 		 * Iterieren durch alle Nachbarn beider Zug-Blumen. Die Zählvariable wird nur genau dann
-		 * inkrementiert, wenn
-		 * unter den Nachbarn Blumen eigener Farbe existieren.
+		 * inkrementiert, wenn unter den Nachbarn Blumen eigener Farbe existieren.
 		 */
 		for (Flower neighbor : firstFlowerNeighbors) {
 			if (boardViewer.getFlowerColor(neighbor) == getPlayerColor()) {

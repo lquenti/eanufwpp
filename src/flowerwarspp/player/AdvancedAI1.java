@@ -53,10 +53,8 @@ public class AdvancedAI1 extends AbstractAI {
 			case Flower:
 				/*
 				 * Die direkten Nachbarn der ersten Zugblume aus dem Viewer abrufen. Diese werden
-				 * benötigt, um zu
-				 * überprüfen, ob die beiden zu setzenden Blumen nebeneinander liegen und um den
-				 * Score auf Basis der
-				 * Nachbarn zu berechnen.
+				 * benötigt, um zu überprüfen, ob die beiden zu setzenden Blumen nebeneinander
+				 * liegen und um den Score auf Basis der Nachbarn zu berechnen.
 				 */
 				final Collection<Flower> firstFlowerNeighbors =
 						boardViewer.getDirectNeighbors(move.getFirstFlower());
@@ -69,8 +67,7 @@ public class AdvancedAI1 extends AbstractAI {
 
 				/*
 				 * Züge, die Beete oder Gärten schaffen, werden priorisiert, Züge die in der Nähe
-				 * des Gegners liegen
-				 * werden negativ bewertet.
+				 * des Gegners liegen werden negativ bewertet.
 				 */
 				int score = gardenMultiplier * (s1.gardenScore + 1) * (s2.gardenScore + 1) +
 						notOwnedFlowerMultiplier * (s1.notOwnedFlowerScore + 1) *
@@ -94,8 +91,7 @@ public class AdvancedAI1 extends AbstractAI {
 				 * Spielbrett.
 				 * Falls der Ditch-Move die Punktezahl erhöht, wird er sofort ausgewählt.
 				 * Andernfalls haben Ditch-Züge eine Bewertung von 0, sodass sie erst ausgeführt
-				 * werden, wenn keine
-				 * Blumen mehr gesetzt werden können.
+				 * werden, wenn keine Blumen mehr gesetzt werden können.
 				 */
 				MainBoard sim = new MainBoard((MainBoard) getBoard());
 				sim.make(move);
@@ -110,10 +106,9 @@ public class AdvancedAI1 extends AbstractAI {
 			case End:
 				/*
 				 * Falls dieser Spieler weniger Punkte hat als sein Gegner (also durch Beenden des
-				 * Spiels verlieren
-				 * würde) wird der End-Zug nicht ausgeführt (stattdessen werden zufällig Ditches
-				 * gesetzt, in der
-				 * Hoffnung, dass dadurch Gärten über Beete verbunden werden).
+				 * Spiels verlieren würde) wird der End-Zug nicht ausgeführt (stattdessen werden
+				 * zufällig Ditches gesetzt, in der Hoffnung, dass dadurch Gärten über Beete
+				 * verbunden werden).
 				 * Würde dieser Spieler durch Beenden des Spiels jedoch gewinnen, tut er dies
 				 * sofort.
 				 */
@@ -144,8 +139,7 @@ public class AdvancedAI1 extends AbstractAI {
 
 		/*
 		 * Durch die direkten Nachbarn der betrachteten Blume iterieren und gardenScore immer
-		 * genau dann
-		 * inkrementieren, wenn einer dieser direkten Nachbarn der eigenen Farbe gehört.
+		 * genau dann inkrementieren, wenn einer dieser direkten Nachbarn der eigenen Farbe gehört.
 		 * So werden Beete und Gärten gebildet.
 		 * Nachbarn, welche keinem Spieler gehören, inkremementieren notOwnedFlowerScore.
 		 */

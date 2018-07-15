@@ -84,15 +84,13 @@ abstract class AbstractAI extends AbstractPlayer {
 			if (score >= SCORE_END) {
 				/*
 				 * Falls getMoveScore() einen Wert größer gleich der statischen Werte SCORE_END
-				 * und SCORE_DITCH
-				 * zurückgegeben hat, wird dieser Zug sofort verwendet.
+				 * und SCORE_DITCH zurückgegeben hat, wird dieser Zug sofort verwendet.
 				 */
 				return move;
 			} else if (score > highestScore) {
 				/*
 				 * Falls der zurück gegebene Zug einen höheren Score hat als alle Züge davor, wird
-				 * dieser Zug
-				 * zum höchstbewerteten Zug.
+				 * dieser Zug zum höchstbewerteten Zug.
 				 */
 				highestScore = score;
 				highestScoredMoves.clear();
@@ -100,8 +98,8 @@ abstract class AbstractAI extends AbstractPlayer {
 			} else if (score == highestScore) {
 				/*
 				 * Falls der zurück gegebene Zug einen Score gleich dem bisher höchsten Score hat,
-				 * wird der aktuell
-				 * betrachtete Zug der Collection der höchst bewerteten Züge hinzugefügt.
+				 * wird der aktuell betrachtete Zug der Collection der höchst bewerteten Züge
+				 * hinzugefügt.
 				 */
 				highestScoredMoves.add(move);
 			}
@@ -121,13 +119,10 @@ abstract class AbstractAI extends AbstractPlayer {
 		/*
 		 * Es wird aus der Collection der am höchsten bewerteten Züge zufällig ein Zug ausgewählt.
 		 * skip(int n) gibt einen neuen Stream zurück, mit den verbleibenden Elementen des Streams
-		 * nachdem die ersten n
-		 * Elemente übersprungen worden sind.
+		 * nachdem die ersten n Elemente übersprungen worden sind.
 		 * findFirst() gibt entweder das erste Element dieses Streams als Optional zurück, oder
-		 * ein Optional mit dem
-		 * Wert null. Mit orElse() wird entweder dieses erste Element zurück gegeben, oder null,
-		 * falls das Optional
-		 * diesen Wert hat.
+		 * ein Optional mit dem Wert null. Mit orElse() wird entweder dieses erste Element zurück
+		 * gegeben, oder null, falls das Optional diesen Wert hat.
 		 */
 		return highestScoredMoves.stream().skip((random.nextInt(highestScoredMoves.size())))
 				.findFirst().orElse(null);

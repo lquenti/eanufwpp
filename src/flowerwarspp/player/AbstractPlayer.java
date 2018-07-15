@@ -262,10 +262,9 @@ abstract class AbstractPlayer implements flowerwarspp.preset.Player {
 
 		/*
 		 * Falls der cycleState schon gesetzt worden ist (also nicht mehr gleich NULL ist), wird
-		 * das Spielbrett zurück
-		 * gesetzt, um ein neues Spiel zu starten.
-		 * Falls des Spielbrett noch nicht gesetzt worden ist, wird ein neues
-		 * Brett gegebener Größe erzeugt und der zugehörige Viewer gesetzt.
+		 * das Spielbrett zurück gesetzt, um ein neues Spiel zu starten.
+		 * Falls des Spielbrett noch nicht gesetzt worden ist, wird ein neues Brett gegebener
+		 * Größe erzeugt und der zugehörige Viewer gesetzt.
 		 */
 		if (board == null || cycleState != NULL) {
 			board = new MainBoard(boardSize);
