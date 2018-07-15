@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 import flowerwarspp.board.MainBoard;
+import flowerwarspp.main.ExitCode;
 import flowerwarspp.main.savegame.SaveGame;
 import flowerwarspp.preset.*;
 import flowerwarspp.ui.Output;
@@ -20,24 +21,6 @@ public class RemotePlayer
 	 * Serialisierungskonstante
 	 */
     private static final long serialVersionUID = 1L;
-
-	/**
-	 * Eine Nachricht, die ausgegeben wird, wenn der zugrundeliegende Spieler keinen Zug zurückgeben
-	 * konnte.
-	 */
-	private static final String noMoveMessage = "Fehler: Der Spieler konnte keinen Zug erzeugen.";
-
-	/**
-	 * Eine Nachricht, die ausgegeben wird, wenn in {@link Player#confirm} des zugrundeliegenden
-	 * Spielers ein Fehler auftritt.
-	 */
-	private static final String inconsistentStateMessage = "Fehler: Der von der Spielsteuerung erhaltene Spielbrettzustand stimmt nicht mit dem des lokalen Spielbretts überein.";
-
-	/**
-	 * Eine Nachricht, die ausgegeben wird, wenn in {@link Player#update} des zugrundeliegenden
-	 * Spielers ein Fehler auftritt.
-	 */
-	private static final String recievedIllegalMoveMessage = "Fehler: Der von der Spielsteuerung erhaltene Spielzug ist nicht mit dem Zustand des lokalen Spielbretts vereinbar.";
 
 	/**
 	 * Referenz auf ein Objekt welches {@link Output} implementiert. Mit diesem Objekt kann lokal das entfernt
@@ -102,7 +85,7 @@ public class RemotePlayer
 		try {
 			result = player.request();
 		} catch (Exception e) {
-			output.showEndMessage(noMoveMessage);
+			output.showEndMessage(ExitCode.NO_MOVE);
 			throw e;
 		}
 		board.make(result);
@@ -112,7 +95,7 @@ public class RemotePlayer
 
 		output.refresh();
 		if (boardViewer.getStatus() != Status.Ok) {
-			output.showEndMessage(Convert.statusToText(boardViewer.getStatus()));
+			output.showEndMessage(Convert.statusToText(boardViewer.getStatus()), ExitCode.OK);
 		}
 		return result;
 	}
@@ -125,7 +108,7 @@ public class RemotePlayer
 		try {
 			player.confirm(status);
 		} catch (Exception e) {
-			output.showEndMessage(inconsistentStateMessage);
+			output.showEndMessage(ExitCode.STATE_INCONSISTENT);
 			throw e;
 		}
 	}
@@ -138,7 +121,7 @@ public class RemotePlayer
 		try {
 			player.update(opponentMove, status);
 		} catch (Exception e) {
-			output.showEndMessage(recievedIllegalMoveMessage);
+			output.showEndMessage(ExitCode.ILLEGAL_MOVE);
 			throw e;
 		}
 		board.make(opponentMove);
@@ -148,7 +131,7 @@ public class RemotePlayer
 
 		output.refresh();
 		if (boardViewer.getStatus() != Status.Ok) {
-			output.showEndMessage(Convert.statusToText(boardViewer.getStatus()));
+			output.showEndMessage(Convert.statusToText(boardViewer.getStatus()), ExitCode.OK);
 		}
 	}
 

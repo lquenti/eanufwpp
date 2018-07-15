@@ -26,9 +26,10 @@ public class Players {
 	 * @return Ein nach den gegebenen Parametern erzeugter Spieler
 	 * @throws IllegalArgumentException falls versucht wird, einen Remote-Spieler mit vorhandenem, nichtleerem Board zu
 	 *                                  erzeugen.
+	 * @throws NetworkException Falls an der gegebenen URL kein entfernter Spieler gefunden werden konnte.
 	 */
 	public static Player createPlayer(PlayerType type, Requestable input, String url, Board board)
-			throws IllegalArgumentException {
+			throws IllegalArgumentException, NetworkException {
 		// Falls auf dem Brett schon Züge gemacht wurden, geht Netzwerkspiel nicht.
 		if (type == PlayerType.REMOTE && board != null && ! board.viewer().getFlowers(PlayerColor.Red).isEmpty()) {
 			throw new IllegalArgumentException("Spielstände laden wird von Remote-Spielern nicht unterstützt.");
@@ -73,8 +74,9 @@ public class Players {
 	 * @param input Das {@link Requestable}, das der Spieler zum Abfragen von Zügen verwenden soll verwenden soll
 	 * @param url   Die URL im Fall eines Remote-Spielers
 	 * @return Der erzeugte Spieler
+	 * @throws NetworkException Falls an der gegebenen URL kein entfernter Spieler gefunden werden konnte.
 	 */
-	public static Player createPlayer(PlayerType type, Requestable input, String url) {
+	public static Player createPlayer(PlayerType type, Requestable input, String url) throws NetworkException {
 		return createPlayer(type, input, url, null);
 	}
 
@@ -83,16 +85,20 @@ public class Players {
 	 *
 	 * @param url Die URL des zu suchenden entfernten Spielers
 	 * @return Der im Netzwerk angebotene und gefundene entfernte Spieler
+	 * @throws NetworkException Falls an der angegebenen URL kein Spieler gefunden werden konnte.
 	 */
-	public static Player findRemotePlayer(String url) {
+	public static Player findRemotePlayer(String url) throws NetworkException {
 		Player result = null;
-		try {
+
 			Log.log(LogLevel.DEBUG, LogModule.PLAYER, "Looking up player " + url);
+		try {
 			result = (Player) Naming.lookup("rmi://" + url);
 		} catch (Exception e) {
-			System.out.println("Der angegebene Spieler konnte nicht im Netzwerk gefunden werden.");
-			Log.log(LogLevel.ERROR, LogModule.PLAYER, "Unable to find the specified player on the network.");
+			throw new NetworkException();
 		}
+
+		Log.log(LogLevel.ERROR, LogModule.PLAYER, "Unable to find the specified player on the network.");
+
 		return result;
 	}
 
@@ -114,8 +120,6 @@ public class Players {
 			throw new RemoteException("Der Name des anzubietenden Spielers ist nicht gültig.");
 		}
 
-		System.out.println("Der Spieler mit dem Namen " + name + " ist jetzt im Netzwerk auf diesem Host am Port "
-				+ port + " verfügbar.");
 		Log.log(LogLevel.INFO, LogModule.PLAYER, "Remote player " + name + " has successfully been offered" +
 				" on port " + port + " in the network.");
 	}

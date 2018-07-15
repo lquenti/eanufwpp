@@ -1,8 +1,8 @@
 package flowerwarspp.ui;
 
+import flowerwarspp.main.ExitCode;
 import flowerwarspp.main.savegame.SaveGame;
 import flowerwarspp.preset.*;
-import flowerwarspp.util.Convert;
 
 import java.util.Scanner;
 
@@ -38,11 +38,6 @@ public class TextInterface implements Requestable, Output {
 	 * Der {@link Scanner}, der Eingaben von der Texteingabe einliest.
 	 */
 	private Scanner inputScanner = new Scanner(System.in);
-
-	/**
-	 * Das {@link SaveGame} des Spiels, das auf diesem {@link Output} gespielt wird.
-	 */
-	private SaveGame saveGame;
 
 	/**
 	 * Liest einen Spielzug vom Standard Input ein.
@@ -163,11 +158,6 @@ public class TextInterface implements Requestable, Output {
 		System.out.println();
 		System.out.println("Rot:  " + viewer.getPoints(PlayerColor.Red) + " Punkte");
 		System.out.println("Blau: " + viewer.getPoints(PlayerColor.Blue) + " Punkte");
-
-		if (viewer.getStatus() != Status.Ok) {
-			System.out.println();
-			System.out.println(Convert.statusToText(viewer.getStatus()));
-		}
 	}
 
 	/**
@@ -190,7 +180,16 @@ public class TextInterface implements Requestable, Output {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void showEndMessage(String message) {
+	public void showEndMessage(String message, ExitCode exitCode) {
 		System.out.println(message);
+		System.exit(exitCode.ordinal());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void showEndMessage(ExitCode exitCode) {
+		showEndMessage(exitCode.toString(), exitCode);
 	}
 }

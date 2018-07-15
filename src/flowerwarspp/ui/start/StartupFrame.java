@@ -2,7 +2,7 @@ package flowerwarspp.ui.start;
 
 import javax.swing.*;
 
-import flowerwarspp.main.Game;
+import flowerwarspp.main.Main;
 import flowerwarspp.main.GameParameters;
 
 import java.awt.*;
@@ -81,7 +81,7 @@ public class StartupFrame extends JFrame implements ActionListener {
 			// (der dann allerdings dem main-Thread in nichts nachsteht).
 			dispose();
 			GameParameters gameParameters = currentGameStartPanel.createParameters();
-			Thread thread = new Thread(() -> new Game(gameParameters));
+			Thread thread = new Thread(() -> Main.startNewGame(gameParameters));
 			thread.start();
 			return;
 		}

@@ -1,5 +1,6 @@
 package flowerwarspp.ui;
 
+import flowerwarspp.main.ExitCode;
 import flowerwarspp.main.savegame.SaveGame;
 import flowerwarspp.preset.Viewer;
 
@@ -28,8 +29,18 @@ public class DummyOutput implements Output {
 	public void setSaveGame(SaveGame saveGame) {}
 
 	/**
-	 * {@inheritDoc} Diese Implementation tut nichts.
+	 * {@inheritDoc} Beendet das Programm mit dem übergebenen {@link ExitCode}.
 	 */
 	@Override
-	public void showEndMessage(String message) {}
+	public void showEndMessage(String message, ExitCode exitCode) {
+		showEndMessage(exitCode);
+	}
+
+	/**
+	 * {@inheritDoc} Beendet das Programm mit dem übergebenen {@link ExitCode}.
+	 */
+	@Override
+	public void showEndMessage(ExitCode exitCode) {
+		System.exit(exitCode.ordinal());
+	}
 }

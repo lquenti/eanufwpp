@@ -1,5 +1,6 @@
 package flowerwarspp.ui;
 
+import flowerwarspp.main.ExitCode;
 import flowerwarspp.main.savegame.SaveGame;
 import flowerwarspp.preset.*;
 
@@ -193,9 +194,16 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void showEndMessage(String message) {
+	public void showEndMessage(String message, ExitCode exitCode) {
 		// NOTE: Es ist wichtig, dass der Konstruktor durch EventQueue aufgerufen wird,
 		// da das Programm aufgrund Swings Threading-Struktur sonst blockiert.
-		EventQueue.invokeLater(() -> new EndPopupFrame(this, message));
+		EventQueue.invokeLater(() -> new EndPopupFrame(this, message, exitCode));
+	}
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void showEndMessage(ExitCode exitCode) {
+		showEndMessage(exitCode.toString(), exitCode);
 	}
 }

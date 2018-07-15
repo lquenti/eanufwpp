@@ -1,8 +1,8 @@
 package flowerwarspp.ui;
 
+import flowerwarspp.main.ExitCode;
 import flowerwarspp.main.savegame.SaveGame;
 import flowerwarspp.preset.Viewer;
-import flowerwarspp.preset.Board;
 
 /**
  * Ein Output an den menschlichen User.
@@ -30,9 +30,19 @@ public interface Output {
 
 	/**
 	 * Zeigt in der Ausgabe eine Meldung an, die dem Nutzer die Möglichkeit bietet, das Programm
-	 * zu beenden.
+	 * zu beenden. Das Programm wird mit dem übergebenen {@link ExitCode} beendet.
 	 *
-	 * @param message Die Nachricht, die angezeigt werden soll
+	 * @param message  Die Nachricht, die angezeigt werden soll
+	 * @param exitCode {@link ExitCode} welcher dem Betriebssystem mit {@link System#exit(int)} mitgeteilt wird.
 	 */
-	void showEndMessage(String message);
+	void showEndMessage(String message, ExitCode exitCode);
+
+	/**
+	 * Zeigt in der Ausgabe eine Meldung an, die dem Nutzer die Möglichkeit bietet, das Programm
+	 * zu beenden. Das Programm wird mit dem übergebenen {@link ExitCode} beendet. Die anzuzeigende Nachricht wird
+	 * dabei vom übergebenen {@link ExitCode} übernommen.
+	 *
+	 * @param exitCode {@link ExitCode} welcher dem Betriebssystem mit {@link System#exit(int)} mitgeteilt wird.
+	 */
+	void showEndMessage(ExitCode exitCode);
 }
