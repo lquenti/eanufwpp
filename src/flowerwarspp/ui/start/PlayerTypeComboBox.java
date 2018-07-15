@@ -1,9 +1,12 @@
 package flowerwarspp.ui.start;
 
-import flowerwarspp.preset.PlayerType;
-
-import javax.swing.*;
+import java.awt.Component;
 import java.util.Collection;
+
+import flowerwarspp.player.Players;
+import flowerwarspp.preset.PlayerType;
+import flowerwarspp.util.Convert;
+import javax.swing.*;
 
 /**
  * Eine {@link JComboBox} für {@link PlayerType}s.
@@ -25,10 +28,10 @@ public class PlayerTypeComboBox extends JComboBox<PlayerType> {
 
 	/**
 	 * Konstruiert eine {@link JComboBox}, mit der sich alle Elemente aus
-	 * {@link GameStartPanel#availablePlayerTypes} auswählen lassen.
+	 * {@link Players#AVAILABLE_PLAYER_TYPES} auswählen lassen.
 	 */
 	public PlayerTypeComboBox() {
-		this(GameStartPanel.availablePlayerTypes);
+		this(Players.AVAILABLE_PLAYER_TYPES);
 	}
 
 	// NOTE: Das heißt "Covariant Return Type"

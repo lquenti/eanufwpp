@@ -150,8 +150,8 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 	@Override
 	public void stateChanged(ChangeEvent changeEvent) {
 		if (changeEvent.getSource() == topToolbarPanel.getZoomSpinner()) {
-			double newZoom = ((Integer) topToolbarPanel.getZoomSpinner().getValue()) / 100.0;
-			boardDisplay.setZoom(newZoom);
+			double zoom = topToolbarPanel.getZoomSpinnerNumberModel().getNumber().intValue() / 100.0;
+			boardDisplay.setZoom(zoom);
 		}
 	}
 

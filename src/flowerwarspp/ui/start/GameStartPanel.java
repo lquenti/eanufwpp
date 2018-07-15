@@ -1,44 +1,64 @@
 package flowerwarspp.ui.start;
 
-import flowerwarspp.main.GameParameters;
-import flowerwarspp.preset.PlayerType;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import flowerwarspp.main.GameParameters;
+import flowerwarspp.main.Main;
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
-import java.util.Arrays;
-import java.util.Collection;
 
 /**
- * Eine abstrakte Klasse für die GameStart-Panels
- * {@link HostGamePanel} und {@link OfferPlayerPanel}.
+ * Ein Panel, das einen Einstellungbereich und einen Button, mit dem das Spiel gestartet werden
+ * kann, enthält.
  */
-public abstract class GameStartPanel extends JPanel {
+public class GameStartPanel extends JPanel implements ActionListener {
 	/**
-	 * Eine {@link Collection} von verfügbaren {@link PlayerType}s.
+	 * Eine Referenz auf den {@link JFrame}, der beim Klicken des Startknopfes geschlossen wird.
 	 */
-	static final Collection<PlayerType> availablePlayerTypes =
-		Arrays.asList(PlayerType.HUMAN,
-			PlayerType.RANDOM_AI,
-			PlayerType.SIMPLE_AI,
-			PlayerType.ADVANCED_AI_1,
-			PlayerType.ADVANCED_AI_2,
-			PlayerType.REMOTE);
+	private JFrame parent;
 
 	/**
-	 * Konstruiert ein {@link GameStartPanel}.
-	 * Setzt einen {@link Border}.
+	 * Ein Panel, in dem die Einstellungen verändert werden können.
 	 */
-	public GameStartPanel() {
-		setBorder(new EmptyBorder(5, 5, 5, 5));
+	private GameParametersPanel parametersPanel;
+
+	/**
+	 * Ein Button, der das Spiel startet.
+	 */
+	private JButton startButton = new JButton("Spiel starten");
+
+	/**
+	 * Konstruktor, der neues Panel erzeugt.
+	 *
+	 * @param parent Der Rahmen, zu dem das Panel gehören soll.
+	 * @param parametersPanel Das Einstellungspanel, das in diesem Panel enthalten sein soll.
+	 */
+	public GameStartPanel(JFrame parent, GameParametersPanel parametersPanel) {
+		this.parent = parent;
+		this.parametersPanel = parametersPanel;
+
+		JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		startButton.addActionListener(this);
+		bottomPanel.add(startButton);
+
+		setLayout(new BorderLayout());
+		add(bottomPanel, BorderLayout.SOUTH);
+		add(parametersPanel, BorderLayout.CENTER);
 	}
 
 	/**
-	 * Erstellt eine {@link GameParameters}-Instanz,
-	 * aus der ein gültiger Spielzustand geneiert werden kann.
-	 *
-	 * @return
-	 * Eine {@link GameParameters}-Instanz.
+	 * Startet ein neues Spiel mit den Einstellungen von {@link #parametersPanel}, wenn der
+	 * {@link #startButton} geklickt wurde.
 	 */
-	public abstract GameParameters createParameters();
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == startButton) {
+			parent.dispose();
+			GameParameters parameters = parametersPanel.createParameters();
+			Thread thread = new Thread(() -> Main.startNewGame(parameters));
+			thread.start();
+		}
+	}
 }

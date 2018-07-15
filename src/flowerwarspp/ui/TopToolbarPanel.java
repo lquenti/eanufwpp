@@ -23,10 +23,15 @@ public class TopToolbarPanel extends JPanel {
 	private JButton saveButton = new JButton("Spielstand speichern…");
 
 	/**
+	 * Das NumberModel für {@link #zoomSpinner}.
+	 */
+	private SpinnerNumberModel zoomSpinnerNumberModel = new SpinnerNumberModel(100, 100, 300, 25);
+
+	/**
 	 * Ein {@link JSlider}, der den Skalierungsfaktor der graphischen Oberfläche bestimmt.
 	 * In Prozent.
 	 */
-	private JSpinner zoomSpinner = new JSpinner(new SpinnerNumberModel(100, 100, 300, 25));
+	private JSpinner zoomSpinner = new JSpinner(zoomSpinnerNumberModel);
 
 	/**
 	 * Konstruiert ein {@link TopToolbarPanel} und fügt notwendige {@link JComponent}s hinzu.
@@ -72,10 +77,19 @@ public class TopToolbarPanel extends JPanel {
 	/**
 	 * Ein Getter für den {@link JSlider}, der den Zoom bestimmt.
 	 *
-	 * @return Der Slider, der den Zoom bestimmt.
+	 * @return Der Spinner, der den Zoom bestimmt.
 	 */
 	JSpinner getZoomSpinner() {
 		return zoomSpinner;
+	}
+
+	/**
+	 * Ein Getter für das {@link SpinnerNumberModel}, das den Zoom bestimmt.
+	 *
+	 * @return Das {@link SpinnerNumberModel}, das den Zoom bestimmt.
+	 */
+	SpinnerNumberModel getZoomSpinnerNumberModel() {
+		return zoomSpinnerNumberModel;
 	}
 
 	/**

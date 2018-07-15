@@ -10,22 +10,32 @@ import java.awt.*;
 /**
  * Ein {@link GameStartPanel}, mit dem ein {@link flowerwarspp.preset.Player} geoffert werden kann.
  */
-public class OfferPlayerPanel extends GameStartPanel {
+public class OfferPlayerPanel extends GameParametersPanel {
 	/**
-	 * Der {@link LayoutManager} dieses {@link JPanel}s.
-	 * Layt sachen out.
+	 * Ein {@link JLabel}, das dem Nutzer signalisiert, dass Nutzername einzugeben ist.
 	 */
-	private SpringLayout springLayout = new SpringLayout();
+	private JLabel playerNameLabel = new JLabel("Spielername");
+
 	/**
-	 * Ein {@link RemotePlayerDataInput}, mit dem Informationen zum geofferten Spieler
+	 * Ein {@link JTextField}, in welches der Nutzer einen Nutzernamen eingeben kann.
+	 */
+	private JTextField playerNameTextField = new JTextField("Peter");
+
+	/**
+	 * Ein {@link JLabel}, das dem Nutzer signalisiert, dass ein Port einzugeben ist.
+	 */
+	private JLabel playerPortLabel = new JLabel("Port");
+
+	/**
+	 * Ein {@link JTextField}, mit dem der Nutzer einen Port auswählen kann.
+	 */
+	private JTextField playerPortTextField = new JTextField("1099");
+
+	/**
+	 * Ein {@link PlayerDataInput}, mit dem Informationen zum geofferten Spieler
 	 * vom Nutzer abgefragt werden sollen.
 	 */
-	private RemotePlayerDataInput remotePlayerDataInput = new RemotePlayerDataInput("");
-	/**
-	 * Eine {@link PlayerTypeComboBox}, mit dem der {@link PlayerType}
-	 * des anzubietenden {@link Player} determiniert werden kann.
-	 */
-	private PlayerTypeComboBox playerTypeSelector = new PlayerTypeComboBox();
+	private PlayerDataInput playerDataInput = new PlayerDataInput("Angebotener Spieler");
 
 	/**
 	 * Konsturiert ein {@link OfferPlayerPanel}, das genutzt werden kann,
@@ -33,27 +43,11 @@ public class OfferPlayerPanel extends GameStartPanel {
 	 * einen {@link Player} anzubieten.
 	 */
 	public OfferPlayerPanel() {
-		setLayout(springLayout);
-		add(remotePlayerDataInput);
-		add(playerTypeSelector);
-		setupConstraints();
-	}
-
-	private void setupConstraints() {
-		// Legt das remotePlayerDataInput nach oben und über das ganze Panel aus.
-		springLayout.putConstraint(SpringLayout.NORTH, remotePlayerDataInput, 0,
-		                           SpringLayout.NORTH, this);
-		springLayout.putConstraint(SpringLayout.WEST, remotePlayerDataInput, 0,
-		                           SpringLayout.WEST, this);
-		springLayout.putConstraint(SpringLayout.EAST, remotePlayerDataInput, 0,
-		                           SpringLayout.EAST, this);
-
-		// Die playerTypeSelector-Box soll hauptsächlich zentriert sein,
-		// und unter dem remotePlayerDataInput liegen.
-		springLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, playerTypeSelector, 0,
-		                           SpringLayout.HORIZONTAL_CENTER, this);
-		springLayout.putConstraint(SpringLayout.NORTH, playerTypeSelector, 0,
-		                           SpringLayout.SOUTH, remotePlayerDataInput);
+		add(playerNameLabel);
+		add(playerNameTextField);
+		add(playerPortLabel);
+		add(playerPortTextField);
+		add(playerDataInput);
 	}
 
 	/**
@@ -65,10 +59,10 @@ public class OfferPlayerPanel extends GameStartPanel {
 	 */
 	@Override
 	public GameParameters createParameters() {
-		PlayerType playerType = playerTypeSelector.getItemAt(playerTypeSelector.getSelectedIndex());
-		String playerName = remotePlayerDataInput.getPlayerName();
-		String playerUrl = "rmi://" + remotePlayerDataInput.getPlayerUrl();
-		// TODO: Port einlesen
-		return new GameParameters(playerType, playerName, 1099, playerUrl);
+		PlayerType playerType = playerDataInput.getPlayerType();
+		String playerName = playerNameTextField.getText();
+		int playerPort = Integer.parseInt(playerPortTextField.getText());
+		String playerUrl = playerDataInput.getPlayerUrl();
+		return new GameParameters(playerType, playerName, playerPort, playerUrl);
 	}
 }

@@ -41,23 +41,23 @@ public class Convert {
 	public static String playerTypeToString(PlayerType playerType) {
 		switch (playerType) {
 			case HUMAN:
-				return "Human";
+				return "Mensch";
 			case RANDOM_AI:
-				return "Random AI";
+				return "Zufälliger Computerspieler";
 			case SIMPLE_AI:
-				return "Simple AI";
+				return "Einfacher Computerspieler";
 			case ADVANCED_AI_1:
-				return "Advanced AI 1";
+				return "Fortgeschrittener Computerspieler 1";
 			case ADVANCED_AI_2:
-				return "Advanced AI 2";
+				return "Fortgeschrittener Computerspieler 2";
 			case ADVANCED_AI_3:
-				return "Advanced AI 3";
+				return "Fortgeschrittener Computerspieler 3";
 			case ADVANCED_AI_4:
-				return "Advanced AI 4";
+				return "Fortgeschrittener Computerspieler 4";
 			case ADVANCED_AI_5:
-				return "Advanced AI 5";
+				return "Fortgeschrittener Computerspieler 5";
 			case REMOTE:
-				return "Remote player";
+				return "Netzwerkspieler";
 			default:
 				return "ILLEGAL VALUE";
 		}

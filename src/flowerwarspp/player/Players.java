@@ -1,20 +1,33 @@
 package flowerwarspp.player;
 
-import flowerwarspp.preset.*;
-import flowerwarspp.util.log.Log;
-import flowerwarspp.util.log.LogLevel;
-import flowerwarspp.util.log.LogModule;
-
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.util.Arrays;
+import java.util.Collection;
+
+import flowerwarspp.preset.*;
+import flowerwarspp.util.log.Log;
+import flowerwarspp.util.log.LogLevel;
+import flowerwarspp.util.log.LogModule;
 
 /**
  * Diese Klasse ermöglicht das Instanzieren von beiden Spielern, welche am aktuellen Spiel teilnehmen. Außerdem wird in
  * dieser Klasse der Hauptteil der Netzwerkunterstützung implementiert.
  */
 public class Players {
+	/**
+	 * Eine {@link Collection} von verfügbaren {@link PlayerType}s.
+	 */
+	public static final Collection<PlayerType> AVAILABLE_PLAYER_TYPES =
+		Arrays.asList(PlayerType.HUMAN,
+			PlayerType.RANDOM_AI,
+			PlayerType.SIMPLE_AI,
+			PlayerType.ADVANCED_AI_1,
+			PlayerType.ADVANCED_AI_2,
+			PlayerType.REMOTE);
+
 	/**
 	 * Erstellt einen neuen Spieler gegebenen Typs und weist im ein gegebenes {@link Requestable} und ein bestehendes
 	 * {@link Board} zu.
