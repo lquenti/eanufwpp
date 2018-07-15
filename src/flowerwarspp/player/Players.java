@@ -94,10 +94,9 @@ public class Players {
 		try {
 			result = (Player) Naming.lookup("rmi://" + url);
 		} catch (Exception e) {
+			Log.log(LogLevel.ERROR, LogModule.PLAYER, "Unable to find the specified player on the network.");
 			throw new NetworkException();
 		}
-
-		Log.log(LogLevel.ERROR, LogModule.PLAYER, "Unable to find the specified player on the network.");
 
 		return result;
 	}
