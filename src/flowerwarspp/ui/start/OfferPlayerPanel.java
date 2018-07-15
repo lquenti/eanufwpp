@@ -43,11 +43,33 @@ public class OfferPlayerPanel extends GameParametersPanel {
 	 * einen {@link Player} anzubieten.
 	 */
 	public OfferPlayerPanel() {
-		add(playerNameLabel);
-		add(playerNameTextField);
-		add(playerPortLabel);
-		add(playerPortTextField);
-		add(playerDataInput);
+		setLayout(new GridBagLayout());
+
+		GridBagConstraints c = new GridBagConstraints();
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+
+		c.insets = new Insets(0, 0, 0, 8);
+		c.gridy = 0;
+		c.gridx = 0;
+		add(playerNameLabel, c);
+		c.insets = new Insets(0, 8, 0, 0);
+		c.gridx = 1;
+		add(playerNameTextField, c);
+
+		c.insets = new Insets(0, 0, 0, 8);
+		c.gridy = 1;
+		c.gridx = 0;
+		add(playerPortLabel, c);
+		c.insets = new Insets(0, 8, 0, 0);
+		c.gridx = 1;
+		add(playerPortTextField, c);
+
+		c.insets = new Insets(16, 0, 0, 0);
+		c.gridy = 2;
+		c.gridx = 0;
+		c.gridwidth = 2;
+		add(playerDataInput, c);
 	}
 
 	/**

@@ -62,16 +62,35 @@ public class HostGamePanel extends GameParametersPanel {
 	 * menschlichen Spieler nach den notwendigen Variablen zu fragen, um ein Spiel zu starten.
 	 */
 	public HostGamePanel() {
-		setLayout(new GridLayout(3, 2));
+		setLayout(new GridBagLayout());
 
-		add(boardSizeLabel);
-		add(boardSizeSpinner);
+		GridBagConstraints c = new GridBagConstraints();
 
-		add(delayLabel);
-		add(delaySpinner);
+		c.fill = GridBagConstraints.HORIZONTAL;
 
-		add(redPlayerDataInput);
-		add(bluePlayerDataInput);
+		c.insets = new Insets(0, 0, 0, 8);
+		c.gridy = 0;
+		c.gridx = 0;
+		add(boardSizeLabel, c);
+		c.insets = new Insets(0, 8, 0, 0);
+		c.gridx = 1;
+		add(boardSizeSpinner, c);
+
+		c.insets = new Insets(0, 0, 0, 8);
+		c.gridy = 1;
+		c.gridx = 0;
+		add(delayLabel, c);
+		c.insets = new Insets(0, 8, 0, 0);
+		c.gridx = 1;
+		add(delaySpinner, c);
+
+		c.insets = new Insets(16, 0, 0, 8);
+		c.gridy = 2;
+		c.gridx = 0;
+		add(redPlayerDataInput, c);
+		c.insets = new Insets(16, 8, 0, 0);
+		c.gridx = 1;
+		add(bluePlayerDataInput, c);
 	}
 
 	/**

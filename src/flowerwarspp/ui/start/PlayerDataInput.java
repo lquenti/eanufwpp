@@ -2,6 +2,7 @@ package flowerwarspp.ui.start;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.border.EmptyBorder;
 
 import flowerwarspp.preset.Player;
 import flowerwarspp.preset.PlayerColor;
@@ -60,6 +61,7 @@ public class PlayerDataInput extends JPanel implements ActionListener {
 
 		JLabel nameLabel = new JLabel(name, JLabel.CENTER);
 		nameLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+		nameLabel.setBorder(new EmptyBorder(0, 0, 8, 0));
 		add(nameLabel);
 
 		JPanel settingsPanel = new JPanel(new GridLayout(4,2));

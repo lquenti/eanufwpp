@@ -30,7 +30,7 @@ public class StartupFrame extends JFrame {
 	public StartupFrame() {
 		super("eanufwpp");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setMinimumSize(new Dimension(500, 300));
+		setMinimumSize(new Dimension(600, 400));
 
 		JTabbedPane tabbedPane = new JTabbedPane();
 		tabbedPane.addTab("Spiel hosten", hostGamePanel);
