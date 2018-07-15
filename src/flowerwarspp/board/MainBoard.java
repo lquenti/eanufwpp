@@ -377,8 +377,7 @@ public class MainBoard implements Board {
 			} else if (isGarden(resultingBed)) {
 				/*
 				 * Wenn mit diesen Nachbarn das Beet Größe 4 hat, müssen alle Züge verboten
-				 * werden, die die Größe des
-				 * Beets noch weiter erhöhen würden.
+				 * werden, die die Größe des Beets noch weiter erhöhen würden.
 				 */
 				for (Flower secondBedNeighbor : getAllNeighbors(resultingBed)) {
 					playerDataSet.get(currentPlayer).legalMoves
@@ -387,10 +386,8 @@ public class MainBoard implements Board {
 			} else {
 				/*
 				 * Ansonsten probieren wir alle Züge aus diesem Nachbarn und den Nachbarn des
-				 * durch das Platzieren
-				 * dieses Nachbars entstehenden Beetes entstehen aus und verbieten sie, wenn
-				 * dadurch ein ungültiges
-				 * Beet entsteht.
+				 * durch das Platzieren dieses Nachbars entstehenden Beetes entstehen aus und
+				 * verbieten sie, wenn dadurch ein ungültiges Beet entsteht.
 				 */
 				for (Flower secondBedNeighbor : getDirectNeighbors(resultingBed)) {
 					if (!playerDataSet.get(currentPlayer).legalMoves
@@ -531,8 +528,7 @@ public class MainBoard implements Board {
 		}
 
 		// Hier muss dann jeweils der Score der einzelnen Pfade entfernt werden und dann die Summe
-		// der Summe
-		// aller Pfäden hinzugefügt werden
+		// der Summe aller Pfäden hinzugefügt werden
 		for (int score : scores) {
 			// Gaußsche Summenformel
 			playerDataSet.get(currentPlayer).currentScore -= (score * score + score) / 2;
