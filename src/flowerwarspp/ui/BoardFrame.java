@@ -121,6 +121,7 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 	@Override
 	public void actionPerformed(ActionEvent actionEvent) {
 		JFileChooser fc = new JFileChooser();
+		fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
 		fc.setDialogTitle("Spielstand speichern");
 		add(fc);
 		if (fc.showSaveDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
