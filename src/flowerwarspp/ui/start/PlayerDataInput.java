@@ -51,7 +51,7 @@ public class PlayerDataInput extends JPanel implements ActionListener {
 	/**
 	 * Ein {@link JTextField}, in welches der Nutzer einen Nutzernamen eingeben kann.
 	 */
-	private JTextField playerNameTextField = new JTextField("Peter");
+	private JTextField playerNameTextField = new JTextField("Eanufwpp");
 
 	/**
 	 * Konstruiert ein {@link PlayerDataInput}, das den Namen anhand der {@link PlayerColor} setzt.
