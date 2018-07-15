@@ -15,7 +15,7 @@ public class OfferPlayerPanel extends GameParametersPanel {
 	/**
 	 * Ein {@link JTextField}, in welches der Nutzer einen Nutzernamen eingeben kann.
 	 */
-	private JTextField playerNameTextField = new JTextField("Peter");
+	private JTextField playerNameTextField = new JTextField("Eanufwpp");
 
 	/**
 	 * Ein {@link JTextField}, mit dem der Nutzer einen Port auswählen kann.
