@@ -56,7 +56,6 @@ public class Players {
 				player = new AdvancedAI2();
 				break;
 			default:
-				System.err.println("Unbekannter Spielertyp " + type);
 				Log.log(LogLevel.ERROR, LogModule.PLAYER,
 						"Players.createPlayer: Invalid PlayerType passed: " + type);
 				return null;

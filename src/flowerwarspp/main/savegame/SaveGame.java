@@ -133,12 +133,13 @@ public class SaveGame implements Iterable<Move> {
 	 */
 	public void save(String saveGameName) throws IOException {
 
+		// synchronized, damit während des Speicherns nicht noch Züge in der Arraydeque gemachter Züge abgelegt werden
 		synchronized (this) {
 
 			/*
 			 * Das Speichern der Züge wird mit einem try-with-resources ermöglicht. Der so erstellte PrintWriter wird
-			 * automatisch geschlossen, falls während des Speicherns ein Fehler aufgetreten ist und eine Exception geworfen
-			 * wurde.
+			 * automatisch geschlossen, falls während des Speicherns ein Fehler aufgetreten ist und eine Exception
+			 * geworfen wurde.
 			 */
 			try (PrintWriter printWriter = new PrintWriter(saveGameName, "UTF-8")) {
 

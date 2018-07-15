@@ -125,7 +125,6 @@ public class GameParameters {
 			 * dann die Methode verlassen.
 			 */
 			if (argumentParser.isSet("offer")) {
-				System.out.println("Biete Netzwerkspieler an, andere Argumente werden ignoriert.");
 				offerType = argumentParser.getOffer();
 				offerName = argumentParser.getOfferName();
 				if (argumentParser.isSet("port")) {
