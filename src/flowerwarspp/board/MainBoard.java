@@ -295,9 +295,9 @@ public class MainBoard implements Board {
 		}
 
 		// Punktestand aktualisieren
-		playerDataSet.get(currentPlayer).currentScore += updateScore(flowers[0]);
+		playerDataSet.get(currentPlayer).currentScore += getBedChainScore(flowers[0]);
 		if (!getBedChain(flowers[0]).contains(getFlowerBed(flowers[1]))) {
-			playerDataSet.get(currentPlayer).currentScore += updateScore(flowers[1]);
+			playerDataSet.get(currentPlayer).currentScore += getBedChainScore(flowers[1]);
 		}
 	}
 
@@ -490,18 +490,6 @@ public class MainBoard implements Board {
 				playerDataSet.get(currentPlayer).legalMoves.add(new Move(ditch));
 			}
 		}
-	}
-
-	/**
-	 * Berechnet die Punktzahl nachdem ein neuer Garten entstanden ist.
-	 *
-	 * @param flower
-	 * 		{@link Flower} welche gesetzt wurde.
-	 *
-	 * @return Um wieviel sich die Punktzahl erhöht hat.
-	 */
-	private int updateScore(Flower flower) {
-		return getBedChainScore(flower);
 	}
 
 	/**
