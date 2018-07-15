@@ -1,6 +1,7 @@
 package flowerwarspp.ui;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
@@ -46,6 +47,7 @@ public class PlayerStatusDisplay extends JPanel {
 		String pointCountString = Integer.toString(playerPoints);
 		Rectangle2D stringBounds = g.getFontMetrics().getStringBounds(pointCountString, g);
 
+		// Die Displays sehen mit 16:9 am besten aus
 		Dimension dimension = new Dimension();
 		int dimensionHeight = (int) (stringBounds.getHeight() * 1.5) ;
 		int dimensionWidth = (int) (stringBounds.getHeight() / 6 * 16); // (h * 1.5) / (9.0 * 16)
@@ -64,6 +66,7 @@ public class PlayerStatusDisplay extends JPanel {
 		g.setColor(Color.BLACK);
 		g.drawRoundRect(x, y, width, height,5, 5);
 
+		// Der Text soll horizontal und vertikal zentriert sein.
 		g.setColor(Color.BLACK);
 		Point drawPoint = new Point();
 		drawPoint.setLocation(drawRect.getCenterX(), drawRect.getCenterY());

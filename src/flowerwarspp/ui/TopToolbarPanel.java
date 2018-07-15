@@ -2,16 +2,15 @@ package flowerwarspp.ui;
 
 import java.util.EnumMap;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import flowerwarspp.preset.PlayerColor;
 import java.awt.*;
 import javax.swing.*;
 
-// TODO: Dokumentation
+/**
+ * Ein {@link JPanel}, das {@link JComponent}s für allgemeine Spielinformationen enthält.
+ */
 public class TopToolbarPanel extends JPanel {
-
 	/**
 	 * Eine {@link java.util.Map}, die für jede {@link PlayerColor} ein {@link PlayerStatusDisplay}
 	 * hält.
@@ -29,7 +28,9 @@ public class TopToolbarPanel extends JPanel {
 	 */
 	private JSpinner zoomSpinner = new JSpinner(new SpinnerNumberModel(100, 100, 300, 25));
 
-	// TODO
+	/**
+	 * Konstruiert ein {@link TopToolbarPanel} und fügt notwendige {@link JComponent}s hinzu.
+	 */
 	public TopToolbarPanel() {
 		setLayout(new GridLayout(1, 3));
 

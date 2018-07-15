@@ -5,7 +5,12 @@ import flowerwarspp.preset.Move;
 import flowerwarspp.preset.PlayerColor;
 
 import java.awt.*;
-// TODO
+
+/**
+ * Eine Klasse von Konstanten, die Farben betreffen.
+ * Neben {@link Color}s für die graphische Ausgabe sind hier auch
+ * Strings definiert, die eine farbige Ausgabe auf der Konsole ermöglichen.
+ */
 public final class GameColors {
 	/*
 	 * Die folgenden Color-Objekte sind konstant.

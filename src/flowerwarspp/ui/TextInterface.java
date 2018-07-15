@@ -30,14 +30,19 @@ public class TextInterface implements Requestable, Output {
 	private static final String invalidMoveMessage = "Der eingegebene Zug ist nicht erlaubt.";
 
 	/**
-	 * Der Viewer, der verwendet wird, um Informationen über das Spielbrett abzufragen.
+	 * Der {@link Viewer}, durch den der {@link Output} auf das {@link Board} schaut.
 	 */
 	private Viewer viewer = null;
 
 	/**
-	 * Der Scanner, der verwendet wird, um Züge vom Spieler abzufragen.
+	 * Der {@link Scanner}, der Eingaben von der Texteingabe einliest.
 	 */
 	private Scanner inputScanner = new Scanner(System.in);
+
+	/**
+	 * Das {@link SaveGame} des Spiels, das auf diesem {@link Output} gespielt wird.
+	 */
+	private SaveGame saveGame;
 
 	/**
 	 * Liest einen Spielzug vom Standard Input ein.

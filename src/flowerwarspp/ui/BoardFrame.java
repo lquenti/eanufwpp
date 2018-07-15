@@ -110,7 +110,13 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 		setVisible(true);
 	}
 
-	// TODO: Dokumentation
+	/**
+	 * Die {@link ActionListener}-Implementation.
+	 * Speichert das Spiel in eine Datei, die wieder geladen werden kann.
+	 *
+	 * @param actionEvent
+	 * Das {@link ActionEvent}, das die Ausführung verursacht hat.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent actionEvent) {
 		JFileChooser fc = new JFileChooser();
@@ -134,11 +140,16 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 		}
 	}
 
-	// TODO: Dokumentation
+	/**
+	 * Updatet die optische Vergrößerung des Spielfelds.
+	 *
+	 * @param changeEvent
+	 * Das {@link ChangeEvent}, das die Ausführung verursacht hat.
+	 */
 	@Override
 	public void stateChanged(ChangeEvent changeEvent) {
 		if (changeEvent.getSource() == topToolbarPanel.getZoomSpinner()) {
-			double newZoom = (Integer)topToolbarPanel.getZoomSpinner().getValue() / 100.0;
+			double newZoom = ((Integer) topToolbarPanel.getZoomSpinner().getValue()) / 100.0;
 			boardDisplay.setZoom(newZoom);
 		}
 	}

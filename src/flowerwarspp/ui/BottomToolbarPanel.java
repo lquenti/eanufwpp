@@ -39,7 +39,9 @@ public class BottomToolbarPanel extends JPanel {
 	 */
 	private BorderLayout layoutManager = new BorderLayout();
 
-	// TODO: Dokumentation
+	/**
+	 * Konstruiert ein {@link JPanel}, das eine Toolbar ist, die für das Spielen verwendet wird.
+	 */
 	public BottomToolbarPanel() {
 		setLayout(layoutManager);
 

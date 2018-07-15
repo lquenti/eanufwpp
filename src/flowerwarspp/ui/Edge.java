@@ -12,7 +12,10 @@ import java.awt.*;
  * Diese Kanten stellen die {@link Ditch}es des Spielbretts dar.
  */
 public class Edge extends BoardPolygon {
-	// TODO: Dokumentation
+	/**
+	 * Der Faktor, durch den die Länge des perpendikularen Vektoren geteilt wird.
+	 * Ausschließlich für optische Zwecke benutzt.
+	 */
 	private static final int divisionFactor = 15;
 
 	/**
@@ -23,12 +26,6 @@ public class Edge extends BoardPolygon {
 	 * Die "zweite" Position (siehe {@link Position#compareTo(Position)}).
 	 */
 	private Position position2;
-
-	// TODO: Dokumentation
-	private Point edge1;
-	private Point edge2;
-	private Point edge3;
-	private Point edge4;
 
 	/**
 	 * Erstelle ein Edge-Objekt, das einen {@link Ditch} repräsentiert.
@@ -64,20 +61,25 @@ public class Edge extends BoardPolygon {
 	public void recalcPoints(int triangleSideLength, Point relativeStart) {
 		reset();
 
-		edge1 = positionToPoint(position1, triangleSideLength, relativeStart);
-		edge2 = positionToPoint(position1, triangleSideLength, relativeStart);
-		edge3 = positionToPoint(position2, triangleSideLength, relativeStart);
-		edge4 = positionToPoint(position2, triangleSideLength, relativeStart);
+		Point edge1 = positionToPoint(position1, triangleSideLength, relativeStart);
+		Point edge2 = positionToPoint(position1, triangleSideLength, relativeStart);
+		Point edge3 = positionToPoint(position2, triangleSideLength, relativeStart);
+		Point edge4 = positionToPoint(position2, triangleSideLength, relativeStart);
 
-		// Make a vector from edge1 to edge2, it's easy to find a perpendicular vector for that.
+		// Ziehe einen Vektor von edge1 nach edge2, da es einfach ist,
+		// dazu einen perpendikularen Vektor zu finden.
 		Point vector = new Point(edge1);
 		vector.x -= edge3.x;
 		vector.y -= edge3.y;
 
+		// Hier wird der Vektor gekürzt.
 		Point perpendicularVector = new Point(vector.y, -vector.x);
 		perpendicularVector.x /= divisionFactor;
 		perpendicularVector.y /= divisionFactor;
 
+		// Der kurze, perpendikulare Vektor wird von der Kante aus in jede Richtung addiert.
+		// Damit wird ein Rechteck konstruiert, wobei die Seiten genau gleich weit
+		// von der Mitte entfernt sind.
 		edge1.x += perpendicularVector.x;
 		edge1.y += perpendicularVector.y;
 		edge2.x -= perpendicularVector.x;

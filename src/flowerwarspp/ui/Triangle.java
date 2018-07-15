@@ -1,6 +1,7 @@
 package flowerwarspp.ui;
 
 import flowerwarspp.preset.Flower;
+import flowerwarspp.preset.Position;
 
 import java.awt.*;
 
@@ -21,10 +22,16 @@ import java.awt.*;
  */
 public class Triangle extends BoardPolygon {
 
-	// TODO: Dokumentation
+	/**
+	 * Die {@link Flower}, die dieses {@link Triangle} repräsentiert.
+	 */
 	private Flower flower;
 
-	// TODO: Dokumentation
+	/**
+	 * <code>true</code> genau dann, wenn die erste {@link Position} der {@link Flower},
+	 * die dieses {@link Triangle} repräsentiert auf derselben Spalte liegt,
+	 * wie die zweite {@link Position}.
+	 */
 	private boolean flipped;
 
 	/**
@@ -39,7 +46,7 @@ public class Triangle extends BoardPolygon {
 	public Triangle(Flower flower, Color currentColor) {
 		super(Color.BLACK, currentColor);
 		this.flower = flower;
-		flipped = (flower.getFirst().getColumn()  == flower.getSecond().getColumn());
+		flipped = (flower.getFirst().getColumn() == flower.getSecond().getColumn());
 	}
 
 	/**
@@ -63,7 +70,9 @@ public class Triangle extends BoardPolygon {
 		return flower;
 	}
 
-	// TODO
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void recalcPoints(int triangleSideLength, Point relativeStart) {
 		reset();

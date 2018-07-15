@@ -10,9 +10,19 @@ import flowerwarspp.util.Convert;
 import java.awt.*;
 import javax.swing.*;
 
-// TODO: Dokumentation
+/**
+ * Ein {@link JDialog}, das dem Nutzer mitteilt, dass das Spiel geendet hat.
+ */
 public class EndPopupFrame extends JDialog {
-	// TODO: Dokumentation
+	/**
+	 * Konstruiert einen {@link JDialog}, der den Nutzer über das Ende des Spiels informiert.
+	 *
+	 * @param parent
+	 * Das Elternelement dieses {@link JDialog}.
+	 *
+	 * @param message
+	 * Die anzuzeigende Nachricht.
+	 */
 	public EndPopupFrame(JFrame parent, String message) {
 		super(parent, "Spiel Beendet");
 
@@ -29,9 +39,16 @@ public class EndPopupFrame extends JDialog {
 	}
 }
 
-// TODO: Dokumentation
+/**
+ * Ein {@link JPanel}, das einen Text hält und zentriert anzeigt.
+ */
 class PopupComponentPane extends JPanel {
-	// TODO: Dokumentation
+	/**
+	 * Konsturiert ein {@link JPanel}, das eine Nachricht zentriert anzeigt.
+	 *
+	 * @param message
+	 * Die anzuzeigende Nachricht.
+	 */
 	PopupComponentPane(String message) {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -49,15 +66,23 @@ class PopupComponentPane extends JPanel {
 	}
 }
 
-// TODO: Dokumentation
+/**
+ * Ein {@link JButton}, der das Programm beendet.
+ */
 class QuitButton extends JButton implements ActionListener {
-	// TODO: Dokumentation
+	/**
+	 * Konsturiert einen {@link JButton}, der auf Klick das Programm beendet.
+	 */
 	QuitButton() {
 		super("Spiel beenden");
 		addActionListener(this);
 	}
 
-	// TODO: Dokumentation
+	/**
+	 * Handhabt das Auslösen eines {@link JButton}s.
+	 * Schließt das Programm.
+	 */
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		System.exit(0);
 	}

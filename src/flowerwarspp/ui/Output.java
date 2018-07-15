@@ -2,6 +2,7 @@ package flowerwarspp.ui;
 
 import flowerwarspp.main.savegame.SaveGame;
 import flowerwarspp.preset.Viewer;
+import flowerwarspp.preset.Board;
 
 /**
  * Ein Output an den menschlichen User.

@@ -86,6 +86,8 @@ public class Dot extends BoardPolygon {
 		graphics.setColor(getFillColor());
 		graphics.fillOval(drawLocationX, drawLocationY, currentDiameter, currentDiameter);
 
+		// NOTE: Die Bedingung muss für alle Kreise gleich sein,
+		// da sonst einige gezeichnet werden und andere nicht.
 		if (currentDiameter > 30) {
 			String text = position.getColumn() + ", " + position.getRow();
 			Rectangle2D textBounds = graphics.getFontMetrics().getStringBounds(text, graphics);
