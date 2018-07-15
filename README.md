@@ -43,13 +43,13 @@ Wenn die jar-Datei ohne Kommandozeilenargumente aufgerufen wird, wird der Startu
 lassen sich die Parameter des Spiels eingestellt und somit ein Spiel mit der grafischen Ausgabe gestartet werden:  
 
 ```
-./eanufwpp.jar
+java -jar eanufwpp.jar
 ```
 
 Für ein schnelles Test-Spiel gegen den simplen Computerspieler kann der folgende Befehl benutzt werden:  
 
 ```
-./eanufwpp.jar -size 8 -red human -blue simple -delay 1000
+java -jar eanufwpp.jar -size 8 -red human -blue simple -delay 1000
 ```
 
 
@@ -140,7 +140,7 @@ soll.
 Beispiel für Anbieten eines Spielers im Netzwerk:
 
 ```
-./eanufwpp.jar -offer human -name Name
+java -jar eanufwpp.jar -offer human -name Name
 ```
 
 ### Starten ohne Kommandozeilenparameter
