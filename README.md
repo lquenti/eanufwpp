@@ -242,10 +242,12 @@ gemacht worden sind. Zur Verifizierung der Spielzüge beim Laden wird außerdem 
 mitgespeichert. Daran angehangen sind Meta-Informationen: Der Spieler welcher den Zug gemacht hat und die Nummer des
 Zugs, angefangen bei 0.
 
+Wird beim Speichern der Datei keine Endung angegeben, wird automatisch die Endung `.sav` ergänzt.
+
 #### Laden eines Spiels
 
 Das Laden eines zuvor gespeicherten Spiels ist nur über den Kommandozeilenparameter `-load <Spielstanddatei>` möglich
-. Dabei muss der gesamte Pfad zur Datei angegeben werden.
+. Dabei muss der gesamte Pfad zur Datei samt Endung angegeben werden.
 
 Der Pfad kann entweder relativ von dem Verzeichnis in dem sich die jar-Datei befindet sein, oder ein absoluter Pfad. In jedem Fall muss der gesamte Dateiname samt Endung 
 angegeben werden. Liegt eine Spielstanddatei zum Beispiel im Verzeichnis `SavedGames` des aktuellen Verzeichnis in 
