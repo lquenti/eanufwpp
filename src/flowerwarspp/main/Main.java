@@ -271,6 +271,7 @@ public class Main {
 				bluePoints += viewer.getPoints(PlayerColor.Red);
 			}
 
+			System.out.println(Convert.statusToText(viewer.getStatus()));
 			System.out.println("Wechsle die Seiten...");
 			// Spieler tauschen die Seiten
 			Player t = redPlayer;
