@@ -546,11 +546,13 @@ public class BoardDisplay extends JPanel {
 			Move move = new Move(ditch);
 
 			// Färbe die Edge in der Farbe, die den Spieler repräsentiert, dem sie gehört.
-			if ((redDitches != null && redDitches.contains(ditch)) ||
-			    (boardViewer.getTurn() == PlayerColor.Red && ditch.equals(displayMouseHandler.lastClickedDitch))) {
+			if (redDitches != null && redDitches.contains(ditch)) {
 				e.setFillColor(GameColors.RED);
-			} else if ((blueDitches != null && blueDitches.contains(ditch)) ||
-			           (boardViewer.getTurn() == PlayerColor.Blue && ditch.equals(displayMouseHandler.lastClickedDitch))) {
+			} else if (blueDitches != null && blueDitches.contains(ditch)) {
+				e.setFillColor(GameColors.BLUE);
+			} else if ((boardViewer.getTurn() == PlayerColor.Red && ditch.equals(displayMouseHandler.lastClickedDitch))) {
+				e.setFillColor(GameColors.RED);
+			} else if (boardViewer.getTurn() == PlayerColor.Blue && ditch.equals(displayMouseHandler.lastClickedDitch)) {
 				e.setFillColor(GameColors.BLUE);
 			} else if (possibleDitchMoves != null && possibleDitchMoves.contains(move)) {
 				// Wenn sie niemandem gehört, aber der Spieler gerade spielen soll,
