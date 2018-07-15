@@ -290,9 +290,6 @@ public class Log {
 
 			case ERROR:
 				return "[ERROR]";
-
-			case CRITICAL:
-				return "[CRITICAL]";
 		}
 	}
 }

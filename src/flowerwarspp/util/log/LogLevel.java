@@ -2,7 +2,7 @@ package flowerwarspp.util.log;
 
 /**
  * Enum für die verschiedenen Log-Level. Die Level sind in aufsteigender Reihenfolge sortiert, so ist zum Beispiel
- * {@link #CRITICAL} der Level mit der höchsten Priorität.
+ * {@link #ERROR} der Level mit der höchsten Priorität.
  */
 public enum LogLevel {
 
@@ -30,9 +30,5 @@ public enum LogLevel {
 	/**
 	 * Log-Level für Fehlermeldungen.
 	 */
-	ERROR,
-	/**
-	 * Log-Level für kritische Fehler, die sofort das Programm beenden.
-	 */
-	CRITICAL
+	ERROR
 }
