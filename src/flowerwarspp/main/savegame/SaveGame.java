@@ -194,9 +194,8 @@ public class SaveGame implements Iterable<Move> {
 
 				// Den PrintWriter schließen, falls Speichern erfolgreich.
 				printWriter.close();
-				System.out.println("Spielstand " + saveGameName + " wurde gespeichert unter");
-				System.out.println(saveGameName);
-				Log.log(LogLevel.INFO, LogModule.MAIN, "Main was saved to: " + saveGameName);
+
+				Log.log(LogLevel.INFO, LogModule.MAIN, "Game was saved to: " + saveGameName);
 
 			} catch (IOException e) {
 				Log.log(LogLevel.ERROR, LogModule.MAIN, "Saving the game failed: " + e.getMessage());

@@ -143,7 +143,6 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 				Log.log(LogLevel.WARNING, LogModule.UI, "Savegame could not be saved at the given location: "
 						+ filename);
 			}
-			System.out.println(fc.getSelectedFile());
 		}
 	}
 
