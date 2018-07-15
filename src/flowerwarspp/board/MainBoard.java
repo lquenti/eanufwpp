@@ -13,15 +13,15 @@ import java.util.*;
  */
 class PlayerData {
 	/**
-	 * Die Blumen, die der Spieler gesetzt hat.
+	 * Die {@link Flower}s, die der Spieler gesetzt hat.
 	 */
 	HashSet<Flower> flowers;
 	/**
-	 * Die Gräben, die der Spieler gesetzt hat.
+	 * Die {@link Ditch}es, die der Spieler gesetzt hat.
 	 */
 	HashSet<Ditch> ditches;
 	/**
-	 * Die legalen Züge, die der Spieler noch machen kann.
+	 * Die legalen {@link Move}s, die der Spieler noch machen kann.
 	 */
 	MoveSet legalMoves;
 	/**

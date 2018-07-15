@@ -29,12 +29,6 @@ public class Log {
 	private static boolean isLogging = false;
 
 	/**
-	 * Ob die Log-Einträge formatiert werden sollen, oder nicht.<br> Deaktivieren der Formatierung könnte evtl. die
-	 * Performance verbessern, ob dem so ist müsste aber überprüft werden.
-	 */
-	private static boolean useFormatting = true;
-
-	/**
 	 * Der aktuelle Log-Level des Loggers. Nur Einträge, welche von der Priorität her gleich diesem Level (oder höher)
 	 * liegen, werden vom Logger gespeichert und ausgegeben.
 	 * <p>
@@ -178,25 +172,6 @@ public class Log {
 	}
 
 	/**
-	 * Gibt <code>true</code> zurück, falls das Formatieren der Log-Einträge aktiviert ist, <code>false</code>
-	 * andererseits.
-	 *
-	 * @return <code>true</code>, falls das Formatieren der Log-Einträge aktiviert ist, <code>false</code> andererseits
-	 */
-	public static boolean useFormatting() {
-		return useFormatting;
-	}
-
-	/**
-	 * Aktiviert oder deaktiviert das Formatieren der Log-Einträge.
-	 *
-	 * @param useFormatting <code>true</code>: Formatierung aktiviert; <code>false</code>: Formatierung deaktiviert
-	 */
-	public static void setUseFormatting( Boolean useFormatting ) {
-		Log.useFormatting = useFormatting;
-	}
-
-	/**
 	 * Sendet eine neue Nachricht angegebenen Log-Levels aus dem angegebenen Modul an den Logger.
 	 *
 	 * @param level   Der Log-Level der Nachricht
@@ -205,15 +180,10 @@ public class Log {
 	 */
 	public static void log( LogLevel level, LogModule module, String message ) {
 		if ( isLogging && level.compareTo(logLevel) >= 0 && ( ( logModule == ALL ) || ( logModule == module ) ) ) {
-			if ( useFormatting )
-				messageBuffer.append(getTimeStamp())
-						.append('\t').append(logLevelToString(level))
-						.append('\t').append(logModuleToString(module))
-						.append('\t').append(message).append('\n');
-			else
-				messageBuffer.append(level)
-						.append(' ').append(module)
-						.append(' ').append(message).append('\n');
+			messageBuffer.append(getTimeStamp())
+					.append('\t').append(level.toString())
+					.append('\t').append(module.toString())
+					.append('\t').append(message).append('\n');
 
 			// Falls das geloggte Level einen Daten-Dump beschreibt, oder falls das automatische Flushen explizit
 			// deaktiviert ist, wird der Log nicht auf die Ausgabe geschrieben.
@@ -238,56 +208,5 @@ public class Log {
 	 */
 	private static String getTimeStamp() {
 		return new SimpleDateFormat("[dd-MM-yyyy HH:mm:ss.SS]").format(new Date());
-	}
-
-	/**
-	 * Gibt die {@link String}-Repräsentation eines gegebenen {@link LogModule} zurück.
-	 *
-	 * @param module Das {@link LogModule} dessen {@link String}-Repräsentation ausgegeben werden soll
-	 * @return {@link String}-Repräsentation des gegebenen Moduls.
-	 */
-	public static String logModuleToString( LogModule module ) {
-		switch ( module ) {
-			case ALL:
-			default:
-				return "(GENERIC)";
-			case MAIN:
-				return "(MAIN)";
-			case BOARD:
-				return "(BOARD)";
-			case UI:
-				return "(UI)";
-			case PLAYER:
-				return "(PLAYER)";
-		}
-	}
-
-	/**
-	 * Gibt die {@link String}-Repräsentation eines gegebenen {@link LogLevel} zurück.
-	 *
-	 * @param level Das {@link LogLevel} dessen {@link String}-Repräsentation ausgegeben werden soll
-	 * @return {@link String}-Repräsentation des gegebenen Levels.
-	 */
-	public static String logLevelToString( LogLevel level ) {
-		switch ( level ) {
-			case NONE:
-			default:
-				return "[NONE]";
-
-			case DUMP:
-				return "[DUMP]";
-
-			case DEBUG:
-				return "[DEBUG]";
-
-			case INFO:
-				return "[INFO]";
-
-			case WARNING:
-				return "[WARNING]";
-
-			case ERROR:
-				return "[ERROR]";
-		}
 	}
 }
