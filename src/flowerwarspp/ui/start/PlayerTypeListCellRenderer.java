@@ -8,17 +8,22 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
-// TODO: Dokumentation
+/**
+ * Ein {@link ListCellRenderer}, der {@link PlayerType}s zeichnet.
+ */
 public class PlayerTypeListCellRenderer implements ListCellRenderer<PlayerType> {
-	// TODO: Dokumentation
-	private Color defaultColor = Color.WHITE;
+	/**
+	 * Die Standardhintergrundfarbe
+	 */
+	private Color defaultColour;
+	private Color selectedColour = Color.LIGHT_GRAY;
 
 	// TODO: Dokumentation
 	private Map<PlayerType, JTextField> templateComponents = new HashMap<>();
 
 	// TODO: Dokumentation
 	public PlayerTypeListCellRenderer(Color defaultColor) {
-		this.defaultColor = defaultColor;
+		this.defaultColour = defaultColor;
 		templateComponents.put(null, new JTextField("NULL"));
 		for (PlayerType playerType : PlayerType.values()) {
 			// NOTE: JTextField kann Text-Alignment, aber der Border muss explizit entfernt werden
@@ -29,17 +34,40 @@ public class PlayerTypeListCellRenderer implements ListCellRenderer<PlayerType> 
 		}
 	}
 
-	// TODO: Dokumentation
+	/**
+	 * Gibt ein {@link JComponent} zurück, das eine graphische Repräsentation
+	 * des {@link PlayerType}s in dieser Zelle ist.
+	 *
+	 * @param elementList
+	 * Die {@link JList}, die gezeichnet werden soll.
+	 *
+	 * @param playerType
+	 * Der aktuell gewählte {@link PlayerType}.
+	 *
+	 * @param cellIndex
+	 * Der Index der Zelle.
+	 *
+	 * @param isSelected
+	 * <code>true</code> genau dann, wenn diese Zelle gewählt ist.
+	 *
+	 * @param hasFocus
+	 * Ob diese Zelle fokussiert ist.
+	 *
+	 * @return
+	 * Ein {@link JComponent}, das den Wert dieser Zelle repräsentiert.
+	 */
 	@Override
-	public Component getListCellRendererComponent(JList<? extends PlayerType> jList, PlayerType playerType, int i, boolean b, boolean b1) {
+	public JComponent getListCellRendererComponent(JList<? extends PlayerType> elementList,
+	                                              PlayerType playerType,
+	                                              int cellIndex,
+	                                              boolean isSelected,
+	                                              boolean hasFocus) {
 		JTextField textField = templateComponents.get(playerType);
 
-		if (b)
-			textField.setBackground(Color.LIGHT_GRAY);
-		else if (b1)
-			textField.setBackground(Color.CYAN);
+		if (isSelected)
+			textField.setBackground(selectedColour);
 		else
-			textField.setBackground(defaultColor);
+			textField.setBackground(defaultColour);
 
 		return textField;
 	}

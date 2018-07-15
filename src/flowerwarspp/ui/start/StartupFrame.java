@@ -28,10 +28,23 @@ public class StartupFrame extends JFrame implements ActionListener {
 	 */
 	private JPanel controlButtonPanel = new JPanel();
 
+	/**
+	 * Ein {@link HostGamePanel}, mit dem der Nutzer ein Spiel hosten kann.
+	 */
 	private GameStartPanel hostGamePanel = new HostGamePanel();
+	/**
+	 * ein {@link OfferPlayerPanel}, mit dem der Nutzer einen {@link flowerwarspp.preset.Player}
+	 * anbieten kann.
+	 */
 	private GameStartPanel offerPlayerPanel = new OfferPlayerPanel();
+	/**
+	 * Eine Referenz auf das aktuell angezeigt Panel.
+	 */
 	private GameStartPanel currentGameStartPanel = hostGamePanel;
 
+	/**
+	 * Konstruiert ein Fenster, mit dem der Nutzer ein Spiel starten kann.
+	 */
 	public StartupFrame() {
 		super("eanufwpp");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -53,6 +66,8 @@ public class StartupFrame extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent actionEvent) {
 		remove(currentGameStartPanel);
 
+		// Diese Lösung ist die eleganteste,
+		// da die JButtons auch das Frame verändern können müssen.
 		if (actionEvent.getSource() == localPlayButton) {
 			remove(currentGameStartPanel);
 			currentGameStartPanel = hostGamePanel;
@@ -61,7 +76,9 @@ public class StartupFrame extends JFrame implements ActionListener {
 			currentGameStartPanel = offerPlayerPanel;
 			add(currentGameStartPanel, BorderLayout.CENTER);
 		} else {
-			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			// Schließt das Fenster und erstellt einen neuen Thread für das Spiel.
+			// NOTE: Hier wird das Spiel in einem Nicht-Main-Thread gestartet
+			// (der dann allerdings dem main-Thread in nichts nachsteht).
 			dispose();
 			GameParameters gameParameters = currentGameStartPanel.createParameters();
 			Thread thread = new Thread(() -> new Game(gameParameters));

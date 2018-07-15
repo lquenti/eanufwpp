@@ -4,15 +4,19 @@ import flowerwarspp.main.GameParameters;
 import flowerwarspp.preset.PlayerType;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.util.Arrays;
 import java.util.Collection;
 
 /**
  * Eine abstrakte Klasse für die GameStart-Panels
- * {@link HostGamePanel} und
+ * {@link HostGamePanel} und {@link OfferPlayerPanel}.
  */
 public abstract class GameStartPanel extends JPanel {
+	/**
+	 * Eine {@link Collection} von verfügbaren {@link PlayerType}s.
+	 */
 	static final Collection<PlayerType> availablePlayerTypes =
 		Arrays.asList(PlayerType.HUMAN,
 			PlayerType.RANDOM_AI,
@@ -21,6 +25,10 @@ public abstract class GameStartPanel extends JPanel {
 			PlayerType.ADVANCED_AI_2,
 			PlayerType.REMOTE);
 
+	/**
+	 * Konstruiert ein {@link GameStartPanel}.
+	 * Setzt einen {@link Border}.
+	 */
 	public GameStartPanel() {
 		setBorder(new EmptyBorder(5, 5, 5, 5));
 	}

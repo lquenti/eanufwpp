@@ -27,7 +27,7 @@ public class HostGamePanel extends GameStartPanel implements ActionListener {
 	 * Das {@link SpinnerModel}, das den Wertebereich für die Spielbrettgröße eingrenzt.
 	 * Ist von 3 bis 30 gültig, wobei 3 der Standardwert und 1 die Schrittgröße ist.
 	 */
-	protected SpinnerNumberModel boardSizeSpinnerModel =
+	private SpinnerNumberModel boardSizeSpinnerModel =
 		new SpinnerNumberModel(3, 3, 30, 1);
 	/**
 	 * Der {@link JSpinner}, der den Nutzer nach der Größe des Boards fragt.
@@ -43,7 +43,7 @@ public class HostGamePanel extends GameStartPanel implements ActionListener {
 	 * Eine {@link JComboBox}, das den Nutzer nach dem {@link PlayerType}
 	 * von {@link flowerwarspp.preset.PlayerColor#Red} fragt
 	 */
-	protected JComboBox<PlayerType> redPlayerTypeSelector = new JComboBox<>();
+	private PlayerTypeComboBox redPlayerTypeSelector = new PlayerTypeComboBox();
 
 	/**
 	 * Das {@link JLabel}, das dem Nutzer signalisiert, dass das nebenstehende Element
@@ -54,7 +54,7 @@ public class HostGamePanel extends GameStartPanel implements ActionListener {
 	 * Eine {@link JComboBox}, das den Nutzer nach dem {@link PlayerType}
 	 * von {@link flowerwarspp.preset.PlayerColor#Blue} fragt
 	 */
-	protected JComboBox<PlayerType> bluePlayerTypeSelector = new JComboBox<>();
+	private PlayerTypeComboBox bluePlayerTypeSelector = new PlayerTypeComboBox();
 
 	/**
 	 * Das {@link JLabel}, das dem Nutzer signalisiert, dass das nebenstehende Element
@@ -66,7 +66,7 @@ public class HostGamePanel extends GameStartPanel implements ActionListener {
 	 * Standardmäßig auf 1000 eingestellt, wobei der Wertebereich
 	 * von 0 bis {@link Integer#MAX_VALUE} reicht und Schritte von 1ms erlaubt.
 	 */
-	protected SpinnerNumberModel delaySpinnerModel =
+	private SpinnerNumberModel delaySpinnerModel =
 		new SpinnerNumberModel(1000, 0, Integer.MAX_VALUE, 1);
 	/**
 	 * Der {@link JSpinner}, der den Nutzer nach dem Mindestdelay fragt,
@@ -106,11 +106,7 @@ public class HostGamePanel extends GameStartPanel implements ActionListener {
 		add(boardSizeLabel);
 		add(boardSizeSpinner);
 
-		for (PlayerType playerType : GameStartPanel.availablePlayerTypes) {
-			redPlayerTypeSelector.addItem(playerType);
-			bluePlayerTypeSelector.addItem(playerType);
-		}
-
+		// Die Renderer stellen den ausgewählten Wert graphisch dar
 		redPlayerTypeSelector.setRenderer(new PlayerTypeListCellRenderer(getBackground()));
 		add(redPlayerTypeLabel);
 		add(redPlayerTypeSelector);
@@ -133,11 +129,17 @@ public class HostGamePanel extends GameStartPanel implements ActionListener {
 		setVisible(true);
 	}
 
+	/**
+	 * Konstruiert {@link GameParameters} aus dem aktuellen Status der GUI.
+	 *
+	 * @return
+	 * Ein {@link GameParameters}-Objekt, aus dem ein Spiel generiert werden soll.
+	 */
 	@Override
 	public GameParameters createParameters() {
 		int boardSize = boardSizeSpinnerModel.getNumber().intValue();
-		PlayerType redPlayerType = (PlayerType) redPlayerTypeSelector.getSelectedItem();
-		PlayerType bluePlayerType = (PlayerType) bluePlayerTypeSelector.getSelectedItem();
+		PlayerType redPlayerType = redPlayerTypeSelector.getSelectedItem();
+		PlayerType bluePlayerType = bluePlayerTypeSelector.getSelectedItem();
 		int moveDelay = delaySpinnerModel.getNumber().intValue();
 
 		String redPlayerUrl = null, bluePlayerUrl = null;
@@ -148,6 +150,8 @@ public class HostGamePanel extends GameStartPanel implements ActionListener {
 			bluePlayerUrl = bluePlayerDataInput.getPlayerUrl();
 		}
 
+		// Der Konstruktor akzeptiert null als URL genau dann,
+		// wenn der dazugehörige PlayerType nicht REMOTE ist.
 		return new GameParameters(boardSize,
 			redPlayerType, redPlayerUrl,
 			bluePlayerType, bluePlayerUrl,
@@ -182,6 +186,7 @@ public class HostGamePanel extends GameStartPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent actionEvent) {
+		// Beide hiervon sollen "==" sein, da Instanzen gleich sein sollen
 		if (actionEvent.getSource() == redPlayerTypeSelector) {
 			boolean shouldEnable = redPlayerTypeSelector.getSelectedItem() == PlayerType.REMOTE;
 			redPlayerDataInput.setComponentsEnabled(shouldEnable);
