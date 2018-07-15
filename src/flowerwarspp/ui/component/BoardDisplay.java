@@ -1,6 +1,10 @@
-package flowerwarspp.ui;
+package flowerwarspp.ui.component;
 
 import flowerwarspp.preset.*;
+import flowerwarspp.ui.geometry.Dot;
+import flowerwarspp.ui.geometry.Edge;
+import flowerwarspp.ui.GameColors;
+import flowerwarspp.ui.geometry.Triangle;
 
 import javax.swing.*;
 import java.awt.*;

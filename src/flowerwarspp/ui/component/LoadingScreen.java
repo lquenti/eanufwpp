@@ -1,4 +1,4 @@
-package flowerwarspp.ui;
+package flowerwarspp.ui.component;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;

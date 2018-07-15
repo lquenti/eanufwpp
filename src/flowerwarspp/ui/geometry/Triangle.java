@@ -1,4 +1,4 @@
-package flowerwarspp.ui;
+package flowerwarspp.ui.geometry;
 
 import flowerwarspp.preset.Flower;
 import flowerwarspp.preset.Position;

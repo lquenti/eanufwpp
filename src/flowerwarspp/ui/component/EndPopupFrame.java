@@ -1,4 +1,4 @@
-package flowerwarspp.ui;
+package flowerwarspp.ui.component;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

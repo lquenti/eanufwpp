@@ -1,4 +1,4 @@
-package flowerwarspp.ui;
+package flowerwarspp.ui.component;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

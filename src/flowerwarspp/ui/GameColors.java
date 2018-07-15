@@ -3,6 +3,9 @@ package flowerwarspp.ui;
 import flowerwarspp.preset.Ditch;
 import flowerwarspp.preset.Move;
 import flowerwarspp.preset.PlayerColor;
+import flowerwarspp.ui.geometry.Dot;
+import flowerwarspp.ui.geometry.Edge;
+import flowerwarspp.ui.geometry.Triangle;
 
 import java.awt.*;
 

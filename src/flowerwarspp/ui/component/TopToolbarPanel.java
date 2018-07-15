@@ -1,9 +1,11 @@
-package flowerwarspp.ui;
+package flowerwarspp.ui.component;
 
 import java.util.EnumMap;
 import javax.swing.border.EmptyBorder;
 
 import flowerwarspp.preset.PlayerColor;
+import flowerwarspp.ui.GameColors;
+
 import java.awt.*;
 import javax.swing.*;
 
