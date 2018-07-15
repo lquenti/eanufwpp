@@ -268,25 +268,25 @@ Werden zum Versus-Modus noch die Schalter `--text` und `--quiet` gesetzt, kann d
 
 | Parameter                      | Optionen                                | Beschreibung
 | ------------------------------ | --------------------------------------- | ----------------------
-<tr><td colspan="3">**Notwendig (Lokales Spiel)**</td></tr>
+| **Notwendig (Lokales Spiel)**
 | `-size`                        | Zahl zwischen 5 und 30 (inklusive)      | Die Größe des Spielbretts wird auf den gegebenen Wert gesetzt
 | `-red`                         | Einer der oben genannten Spielertypen   | Setzt den Spielertypen des roten Spielers auf den gegebenen Typen
 | `-blue`                        | Einer der oben genannten Spielertypen   | Setzt den Spielertypen des blauen Spielers auf den gegebenen Typen
-<tr><td colspan="3">*Falls Rot/Blau Remote*</td></tr>
+| *Falls Rot/Blau Remote*
 | `-redUrl`/`-blueUrl`           | Eine URL: HOST:PORT/NAME                | Adresse unter welcher der entfernte Spieler zu finden ist
-<tr><td colspan="3">**Optional (Lokales Spiel)**</td></tr>
+| **Optional (Lokales Spiel)**
 | `-delay`                       | Zeit in Millisekunden                   | Verzögerung in Millisekunden zwischen Spielzügen
 | `-load`                        | Pfad zur Spielstanddatei                | Lädt den gegebenen Spielstand und setzt das Spiel fort
 | `-replay`                      | Zeit in Millisekunden                   | Der geladene Spielzug wird Zug für Zug ausgeführt, mit der gegebenen Verzögerung zwischen den Zügen
 | `-games`                       | Anzahl an Spielen                       | Zwei Spieler treten in der gegebenen Anzahl von Spielen gegeneinander an. Am Ende wird eine Statistik ausgegeben
-<tr><td colspan="3">**Notwendig (Netzwerkspiel)**</td></tr>
+| **Notwendig (Netzwerkspiel)**
 | `-offer`                       | Einer der oben genannten Spielertypen   | Bietet den angegebenen Spielertypen im Netzwerk an
 | `-name`                        | Der Name des Spielers                   | Der Name unter welchem der Spieler angeboten werden soll
-<tr><td colspan="3">**Optional (Netzwerkspiel)**</td></tr>
+| **Optional (Netzwerkspiel)**
 | `-port`                        | Ein valider, offener Port               | Der Port an welchem der Spieler angeboten werden soll
-<tr><td colspan="3">*Falls Remote angeboten wird*</td></tr>
+| *Falls Remote angeboten wird*
 | `-offerUrl`                    | Eine URL: HOST:PORT/NAME                | Adresse unter welcher der entfernte Spieler zu finden ist
-<tr><td colspan="3">**Schalter**</td></tr>
+| **Schalter**
 | `--debug`                      | Keine                                   | Falls gesetzt, werden Debug-Informationen vom Logger aufgenommen und ausgegeben
 | `--text`                       | Keine                                   | Falls gesetzt, wird das Spielgeschehen auf der Standardausgabe angezeigt, und nicht auf der graphischen Anzeige
 | `--help`                       | Keine                                   | Zeigt eine kurze Hilfe an und beendet das Programm
