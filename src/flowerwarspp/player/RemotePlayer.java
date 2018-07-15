@@ -153,6 +153,7 @@ public class RemotePlayer extends UnicastRemoteObject implements Player {
 		board = new MainBoard(boardSize);
 		boardViewer = board.viewer();
 		output.setViewer(boardViewer);
+		output.setSaveGame(new SaveGame(boardSize));
 
 		player.init(boardSize, color);
 	}
