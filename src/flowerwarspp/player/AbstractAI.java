@@ -10,14 +10,15 @@ import java.util.HashSet;
 import java.util.Random;
 
 /**
- * Eine abstrakte Klasse, welche grundlegende Methoden vordefiniert um KIs zu implementieren. Dabei wird im Laufe der
- * {@link #requestMove()}-Methode für die möglichen Spielzüge ein Bewertungsalgorithmus durchlaufen, welcher einen Zug
- * nach Strategie auswählt, zurück gibt und ausführt.
+ * Eine abstrakte Klasse, welche grundlegende Methoden vordefiniert um KIs zu implementieren. Dabei
+ * wird im Laufe der {@link #requestMove()}-Methode für die möglichen Spielzüge ein
+ * Bewertungsalgorithmus durchlaufen, welcher einen Zug nach Strategie auswählt, zurück gibt und
+ * ausführt.
  */
 abstract class AbstractAI extends AbstractPlayer {
 	/**
-	 * Globale Definition des Scores, falls ein {@link MoveType#Ditch}-Move gemacht werden kann, welcher den Score des
-	 * Spielers verbessern würde.
+	 * Globale Definition des Scores, falls ein {@link MoveType#Ditch}-Move gemacht werden kann,
+	 * welcher den Score des Spielers verbessern würde.
 	 */
 	protected static final int SCORE_DITCH = 1000;
 	/**
@@ -25,7 +26,8 @@ abstract class AbstractAI extends AbstractPlayer {
 	 */
 	protected static final int SCORE_END = 500;
 	/**
-	 * <code>private</code> Random Number Generator, um die zufällige Auswahl eines Spielzugs mit Hilfe von
+	 * <code>private</code> Random Number Generator, um die zufällige Auswahl eines Spielzugs mit
+	 * Hilfe von
 	 * Pseudozufallszahlen leisten zu können.
 	 */
 	protected static final Random random = new Random();
@@ -38,13 +40,17 @@ abstract class AbstractAI extends AbstractPlayer {
 	}
 
 	/**
-	 * Fordert einen Zug an, nach den Vorgaben der Interface-Methode {@link Player#request()}. Diese Methode bedient
-	 * sich einer Strategie zur Bewertung und anschließend zur Auswahl eines Zuges, welche von der Implementation der
-	 * Methode {@link #getMoveScore(Move)} abhängt.
+	 * Fordert einen Zug an, nach den Vorgaben der Interface-Methode {@link Player#request()}.
+	 * Diese
+	 * Methode bedient sich einer Strategie zur Bewertung und anschließend zur Auswahl eines Zuges,
+	 * welche von der Implementation der Methode {@link #getMoveScore(Move)} abhängt.
 	 *
 	 * @return Der vom Spieler zurück gegebene Zug
-	 * @throws Exception Falls der Spieler nicht in der Lage war, einen Zug zu liefern oder falls diese Methode zum
-	 *                   falschen Zeitpunkt innerhalb des Zyklus aufgerufen worden ist
+	 *
+	 * @throws Exception
+	 * 		Falls der Spieler nicht in der Lage war, einen Zug zu liefern oder falls diese Methode
+	 * 		zum
+	 * 		falschen Zeitpunkt innerhalb des Zyklus aufgerufen worden ist
 	 */
 	protected Move requestMove() throws Exception {
 		final Move move = getMove();
@@ -59,18 +65,10 @@ abstract class AbstractAI extends AbstractPlayer {
 	}
 
 	/**
-	 * Methode zur Berechnung des Scores eines gegebenen Zuges. Der höchst-bewerteste Zug wird von {@link
-	 * #requestMove()} ausgewählt und ausgeführt.
-	 *
-	 * @param move Der {@link Move} dessen Score berechnet werden soll
-	 * @return Der Score des Spielzugs
-	 */
-	abstract protected int getMoveScore(Move move);
-
-	/**
-	 * Gibt einen Spielzug zurück, per default wird dieser Spielzug nach einem implementierten Bewertungsalgorithmus
-	 * ausgewählt. Der Spielzug mit dem höchsten Score wird zurück gegeben. Klassen die diese abstrakte Klasse
-	 * implementieren können die Auswahl eines Zuges aber durchaus anders definieren.
+	 * Gibt einen Spielzug zurück, per default wird dieser Spielzug nach einem implementierten
+	 * Bewertungsalgorithmus ausgewählt. Der Spielzug mit dem höchsten Score wird zurück gegeben.
+	 * Klassen die diese abstrakte Klasse implementieren können die Auswahl eines Zuges aber
+	 * durchaus anders definieren.
 	 *
 	 * @return Der Spielzug mit dem höchsten Score.
 	 */
@@ -80,8 +78,7 @@ abstract class AbstractAI extends AbstractPlayer {
 		HashSet<Move> highestScoredMoves = new HashSet<>();
 
 		// Durch alle möglichen Züge iterieren...
-		for (Move move :
-				boardViewer.getPossibleMoves()) {
+		for (Move move : boardViewer.getPossibleMoves()) {
 
 			// Den Score eines Zuges mit der abstrakten Methode berechnen.
 			final int score = getMoveScore(move);
@@ -89,23 +86,24 @@ abstract class AbstractAI extends AbstractPlayer {
 
 			if (score >= SCORE_END) {
 				/*
-				 * Falls getMoveScore() einen Wert größer gleich der statischen Werte SCORE_END und SCORE_DITCH
+				 * Falls getMoveScore() einen Wert größer gleich der statischen Werte SCORE_END
+				 * und SCORE_DITCH
 				 * zurückgegeben hat, wird dieser Zug sofort verwendet.
 				 */
 				return move;
-
 			} else if (score > highestScore) {
 				/*
-				 * Falls der zurück gegebene Zug einen höheren Score hat als alle Züge davor, wird dieser Zug
+				 * Falls der zurück gegebene Zug einen höheren Score hat als alle Züge davor, wird
+				  * dieser Zug
 				 * zum höchstbewerteten Zug.
 				 */
 				highestScore = score;
 				highestScoredMoves.clear();
 				highestScoredMoves.add(move);
-
 			} else if (score == highestScore) {
 				/*
-				 * Falls der zurück gegebene Zug einen Score gleich dem bisher höchsten Score hat, wird der aktuell
+				 * Falls der zurück gegebene Zug einen Score gleich dem bisher höchsten Score hat,
+				  * wird der aktuell
 				 * betrachtete Zug der Collection der höchst bewerteten Züge hinzugefügt.
 				 */
 				highestScoredMoves.add(move);
@@ -115,23 +113,37 @@ abstract class AbstractAI extends AbstractPlayer {
 		// Nach dem Daten-Dump wird der Log manuell geflushed.
 		Log.flush();
 
-		log(LogLevel.DEBUG, "highestScore: " + highestScore + ", highestScoredMoves: " + highestScoredMoves);
+		log(LogLevel.DEBUG,
+				"highestScore: " + highestScore + ", highestScoredMoves: " + highestScoredMoves);
 
 		// Falls die Collection der höchste bewerteten Züge leer ist wird null zurück gegeben.
-		if (highestScoredMoves.size() == 0) return null;
+		if (highestScoredMoves.size() == 0) {
+			return null;
+		}
 
 		/*
 		 * Es wird aus der Collection der am höchsten bewerteten Züge zufällig ein Zug ausgewählt.
-		 * skip(int n) gibt einen neuen Stream zurück, mit den verbleibenden Elementen des Streams nachdem die ersten n
+		 * skip(int n) gibt einen neuen Stream zurück, mit den verbleibenden Elementen des Streams
+		  * nachdem die ersten n
 		 * Elemente übersprungen worden sind.
-		 * findFirst() gibt entweder das erste Element dieses Streams als Optional zurück, oder ein Optional mit dem
-		 * Wert null. Mit orElse() wird entweder dieses erste Element zurück gegeben, oder null, falls das Optional
+		 * findFirst() gibt entweder das erste Element dieses Streams als Optional zurück, oder
+		 * ein Optional mit dem
+		 * Wert null. Mit orElse() wird entweder dieses erste Element zurück gegeben, oder null,
+		 * falls das Optional
 		 * diesen Wert hat.
 		 */
-		return highestScoredMoves
-				.stream()
-				.skip(( random.nextInt(highestScoredMoves.size()) ))
-				.findFirst()
-				.orElse(null);
+		return highestScoredMoves.stream().skip((random.nextInt(highestScoredMoves.size())))
+				.findFirst().orElse(null);
 	}
+
+	/**
+	 * Methode zur Berechnung des Scores eines gegebenen Zuges. Der höchst-bewerteste Zug wird von
+	 * {@link #requestMove()} ausgewählt und ausgeführt.
+	 *
+	 * @param move
+	 * 		Der {@link Move} dessen Score berechnet werden soll
+	 *
+	 * @return Der Score des Spielzugs
+	 */
+	abstract protected int getMoveScore(Move move);
 }

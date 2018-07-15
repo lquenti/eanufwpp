@@ -1,7 +1,6 @@
 package flowerwarspp.ui.component;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
@@ -18,7 +17,7 @@ public class PlayerStatusDisplay extends JPanel {
 	 * Konstruiert ein Display für den Status des Spielers.
 	 *
 	 * @param playerColor
-	 * Die Farbe des {@link flowerwarspp.preset.PlayerColor}.
+	 * 		Die Farbe des {@link flowerwarspp.preset.PlayerColor}.
 	 */
 	public PlayerStatusDisplay(Color playerColor) {
 		setBackground(playerColor);
@@ -28,7 +27,7 @@ public class PlayerStatusDisplay extends JPanel {
 	 * Updatet den internen Status des Displays.
 	 *
 	 * @param playerPoints
-	 * Die Anzahl der Punkte, die der {@link flowerwarspp.preset.PlayerColor} hat.
+	 * 		Die Anzahl der Punkte, die der {@link flowerwarspp.preset.PlayerColor} hat.
 	 */
 	public synchronized void updateStatus(int playerPoints) {
 		this.playerPoints = playerPoints;
@@ -38,7 +37,7 @@ public class PlayerStatusDisplay extends JPanel {
 	 * Zeichnet das Status-Display.
 	 *
 	 * @param g
-	 * Das {@link Graphics}-Objekt, auf das gezeichnet werden soll.
+	 * 		Das {@link Graphics}-Objekt, auf das gezeichnet werden soll.
 	 */
 	@Override
 	public synchronized void paintComponent(Graphics g) {
@@ -49,7 +48,7 @@ public class PlayerStatusDisplay extends JPanel {
 
 		// Die Displays sehen mit 16:9 am besten aus
 		Dimension dimension = new Dimension();
-		int dimensionHeight = (int) (stringBounds.getHeight() * 1.5) ;
+		int dimensionHeight = (int) (stringBounds.getHeight() * 1.5);
 		int dimensionWidth = (int) (stringBounds.getHeight() / 6 * 16); // (h * 1.5) / (9.0 * 16)
 		dimension.setSize(dimensionWidth, dimensionHeight);
 		setPreferredSize(dimension);
@@ -64,7 +63,7 @@ public class PlayerStatusDisplay extends JPanel {
 		g.setColor(getBackground());
 		g.fillRoundRect(x, y, width, height, 5, 5);
 		g.setColor(Color.BLACK);
-		g.drawRoundRect(x, y, width, height,5, 5);
+		g.drawRoundRect(x, y, width, height, 5, 5);
 
 		// Der Text soll horizontal und vertikal zentriert sein.
 		g.setColor(Color.BLACK);

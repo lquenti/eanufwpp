@@ -1,13 +1,7 @@
 package flowerwarspp.ui.start;
 
 import javax.swing.*;
-
-import flowerwarspp.main.Main;
-import flowerwarspp.main.GameParameters;
-
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class StartupFrame extends JFrame {
 	/**

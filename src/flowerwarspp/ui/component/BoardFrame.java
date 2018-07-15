@@ -3,6 +3,10 @@ package flowerwarspp.ui.component;
 import flowerwarspp.main.ExitCode;
 import flowerwarspp.main.savegame.SaveGame;
 import flowerwarspp.preset.*;
+import flowerwarspp.ui.Output;
+import flowerwarspp.util.log.Log;
+import flowerwarspp.util.log.LogLevel;
+import flowerwarspp.util.log.LogModule;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -12,15 +16,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-import flowerwarspp.ui.Output;
-import flowerwarspp.util.log.Log;
-import flowerwarspp.util.log.LogLevel;
-import flowerwarspp.util.log.LogModule;
-
 /**
  * Das {@link JFrame}, das das {@link BoardDisplay} enthält.
  */
-public class BoardFrame extends JFrame implements Requestable, Output, ChangeListener, ActionListener {
+public class BoardFrame extends JFrame
+		implements Requestable, Output, ChangeListener, ActionListener {
 
 	/**
 	 * Private Referenz auf die singuläre Instanz dieser Klasse.
@@ -56,7 +56,8 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 	private BottomToolbarPanel bottomToolbarPanel = new BottomToolbarPanel();
 
 	/**
-	 * Das vom Hauptprogramm übergebende {@link SaveGame}, mit welchem das Spiel gespeichert werden kann.
+	 * Das vom Hauptprogramm übergebende {@link SaveGame}, mit welchem das Spiel gespeichert werden
+	 * kann.
 	 */
 	private SaveGame saveGame;
 
@@ -75,9 +76,11 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 	}
 
 	// NOTE: synchronized, da ggf. ein Singleton gesetzt wird.
+
 	/**
-	 * Gibt einen Verweis auf die singuläre Instanz dieser Singleton-Klasse zurück. Falls noch keine Instanz existiert,
-	 * wird eine neue erzeugt.
+	 * Gibt einen Verweis auf die singuläre Instanz dieser Singleton-Klasse zurück. Falls noch
+	 * keine
+	 * Instanz existiert, wird eine neue erzeugt.
 	 *
 	 * @return Die singuläre Instanz des Frames
 	 */
@@ -89,11 +92,11 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 	}
 
 	/**
-	 * Setzt den {@link Viewer}, durch den gerade geschaut wird und erstellt ein
-	 * zugehöriges {@link BoardDisplay}.
+	 * Setzt den {@link Viewer}, durch den gerade geschaut wird und erstellt ein zugehöriges {@link
+	 * BoardDisplay}.
 	 *
 	 * @param viewer
-	 * Der {@link Viewer}, durch den auf das Spielbrett geschaut wird.
+	 * 		Der {@link Viewer}, durch den auf das Spielbrett geschaut wird.
 	 */
 	public void setViewer(Viewer viewer) {
 		this.viewer = viewer;
@@ -114,11 +117,11 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 	}
 
 	/**
-	 * Die {@link ActionListener}-Implementation.
-	 * Speichert das Spiel in eine Datei, die wieder geladen werden kann.
+	 * Die {@link ActionListener}-Implementation. Speichert das Spiel in eine Datei, die wieder
+	 * geladen werden kann.
 	 *
 	 * @param actionEvent
-	 * Das {@link ActionEvent}, das die Ausführung verursacht hat.
+	 * 		Das {@link ActionEvent}, das die Ausführung verursacht hat.
 	 */
 	@Override
 	public void actionPerformed(ActionEvent actionEvent) {
@@ -132,14 +135,14 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 				fc.approveSelection();
 			}
 			String filename = fc.getSelectedFile().getAbsolutePath();
-			if (!filename.endsWith(".sav")) {
+			if (! filename.endsWith(".sav")) {
 				filename += ".sav";
 			}
 			try {
 				saveGame.save(filename);
 			} catch (Exception e) {
-				Log.log(LogLevel.WARNING, LogModule.UI, "Savegame could not be saved at the given location: "
-						+ filename);
+				Log.log(LogLevel.WARNING, LogModule.UI,
+						"Savegame could not be saved at the given location: " + filename);
 			}
 		}
 	}
@@ -148,12 +151,13 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 	 * Updatet die optische Vergrößerung des Spielfelds.
 	 *
 	 * @param changeEvent
-	 * Das {@link ChangeEvent}, das die Ausführung verursacht hat.
+	 * 		Das {@link ChangeEvent}, das die Ausführung verursacht hat.
 	 */
 	@Override
 	public void stateChanged(ChangeEvent changeEvent) {
 		if (changeEvent.getSource() == topToolbarPanel.getZoomSpinner()) {
-			double zoom = topToolbarPanel.getZoomSpinnerNumberModel().getNumber().intValue() / 100.0;
+			double zoom =
+					topToolbarPanel.getZoomSpinnerNumberModel().getNumber().intValue() / 100.0;
 			boardDisplay.setZoom(zoom);
 		}
 	}
@@ -163,8 +167,9 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 	 */
 	@Override
 	public Move request() throws Exception {
-		if (boardDisplay == null)
+		if (boardDisplay == null) {
 			return null;
+		}
 
 		return boardDisplay.requestMove();
 	}
@@ -174,8 +179,9 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 	 */
 	@Override
 	public void refresh() {
-		if (boardDisplay == null)
+		if (boardDisplay == null) {
 			return;
+		}
 
 		for (PlayerColor playerColor : PlayerColor.values()) {
 			topToolbarPanel.updatePlayerStatus(playerColor, viewer.getPoints(playerColor));
@@ -197,16 +203,17 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void showEndMessage(String message, ExitCode exitCode) {
-		// NOTE: Es ist wichtig, dass der Konstruktor durch EventQueue aufgerufen wird,
-		// da das Programm aufgrund Swings Threading-Struktur sonst blockiert.
-		EventQueue.invokeLater(() -> new EndPopupFrame(this, message, exitCode));
+	public void showEndMessage(ExitCode exitCode) {
+		showEndMessage(exitCode.toString(), exitCode);
 	}
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void showEndMessage(ExitCode exitCode) {
-		showEndMessage(exitCode.toString(), exitCode);
+	public void showEndMessage(String message, ExitCode exitCode) {
+		// NOTE: Es ist wichtig, dass der Konstruktor durch EventQueue aufgerufen wird,
+		// da das Programm aufgrund Swings Threading-Struktur sonst blockiert.
+		EventQueue.invokeLater(() -> new EndPopupFrame(this, message, exitCode));
 	}
 }

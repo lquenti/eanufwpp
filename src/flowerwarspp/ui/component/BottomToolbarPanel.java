@@ -3,9 +3,10 @@ package flowerwarspp.ui.component;
 import flowerwarspp.preset.PlayerColor;
 import flowerwarspp.util.Convert;
 
-import java.awt.*;
-import javax.swing.border.*;
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
 
 /**
  * Die Klasse, die die Toolbar an der unteren Seite des {@link BoardFrame}s hält.
@@ -57,7 +58,7 @@ public class BottomToolbarPanel extends JPanel {
 	 * Enablet oder disablet den {@link #surrenderButton}.
 	 *
 	 * @param enabled
-	 * <code>true</code> oder <code>false</code>, je nachdem, ob der Button aktiv sein soll.
+	 * 		<code>true</code> oder <code>false</code>, je nachdem, ob der Button aktiv sein soll.
 	 */
 	public void setSurrenderEnabled(boolean enabled) {
 		surrenderButton.setEnabled(enabled);
@@ -67,7 +68,7 @@ public class BottomToolbarPanel extends JPanel {
 	 * Enablet oder disablet den {@link #endButton}.
 	 *
 	 * @param enabled
-	 * <code>true</code> oder <code>false</code>, je nachdem, ob der Button aktiv sein soll.
+	 * 		<code>true</code> oder <code>false</code>, je nachdem, ob der Button aktiv sein soll.
 	 */
 	public void setEndEnabled(boolean enabled) {
 		endButton.setEnabled(enabled);
@@ -83,8 +84,7 @@ public class BottomToolbarPanel extends JPanel {
 	/**
 	 * Ein Getter für den {@link #surrenderButton}.
 	 *
-	 * @return
-	 * Den {@link #surrenderButton}.
+	 * @return Den {@link #surrenderButton}.
 	 */
 	JButton getSurrenderButton() {
 		return surrenderButton;
@@ -93,8 +93,7 @@ public class BottomToolbarPanel extends JPanel {
 	/**
 	 * Ein Getter für den {@link #endButton}.
 	 *
-	 * @return
-	 * Den {@link #endButton}.
+	 * @return Den {@link #endButton}.
 	 */
 	JButton getEndButton() {
 		return endButton;

@@ -24,20 +24,13 @@ public class Dot extends BoardPolygon {
 	private int currentDiameter = 1;
 
 	/**
-	 * Gibt den Wert von {@link #position} zurück.
-	 * @return Wert von {@link #position}.
-	 */
-	public Position getPosition() {
-		return position;
-	}
-
-	/**
 	 * Konstruiert einen Punkt im Koordinatensystem des {@link flowerwarspp.preset.Board}s.
-	 * Wichtig: Der Text, der die Position schreibt wird als Teil des Borders gesehen
-	 * (siehe {@link BoardPolygon#getBorderColor()}).
+	 * Wichtig:
+	 * Der Text, der die Position schreibt wird als Teil des Borders gesehen (siehe {@link
+	 * BoardPolygon#getBorderColor()}).
 	 *
 	 * @param position
-	 * Die {@link Position}, an der dieser Punkt liegen soll.
+	 * 		Die {@link Position}, an der dieser Punkt liegen soll.
 	 */
 	public Dot(Position position, Color fillColor) {
 		super(Color.WHITE, fillColor);
@@ -46,18 +39,24 @@ public class Dot extends BoardPolygon {
 	}
 
 	/**
+	 * Gibt den Wert von {@link #position} zurück.
+	 *
+	 * @return Wert von {@link #position}.
+	 */
+	public Position getPosition() {
+		return position;
+	}
+
+	/**
 	 * Überprüft, ob sich ein Punkt in diesem {@link Dot} befindet.
 	 *
 	 * @param x
-	 * Die x-Koordinate.
-	 *
+	 * 		Die x-Koordinate.
 	 * @param y
-	 * Die y-Koordinate.
+	 * 		Die y-Koordinate.
 	 *
-	 * @return
-	 * <code>true</code> genau dann, wenn der Abstand des Punkts
-	 * zum Mittelpunkt dieses {@link Dot}s kleiner ist als der Radius
-	 * dieses {@link Dot}s.
+	 * @return <code>true</code> genau dann, wenn der Abstand des Punkts
+	 * zum Mittelpunkt dieses {@link Dot}s kleiner ist als der Radius dieses {@link Dot}s.
 	 */
 	@Override
 	public boolean contains(int x, int y) {

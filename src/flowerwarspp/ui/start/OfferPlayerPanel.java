@@ -32,15 +32,14 @@ public class OfferPlayerPanel extends GameParametersPanel {
 	private JTextField playerPortTextField = new JTextField("1099");
 
 	/**
-	 * Ein {@link PlayerDataInput}, mit dem Informationen zum geofferten Spieler
-	 * vom Nutzer abgefragt werden sollen.
+	 * Ein {@link PlayerDataInput}, mit dem Informationen zum geofferten Spieler vom Nutzer
+	 * abgefragt werden sollen.
 	 */
 	private PlayerDataInput playerDataInput = new PlayerDataInput("Angebotener Spieler");
 
 	/**
-	 * Konsturiert ein {@link OfferPlayerPanel}, das genutzt werden kann,
-	 * um den Nutzer nach den nötigen Parametern fragen kann,
-	 * einen {@link Player} anzubieten.
+	 * Konsturiert ein {@link OfferPlayerPanel}, das genutzt werden kann, um den Nutzer nach den
+	 * nötigen Parametern fragen kann, einen {@link Player} anzubieten.
 	 */
 	public OfferPlayerPanel() {
 		setLayout(new GridBagLayout());

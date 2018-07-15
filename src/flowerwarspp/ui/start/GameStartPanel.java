@@ -1,13 +1,12 @@
 package flowerwarspp.ui.start;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import flowerwarspp.main.GameParameters;
 import flowerwarspp.main.Main;
+
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Ein Panel, das einen Einstellungbereich und einen Button, mit dem das Spiel gestartet werden
@@ -32,8 +31,10 @@ public class GameStartPanel extends JPanel implements ActionListener {
 	/**
 	 * Konstruktor, der neues Panel erzeugt.
 	 *
-	 * @param parent Der Rahmen, zu dem das Panel gehören soll.
-	 * @param parametersPanel Das Einstellungspanel, das in diesem Panel enthalten sein soll.
+	 * @param parent
+	 * 		Der Rahmen, zu dem das Panel gehören soll.
+	 * @param parametersPanel
+	 * 		Das Einstellungspanel, das in diesem Panel enthalten sein soll.
 	 */
 	public GameStartPanel(JFrame parent, GameParametersPanel parametersPanel) {
 		this.parent = parent;
@@ -49,8 +50,8 @@ public class GameStartPanel extends JPanel implements ActionListener {
 	}
 
 	/**
-	 * Startet ein neues Spiel mit den Einstellungen von {@link #parametersPanel}, wenn der
-	 * {@link #startButton} geklickt wurde.
+	 * Startet ein neues Spiel mit den Einstellungen von {@link #parametersPanel}, wenn der {@link
+	 * #startButton} geklickt wurde.
 	 */
 	@Override
 	public void actionPerformed(ActionEvent event) {
@@ -61,7 +62,8 @@ public class GameStartPanel extends JPanel implements ActionListener {
 				Thread thread = new Thread(() -> Main.startNewGame(parameters));
 				thread.start();
 			} catch (Exception e) {
-				JOptionPane.showMessageDialog(this, "Die Einstellungen sind ungültig", "Fehler", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, "Die Einstellungen sind ungültig", "Fehler",
+						JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}

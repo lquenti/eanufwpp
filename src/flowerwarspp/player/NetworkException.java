@@ -1,7 +1,8 @@
 package flowerwarspp.player;
 
 /**
- * Diese Exception wird geworfen, falls beim Suchen eines entfernten Spielers ein Fehler aufgetreten ist.
+ * Diese Exception wird geworfen, falls beim Suchen eines entfernten Spielers ein Fehler aufgetreten
+ * ist.
  */
 public class NetworkException extends Throwable {
 	/**
