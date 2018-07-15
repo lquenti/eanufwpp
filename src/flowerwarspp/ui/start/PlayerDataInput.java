@@ -1,27 +1,22 @@
 package flowerwarspp.ui.start;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.net.MalformedURLException;
-import java.net.URL;
-import javax.swing.border.EmptyBorder;
-
 import flowerwarspp.preset.Player;
 import flowerwarspp.preset.PlayerColor;
 import flowerwarspp.preset.PlayerType;
 import flowerwarspp.util.Convert;
-import java.awt.*;
+
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.net.MalformedURLException;
 
 /**
- * Ein {@link JPanel}, das Elemente hält, um Informationen über einen {@link Player} abzufragen,
- * der als Netzwerkspieler fungieren soll.
+ * Ein {@link JPanel}, das Elemente hält, um Informationen über einen {@link Player} abzufragen, der
+ * als Netzwerkspieler fungieren soll.
  */
 public class PlayerDataInput extends JPanel implements ActionListener {
-	/**
-	 * Ein {@link JLabel}, das dem Nutzer signalisiert, dass ein Spielertyp einzugeben ist.
-	 */
-	private JLabel playerTypeLabel = new JLabel("Spielertyp");
 
 	/**
 	 * Eine {@link PlayerTypeComboBox}, über die der Nutzer den Spielertypen eingeben kann.
@@ -58,6 +53,16 @@ public class PlayerDataInput extends JPanel implements ActionListener {
 	 */
 	private JTextField playerNameTextField = new JTextField("Peter");
 
+	/**
+	 * Konstruiert ein {@link PlayerDataInput}, das den Namen anhand der {@link PlayerColor} setzt.
+	 *
+	 * @param playerColour
+	 * 		Die {@link PlayerColor}, die den Namen bestimmt.
+	 */
+	public PlayerDataInput(PlayerColor playerColour) {
+		this(Convert.playerColorToString(playerColour));
+	}
+
 	public PlayerDataInput(String name) {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -66,8 +71,9 @@ public class PlayerDataInput extends JPanel implements ActionListener {
 		nameLabel.setBorder(new EmptyBorder(0, 0, 8, 0));
 		add(nameLabel);
 
-		JPanel settingsPanel = new JPanel(new GridLayout(4,2));
+		JPanel settingsPanel = new JPanel(new GridLayout(4, 2));
 
+		JLabel playerTypeLabel = new JLabel("Spielertyp");
 		settingsPanel.add(playerTypeLabel);
 		playerTypeComboBox.addActionListener(this);
 		settingsPanel.add(playerTypeComboBox);
@@ -85,34 +91,36 @@ public class PlayerDataInput extends JPanel implements ActionListener {
 	}
 
 	/**
-	 * Konstruiert ein {@link PlayerDataInput}, das den Namen anhand der {@link PlayerColor} setzt.
+	 * Ruft {@link Component#setEnabled(boolean)} auf alle Elemente auf, die für
+	 * Netzwerkeinstellungen verantwortlich sind.
 	 *
-	 * @param playerColour
-	 * Die {@link PlayerColor}, die den Namen bestimmt.
+	 * @param enabled
+	 * 		Ob die {@link Component}s enabled werden sollen oder nicht. Siehe {@link
+	 * 		Component#setEnabled(boolean)}}.
 	 */
-	public PlayerDataInput(PlayerColor playerColour) {
-		this(Convert.playerColorToString(playerColour));
+	private void setNetworkComponentsEnabled(boolean enabled) {
+		playerHostnameLabel.setEnabled(enabled);
+		playerHostnameTextField.setEnabled(enabled);
+		playerPortLabel.setEnabled(enabled);
+		playerPortTextField.setEnabled(enabled);
+		playerNameLabel.setEnabled(enabled);
+		playerNameTextField.setEnabled(enabled);
 	}
 
 	/**
 	 * Getter für den Typen des {@link Player}s.
 	 *
-	 * @return
-	 * Der Typ des {@link Player}s.
+	 * @return Der Typ des {@link Player}s.
 	 */
 	public PlayerType getPlayerType() {
 		return playerTypeComboBox.getSelectedItem();
 	}
 
 	/**
-	 * Konstruiert einen {@link String}, der eine URL repräsentiert,
-	 * im Muster: <code>hostname:port/playername</code>
-	 * Hat explizit <b>kein</b> <code>rmi://</code>
+	 * Konstruiert einen {@link String}, der eine URL repräsentiert, im Muster:
+	 * <code>hostname:port/playername</code> Hat explizit <b>kein</b> <code>rmi://</code>
 	 *
-	 * @return
-	 * Ein String, der eine URL repräsentiert, mit der ein Nutzer gefunden werden kann.
-	 *
-	 * @throws MalformedURLException falls die URL ungültig ist.
+	 * @return Ein String, der eine URL repräsentiert, mit der ein Nutzer gefunden werden kann.
 	 */
 	public String getPlayerUrl() {
 		StringBuilder urlBuilder = new StringBuilder();
@@ -123,23 +131,6 @@ public class PlayerDataInput extends JPanel implements ActionListener {
 		urlBuilder.append(playerNameTextField.getText());
 
 		return urlBuilder.toString();
-	}
-
-	/**
-	 * Ruft {@link Component#setEnabled(boolean)} auf alle Elemente auf,
-	 * die für Netzwerkeinstellungen verantwortlich sind.
-	 *
-	 * @param enabled
-	 * Ob die {@link Component}s enabled werden sollen oder nicht.
-	 * Siehe {@link Component#setEnabled(boolean)}}.
-	 */
-	private void setNetworkComponentsEnabled(boolean enabled) {
-		playerHostnameLabel.setEnabled(enabled);
-		playerHostnameTextField.setEnabled(enabled);
-		playerPortLabel.setEnabled(enabled);
-		playerPortTextField.setEnabled(enabled);
-		playerNameLabel.setEnabled(enabled);
-		playerNameTextField.setEnabled(enabled);
 	}
 
 	/**

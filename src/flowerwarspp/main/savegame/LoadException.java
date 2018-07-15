@@ -3,20 +3,15 @@ package flowerwarspp.main.savegame;
 import java.io.IOException;
 
 /**
- * Eine Exception, welche geworfen wird, falls während des Ladens eines Spielstands ein Fehler auftritt.
+ * Eine Exception, welche geworfen wird, falls während des Ladens eines Spielstands ein Fehler
+ * auftritt.
  */
 public class LoadException extends Exception {
-
-	/**
-	 * Default-Konstruktor, welcher eine neue Instanz dieser Klasse erzeugt.
-	 */
-	public LoadException() {
-		super();
-	}
-
 	/**
 	 * Konstruktor, welche eine neue Instanz dieser Klasse mit einer Detail-Nachricht erzeugt.
-	 * @param message Die Nachricht, welche den Grund der Exception detailliert.
+	 *
+	 * @param message
+	 * 		Die Nachricht, welche den Grund der Exception detailliert.
 	 */
 	public LoadException(String message) {
 		super(message);
@@ -24,7 +19,10 @@ public class LoadException extends Exception {
 
 	/**
 	 * Copy-Konstruktor, um eine {@link IOException} indirekt in eine LoadException zu verpacken.
-	 * @param e Eine Instanz der Klasse {@link IOException}, deren Daten in dieses Objekt kopiert werden soll.
+	 *
+	 * @param e
+	 * 		Eine Instanz der Klasse {@link IOException}, deren Daten in dieses Objekt kopiert
+	 * 		werden soll.
 	 */
 	public LoadException(IOException e) {
 		super(e);

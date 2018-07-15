@@ -10,9 +10,8 @@ import flowerwarspp.ui.geometry.Triangle;
 import java.awt.*;
 
 /**
- * Eine Klasse von Konstanten, die Farben betreffen.
- * Neben {@link Color}s für die graphische Ausgabe sind hier auch
- * Strings definiert, die eine farbige Ausgabe auf der Konsole ermöglichen.
+ * Eine Klasse von Konstanten, die Farben betreffen. Neben {@link Color}s für die graphische Ausgabe
+ * sind hier auch Strings definiert, die eine farbige Ausgabe auf der Konsole ermöglichen.
  */
 public final class GameColors {
 	/*
@@ -26,13 +25,13 @@ public final class GameColors {
 	 */
 	public static final Color TRIANGLE_DEFAULT = Color.LIGHT_GRAY;
 	/**
-	 * Die Farbe, die ein angewähltes {@link Triangle} hat,
-	 * bevor ein zweites für einen {@link Move} gewählt wurde.
+	 * Die Farbe, die ein angewähltes {@link Triangle} hat, bevor ein zweites für einen
+	 * {@link Move} gewählt wurde.
 	 */
 	public static final Color TRIANGLE_CLICKED = new Color(0x966BAF);
 	/**
-	 * Die Farbe, die ein {@link Triangle} hat,
-	 * wenn es mit dem aktuell angewählten kombinierbar ist.
+	 * Die Farbe, die ein {@link Triangle} hat, wenn es mit dem aktuell angewählten kombinierbar
+	 * ist.
 	 */
 	public static final Color TRIANGLE_COMBINABLE = new Color(0xB9EEA0);
 	/**
@@ -40,8 +39,8 @@ public final class GameColors {
 	 */
 	public static final Color EDGE_DEFAULT = Color.BLACK;
 	/**
-	 * Die Farbe die eine {@link Edge} hat,
-	 * wenn es einen gültigen {@link Move} gibt, der den repräsentierten {@link Ditch} enthält.
+	 * Die Farbe die eine {@link Edge} hat, wenn es einen gültigen {@link Move} gibt, der den
+	 * repräsentierten {@link Ditch} enthält.
 	 */
 	public static final Color EDGE_CLICKABLE = TRIANGLE_COMBINABLE;
 	/**
@@ -99,10 +98,9 @@ public final class GameColors {
 	 * Gibt für jede {@link PlayerColor} das entsprechende {@link Color}-Objekt zurück.
 	 *
 	 * @param playerColor
-	 * Die {@link PlayerColor}, für die die {@link Color} zurückgegeben werden soll.
+	 * 		Die {@link PlayerColor}, für die die {@link Color} zurückgegeben werden soll.
 	 *
-	 * @return
-	 * Die zur {@link PlayerColor} passende {@link Color} im "normalen" Zustand."
+	 * @return Die zur {@link PlayerColor} passende {@link Color} im "normalen" Zustand."
 	 */
 	public static Color getColorForPlayerColor(PlayerColor playerColor) {
 		switch (playerColor) {
@@ -119,18 +117,19 @@ public final class GameColors {
 	 * Gibt den ANSI-Escape-Code für die Blumenfarbe für eine {@link PlayerColor} zurück.
 	 *
 	 * @param color
-	 * Die {@link PlayerColor}, für die der Farbstring zurückgegeben werden soll.
+	 * 		Die {@link PlayerColor}, für die der Farbstring zurückgegeben werden soll.
 	 *
-	 * @return
-	 * Der zur {@link PlayerColor} gehörende ANSI-Escape-Code.
+	 * @return Der zur {@link PlayerColor} gehörende ANSI-Escape-Code.
 	 */
 	public static String getAnsiFlowerColor(PlayerColor color) {
 		if (color == null) {
 			return "";
 		}
-		switch(color) {
-			case Blue: return ANSI_FLOWER_BLUE;
-			case Red: return ANSI_FLOWER_RED;
+		switch (color) {
+			case Blue:
+				return ANSI_FLOWER_BLUE;
+			case Red:
+				return ANSI_FLOWER_RED;
 		}
 		return "";
 	}
@@ -139,18 +138,19 @@ public final class GameColors {
 	 * Gibt den ANSI-Escape-Code für die Grabenfarbe für eine {@link PlayerColor} zurück.
 	 *
 	 * @param color
-	 * Die {@link PlayerColor}, für die der Farbstring zurückgegeben werden soll.
+	 * 		Die {@link PlayerColor}, für die der Farbstring zurückgegeben werden soll.
 	 *
-	 * @return
-	 * Der zur {@link PlayerColor} gehörende ANSI-Escape-Code.
+	 * @return Der zur {@link PlayerColor} gehörende ANSI-Escape-Code.
 	 */
 	public static String getAnsiDitchColor(PlayerColor color) {
 		if (color == null) {
 			return "";
 		}
-		switch(color) {
-			case Blue: return ANSI_DITCH_BLUE;
-			case Red: return ANSI_DITCH_RED;
+		switch (color) {
+			case Blue:
+				return ANSI_DITCH_BLUE;
+			case Red:
+				return ANSI_DITCH_RED;
 		}
 		return "";
 	}

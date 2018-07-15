@@ -1,12 +1,12 @@
 package flowerwarspp.ui.component;
 
+import flowerwarspp.main.ExitCode;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.border.EmptyBorder;
-
-import flowerwarspp.main.ExitCode;
-import java.awt.*;
-import javax.swing.*;
 
 /**
  * Ein {@link JDialog}, das dem Nutzer mitteilt, dass das Spiel geendet hat.
@@ -16,13 +16,12 @@ public class EndPopupFrame extends JDialog {
 	 * Konstruiert einen {@link JDialog}, der den Nutzer über das Ende des Spiels informiert.
 	 *
 	 * @param parent
-	 * Das Elternelement dieses {@link JDialog}.
-	 *
+	 * 		Das Elternelement dieses {@link JDialog}.
 	 * @param message
-	 * Die anzuzeigende Nachricht.
-	 *
+	 * 		Die anzuzeigende Nachricht.
 	 * @param exitCode
-	 * {@link ExitCode} welcher dem Betriebssystem mit {@link System#exit(int)} mitgeteilt wird.
+	 * 		{@link ExitCode} welcher dem Betriebssystem mit {@link System#exit(int)} mitgeteilt
+	 * 		wird.
 	 */
 	public EndPopupFrame(JFrame parent, String message, ExitCode exitCode) {
 		super(parent, "Spiel Beendet");
@@ -48,10 +47,10 @@ class PopupComponentPane extends JPanel {
 	 * Konsturiert ein {@link JPanel}, das eine Nachricht zentriert anzeigt.
 	 *
 	 * @param message
-	 * Die anzuzeigende Nachricht.
-	 *
+	 * 		Die anzuzeigende Nachricht.
 	 * @param exitCode
-	 * {@link ExitCode} welcher dem Betriebssystem mit {@link System#exit(int)} mitgeteilt wird.
+	 * 		{@link ExitCode} welcher dem Betriebssystem mit {@link System#exit(int)} mitgeteilt
+	 * 		wird.
 	 */
 	PopupComponentPane(String message, ExitCode exitCode) {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -84,7 +83,8 @@ class QuitButton extends JButton implements ActionListener {
 	 * Konsturiert einen {@link JButton}, der auf Klick das Programm beendet.
 	 *
 	 * @param exitCode
-	 * {@link ExitCode} welcher dem Betriebssystem mit {@link System#exit(int)} mitgeteilt wird.
+	 * 		{@link ExitCode} welcher dem Betriebssystem mit {@link System#exit(int)} mitgeteilt
+	 * 		wird.
 	 */
 	QuitButton(ExitCode exitCode) {
 		super("Spiel beenden");
@@ -93,8 +93,7 @@ class QuitButton extends JButton implements ActionListener {
 	}
 
 	/**
-	 * Handhabt das Auslösen eines {@link JButton}s.
-	 * Schließt das Programm.
+	 * Handhabt das Auslösen eines {@link JButton}s. Schließt das Programm.
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {

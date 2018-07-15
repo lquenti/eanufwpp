@@ -9,13 +9,12 @@ import java.awt.*;
 // Welcome to Microsoft Windows 10
 
 /**
- * Eine Klasse, die Kanten darstellt.
- * Diese Kanten stellen die {@link Ditch}es des Spielbretts dar.
+ * Eine Klasse, die Kanten darstellt. Diese Kanten stellen die {@link Ditch}es des Spielbretts dar.
  */
 public class Edge extends BoardPolygon {
 	/**
-	 * Der Faktor, durch den die Länge des perpendikularen Vektoren geteilt wird.
-	 * Ausschließlich für optische Zwecke benutzt.
+	 * Der Faktor, durch den die Länge des perpendikularen Vektoren geteilt wird. Ausschließlich
+	 * für optische Zwecke benutzt.
 	 */
 	private static final int divisionFactor = 15;
 
@@ -32,12 +31,11 @@ public class Edge extends BoardPolygon {
 	 * Erstelle ein Edge-Objekt, das einen {@link Ditch} repräsentiert.
 	 *
 	 * @param position1
-	 * Eine der {@link Position}en auf dem Brett. Die Reihenfolge der beiden Positionen
-	 * ist in diesem Konstruktor egal.
-	 *
+	 * 		Eine der {@link Position}en auf dem Brett. Die Reihenfolge der beiden Positionen ist in
+	 * 		diesem Konstruktor egal.
 	 * @param position2
-	 * Eine der {@link Position}en auf dem Brett. Die Reihenfolge der beiden Positionen
-	 * ist in diesem Konstruktor egal.
+	 * 		Eine der {@link Position}en auf dem Brett. Die Reihenfolge der beiden Positionen ist in
+	 * 		diesem Konstruktor egal.
 	 */
 	public Edge(Position position1, Position position2) {
 		super(Color.BLACK, GameColors.EDGE_DEFAULT);
@@ -47,11 +45,11 @@ public class Edge extends BoardPolygon {
 	}
 
 	/**
-	 * Erstellt ein {@link Ditch}-Objekt, das auf dem Spielbrett an der Stelle liegt,
-	 * die dieses Polygon repräsentiert.
+	 * Erstellt ein {@link Ditch}-Objekt, das auf dem Spielbrett an der Stelle liegt, die dieses
+	 * Polygon repräsentiert.
 	 *
-	 * @return
-	 * Ein neues {@link Ditch}-Objekt, das die Koordinaten diese Edge auf dem Spielbrett hat.
+	 * @return Ein neues {@link Ditch}-Objekt, das die Koordinaten diese Edge auf dem Spielbrett
+	 * hat.
 	 */
 	public Ditch toDitch() {
 		return new Ditch(position1, position2);
@@ -61,10 +59,9 @@ public class Edge extends BoardPolygon {
 	 * Berechnet die Position der Punkte des Dreiecks.
 	 *
 	 * @param triangleSideLength
-	 * Die Länge der Seiten der Dreiecke auf dem aktuellen Spielbrett.
-	 *
+	 * 		Die Länge der Seiten der Dreiecke auf dem aktuellen Spielbrett.
 	 * @param relativeStart
-	 * Der Punkt von dem aus die Dreiecke angelegt werden sollen.
+	 * 		Der Punkt von dem aus die Dreiecke angelegt werden sollen.
 	 */
 	@Override
 	public void recalcPoints(int triangleSideLength, Point relativeStart) {
@@ -82,7 +79,7 @@ public class Edge extends BoardPolygon {
 		vector.y -= edge3.y;
 
 		// Hier wird der Vektor gekürzt.
-		Point perpendicularVector = new Point(vector.y, -vector.x);
+		Point perpendicularVector = new Point(vector.y, - vector.x);
 		perpendicularVector.x /= divisionFactor;
 		perpendicularVector.y /= divisionFactor;
 

@@ -7,8 +7,8 @@ import flowerwarspp.preset.*;
 import java.util.Scanner;
 
 /**
- * Eine Klasse, die ein Command Line Interface implementiert.
- * Stellt Spielfunktionen mittels ASCII-Art und Texteingabe zur Verfügung.
+ * Eine Klasse, die ein Command Line Interface implementiert. Stellt Spielfunktionen mittels
+ * ASCII-Art und Texteingabe zur Verfügung.
  */
 public class TextInterface implements Requestable, Output {
 	/**
@@ -17,15 +17,15 @@ public class TextInterface implements Requestable, Output {
 	private static final String moveRequestPrompt = "Zug eingeben: ";
 
 	/**
-	 * Eine vordefinierte Nachricht für eine {@link MoveFormatException}, das heißt für
-	 * eine Exception die geworfen wird, wenn das Format des Zuges, den der interaktive
-	 * Spieler eingegeben hat, ingültig ist.
+	 * Eine vordefinierte Nachricht für eine {@link MoveFormatException}, das heißt für eine
+	 * Exception die geworfen wird, wenn das Format des Zuges, den der interaktive Spieler
+	 * eingegeben hat, ingültig ist.
 	 */
 	private static final String moveFormatErrorMessage = "Zug konnte nicht gelesen werden.";
 
 	/**
-	 * Eine vordefinierte Nachricht einer {@link Exception}, welche geworfen wird,
-	 * wenn der Spieler einen nicht validen Zug angegeben hat.
+	 * Eine vordefinierte Nachricht einer {@link Exception}, welche geworfen wird, wenn der Spieler
+	 * einen nicht validen Zug angegeben hat.
 	 */
 	private static final String invalidMoveMessage = "Der eingegebene Zug ist nicht erlaubt.";
 
@@ -42,8 +42,7 @@ public class TextInterface implements Requestable, Output {
 	/**
 	 * Liest einen Spielzug vom Standard Input ein.
 	 *
-	 * @return
-	 * Der eingelesene Zug, oder <code>null</code>, wenn der eingegebene Zug invalide war.
+	 * @return Der eingelesene Zug, oder <code>null</code>, wenn der eingegebene Zug invalide war.
 	 */
 	@Override
 	public Move request() {
@@ -53,7 +52,7 @@ public class TextInterface implements Requestable, Output {
 				System.out.print(moveRequestPrompt);
 				move = Move.parseMove(inputScanner.nextLine());
 
-				if (!this.viewer.possibleMovesContains(move)) {
+				if (! this.viewer.possibleMovesContains(move)) {
 					System.out.println(invalidMoveMessage);
 					move = null;
 				}
@@ -67,13 +66,74 @@ public class TextInterface implements Requestable, Output {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setViewer(Viewer viewer) {
+		this.viewer = viewer;
+		refresh();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void refresh() throws IllegalStateException {
+		if (viewer == null) {
+			throw new IllegalStateException("Viewer wurde noch nicht gesetzt.");
+		}
+
+		System.out.println();
+		System.out.print(drawBoard());
+		System.out.println();
+		System.out.println("Rot:  " + viewer.getPoints(PlayerColor.Red) + " Punkte");
+		System.out.println("Blau: " + viewer.getPoints(PlayerColor.Blue) + " Punkte");
+	}
+
+	/**
+	 * Zeichnet das {@link Board} aus ASCII-Art.
+	 *
+	 * @return Einen {@link StringBuilder}, der eine Textdarstellung des Spielbretts enthält.
+	 */
+	private StringBuilder drawBoard() {
+		int size = viewer.getSize();
+		StringBuilder board = new StringBuilder();
+		for (int i = - 1; i < size; i++) {
+			for (int j = 0; j < (size - i - 1) * 2; j++) {
+				board.append(' ');
+			}
+			board.append(GameColors.ANSI_GRID);
+			board.append(String.format("%2d", size - i));
+			board.append(GameColors.ANSI_RESET);
+			board.append(' ');
+			for (int j = 1; j <= i + 1; j++) {
+				board.append(drawTriangle(
+						new Flower(new Position(j, size - i), new Position(j + 1, size - i),
+								new Position(j, size - i + 1))));
+				if (j != i + 1) {
+					board.append(drawTriangle(new Flower(new Position(j + 1, size - i + 1),
+							new Position(j + 1, size - i), new Position(j, size - i + 1))));
+				}
+			}
+			board.append('\n');
+		}
+		board.append(GameColors.ANSI_GRID);
+		for (int i = 1; i <= size + 1; i++) {
+			board.append(String.format("%3d", i));
+			board.append(' ');
+		}
+		board.append(GameColors.ANSI_RESET);
+		board.append('\n');
+		return board;
+	}
+
+	/**
 	 * Erstellt ein Dreieck aus ASCII-Zeichen, gegebenenfalls mit einer Farbe.
 	 *
 	 * @param flower
-	 * Die zu zeichnende {@link Flower}.
+	 * 		Die zu zeichnende {@link Flower}.
 	 *
-	 * @return
-	 * Ein {@link StringBuilder}, der das Dreieck enthält.
+	 * @return Ein {@link StringBuilder}, der das Dreieck enthält.
 	 */
 	private StringBuilder drawTriangle(Flower flower) {
 		StringBuilder triangle = new StringBuilder();
@@ -102,74 +162,6 @@ public class TextInterface implements Requestable, Output {
 	}
 
 	/**
-	 * Zeichnet das {@link Board} aus ASCII-Art.
-	 *
-	 * @return
-	 * Einen {@link StringBuilder}, der eine Textdarstellung des Spielbretts enthält.
-	 */
-	private StringBuilder drawBoard() {
-		int size = viewer.getSize();
-		StringBuilder board = new StringBuilder();
-		for (int i = -1; i < size; i++) {
-			for (int j = 0; j < (size-i-1)*2; j++) {
-				board.append(' ');
-			}
-			board.append(GameColors.ANSI_GRID);
-			board.append(String.format("%2d", size - i));
-			board.append(GameColors.ANSI_RESET);
-			board.append(' ');
-			for (int j = 1; j <= i+1; j++) {
-				board.append(drawTriangle(new Flower (
-					new Position(j, size - i),
-					new Position(j + 1, size - i),
-					new Position(j, size - i + 1)
-				)));
-				if (j != i+1) {
-					board.append(drawTriangle(new Flower (
-						new Position(j + 1, size - i + 1),
-						new Position(j + 1, size - i),
-						new Position(j, size - i + 1)
-					)));
-				}
-			}
-			board.append('\n');
-		}
-		board.append(GameColors.ANSI_GRID);
-		for (int i = 1; i <= size + 1; i++) {
-			board.append(String.format("%3d", i));
-			board.append(' ');
-		}
-		board.append(GameColors.ANSI_RESET);
-		board.append('\n');
-		return board;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void refresh() throws IllegalStateException {
-		if (viewer == null) {
-			throw new IllegalStateException("Viewer wurde noch nicht gesetzt.");
-		}
-
-		System.out.println();
-		System.out.print(drawBoard());
-		System.out.println();
-		System.out.println("Rot:  " + viewer.getPoints(PlayerColor.Red) + " Punkte");
-		System.out.println("Blau: " + viewer.getPoints(PlayerColor.Blue) + " Punkte");
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setViewer(Viewer viewer) {
-		this.viewer = viewer;
-		refresh();
-	}
-
-	/**
 	 * {@inheritDoc} Diese Implementation tut nichts, da diese Ausgabe das Speichern von
 	 * Spielständen nicht unterstützt.
 	 */
@@ -180,16 +172,16 @@ public class TextInterface implements Requestable, Output {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void showEndMessage(String message, ExitCode exitCode) {
-		System.out.println(message);
-		System.exit(exitCode.ordinal());
+	public void showEndMessage(ExitCode exitCode) {
+		showEndMessage(exitCode.toString(), exitCode);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void showEndMessage(ExitCode exitCode) {
-		showEndMessage(exitCode.toString(), exitCode);
+	public void showEndMessage(String message, ExitCode exitCode) {
+		System.out.println(message);
+		System.exit(exitCode.ordinal());
 	}
 }

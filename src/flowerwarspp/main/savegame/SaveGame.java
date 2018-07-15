@@ -1,9 +1,15 @@
 package flowerwarspp.main.savegame;
 
-import flowerwarspp.preset.*;
-import flowerwarspp.util.log.*;
+import flowerwarspp.preset.Move;
+import flowerwarspp.preset.PlayerColor;
+import flowerwarspp.util.log.Log;
+import flowerwarspp.util.log.LogLevel;
+import flowerwarspp.util.log.LogModule;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayDeque;
 import java.util.Iterator;
 
@@ -11,15 +17,15 @@ import static flowerwarspp.preset.PlayerColor.Blue;
 import static flowerwarspp.preset.PlayerColor.Red;
 
 /**
- * Diese Klasse erlaubt das Speichern und Laden des aktuellen Status des Spiels. Dies wird ermöglicht durch das
- * Speichern aller gemachten Spielzüge in einer {@link ArrayDeque}.
+ * Diese Klasse erlaubt das Speichern und Laden des aktuellen Status des Spiels. Dies wird
+ * ermöglicht durch das Speichern aller gemachten Spielzüge in einer {@link ArrayDeque}.
  * <p>
- * Mit {@link #save(String)} werden diese gemachten Züge zusammen mit gewissen Meta-Daten in einer Datei mit dem
- * gegebenen Namen gespeichert.
+ * Mit {@link #save(String)} werden diese gemachten Züge zusammen mit gewissen Meta-Daten in einer
+ * Datei mit dem gegebenen Namen gespeichert.
  * <p>
- * Diese Datei kann zu einem späteren Zeitpunkt mit {@link #load(String)} wieder geladen werden, dabei werden die, von
- * der Datei beschriebenen, Spielzüge in der {@link ArrayDeque} einer neuen Instanz dieser Klasse gespeichert. Diese
- * Instanz wird dann zurückgegeben.
+ * Diese Datei kann zu einem späteren Zeitpunkt mit {@link #load(String)} wieder geladen werden,
+ * dabei werden die, von der Datei beschriebenen, Spielzüge in der {@link ArrayDeque} einer neuen
+ * Instanz dieser Klasse gespeichert. Diese Instanz wird dann zurückgegeben.
  */
 public class SaveGame implements Iterable<Move> {
 	/**
@@ -33,9 +39,11 @@ public class SaveGame implements Iterable<Move> {
 	private int boardSize;
 
 	/**
-	 * Dieser Konstruktor initialisiert ein neues SaveGame-Objekt mit der gegebenen Spielbrett-Größe.
+	 * Dieser Konstruktor initialisiert ein neues SaveGame-Objekt mit der gegebenen
+	 * Spielbrett-Größe.
 	 *
-	 * @param boardSize Die Spielbrettgröße des aktuellen Spiels
+	 * @param boardSize
+	 * 		Die Spielbrettgröße des aktuellen Spiels
 	 */
 	public SaveGame(int boardSize) {
 
@@ -44,50 +52,65 @@ public class SaveGame implements Iterable<Move> {
 	}
 
 	/**
-	 * Diese Methode ermöglicht das Laden eines mit {@link #save(String)} gespeicherten Spielstands.
+	 * Diese Methode ermöglicht das Laden eines mit {@link #save(String)} gespeicherten
+	 * Spielstands.
 	 * <p>
-	 * Dabei werden die, von der Datei beschriebenen, Spielzüge in der {@link ArrayDeque} einer neuen Instanz dieser
-	 * Klasse gespeichert. Diese Instanz wird dann zurückgegeben.
+	 * Dabei werden die, von der Datei beschriebenen, Spielzüge in der {@link ArrayDeque} einer
+	 * neuen Instanz dieser Klasse gespeichert. Diese Instanz wird dann zurückgegeben.
 	 *
-	 * @param saveGameName Name der zu ladenden Spielstand-Datei mit Pfad
-	 * @return Die, mit den in der Datei gespeicherten Spielzüge, intialisierte Instanz dieser Klasse
-	 * @throws LoadException Falls während des Ladevorgangs ein Fehler aufgetreten ist
+	 * @param saveGameName
+	 * 		Name der zu ladenden Spielstand-Datei mit Pfad
+	 *
+	 * @return Die, mit den in der Datei gespeicherten Spielzüge, intialisierte Instanz dieser
+	 * Klasse
+	 *
+	 * @throws LoadException
+	 * 		Falls während des Ladevorgangs ein Fehler aufgetreten ist
 	 */
 	public static SaveGame load(String saveGameName) throws LoadException {
 
 		/*
-		 * Mit einem try-with-resources wird ein neuer BufferedReader instanziiert. Falls während des Ladens ein
-		 * Fehler auftritt und eine Exception geworfen wird, wird dieser BufferedReader automatisch geschlossen.
+		 * Mit einem try-with-resources wird ein neuer BufferedReader instanziiert. Falls während
+		 * des Ladens ein
+		 * Fehler auftritt und eine Exception geworfen wird, wird dieser BufferedReader
+		 * automatisch geschlossen.
 		 */
 		try (BufferedReader bufferedReader = new BufferedReader(new FileReader(saveGameName))) {
 			/*
-			 * Die erste Zeile einer Savegame-Datei beinhaltet die Größe des Spielbretts. Diese wird eingelesen und
+			 * Die erste Zeile einer Savegame-Datei beinhaltet die Größe des Spielbretts. Diese
+			 * wird eingelesen und
 			 * damit ein neues Objekt dieser Klasse als Rückgabewert instanziiert.
 			 */
 			int boardSize = Integer.parseInt(bufferedReader.readLine());
 			SaveGame saveGame = new SaveGame(boardSize);
 
-			// Die nächste Zeile wird eingelesen. Dann wird solange iteriert, bis keine Zeile mehr gelesen werden kann.
+			// Die nächste Zeile wird eingelesen. Dann wird solange iteriert, bis keine Zeile mehr
+			// gelesen werden kann.
 			String currentLine = bufferedReader.readLine();
 
 			while (currentLine != null) {
 
 				/*
-				 * Es wird versucht, die aktuell eingelesene Zeile als Zug zu parsen. Außerdem lesen wir den
+				 * Es wird versucht, die aktuell eingelesene Zeile als Zug zu parsen. Außerdem
+				 * lesen wir den
 				 * gespeicherten Hash-Code des Zuges aus der gleichen Zeile aus.
 				 */
 				Move move = Move.parseMove(currentLine.split(";", 2)[0]);
 				int hashCode = Integer.parseInt(currentLine.split(";", 3)[1]);
 
 				/*
-				 * Falls sich der gespeicherte Hash-Code nicht mit dem Hash-Code des eingelesenen Spielzugs gleicht,
+				 * Falls sich der gespeicherte Hash-Code nicht mit dem Hash-Code des eingelesenen
+				 * Spielzugs gleicht,
 				 * wird der Ladevorgang abgebrochen und eine Exception geworfen.
 				 */
 				if (move.hashCode() != hashCode) {
-					Log.log(LogLevel.ERROR, LogModule.MAIN, "The hasCode of the loaded move was not equal " +
-							"to the hasCode stored in the savegame");
-					throw new LoadException("Der hashCode des geladenen Spielzugs stimmt nicht mit dem hinterlegten" +
-							"hashCode überein!");
+					Log.log(LogLevel.ERROR, LogModule.MAIN,
+							"The hasCode of the loaded move was not equal " +
+									"to the hasCode stored in the savegame");
+					throw new LoadException(
+							"Der hashCode des geladenen Spielzugs stimmt nicht mit dem " +
+									"hinterlegten" +
+									"hashCode überein!");
 				}
 
 				// Dem neu instanziierten Objekt wird der eingelesene Zug mitgeteilt.
@@ -103,6 +126,23 @@ public class SaveGame implements Iterable<Move> {
 	}
 
 	/**
+	 * Fügt den gegeben Zug der Liste der gespeicherten Spielzüge hinzu.
+	 *
+	 * @param move
+	 * 		Spielzug, welcher der {@link ArrayDeque} hinzugefügt werden soll
+	 */
+	public void add(Move move) {
+		if (move == null) {
+			return;
+		}
+
+		synchronized (this) {
+
+			madeMoves.add(move);
+		}
+	}
+
+	/**
 	 * Gibt den Wert von {@link #boardSize} zurück.
 	 *
 	 * @return Wert von {@link #boardSize}.
@@ -112,33 +152,25 @@ public class SaveGame implements Iterable<Move> {
 	}
 
 	/**
-	 * Fügt den gegeben Zug der Liste der gespeicherten Spielzüge hinzu.
-	 *
-	 * @param move Spielzug, welcher der {@link ArrayDeque} hinzugefügt werden soll
-	 */
-	public void add(Move move) {
-		if (move == null) return;
-
-		synchronized (this) {
-
-			madeMoves.add(move);
-		}
-	}
-
-	/**
 	 * Speichert den Spielstand in einer Datei mit gegebenen Namen.
 	 *
-	 * @param saveGameName Name des Spielstands mit Pfad.
-	 * @throws IOException Falls während des Speicherns des Spielstands ein Fehler aufgetreten ist.
+	 * @param saveGameName
+	 * 		Name des Spielstands mit Pfad.
+	 *
+	 * @throws IOException
+	 * 		Falls während des Speicherns des Spielstands ein Fehler aufgetreten ist.
 	 */
 	public void save(String saveGameName) throws IOException {
 
-		// synchronized, damit während des Speicherns nicht noch Züge in der Arraydeque gemachter Züge abgelegt werden
+		// synchronized, damit während des Speicherns nicht noch Züge in der Arraydeque gemachter
+		// Züge abgelegt werden
 		synchronized (this) {
 
 			/*
-			 * Das Speichern der Züge wird mit einem try-with-resources ermöglicht. Der so erstellte PrintWriter wird
-			 * automatisch geschlossen, falls während des Speicherns ein Fehler aufgetreten ist und eine Exception
+			 * Das Speichern der Züge wird mit einem try-with-resources ermöglicht. Der so
+			 * erstellte PrintWriter wird
+			 * automatisch geschlossen, falls während des Speicherns ein Fehler aufgetreten ist
+			 * und eine Exception
 			 * geworfen wurde.
 			 */
 			try (PrintWriter printWriter = new PrintWriter(saveGameName, "UTF-8")) {
@@ -156,11 +188,13 @@ public class SaveGame implements Iterable<Move> {
 					/*
 					 * Ein Zug wird in folgendem Format gespeichert:
 					 * String-Repräsentation des Moves;HashCode des Zugs;Aktueller Spieler, #i
-					 * Das Semikolon (;) wird hier als Seperator verwendet, da es nicht in der String-Repräsentation
+					 * Das Semikolon (;) wird hier als Seperator verwendet, da es nicht in der
+					 * String-Repräsentation
 					 * eines Spielzugs vorkommt.
 					 */
-					printWriter.println(m + ";" + m.hashCode() + ";" + currentPlayer
-							+ ", " + "#" + i);
+					printWriter
+							.println(m + ";" + m.hashCode() + ";" + currentPlayer + ", " + "#" +
+									i);
 
 					// Wechseln des aktuellen Spielers mit dem Elvis-Operator.
 					currentPlayer = currentPlayer == Red ? Blue : Red;
@@ -171,9 +205,9 @@ public class SaveGame implements Iterable<Move> {
 				printWriter.close();
 
 				Log.log(LogLevel.INFO, LogModule.MAIN, "Game was saved to: " + saveGameName);
-
 			} catch (IOException e) {
-				Log.log(LogLevel.ERROR, LogModule.MAIN, "Saving the game failed: " + e.getMessage());
+				Log.log(LogLevel.ERROR, LogModule.MAIN,
+						"Saving the game failed: " + e.getMessage());
 				throw e;
 			}
 		}

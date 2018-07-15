@@ -3,9 +3,10 @@ package flowerwarspp.ui.component;
 import flowerwarspp.preset.PlayerColor;
 import flowerwarspp.util.Convert;
 
-import java.awt.*;
-import javax.swing.border.*;
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
 
 /**
  * Die Klasse, die die Toolbar an der unteren Seite des {@link BoardFrame}s hält.
@@ -15,15 +16,7 @@ public class BottomToolbarPanel extends JPanel {
 	 * Das {@link JLabel}, das einen Text enthält, der anzeigt, welcher Spieler am Zug ist.
 	 */
 	private JLabel currentPlayerLabel = new JLabel();
-	/**
-	 * Der Border der um das {@link #currentPlayerLabel} gelegt wird.
-	 */
-	// NOTE: Oben, links, unten, rechts.
-	private Border playerLabelBorder = new EmptyBorder(0, 10, 0, 10);
-	/**
-	 * Das {@link JPanel}, das die Buttons containt.
-	 */
-	private JPanel buttonContainer = new JPanel();
+
 	/**
 	 * Der {@link JButton}, der geklickt werden kann, wenn der Spieler aufgeben möchte.
 	 */
@@ -35,19 +28,17 @@ public class BottomToolbarPanel extends JPanel {
 	private JButton endButton = new JButton("Spiel beenden");
 
 	/**
-	 * Der {@link LayoutManager}, der für das Layout dieses {@link JPanel}s verantwortlich ist.
-	 */
-	private BorderLayout layoutManager = new BorderLayout();
-
-	/**
 	 * Konstruiert ein {@link JPanel}, das eine Toolbar ist, die für das Spielen verwendet wird.
 	 */
 	public BottomToolbarPanel() {
+		BorderLayout layoutManager = new BorderLayout();
 		setLayout(layoutManager);
 
+		Border playerLabelBorder = new EmptyBorder(0, 10, 0, 10);
 		currentPlayerLabel.setBorder(playerLabelBorder);
 		add(currentPlayerLabel, BorderLayout.WEST);
 
+		JPanel buttonContainer = new JPanel();
 		buttonContainer.add(surrenderButton);
 		buttonContainer.add(endButton);
 		add(buttonContainer, BorderLayout.EAST);
@@ -57,7 +48,7 @@ public class BottomToolbarPanel extends JPanel {
 	 * Enablet oder disablet den {@link #surrenderButton}.
 	 *
 	 * @param enabled
-	 * <code>true</code> oder <code>false</code>, je nachdem, ob der Button aktiv sein soll.
+	 * 		<code>true</code> oder <code>false</code>, je nachdem, ob der Button aktiv sein soll.
 	 */
 	public void setSurrenderEnabled(boolean enabled) {
 		surrenderButton.setEnabled(enabled);
@@ -67,7 +58,7 @@ public class BottomToolbarPanel extends JPanel {
 	 * Enablet oder disablet den {@link #endButton}.
 	 *
 	 * @param enabled
-	 * <code>true</code> oder <code>false</code>, je nachdem, ob der Button aktiv sein soll.
+	 * 		<code>true</code> oder <code>false</code>, je nachdem, ob der Button aktiv sein soll.
 	 */
 	public void setEndEnabled(boolean enabled) {
 		endButton.setEnabled(enabled);
@@ -83,8 +74,7 @@ public class BottomToolbarPanel extends JPanel {
 	/**
 	 * Ein Getter für den {@link #surrenderButton}.
 	 *
-	 * @return
-	 * Den {@link #surrenderButton}.
+	 * @return Den {@link #surrenderButton}.
 	 */
 	JButton getSurrenderButton() {
 		return surrenderButton;
@@ -93,8 +83,7 @@ public class BottomToolbarPanel extends JPanel {
 	/**
 	 * Ein Getter für den {@link #endButton}.
 	 *
-	 * @return
-	 * Den {@link #endButton}.
+	 * @return Den {@link #endButton}.
 	 */
 	JButton getEndButton() {
 		return endButton;

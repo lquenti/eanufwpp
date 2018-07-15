@@ -1,13 +1,12 @@
 package flowerwarspp.ui.component;
 
-import java.util.EnumMap;
-import javax.swing.border.EmptyBorder;
-
 import flowerwarspp.preset.PlayerColor;
 import flowerwarspp.ui.GameColors;
 
-import java.awt.*;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.util.EnumMap;
 
 /**
  * Ein {@link JPanel}, das {@link JComponent}s für allgemeine Spielinformationen enthält.
@@ -30,8 +29,8 @@ public class TopToolbarPanel extends JPanel {
 	private SpinnerNumberModel zoomSpinnerNumberModel = new SpinnerNumberModel(100, 100, 300, 25);
 
 	/**
-	 * Ein {@link JSlider}, der den Skalierungsfaktor der graphischen Oberfläche bestimmt.
-	 * In Prozent.
+	 * Ein {@link JSlider}, der den Skalierungsfaktor der graphischen Oberfläche bestimmt. In
+	 * Prozent.
 	 */
 	private JSpinner zoomSpinner = new JSpinner(zoomSpinnerNumberModel);
 
@@ -98,10 +97,9 @@ public class TopToolbarPanel extends JPanel {
 	 * Setzt die Anzahl der Punkte  für einen Spieler.
 	 *
 	 * @param playerColor
-	 * Die {@link PlayerColor} des Spielers, deren Punktzahl geändert werden soll.
-	 *
+	 * 		Die {@link PlayerColor} des Spielers, deren Punktzahl geändert werden soll.
 	 * @param playerPoints
-	 * Die Anzahl der Punkte, die angezeigt werden soll.
+	 * 		Die Anzahl der Punkte, die angezeigt werden soll.
 	 */
 	public void updatePlayerStatus(PlayerColor playerColor, int playerPoints) {
 		playerStatusDisplays.get(playerColor).updateStatus(playerPoints);

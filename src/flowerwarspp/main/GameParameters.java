@@ -1,11 +1,13 @@
 package flowerwarspp.main;
 
-import java.util.Arrays;
-
 import flowerwarspp.preset.ArgumentParser;
 import flowerwarspp.preset.ArgumentParserException;
 import flowerwarspp.preset.PlayerType;
-import flowerwarspp.util.log.*;
+import flowerwarspp.util.log.Log;
+import flowerwarspp.util.log.LogLevel;
+import flowerwarspp.util.log.LogModule;
+
+import java.util.Arrays;
 
 /**
  * Ein Daten-Konstrukt um gesammelt Parameter an die Spiel-Klassen weiterleiten zu können.
@@ -98,18 +100,22 @@ public class GameParameters {
 	private long replaySpeed = - 1;
 
 	/**
-	 * Erzeugt ein neues Objekt basierend auf den angegebenen Kommandozeilenparametern und versucht, diese zu parsen.
+	 * Erzeugt ein neues Objekt basierend auf den angegebenen Kommandozeilenparametern und
+	 * versucht, diese zu parsen.
 	 *
-	 * @param args Die Kommandozeilenparameter
+	 * @param args
+	 * 		Die Kommandozeilenparameter
 	 */
 	public GameParameters(String[] args) {
 		try {
-			// Einen ArgumentParser instanziieren, damit Kommandozeilenargumente geparsed werden können.
+			// Einen ArgumentParser instanziieren, damit Kommandozeilenargumente geparsed werden
+			// können.
 			ArgumentParser argumentParser = new ArgumentParser(args);
 
 			// Help-Schalter überprüfen
-			if (argumentParser.isSet("help"))
+			if (argumentParser.isSet("help")) {
 				Main.quitWithUsage();
+			}
 
 			// Debug-Schalter überprüfen
 			debug = argumentParser.isSet("debug");
@@ -121,7 +127,8 @@ public class GameParameters {
 			quiet = argumentParser.isSet("quiet");
 
 			/*
-			 * Wenn ein Spieler im Netzwerk angeboten werden soll, werden die notwendigen Einstellungen geparsed und
+			 * Wenn ein Spieler im Netzwerk angeboten werden soll, werden die notwendigen
+			 * Einstellungen geparsed und
 			 * dann die Methode verlassen.
 			 */
 			if (argumentParser.isSet("offer")) {
@@ -137,8 +144,9 @@ public class GameParameters {
 			}
 
 			// Games-Einstellung überprüfen
-			if (argumentParser.isSet("games"))
+			if (argumentParser.isSet("games")) {
 				numberOfGames = argumentParser.getNumberOfGames();
+			}
 
 			if (argumentParser.isSet("delay")) {
 				delay = argumentParser.getDelay();
@@ -167,36 +175,46 @@ public class GameParameters {
 			boardSize = argumentParser.getSize();
 
 			// Validate board size
-			if (getBoardSize() < 3
-					|| getBoardSize() > 30
-					|| getBoardSize() < 0) {
+			if (getBoardSize() < 3 || getBoardSize() > 30 || getBoardSize() < 0) {
 				throw new ArgumentParserException("Groeße des Spielfelds ist nicht gueltig.");
 			}
-
 		} catch (ArgumentParserException e) {
-			Log.log(LogLevel.ERROR, LogModule.MAIN, "Invalid arguments passed: " + Arrays.toString(args));
+			Log.log(LogLevel.ERROR, LogModule.MAIN,
+					"Invalid arguments passed: " + Arrays.toString(args));
 			Main.quitWithUsage();
 		}
 	}
 
 	/**
-	 * Konstruiert ein neues {@link GameParameters}-Objekt, das für das Hosten eines Spiels ausgelegt ist.
+	 * Gibt {@link #boardSize} zurück.
 	 *
-	 * @param boardSize Die Größe des Spielbretts.
-	 * @param redType   Der {@link PlayerType} des roten Spielers.
-	 * @param redUrl    Die URL eines entfernten roten Spielers.
-	 * @param blueType  Der {@link PlayerType} des blauen Spielers.
-	 * @param blueUrl   Die URL eines entfernten blauen Spielers.
-	 * @param delay     Die Verzögerung in ms zwischen zwei Zügen.
+	 * @return Wert von {@link #boardSize}
 	 */
-	public GameParameters(int           boardSize,
-	                      PlayerType    redType,
-	                      String        redUrl,
-	                      PlayerType    blueType,
-	                      String        blueUrl,
-	                      int           delay) {
+	int getBoardSize() {
+		return boardSize;
+	}
+
+	/**
+	 * Konstruiert ein neues {@link GameParameters}-Objekt, das für das Hosten eines Spiels
+	 * ausgelegt ist.
+	 *
+	 * @param boardSize
+	 * 		Die Größe des Spielbretts.
+	 * @param redType
+	 * 		Der {@link PlayerType} des roten Spielers.
+	 * @param redUrl
+	 * 		Die URL eines entfernten roten Spielers.
+	 * @param blueType
+	 * 		Der {@link PlayerType} des blauen Spielers.
+	 * @param blueUrl
+	 * 		Die URL eines entfernten blauen Spielers.
+	 * @param delay
+	 * 		Die Verzögerung in ms zwischen zwei Zügen.
+	 */
+	public GameParameters(int boardSize, PlayerType redType, String redUrl, PlayerType blueType,
+	                      String blueUrl, int delay) {
 		if ((redType == PlayerType.REMOTE && (redUrl == null)) ||
-			(blueType == PlayerType.REMOTE && (blueUrl == null))) {
+				(blueType == PlayerType.REMOTE && (blueUrl == null))) {
 			Log.log(LogLevel.ERROR, LogModule.UI, "Invalid arguments were constructed.");
 			throw new IllegalArgumentException("Ein Remote-Spieler benötigt eine URL.");
 		}
@@ -210,26 +228,23 @@ public class GameParameters {
 	}
 
 	/**
-	 * Konstruiert ein neues {@link GameParameters}-Objekt, das für das Anbieten eines eigenen Spielers ausgelegt ist.
-	 * @param offerType {@link PlayerType} des anzubietenden Spielers.
-	 * @param offerName Name des anzubietenden Spielers.
-	 * @param offerPort Port des anzubietenden Spielers.
-	 * @param offerUrl  URL eines anzubietenden entfernten Spielers.
+	 * Konstruiert ein neues {@link GameParameters}-Objekt, das für das Anbieten eines eigenen
+	 * Spielers ausgelegt ist.
+	 *
+	 * @param offerType
+	 * 		{@link PlayerType} des anzubietenden Spielers.
+	 * @param offerName
+	 * 		Name des anzubietenden Spielers.
+	 * @param offerPort
+	 * 		Port des anzubietenden Spielers.
+	 * @param offerUrl
+	 * 		URL eines anzubietenden entfernten Spielers.
 	 */
 	public GameParameters(PlayerType offerType, String offerName, int offerPort, String offerUrl) {
 		this.offerType = offerType;
 		this.offerName = offerName;
 		this.offerPort = offerPort;
 		this.offerUrl = offerUrl;
-	}
-
-	/**
-	 * Gibt {@link #boardSize} zurück.
-	 *
-	 * @return Wert von {@link #boardSize}
-	 */
-	int getBoardSize() {
-		return boardSize;
 	}
 
 	/**
@@ -304,7 +319,6 @@ public class GameParameters {
 		return offerPort;
 	}
 
-
 	/**
 	 * Gibt {@link #delay} zurück.
 	 *
@@ -368,11 +382,10 @@ public class GameParameters {
 		return replaySpeed;
 	}
 
-
 	/**
 	 * Gibt {@link #loadGame} zurück.
 	 *
-	 * @return Wert von {@link #loadGame()}
+	 * @return Wert von {@link #loadGame}
 	 */
 	public boolean loadGame() {
 		return loadGame;
