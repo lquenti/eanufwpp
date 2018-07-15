@@ -109,7 +109,7 @@ public class TextInterface implements Requestable, Output {
 	 */
 	private StringBuilder drawBoard() {
 		int size = viewer.getSize();
-		StringBuilder board = new StringBuilder(size * size); // TODO: Kapazität genauer einstellen
+		StringBuilder board = new StringBuilder();
 		for (int i = -1; i < size; i++) {
 			for (int j = 0; j < (size-i-1)*2; j++) {
 				board.append(' ');
