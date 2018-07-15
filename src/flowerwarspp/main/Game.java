@@ -393,11 +393,7 @@ public class Game {
 			}
 
 			long endTime = System.currentTimeMillis();
-			// Delay wird nur angewendet, wenn der Spieler kein Mensch ist.
-			if ((currentPlayer == redPlayer && gameParameters.getRedType() != PlayerType.HUMAN) ||
-			    (currentPlayer == bluePlayer && gameParameters.getBlueType() != PlayerType.HUMAN)){
-				Thread.sleep(Math.max(0, gameParameters.getDelay() - (endTime - startTime)));
-			}
+			Thread.sleep(Math.max(0, gameParameters.getDelay() - (endTime - startTime)));
 
 			// Der vom aktuellen Spieler übergebene Zug wird auf dem Spielbrett ausgeführt und dem eigenem saveGame-
 			// Objekt mitgeteilt.
