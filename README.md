@@ -26,7 +26,7 @@ verschiedenen Einstellungsmöglichkeiten werden im nächsten Abschnitt detaillie
 2. In das Verzeichnis wechseln, in welchem sich das `tar`-Archiv mit dem gepackten Spiel befindet. Falls dieses Archiv
 heruntergeladen worden ist, befindet es sich unter Ubuntu höchstwahrscheinlich im Verzeichnis `~\Downloads`.
 3. Das `tar`-Archiv mit folgendem Befehl entpacken:  
-   **`tar xvf eanufwpp.jar`**
+   **`tar xvf eanufwpp.tar`**
 4. In das entpackte Verzeichnis `eanufwpp` wechseln
 5. Mit Hilfe des Befehls `ant` den Quelltext übersetzen, die Javadoc-Dokumentation erzeugen und das ausführbare
 `jar`-Archiv packen.:  
