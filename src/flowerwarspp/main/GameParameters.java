@@ -97,7 +97,7 @@ public class GameParameters {
 	/**
 	 * Die Zeit in MS zwischen Zügen beim Replay eines geladenen Spielstands.
 	 */
-	private long replaySpeed = - 1;
+	private long replaySpeed = -1;
 
 	/**
 	 * Erzeugt ein neues Objekt basierend auf den angegebenen Kommandozeilenparametern und

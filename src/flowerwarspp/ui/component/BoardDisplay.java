@@ -90,6 +90,7 @@ public class BoardDisplay extends JPanel {
 	 * <code>true</code> genau dann, wenn das Spiel geendet hat.
 	 */
 	private boolean gameHasEnded = false;
+
 	/**
 	 * Konstruiert ein Display für die Darstellung eines {@link Board}s.
 	 */
@@ -156,7 +157,7 @@ public class BoardDisplay extends JPanel {
 
 		// Für jedes Triangle, das nicht auf dem Kopf steht, sollen drei Edges erstellt werden.
 		for (Triangle t : mapTriangles) {
-			if (! t.isFlipped()) {
+			if (!t.isFlipped()) {
 				Flower f = t.toFlower();
 				Edge leftDitch = new Edge(f.getFirst(), f.getSecond());
 				Edge rightDitch = new Edge(f.getFirst(), f.getThird());
@@ -185,7 +186,7 @@ public class BoardDisplay extends JPanel {
 
 		// Für jedes Triangle, das nicht auf dem Kopf steht, sollen drei Dots erstellt werden.
 		for (Triangle t : mapTriangles) {
-			if (! t.isFlipped()) {
+			if (!t.isFlipped()) {
 				Flower f = t.toFlower();
 				Dot leftDot = new Dot(f.getFirst(), GameColors.DOT_DEFAULT);
 				Dot topDot = new Dot(f.getSecond(), GameColors.DOT_DEFAULT);
@@ -207,7 +208,7 @@ public class BoardDisplay extends JPanel {
 		bottomToolbarPanel.setTurnDisplay(boardViewer.getTurn());
 
 		// Wenn das Spiel zuende ist, soll ein Dialog das anzeigen.
-		if ((boardViewer.getStatus() != Status.Ok) && (! gameHasEnded)) {
+		if ((boardViewer.getStatus() != Status.Ok) && (!gameHasEnded)) {
 			possibleDitchMoves = null;
 			gameHasEnded = true;
 		}
@@ -391,7 +392,7 @@ public class BoardDisplay extends JPanel {
 		// Wenn das Spiel bereits zuende ist,
 		// sollen keine weiteren möglichen Moves mehr angezeigt werden,
 		// selbst wenn es noch welche gäbe.
-		if ((boardViewer.getStatus() != Status.Ok) && (! gameHasEnded)) {
+		if ((boardViewer.getStatus() != Status.Ok) && (!gameHasEnded)) {
 			possibleDitchMoves = null;
 			combinableFlowers = null;
 		} else {
@@ -448,7 +449,7 @@ public class BoardDisplay extends JPanel {
 				// Man darf das Spiel nicht immer beenden.
 				// Es wird ein Move-Objekt benötigt, um prüfen zu können, ob das möglich ist.
 				result = new Move(MoveType.End);
-				if (! boardViewer.possibleMovesContains(result)) {
+				if (!boardViewer.possibleMovesContains(result)) {
 					result = null;
 					displayMouseHandler.reset();
 					displayMouseHandler.isRequesting = true;
@@ -497,7 +498,7 @@ public class BoardDisplay extends JPanel {
 	private Move checkForFlowerMove() {
 		Flower flower1 = displayMouseHandler.clickedFlower1;
 
-		if (! boardViewer.possibleMovesContainsMovesContaining(flower1)) {
+		if (!boardViewer.possibleMovesContainsMovesContaining(flower1)) {
 			// Wenn die Blume in keinem möglichen Zug gültig ist,
 			// soll der Klick (effektiv) ignoriert werden.
 			displayMouseHandler.reset();
@@ -518,7 +519,7 @@ public class BoardDisplay extends JPanel {
 				displayMouseHandler.isRequesting = true;
 				combinableFlowers = boardViewer.getPossibleFlowers();
 				possibleDitchMoves = boardViewer.getPossibleDitchMoves();
-			} else if (! combinableFlowers.contains(flower2)) {
+			} else if (!combinableFlowers.contains(flower2)) {
 				displayMouseHandler.clickedFlower2 = null;
 			} else {
 				displayMouseHandler.lastClickedFlower1 = flower1;
@@ -534,11 +535,18 @@ public class BoardDisplay extends JPanel {
 	 * Eine private Klasse, die die Mausaktionen für das {@link BoardDisplay} verarbeitet.
 	 */
 	private class DisplayMouseHandler extends MouseAdapter implements ActionListener {
+		/**
+		 * Auf dieses Objekt wird der Thread gelocked.
+		 */
 		private final Object moveAwaitLock = new Object();
 		/**
 		 * Das {@link BoardDisplay}, zu dem dieser {@link MouseAdapter} gehört.
 		 */
 		private BoardDisplay boardDisplay;
+		/**
+		 * <code>true</code> falls dieser {@link MouseAdapter} Events akzeptiert.
+		 * <code>false</code> andererseits.
+		 */
 		private boolean isRequesting = false;
 		/**
 		 * Der {@link MoveType}, der durch den Klick erzeugt wird. Wichtig ist, dass {@link
@@ -609,7 +617,7 @@ public class BoardDisplay extends JPanel {
 		 * {@inheritDoc}
 		 */
 		public void mouseClicked(MouseEvent mouseEvent) {
-			if (! isRequesting) {
+			if (!isRequesting) {
 				return;
 			}
 
@@ -750,7 +758,7 @@ public class BoardDisplay extends JPanel {
 		 */
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			if (! isRequesting) {
+			if (!isRequesting) {
 				return;
 			}
 

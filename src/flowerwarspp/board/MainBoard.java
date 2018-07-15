@@ -172,7 +172,7 @@ public class MainBoard implements Board {
 		if (currentStatus != Status.Ok) {
 			throw new IllegalStateException("Das Spielbrett kann keine Züge mehr annehmen!");
 		}
-		if (! playerDataSet.get(currentPlayer).legalMoves.contains(move)) {
+		if (!playerDataSet.get(currentPlayer).legalMoves.contains(move)) {
 			currentStatus = Status.Illegal;
 			return;
 		}
@@ -296,7 +296,7 @@ public class MainBoard implements Board {
 
 		// Punktestand aktualisieren
 		playerDataSet.get(currentPlayer).currentScore += updateScore(flowers[0]);
-		if (! getBedChain(flowers[0]).contains(getFlowerBed(flowers[1]))) {
+		if (!getBedChain(flowers[0]).contains(getFlowerBed(flowers[1]))) {
 			playerDataSet.get(currentPlayer).currentScore += updateScore(flowers[1]);
 		}
 	}
@@ -363,14 +363,14 @@ public class MainBoard implements Board {
 		// Ansonsten nehmen wir uns einen direkten Beetnachbarn.
 		for (Flower bedNeighbor : getDirectNeighbors(bed)) {
 			// Wenn dieser bereits verboten ist nichts mehr zu tun.
-			if (! playerDataSet.get(currentPlayer).legalMoves
-					.containsMovesContaining(bedNeighbor)) {
+			if (!playerDataSet.get(currentPlayer).legalMoves.containsMovesContaining
+					(bedNeighbor)) {
 				continue;
 			}
 			// Wir platzieren den Nachbarn testweise auf dem Brett.
 			playerDataSet.get(currentPlayer).flowers.add(bedNeighbor);
 			Collection<Flower> resultingBed = getFlowerBed(bedNeighbor);
-			if (! isLegalBed(resultingBed, currentPlayer)) {
+			if (!isLegalBed(resultingBed, currentPlayer)) {
 				// Wenn mit diesem Nachbarn das Beet ungültig wird, müssen alle Züge mit dieser
 				// Flower verboten werden
 				playerDataSet.get(currentPlayer).legalMoves.removeMovesContaining(bedNeighbor);
@@ -393,13 +393,13 @@ public class MainBoard implements Board {
 				 * Beet entsteht.
 				 */
 				for (Flower secondBedNeighbor : getDirectNeighbors(resultingBed)) {
-					if (! playerDataSet.get(currentPlayer).legalMoves
+					if (!playerDataSet.get(currentPlayer).legalMoves
 							.containsMovesContaining(secondBedNeighbor)) {
 						continue;
 					}
 					// Wir platzieren den Nachbarn testweise auf dem Brett.
 					playerDataSet.get(currentPlayer).flowers.add(secondBedNeighbor);
-					if (! isLegalBed(getFlowerBed(secondBedNeighbor), currentPlayer)) {
+					if (!isLegalBed(getFlowerBed(secondBedNeighbor), currentPlayer)) {
 						playerDataSet.get(currentPlayer).legalMoves
 								.remove(new Move(bedNeighbor, secondBedNeighbor));
 					}
@@ -501,7 +501,7 @@ public class MainBoard implements Board {
 	 * @return Um wieviel sich die Punktzahl erhöht hat.
 	 */
 	private int updateScore(Flower flower) {
-		if (! isGarden(getFlowerBed(flower))) {
+		if (!isGarden(getFlowerBed(flower))) {
 			return 0;
 		}
 		return getBedChainScore(flower);
@@ -524,7 +524,7 @@ public class MainBoard implements Board {
 			int score = 0;
 			for (Flower flowerConnectedToPos : getFlowersAround(pos)) {
 				if (playerDataSet.get(currentPlayer).flowers.contains(flowerConnectedToPos) &&
-						! visitedBeds.contains(getFlowerBed(flowerConnectedToPos))) {
+						!visitedBeds.contains(getFlowerBed(flowerConnectedToPos))) {
 					score += getBedChainScore(flowerConnectedToPos);
 					// Damit Ketten nicht doppelt gezaehlt werden
 					visitedBeds.addAll(getBedChain(flowerConnectedToPos));
@@ -562,10 +562,10 @@ public class MainBoard implements Board {
 		HashSet<HashSet<Flower>> bedChain = new HashSet<>();
 		LinkedList<HashSet<Flower>> queue = new LinkedList<>();
 		queue.add(getFlowerBed(flower));
-		while (! queue.isEmpty()) {
+		while (!queue.isEmpty()) {
 			HashSet<Flower> currentBed = queue.pop();
 			bedChain.add(currentBed);
-			getBedsConnectedToBed(currentBed).stream().filter(bed -> ! bedChain.contains(bed))
+			getBedsConnectedToBed(currentBed).stream().filter(bed -> !bedChain.contains(bed))
 					.forEach(queue::add);
 		}
 		return bedChain;
@@ -698,10 +698,10 @@ public class MainBoard implements Board {
 		Stack<Flower> toVisit = new Stack<>();
 		toVisit.add(flower);
 
-		while (! toVisit.empty()) {
+		while (!toVisit.empty()) {
 			Flower visiting = toVisit.pop();
 			for (Flower neighbor : getDirectNeighbors(visiting)) {
-				if (! result.contains(neighbor) &&
+				if (!result.contains(neighbor) &&
 						playerDataSet.get(flowerColor).flowers.contains(neighbor)) {
 					toVisit.add(neighbor);
 				}
@@ -836,7 +836,7 @@ public class MainBoard implements Board {
 		HashSet<Flower> result = new HashSet<>();
 		for (Flower flower : bed) {
 			for (Flower neighbor : getDirectNeighbors(flower)) {
-				if (! bed.contains(neighbor)) {
+				if (!bed.contains(neighbor)) {
 					result.add(neighbor);
 				}
 			}
@@ -857,7 +857,7 @@ public class MainBoard implements Board {
 		HashSet<Flower> result = new HashSet<>();
 		for (Flower flower : bed) {
 			for (Flower neighbor : getAllNeighbors(flower)) {
-				if (! bed.contains(neighbor)) {
+				if (!bed.contains(neighbor)) {
 					result.add(neighbor);
 				}
 			}
@@ -889,7 +889,7 @@ public class MainBoard implements Board {
 							nodes[1].getRow() + nodes[1].getColumn() - nodes[0].getColumn())));
 		} catch (IllegalArgumentException ignored) {
 		}
-		result.removeIf(f -> ! isOnBoard(f));
+		result.removeIf(f -> !isOnBoard(f));
 		return result;
 	}
 
@@ -975,7 +975,7 @@ public class MainBoard implements Board {
 			HashSet<Ditch> flowerDitches = getAdjacentDitches(bedFlower);
 
 			for (Ditch d : flowerDitches) {
-				if (! playerDataSet.get(currentPlayer).ditches.contains(d)) {
+				if (!playerDataSet.get(currentPlayer).ditches.contains(d)) {
 					continue;
 				}
 				// Nun muessen wir herausfinden welche Seite zum neuen Beet gehoert.

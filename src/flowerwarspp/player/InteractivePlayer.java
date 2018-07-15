@@ -45,7 +45,7 @@ public class InteractivePlayer extends AbstractPlayer {
 	 */
 	protected Move requestMove() throws Exception {
 		Move playerMove = null;
-		while ((playerMove == null) || (! boardViewer.possibleMovesContains(playerMove))) {
+		while ((playerMove == null) || (!boardViewer.possibleMovesContains(playerMove))) {
 			playerMove = input.request();
 		}
 

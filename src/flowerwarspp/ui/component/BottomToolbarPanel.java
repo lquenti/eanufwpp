@@ -45,7 +45,7 @@ public class BottomToolbarPanel extends JPanel {
 	}
 
 	/**
-	 * Enablet oder disablet den {@link #surrenderButton}.
+	 * Enabled oder disabled den {@link #surrenderButton}.
 	 *
 	 * @param enabled
 	 * 		<code>true</code> oder <code>false</code>, je nachdem, ob der Button aktiv sein soll.
@@ -55,7 +55,7 @@ public class BottomToolbarPanel extends JPanel {
 	}
 
 	/**
-	 * Enablet oder disablet den {@link #endButton}.
+	 * Enabled oder disabled den {@link #endButton}.
 	 *
 	 * @param enabled
 	 * 		<code>true</code> oder <code>false</code>, je nachdem, ob der Button aktiv sein soll.

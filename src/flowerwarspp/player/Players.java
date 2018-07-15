@@ -19,16 +19,16 @@ import java.util.Collection;
  */
 public class Players {
 	/**
-	 * Leerer privater Konstruktor zum Verhindern der Objektinitialisierung
-	 */
-	private Players() {}
-
-	/**
 	 * Eine {@link Collection} von verfügbaren {@link PlayerType}s.
 	 */
 	public static final Collection<PlayerType> AVAILABLE_PLAYER_TYPES =
 			Arrays.asList(PlayerType.HUMAN, PlayerType.RANDOM_AI, PlayerType.SIMPLE_AI,
 					PlayerType.ADVANCED_AI_1, PlayerType.ADVANCED_AI_2, PlayerType.REMOTE);
+
+	/**
+	 * Leerer privater Konstruktor zum Verhindern der Objektinitialisierung
+	 */
+	private Players() {}
 
 	/**
 	 * Variante von {@link #createPlayer(PlayerType, Requestable, String, Board)}, welche dem neu
@@ -77,7 +77,7 @@ public class Players {
 			throws IllegalArgumentException, NetworkException {
 		// Falls auf dem Brett schon Züge gemacht wurden, geht Netzwerkspiel nicht.
 		if (type == PlayerType.REMOTE && board != null &&
-				! board.viewer().getFlowers(PlayerColor.Red).isEmpty()) {
+				!board.viewer().getFlowers(PlayerColor.Red).isEmpty()) {
 			throw new IllegalArgumentException(
 					"Spielstände laden wird von Remote-Spielern nicht unterstützt.");
 		}

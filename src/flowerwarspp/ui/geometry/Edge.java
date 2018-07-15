@@ -79,7 +79,7 @@ public class Edge extends BoardPolygon {
 		vector.y -= edge3.y;
 
 		// Hier wird der Vektor gekürzt.
-		Point perpendicularVector = new Point(vector.y, - vector.x);
+		Point perpendicularVector = new Point(vector.y, -vector.x);
 		perpendicularVector.x /= divisionFactor;
 		perpendicularVector.y /= divisionFactor;
 

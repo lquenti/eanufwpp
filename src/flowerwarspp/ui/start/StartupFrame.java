@@ -3,6 +3,9 @@ package flowerwarspp.ui.start;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Ein {@link JFrame} über den ein Spiel mit grafischer Ausgabe gestartet werden kann.
+ */
 public class StartupFrame extends JFrame {
 	/**
 	 * Ein {@link HostGamePanel}, mit dem der Nutzer ein Spiel hosten kann.
