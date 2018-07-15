@@ -7,7 +7,11 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
-// TODO: Dokumentation
+/**
+ * Ein {@link JComponent}, welches Nutzereingaben handhabt
+ * und eine graphische Ausgabe für ein {@link Board}
+ * durch einen {@link Viewer} zur Verfügung stellt.
+ */
 public class BoardDisplay extends JPanel {
 	/**
 	 * Eine private Klasse, die die Mausaktionen für das {@link BoardDisplay} verarbeitet.

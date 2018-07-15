@@ -56,7 +56,15 @@ public class Edge extends BoardPolygon {
 		return new Ditch(position1, position2);
 	}
 
-	// TODO
+	/**
+	 * Berechnet die Position der Punkte des Dreiecks.
+	 *
+	 * @param triangleSideLength
+	 * Die Länge der Seiten der Dreiecke auf dem aktuellen Spielbrett.
+	 *
+	 * @param relativeStart
+	 * Der Punkt von dem aus die Dreiecke angelegt werden sollen.
+	 */
 	@Override
 	public void recalcPoints(int triangleSideLength, Point relativeStart) {
 		reset();

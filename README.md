@@ -2,7 +2,7 @@
 
 ## Gruppenname
 
-eanufwpp: **E**in **a**ussagekräftiger **N**ame **u**ngleich **F**lower**W**ars**PP**
+**eanufwpp**: **E**in **a**ussagekräftiger **N**ame **u**ngleich **F**lower**W**ars**PP**
 
 ## Gruppenmitglieder
 
@@ -13,7 +13,7 @@ eanufwpp: **E**in **a**ussagekräftiger **N**ame **u**ngleich **F**lower**W**ars
 
 ## Tutor
 
-David Eipper
+Maximilian David Eipper
 
 ## Anleitung
 
@@ -26,17 +26,19 @@ verschiedenen Einstellungsmöglichkeiten werden im nächsten Abschnitt detaillie
 2. In das Verzeichnis wechseln, in welchem sich das `tar`-Archiv mit dem gepackten Spiel befindet. Falls dieses Archiv
 heruntergeladen worden ist, befindet es sich unter Ubuntu höchstwahrscheinlich im Verzeichnis `~\Downloads`.
 3. Das `tar`-Archiv mit folgendem Befehl entpacken:  
-   **`tar xvf eanufwpp.jar`**
+   **`tar xvf eanufwpp.tar`**
 4. In das entpackte Verzeichnis `eanufwpp` wechseln
 5. Mit Hilfe des Befehls `ant` den Quelltext übersetzen, die Javadoc-Dokumentation erzeugen und das ausführbare
-`jar`-Archiv packen.
+`jar`-Archiv packen.:  
+   **`ant`**
 6. Das Spiel ist nun installiert und vorbereitet. Mit dem folgenden Befehl kann die Hilfe des Spiels mit kurzen
-Erklärungen der möglichen Kommandozeilenparameter angezeigt werden:
+Erklärungen der möglichen Kommandozeilenparameter angezeigt werden:  
    **`java -jar eanufwpp.jar --help`**  
+   Wenn die jar-Datei ohne Kommandozeilenargumente aufgerufen wird, wird der Startup-Dialog angezeigt. Mit diesem 
+   lassen sich die Parameter des Spiels eingestellt und somit ein Spiel mit der grafischen Ausgabe gestartet werden:  
+   **`java -jar eanufwpp.jar`**  
    Für ein schnelles Test-Spiel gegen den simplen Computerspieler kann der folgende Befehl benutzt werden:  
    **`java -jar eanufwpp.jar -size 8 -red human -blue simple -delay 1000`**
-7. Wird das Spiel ohne jegliche Kommandozeilenparameter aufgerufen, dann wird ein interaktiver Auswahlbildschirm
-angezeigt mit welchem sich das Spiel anpassen lässt.
 
 ### Starten ohne Kommandozeilenparameter
 
@@ -240,6 +242,19 @@ gemacht worden sind. Zur Verifizierung der Spielzüge beim Laden wird außerdem 
 mitgespeichert. Daran angehangen sind Meta-Informationen: Der Spieler welcher den Zug gemacht hat und die Nummer des
 Zugs, angefangen bei 0.
 
+Wird beim Speichern der Datei keine Endung angegeben, wird automatisch die Endung `.sav` ergänzt.
+
+#### Laden eines Spiels
+
+Das Laden eines zuvor gespeicherten Spiels ist nur über den Kommandozeilenparameter `-load <Spielstanddatei>` möglich
+. Dabei muss der gesamte Pfad zur Datei samt Endung angegeben werden.
+
+Der Pfad kann entweder relativ von dem Verzeichnis in dem sich die jar-Datei befindet sein, oder ein absoluter Pfad. In jedem Fall muss der gesamte Dateiname samt Endung 
+angegeben werden. Liegt eine Spielstanddatei zum Beispiel im Verzeichnis `SavedGames` des aktuellen Verzeichnis in 
+dem sich die jar-Datei befindet, könnte diese Spielstanddatei mit dem Befehl  
+**`(...) -load "SavedGamed/datei.sav"`**  
+geladen werden.
+
 #### Versus-Mode mit Statistik
 
 Mit der Einstellung `-games <Anzahl Spiele>` wird der Versus-Mode gestartet. Zwei Spieler nehmen dabei an der gegebenen
@@ -261,7 +276,7 @@ Parameter                     |       Optionen                        |       Be
 `-redUrl`/`-blueUrl`          |Eine URL: HOST:PORT/NAME               |Adresse unter welcher der entfernte Spieler zu finden ist
 **Optional (Lokales Spiel)**  |                                       |
 `-delay`                      |Zeit in Millisekunden                  |Verzögerung in Millisekunden zwischen Spielzügen
-`-load`                       |Name des Spielstands, ohne Dateiendung |Lädt den gegebenen Spielstand und setzt das Spiel fort
+`-load`                       |Pfad zur Spielstanddatei               |Lädt den gegebenen Spielstand und setzt das Spiel fort
 `-replay`                     |Zeit in Millisekunden                  |Der geladene Spielzug wird Zug für Zug ausgeführt, mit der gegebenen Verzögerung zwischen den Zügen
 `-games`                      |Anzahl an Spielen                      |Zwei Spieler treten in der gegebenen Anzahl von Spielen gegeneinander an. Am Ende wird eine Statistik ausgegeben
 **Notwendig (Netzwerkspiel)** |                                       |

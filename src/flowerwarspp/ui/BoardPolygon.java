@@ -16,8 +16,13 @@ public abstract class BoardPolygon extends Polygon {
 	 */
 	private static final double triangleSideHeightFactor = Math.sqrt(3.0) / 2;
 
-	// TODO: Dokumentation
+	/**
+	 * Die Farbe, die die Seiten dieses Polygons haben.
+	 */
 	private Color borderColor;
+	/**
+	 * Die Farbe, mit der dieses Polygon gefüllt wird.
+	 */
 	private Color fillColor;
 
 	/**
