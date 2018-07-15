@@ -40,6 +40,7 @@
         <move file="${distdir}/eanufwpp-${DSTAMP}.jar" tofile="eanufwpp.jar"/>
         <delete dir="${builddir}"/>
         <delete dir="${distdir}"/>
+        <chmod file ="eanufwpp.jar" perm="+x"/>
         <echo>
             Die Release-Version des Projekts eanufwpp wurde generiert.
         </echo>

@@ -38,6 +38,17 @@ Erklärungen der möglichen Kommandozeilenparameter angezeigt werden:
 7. Wird das Spiel ohne jegliche Kommandozeilenparameter aufgerufen, dann wird ein interaktiver Auswahlbildschirm
 angezeigt mit welchem sich das Spiel anpassen lässt.
 
+### Starten ohne Kommandozeilenparameter
+
+Wird die als `.jar` gepackte Version des Spiels ohne Kommandozeilenargumente von der Konsole gestartet oder durch 
+doppeltes Klicken auf die Datei in einem Dateimanager (wie z.B. *Nautilus*) aufgerufen, öffnet sich ein grafischer 
+Dialog, mit welchem die Parameter des Spiels eingestellt werden können.
+
+Dieser Startdialog erlaubt das Starten eines lokalen Spiels und von Netzwerkspielen. Jedoch können im Startdialog 
+keine Schalter gesetzt werden. Diese Restriktion existiert, weil alle verfügbaren Schalter eine geöffnete 
+Konsole voraussetzen. Der Startdialog ist also nur zum Starten von Spielen vorgesehen, welche ausschlielßlich über 
+die grafische Ausgabe mitverfolgt und gesteuert werden können.
+
 ### Kommandozeilenparameter
 
 #### Grundlegendes
@@ -104,7 +115,15 @@ starten
 werden,jedoch kann ein interaktiver Spieler immer noch Züge eingeben, wenn der Input über die Standardeingabe abgefragt
 wird.
 
-#### Notwendige Einstellungen (Netzwerkspiel)
+#### Notwendige Einstellungen (Netzwerkspiel - Spieler finden)
+
+Falls mindestens einer der beiden Spieler den Typen `remote` hat, muss dem Programm zusätzlich mitgeteilt werden, wo 
+dieser entfernte Spieler zu finden ist. Dazu muss die Einstellung `-redUrl <URL>` bzw. `-blueUrl <URL>` respektive 
+gesetzt werden. Eine URL hat folgendes Format:
+
+**`host:port/name`**
+
+#### Notwendige Einstellungen (Netzwerkspiel - Spieler anbieten)
 
 Um einen Spieler im Netzwerk anzubieten, wird die Einstellung
 
@@ -116,7 +135,7 @@ Programm mit `-name <Name>` der Name des anzubietenden Spielers mitgeteilt werde
 Falls der anzubietende Spieler den Typ `remote` hat, muss dem Programm mit der Einstellung `-offerUrl <URL>` mitgeteilt
 werden, wo der anzubietende entfernte Spieler zu finden ist. Wie eine URL gestaltet ist, ist weiter unten beschrieben.
 
-#### Optionale Einstellungen (Netzwerkspiel)
+#### Optionale Einstellungen (Netzwerkspiel - Spieler anbieten)
 
 Mit der Einstellung `-port <Port>` kann dem Programm mitgeteilt werden, auf welchem Port der Spieler angeboten werden
 soll.
