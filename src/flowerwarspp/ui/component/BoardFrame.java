@@ -1,4 +1,4 @@
-package flowerwarspp.ui;
+package flowerwarspp.ui.component;
 
 import flowerwarspp.main.ExitCode;
 import flowerwarspp.main.savegame.SaveGame;
@@ -7,15 +7,12 @@ import flowerwarspp.preset.*;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
-import flowerwarspp.ui.EndPopupFrame;
+import flowerwarspp.ui.Output;
 import flowerwarspp.util.log.Log;
 import flowerwarspp.util.log.LogLevel;
 import flowerwarspp.util.log.LogModule;

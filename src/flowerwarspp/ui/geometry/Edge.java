@@ -1,7 +1,8 @@
-package flowerwarspp.ui;
+package flowerwarspp.ui.geometry;
 
 import flowerwarspp.preset.Ditch;
 import flowerwarspp.preset.Position;
+import flowerwarspp.ui.GameColors;
 
 import java.awt.*;
 

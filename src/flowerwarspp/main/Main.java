@@ -9,6 +9,7 @@ import flowerwarspp.main.savegame.SaveGame;
 import flowerwarspp.player.*;
 import flowerwarspp.preset.*;
 import flowerwarspp.ui.*;
+import flowerwarspp.ui.component.BoardFrame;
 import flowerwarspp.ui.start.StartupFrame;
 import flowerwarspp.util.Convert;
 import flowerwarspp.util.log.*;

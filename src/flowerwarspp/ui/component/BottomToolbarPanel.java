@@ -1,4 +1,4 @@
-package flowerwarspp.ui;
+package flowerwarspp.ui.component;
 
 import flowerwarspp.preset.PlayerColor;
 import flowerwarspp.util.Convert;
