@@ -1,7 +1,6 @@
 package flowerwarspp.util;
 
 import flowerwarspp.preset.PlayerColor;
-import flowerwarspp.preset.PlayerType;
 import flowerwarspp.preset.Status;
 import flowerwarspp.util.log.Log;
 import flowerwarspp.util.log.LogLevel;

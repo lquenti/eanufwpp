@@ -145,7 +145,7 @@ public class MoveSet extends AbstractSet<Move> {
 	 * @return true, falls das Element enthalten war
 	 */
 	public boolean remove(Object o) {
-		if (! contains(o)) {
+		if (!contains(o)) {
 			return false;
 		}
 		switch (((Move) o).getType()) {
@@ -317,6 +317,7 @@ public class MoveSet extends AbstractSet<Move> {
 		/**
 		 * Gibt true zurück, falls die Iteration noch Elemente enthält.
 		 * <p>
+		 *
 		 * @return true, falls die Iteration noch Elemente enthält
 		 */
 		public boolean hasNext() {

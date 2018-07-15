@@ -84,7 +84,7 @@ public class AdvancedAI2 extends AbstractAI {
 		 * ist (zum Beispiel nach
 		 * dem Laden) wird sofort geclustert.
 		 */
-		if (! boardViewer.getFlowers(getPlayerColor()).isEmpty()) {
+		if (!boardViewer.getFlowers(getPlayerColor()).isEmpty()) {
 			startClusteringAt = 0;
 		} else {
 			startClusteringAt = (boardSize * boardSize) / clusterStartDivisor;
@@ -161,7 +161,7 @@ public class AdvancedAI2 extends AbstractAI {
 			case End:
 				/*
 				 * Falls dieser Spieler weniger Punkte hat als sein Gegner (also durch Beenden des
-				  * Spiels verlieren
+				 * Spiels verlieren
 				 * würde) wird der End-Zug nicht ausgeführt (stattdessen werden zufällig Ditches
 				 * gesetzt, in der
 				 * Hoffnung, dass dadurch Gärten über Beete verbunden werden).
@@ -176,7 +176,7 @@ public class AdvancedAI2 extends AbstractAI {
 
 			case Surrender:
 			default:
-				return - 1;
+				return -1;
 		}
 	}
 
@@ -237,7 +237,7 @@ public class AdvancedAI2 extends AbstractAI {
 		for (Flower neighbor : boardViewer.getAllNeighbors(flower)) {
 
 			if (boardViewer.getFlowerColor(neighbor) == getPlayerColor()) {
-				result.clusterScore = - 2;
+				result.clusterScore = -2;
 				return result;
 			}
 

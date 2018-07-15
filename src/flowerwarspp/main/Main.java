@@ -85,14 +85,12 @@ public class Main {
 	 */
 	static void quitWithUsage() {
 		System.out.println("Verwendung:");
-		System.out.println(
-				"flowerwarspp.main.Main (-offer <Spielertyp> -name <Name> " +
-						"[-offerUrl <URL>] [-port" +
-						" <Port>] | -size <Spielfeldgröße> -red <Spielertyp> " +
-						"[-redUrl <URL>] -blue " +
-						"<Spielertyp> [-blueUrl <URL>]) [-delay <Verzögerung>] " +
-						"[-load <Spielstandname>] [-replay <Verzögerung>] " +
-						"[-games <Anzahl Spiele>] [--debug] [--text] [--quiet] [--help]");
+		System.out.println("flowerwarspp.main.Main (-offer <Spielertyp> -name <Name> " +
+				"[-offerUrl <URL>] [-port" +
+				" <Port>] | -size <Spielfeldgröße> -red <Spielertyp> " + "[-redUrl <URL>] -blue " +
+				"<Spielertyp> [-blueUrl <URL>]) [-delay <Verzögerung>] " +
+				"[-load <Spielstandname>] [-replay <Verzögerung>] " +
+				"[-games <Anzahl Spiele>] [--debug] [--text] [--quiet] [--help]");
 		System.out.println();
 		System.out.println("Spielfeldgröße: Zahl zwischen 3 und 30");
 		System.out.println(
@@ -133,7 +131,7 @@ public class Main {
 	 * 		Kommandozeilenargumente.
 	 */
 	public static void main(String[] args) {
-		if ((args.length == 0) && (! GraphicsEnvironment.isHeadless())) {
+		if ((args.length == 0) && (!GraphicsEnvironment.isHeadless())) {
 			SwingUtilities.invokeLater(StartupFrame::new);
 		} else {
 			startNewGame(new GameParameters(args));
@@ -358,7 +356,7 @@ public class Main {
 
 			/*
 			 * Der vom aktuellen Spieler übergebene Zug wird auf dem Spielbrett ausgeführt und dem
-			  * eigenem saveGame-
+			 * eigenem saveGame-
 			 * Objekt mitgeteilt.
 			 */
 			Log.log(LogLevel.DEBUG, LogModule.MAIN, "Making move on main board.");

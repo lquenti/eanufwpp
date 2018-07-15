@@ -110,7 +110,7 @@ public class AdvancedAI1 extends AbstractAI {
 			case End:
 				/*
 				 * Falls dieser Spieler weniger Punkte hat als sein Gegner (also durch Beenden des
-				  * Spiels verlieren
+				 * Spiels verlieren
 				 * würde) wird der End-Zug nicht ausgeführt (stattdessen werden zufällig Ditches
 				 * gesetzt, in der
 				 * Hoffnung, dass dadurch Gärten über Beete verbunden werden).
@@ -125,7 +125,7 @@ public class AdvancedAI1 extends AbstractAI {
 
 			case Surrender:
 			default:
-				return - 1;
+				return -1;
 		}
 	}
 

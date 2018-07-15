@@ -184,7 +184,7 @@ abstract class AbstractPlayer implements flowerwarspp.preset.Player {
 
 		log(DEBUG, "board status on confirm() = " + playerBoardState);
 
-		if (! playerBoardState.equals(status)) {
+		if (!playerBoardState.equals(status)) {
 			log(ERROR, "confirm(): status of player board and main program are not the same");
 			throw new Exception(statusErrorMessage);
 		}
@@ -229,7 +229,7 @@ abstract class AbstractPlayer implements flowerwarspp.preset.Player {
 		// Validieren der Status der Bretter des Hauptprogramms und diesen Spielers.
 		final Status playerBoardStatus = boardViewer.getStatus();
 
-		if (! playerBoardStatus.equals(status)) {
+		if (!playerBoardStatus.equals(status)) {
 			log(ERROR, "update(): status of player board and main program are not the same");
 			throw new Exception(statusErrorMessage);
 		}

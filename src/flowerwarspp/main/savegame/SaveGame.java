@@ -109,8 +109,7 @@ public class SaveGame implements Iterable<Move> {
 									"to the hasCode stored in the savegame");
 					throw new LoadException(
 							"Der hashCode des geladenen Spielzugs stimmt nicht mit dem " +
-									"hinterlegten" +
-									"hashCode überein!");
+									"hinterlegten" + "hashCode überein!");
 				}
 
 				// Dem neu instanziierten Objekt wird der eingelesene Zug mitgeteilt.

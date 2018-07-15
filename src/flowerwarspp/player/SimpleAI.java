@@ -42,8 +42,8 @@ public class SimpleAI extends AbstractAI {
 		}
 
 		// Der einfache Computer-Spieler gibt niemals auf und beendet niemals das Spiel.
-		if (! move.getType().equals(MoveType.Flower)) {
-			return - 1;
+		if (!move.getType().equals(MoveType.Flower)) {
+			return -1;
 		}
 
 		int n1 = 0;
@@ -54,7 +54,7 @@ public class SimpleAI extends AbstractAI {
 		 * Die direkten Nachbarn der ersten Zugblume aus dem Viewer abrufen. Diese werden
 		 * benötigt, um zu
 		 * überprüfen, ob die beiden zu setzenden Blumen nebeneinander liegen und um den Score auf
-		  * Basis der
+		 * Basis der
 		 * Nachbarn zu berechnen.
 		 */
 		final Collection<Flower> firstFlowerNeighbors =

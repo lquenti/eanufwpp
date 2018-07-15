@@ -134,7 +134,7 @@ public class BoardFrame extends JFrame
 				fc.approveSelection();
 			}
 			String filename = fc.getSelectedFile().getAbsolutePath();
-			if (! filename.endsWith(".sav")) {
+			if (!filename.endsWith(".sav")) {
 				filename += ".sav";
 			}
 			try {

@@ -52,7 +52,7 @@ public class TextInterface implements Requestable, Output {
 				System.out.print(moveRequestPrompt);
 				move = Move.parseMove(inputScanner.nextLine());
 
-				if (! this.viewer.possibleMovesContains(move)) {
+				if (!this.viewer.possibleMovesContains(move)) {
 					System.out.println(invalidMoveMessage);
 					move = null;
 				}
@@ -98,7 +98,7 @@ public class TextInterface implements Requestable, Output {
 	private StringBuilder drawBoard() {
 		int size = viewer.getSize();
 		StringBuilder board = new StringBuilder();
-		for (int i = - 1; i < size; i++) {
+		for (int i = -1; i < size; i++) {
 			for (int j = 0; j < (size - i - 1) * 2; j++) {
 				board.append(' ');
 			}

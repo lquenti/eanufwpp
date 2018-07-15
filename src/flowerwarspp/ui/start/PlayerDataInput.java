@@ -10,7 +10,6 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.MalformedURLException;
 
 /**
  * Ein {@link JPanel}, das Elemente hält, um Informationen über einen {@link Player} abzufragen.
@@ -64,7 +63,9 @@ public class PlayerDataInput extends JPanel implements ActionListener {
 
 	/**
 	 * Konstruiert ein {@link PlayerDataInput} mit gegebenen Namen.
-	 * @param name Der Name.
+	 *
+	 * @param name
+	 * 		Der Name.
 	 */
 	public PlayerDataInput(String name) {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
