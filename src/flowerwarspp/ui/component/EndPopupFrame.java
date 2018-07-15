@@ -44,7 +44,7 @@ public class EndPopupFrame extends JDialog {
  */
 class PopupComponentPane extends JPanel {
 	/**
-	 * Konsturiert ein {@link JPanel}, das eine Nachricht zentriert anzeigt.
+	 * Konstruiert ein {@link JPanel}, das eine Nachricht zentriert anzeigt.
 	 *
 	 * @param message
 	 * 		Die anzuzeigende Nachricht.
@@ -80,7 +80,7 @@ class QuitButton extends JButton implements ActionListener {
 	private int exitCode;
 
 	/**
-	 * Konsturiert einen {@link JButton}, der auf Klick das Programm beendet.
+	 * Konstruiert einen {@link JButton}, der auf Klick das Programm beendet.
 	 *
 	 * @param exitCode
 	 * 		{@link ExitCode} welcher dem Betriebssystem mit {@link System#exit(int)} mitgeteilt

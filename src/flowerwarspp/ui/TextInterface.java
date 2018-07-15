@@ -19,7 +19,7 @@ public class TextInterface implements Requestable, Output {
 	/**
 	 * Eine vordefinierte Nachricht für eine {@link MoveFormatException}, das heißt für eine
 	 * Exception die geworfen wird, wenn das Format des Zuges, den der interaktive Spieler
-	 * eingegeben hat, ingültig ist.
+	 * eingegeben hat, ungültig ist.
 	 */
 	private static final String moveFormatErrorMessage = "Zug konnte nicht gelesen werden.";
 

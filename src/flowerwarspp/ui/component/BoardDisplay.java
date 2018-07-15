@@ -534,11 +534,18 @@ public class BoardDisplay extends JPanel {
 	 * Eine private Klasse, die die Mausaktionen für das {@link BoardDisplay} verarbeitet.
 	 */
 	private class DisplayMouseHandler extends MouseAdapter implements ActionListener {
+		/**
+		 * Auf dieses Objekt wird der Thread gelocked.
+		 */
 		private final Object moveAwaitLock = new Object();
 		/**
 		 * Das {@link BoardDisplay}, zu dem dieser {@link MouseAdapter} gehört.
 		 */
 		private BoardDisplay boardDisplay;
+		/**
+		 * <code>true</code> falls dieser {@link MouseAdapter} Events akzeptiert.
+		 * <code>false</code> andererseits.
+		 */
 		private boolean isRequesting = false;
 		/**
 		 * Der {@link MoveType}, der durch den Klick erzeugt wird. Wichtig ist, dass {@link
