@@ -15,23 +15,23 @@ import java.util.*;
  */
 public class MoveSet extends AbstractSet<Move> {
 	/**
-	 * Die Menge der Spielzüge, die Blumen enthalten.
+	 * Die Menge der Spielzüge, die {@link Flower}s enthalten.
 	 */
 	private HashSet<Move> flowerMoves;
 
 	/**
-	 * Eine Tabelle, die jeder Blume die Blumen zuordnet, mit denen sie sich so kombinieren lässt,
+	 * Eine Tabelle, die jeder {@link Flower} die {@link Flower}s zuordnet, mit denen sie sich so kombinieren lässt,
 	 * dass sich Spielzüge ergeben, die in dieser Menge enthalten sind.
 	 */
 	private HashMap<Flower, HashSet<Flower>> flowerMap;
 
 	/**
-	 * Die Menge der Spielzüge, die Gräben enthalten.
+	 * Die Menge der Spielzüge, die {@link Ditch}es enthalten.
 	 */
 	private HashSet<Move> ditchMoves;
 
 	/**
-	 * Die Menge der Spielzüge, die weder Blumen noch Gräben enthalten.
+	 * Die Menge der Spielzüge, die weder {@link Flower}s noch {@link Ditch}es enthalten.
 	 */
 	private HashSet<Move> otherMoves;
 
@@ -46,11 +46,11 @@ public class MoveSet extends AbstractSet<Move> {
 	}
 
 	/**
-	 * Erzeugt eine neue Menge, die die Spielzüge, die in der angegebenen Collection enthalten
+	 * Erzeugt eine neue Menge, die die Spielzüge, die in der angegebenen {@link Collection} enthalten
 	 * sind, enthält.
 	 *
-	 * @param list Die Collection, deren Elemente zu dieser Menge hinzugefügt werden sollen.
-	 * @throws NullPointerException falls die angegebene Collection null ist.
+	 * @param list Die {@link Collection}, deren Elemente zu dieser Menge hinzugefügt werden sollen.
+	 * @throws NullPointerException falls die angegebene {@link Collection} null ist.
 	 */
 	public MoveSet(Collection<Move> list) throws NullPointerException {
 		this();
@@ -59,10 +59,10 @@ public class MoveSet extends AbstractSet<Move> {
 
 	/**
 	 * Erzeugt eine Kopie eines MoveSets. Die Implementation ist wesentlich schneller als die
-	 * für allgemeine Collections, da die initiale Kapazität der HashSets korrekt gesetzt wird.
+	 * für allgemeine {@link Collection}s, da die initiale Kapazität der HashSets korrekt gesetzt wird.
 	 *
-	 * @param original Das MoveSet, das kopiert werden Soll.
-	 * @throws NullPointerException falls das angegebene MoveSet null ist.
+	 * @param original Das MoveSet, das kopiert werden soll.
+	 * @throws NullPointerException falls das angegebene {@link MoveSet} null ist.
 	 */
 	public MoveSet(MoveSet original) throws NullPointerException {
 		flowerMoves = new HashSet<>(original.flowerMoves);
@@ -145,10 +145,10 @@ public class MoveSet extends AbstractSet<Move> {
 	}
 
 	/**
-	 * Entfernt alle Spielzüge aus dieser Menge, die eine gegebene Blume enthalten.
+	 * Entfernt alle Spielzüge aus dieser Menge, die eine gegebene {@link Flower} enthalten.
 	 *
-	 * @param flower Die Blume, deren Züge entfernt werden sollen
-	 * @return true, falls Züge mit der angegebenen Blume enthalten waren
+	 * @param flower Die {@link Flower}, deren {@link Move}s entfernt werden sollen
+	 * @return true, falls {@link Move}s mit der angegebenen {@link Flower} enthalten waren
 	 */
 	public boolean removeMovesContaining(Flower flower) {
 		if (flowerMap.containsKey(flower)) {
@@ -170,53 +170,53 @@ public class MoveSet extends AbstractSet<Move> {
 	}
 
 	/**
-	 * Gibt zurück, ob diese Menge Spielzüge enthält, die die angegebene Blume enthalten.
+	 * Gibt zurück, ob diese Menge {@link Move}s enthält, die die angegebene {@link Flower} enthalten.
 	 *
-	 * @param flower Die Blume, für die geprüft werden soll, ob zugehörige Züge enthalten sind
-	 * @return true, falls diese Menge Spielzüge enthält, die die angegebene Blume enthalten
+	 * @param flower Die {@link Flower}, für die geprüft werden soll, ob zugehörige {@link Move} enthalten sind
+	 * @return true, falls diese Menge {@link Move}s enthält, die die angegebene {@link Flower} enthalten
 	 */
 	public boolean containsMovesContaining(Flower flower) {
 		return flowerMap.containsKey(flower);
 	}
 
 	/**
-	 * Gibt alle in dieser Menge enthaltenen Spielzüge zurück, die Blumen enthalten. Die
+	 * Gibt alle in dieser Menge enthaltenen {@link Move}s zurück, die {@link Flower}s enthalten. Die
 	 * zurückgegebene Menge ist ein unmodifiableSet.
 	 *
-	 * @return Alle in dieser Menge enthaltenen Spielzüge, die Blumen enthalten
+	 * @return Alle in dieser Menge enthaltenen {@link Move}s, die {@link Flower}s enthalten
 	 */
 	public Set<Move> getFlowerMoves() {
 		return Collections.unmodifiableSet(flowerMoves);
 	}
 
 	/**
-	 * Gibt alle Blumen zurück, für die diese Menge Spielzüge enthält, die die Blume enthalten.
-	 * Die zurückgegebene Menge ist ein unmodifiableSet.
+	 * Gibt alle {@link Flower}s zurück, für die diese Menge Spielzüge enthält, die die {@link Flower}s enthalten.
+	 * Die zurückgegebene Menge ist ein {@link java.util.Collections.UnmodifiableSet}.
 	 *
-	 * @return Alle Blumen, für die diese Menge Spielzüge enthält, die die Blume enthalten
+	 * @return Alle {@link Flower}s, für die diese Menge {@link Move}s enthält, die die {@link Flower} enthalten
 	 */
 	public Set<Flower> getFlowers() {
 		return Collections.unmodifiableSet(flowerMap.keySet());
 	}
 
 	/**
-	 * Gibt alle Blumen zurück, mit denen sich die angegebene Blume kombinieren lässt, sodass sich
-	 * Spielzüge ergeben, die in dieser Menge enthalten sind. Die zurückgegebene Menge ist
-	 * ein unmodifiableSet.
+	 * Gibt alle {@link Flower}s zurück, mit denen sich die angegebene {@link Flower} kombinieren lässt, sodass sich
+	 * {@link Move}s ergeben, die in dieser Menge enthalten sind. Die zurückgegebene Menge ist
+	 * ein {@link java.util.Collections.UnmodifiableSet}.
 	 *
-	 * @param flower Die Blume, für die die kombinierbaren Blumen zurückgegeben werden sollen
-	 * @return Alle Blumen, mit denen sich die angegebene Blume kombinieren lässt, sodass sich
-	 * Spielzüge ergeben, die in dieser Menge enthalten sind
+	 * @param flower Die {@link Flower}, für die die kombinierbaren {@link Flower}s zurückgegeben werden sollen
+	 * @return Alle {@link Flower}s, mit denen sich die angegebene {@link Flower} kombinieren lässt, sodass sich
+	 * {@link Move}s ergeben, die in dieser Menge enthalten sind
 	 */
 	public Set<Flower> getFlowersCombinableWith(Flower flower) {
 		return Collections.unmodifiableSet(flowerMap.get(flower));
 	}
 
 	/**
-	 * Gibt eine Map zurück, die jeder erlaubten Blume die Blumen zuordnet, mit denen sie sich
-	 * kombinieren lässt. Das Ergebnis ist eine unmodifiableMap.
+	 * Gibt eine {@link Map} zurück, die jeder erlaubten {@link Flower} die {@link Flower}s zuordnet, mit denen sie sich
+	 * kombinieren lässt. Das Ergebnis ist eine {@link java.util.Collections.UnmodifiableMap}.
 	 *
-	 * @return Eine Map, die jeder erlaubten Blume die Blumen zuordnet, mit denen sie sich
+	 * @return Eine {@link Map}, die jeder erlaubten {@link Flower} die {@link Flower}s zuordnet, mit denen sie sich
 	 * kombinieren lässt.
 	 */
 	public Map<Flower, HashSet<Flower>> getFlowerMap() {
@@ -224,10 +224,10 @@ public class MoveSet extends AbstractSet<Move> {
 	}
 
 	/**
-	 * Gibt alle in dieser Menge enthaltenen Spielzüge zurück, die die angegebene Blume enthalten.
+	 * Gibt alle in dieser Menge enthaltenen {@link Move}s zurück, die die angegebene {@link Flower} enthalten.
 	 * 
-	 * @param flower Die Blume, für die die zugehörigen Züge zurückgegeben werden sollen
-	 * @return Alle in dieser Menge enthaltenen Spielzüge, die die angegebene Blume enthalten
+	 * @param flower Die {@link Flower}, für die die zugehörigen {@link Move}s zurückgegeben werden sollen
+	 * @return Alle in dieser Menge enthaltenen {@link Move}s, die die angegebene {@link Flower} enthalten
 	 */
 	public HashSet<Move> getMovesContaining(Flower flower) {
 		if (flowerMap.containsKey(flower)) {
@@ -241,17 +241,17 @@ public class MoveSet extends AbstractSet<Move> {
 	}
 
 	/**
-	 * Gibt alle in dieser Menge enthaltenen Spielzüge zurück, die Gräben enthalten. Die
-	 * zurückgegebene Menge ist ein unmodifiableSet.
+	 * Gibt alle in dieser Menge enthaltenen {@link Move}s zurück, die {@link Ditch} enthalten. Die
+	 * zurückgegebene Menge ist ein {@link java.util.Collections.UnmodifiableSet}.
 	 *
-	 * @return Alle in dieser Menge enthaltenen Spielzüge, die Gräben enthalten
+	 * @return Alle in dieser Menge enthaltenen {@link Move}s, die {@link Ditch}es enthalten
 	 */
 	public Set<Move> getDitchMoves() {
 		return Collections.unmodifiableSet(ditchMoves);
 	}
 
 	/**
-	 * Gibt einen Iterator über die Elemente dieser Menge zurück. Der Iterator iteriert zuerst über
+	 * Gibt einen {@link MoveSetIterator} über die Elemente dieser Menge zurück. Der Iterator iteriert zuerst über
 	 * die Blumenzüge, dann über die Grabenzüge und dann über alle anderen Züge. Innerhalb dieser
 	 * Kategorien gibt es allerdings keine bestimmte Ordnung.
 	 *
@@ -262,7 +262,7 @@ public class MoveSet extends AbstractSet<Move> {
 	}
 
 	/**
-	 * Klasse für Iteratoren über ein MoveSet.
+	 * Klasse für Iteratoren über ein {@link MoveSet}.
 	 */
 	private class MoveSetIterator implements Iterator<Move> {
 		/**
