@@ -212,7 +212,14 @@ einen Spielers wird dem anderen Spieler als Sieg angerechnet.
 
 #### Speichern eines Spiels
 
-Wird noch implementiert. TODO
+Das Spiel kann nur über die grafische Ausgabe gespeichert werden. Ein Klick auf den Button mit der Aufschrift
+"Spielstand speichern" öffnet einen Dialog, in welchem der Speicherort der Datei ausgewählt werden kann. Das Spiel wird
+dann in der ausgewählten Datei gespeichert und kann zu einem späteren Zeitpunkt wieder geladen werden.
+
+In der Spielstand-Datei werden die von beiden Spielern gemachten Züge in der Reihenfolge gespeichert, in welcher sie
+gemacht worden sind. Zur Verifizierung der Spielzüge beim Laden wird außerdem der Hashcode des jeweiligen Spielzugs
+mitgespeichert. Daran angehangen sind Meta-Informationen: Der Spieler welcher den Zug gemacht hat und die Nummer des
+Zugs, angefangen bei 0.
 
 #### Versus-Mode mit Statistik
 

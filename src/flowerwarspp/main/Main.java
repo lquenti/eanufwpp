@@ -304,8 +304,10 @@ public class Main {
 	private static void loadGame() throws Exception, InterruptedException, LoadException, NetworkException {
 		Log.log(LogLevel.DEBUG, LogModule.MAIN, "Started loading savegame " + gameParameters.getSaveGameName());
 
-		// Es wird versucht, den verlangten Spielstand zu laden. load(String) kann eine LoadException werfen, diese
-		// wird dann vom Hauptprogramm in init() vernünftig behandelt.
+		/*
+		 * Es wird versucht, den verlangten Spielstand zu laden. load(String) kann eine LoadException werfen, diese
+		 * wird dann vom Hauptprogramm in init() vernünftig behandelt.
+		 */
 		SaveGame loadedSaveGame = SaveGame.load(gameParameters.getSaveGameName());
 
 		boardSize = loadedSaveGame.getBoardSize();
@@ -427,9 +429,11 @@ public class Main {
 		while (viewer.getStatus() == Status.Ok) {
 			Log.log(LogLevel.DEBUG, LogModule.MAIN, "Beginning game loop.");
 
-			// Es wird versucht, vom aktuellen Spieler einen Zug zu erhalten. Schlägt dies fehl, also wird eine
-			// Exception geworfen, dann wird dem aktuellen Spieler automatisch der Surrender-Move zugewiesen.
-			// Startzeit wird für die spätere Berechnung des Delays bestimmt.
+			/*
+			 * Es wird versucht, vom aktuellen Spieler einen Zug zu erhalten. Schlägt dies fehl, also wird eine
+			 * Exception geworfen, dann wird dem aktuellen Spieler automatisch der Surrender-Move zugewiesen.
+			 * Startzeit wird für die spätere Berechnung des Delays bestimmt.
+			 */
 			long startTime = System.currentTimeMillis();
 
 			Move move = null;
@@ -449,15 +453,19 @@ public class Main {
 			long endTime = System.currentTimeMillis();
 			Thread.sleep(Math.max(0, gameParameters.getDelay() - ( endTime - startTime )));
 
-			// Der vom aktuellen Spieler übergebene Zug wird auf dem Spielbrett ausgeführt und dem eigenem saveGame-
-			// Objekt mitgeteilt.
+			/*
+			 * Der vom aktuellen Spieler übergebene Zug wird auf dem Spielbrett ausgeführt und dem eigenem saveGame-
+			 * Objekt mitgeteilt.
+			 */
 			Log.log(LogLevel.DEBUG, LogModule.MAIN, "Making move on main board.");
 			board.make(move);
 			saveGame.add(move);
 
 			try {
-				// Falls der aktuelle Spieler nicht aufgegeben hat, werden der Status des Spielbretts des Hauptprogramms
-				// und der Status des Spielbretts des aktuellen Spielers mit confirm verglichen.
+				/*
+				 * Falls der aktuelle Spieler nicht aufgegeben hat, werden der Status des Spielbretts des Hauptprogramms
+				 * und der Status des Spielbretts des aktuellen Spielers mit confirm verglichen.
+				 */
 				Log.log(LogLevel.DEBUG, LogModule.MAIN, "Confirming status.");
 				currentPlayer.confirm(viewer.getStatus());
 				// Dem Gegner werden Zug des aktuellen Spielers und Status des Spielbretts mit update mitgeteilt.
@@ -498,8 +506,10 @@ public class Main {
 		Log.log(LogLevel.INFO, LogModule.MAIN, "Starting replay of loaded savegame: "
 				+ gameParameters.getSaveGameName());
 
-		// Mit dem von SaveGame implementierten Iterator wird durch alle Züge iteriert. Diese werden jeweils auf dem
-		// Spielbrett ausgeführt.
+		/*
+		 * Mit dem von SaveGame implementierten Iterator wird durch alle Züge iteriert. Diese werden jeweils auf dem
+		 * Spielbrett ausgeführt.
+		 */
 		for (Move move : loadedSaveGame) {
 			board.make(move);
 			saveGame.add(move);

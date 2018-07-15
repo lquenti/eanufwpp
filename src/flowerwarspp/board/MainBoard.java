@@ -58,22 +58,22 @@ public class MainBoard implements Board {
 	private static final int GARDEN_SIZE = 4;
 
 	/**
-	 * Größe des Boards.
+	 * Größe des {@link MainBoard}.
 	 */
 	private final int size;
 
 	/**
-	 * Der Spieler, der aktuell am Zug ist.
+	 * Die {@link PlayerColor} des Spielers, der aktuell am Zug ist.
 	 */
 	private PlayerColor currentPlayer = PlayerColor.Red;
 
 	/**
-	 * Der Spieler, der aktuell nicht am Zug ist.
+	 * Die {@link PlayerColor} Spielers, der aktuell nicht am Zug ist.
 	 */
 	private PlayerColor oppositePlayer = PlayerColor.Blue;
 
 	/**
-	 * Der aktuelle Status des Spielbretts.
+	 * Der aktuelle {@link Status} des Spielbretts.
 	 */
 	private Status currentStatus = Status.Ok;
 
@@ -83,12 +83,12 @@ public class MainBoard implements Board {
 	private EnumMap<PlayerColor, PlayerData> playerDataSet = new EnumMap<>(PlayerColor.class);
 
 	/**
-	 * Liste mit allen möglichen Blumen.
+	 * Array aus allen möglichen Blumen.
 	 */
 	private final Flower[] allFlowers;
 
 	/**
-	 * Erzeugt ein neues Spielbrett mit der angegebenen Größe.
+	 * Erzeugt ein neues {@link MainBoard} mit der angegebenen Größe.
 	 *
 	 * @param size Größe des Boardes.
 	 */
@@ -99,9 +99,9 @@ public class MainBoard implements Board {
 	}
 
 	/**
-	 * Erzeugt eine Kopie eines vorhandenen MainBoards.
+	 * Erzeugt eine Kopie eines vorhandenen {@link MainBoard}s.
 	 *
-	 * @param original Das Brett, das kopiert werden soll.
+	 * @param original Das {@link MainBoard}, das kopiert werden soll.
 	 */
 	public MainBoard(MainBoard original) {
 		size = original.size;
@@ -118,7 +118,7 @@ public class MainBoard implements Board {
 	}
 
 	/**
-	 * Initalisiert das Board.
+	 * Initalisiert das {@link MainBoard}.
 	 */
 	private void initBoard() {
 		// Spielerdaten anlegen
@@ -164,10 +164,10 @@ public class MainBoard implements Board {
 
 	/**
 	 * {@inheritDoc}
-	 * Verifiziert Zug, führt diesen aus und berechnet die Punktzahl.
+	 * Verifiziert den {@link Move}, führt diesen aus und berechnet die Punktzahl.
 	 *
-	 * @param move Auszuführender Zug
-	 * @throws IllegalStateException falls der Zug nicht erlaubt ist.
+	 * @param move Auszuführender {@link Move}
+	 * @throws IllegalStateException falls der {@link Move} nicht erlaubt ist.
 	 */
 	@Override
 	public void make(Move move) throws IllegalStateException {
@@ -224,7 +224,7 @@ public class MainBoard implements Board {
 	/**
 	 * Beendet das Spiel. Unentschieden wenn Parameter null ist.
 	 *
-	 * @param winner Die Farbe des Gewinners.
+	 * @param winner Die {@link PlayerColor} des Gewinners.
 	 */
 	private void endGame(PlayerColor winner) {
 		if (winner == null) {
@@ -259,9 +259,9 @@ public class MainBoard implements Board {
 
 	/**
 	 * Wertet das Spielbrett nach gesetzten Blumenzug aus.
-	 * Hierzu gehören das Aktualisieren der möglichen Blumen, Gräben und der aktuellen Punktzahl
+	 * Hierzu gehört das Aktualisieren der möglichen {@link Flower}s, {@link Ditch}es und der aktuellen Punktzahl
 	 *
-	 * @param flowers die gesetzten Blumen
+	 * @param flowers die gesetzten {@link Flower}s
 	 */
 	private void updateAfterMove(Flower[] flowers) {
 		for (Flower flower : flowers) {
@@ -294,10 +294,10 @@ public class MainBoard implements Board {
 	}
 
 	/**
-	 * Gibt die Gräben zurück, welche die Blume bilden.
+	 * Gibt die {@link Ditch}es zurück, welche die {@link Flower} bilden.
 	 *
-	 * @param flower Blume wessen Gräben zurückgegeben werden.
-	 * @return Die Gräben aus welchen die Blume besteht.
+	 * @param flower {@link Flower} wessen {@link Ditch}es zurückgegeben werden.
+	 * @return Die {@link Ditch}es aus welchen die {@link Flower} besteht.
 	 */
 	private Ditch[] getEdgeDitches(Flower flower) {
 		Ditch[] result = new Ditch[3];
@@ -309,12 +309,12 @@ public class MainBoard implements Board {
 	}
 
 	/**
-	 * Gibt die Beete eines Spielers innerhalb einer Reichweite an Blumenabständen zurück.
+	 * Gibt die Beete eines Spielers innerhalb einer Reichweite an {@link Flower}abständen zurück.
 	 * Hierbei ist die Reichweite nur durch direkte Verbindungen definiert.
 	 *
-	 * @param flower Blume von welcher aus gesucht wird.
+	 * @param flower {@link Flower} von welcher aus gesucht wird.
 	 * @param radius Radius in welchen von der Blume aus gesucht wird.
-	 * @param player Spieler wessen Beeten zurückgegeben werden.
+	 * @param player {@link PlayerColor} des Spielers wessen Beeten zurückgegeben werden.
 	 * @return Menge an Beeten des Spielers innerhalb des Radius.
 	 */
 	private HashSet<Collection<Flower>> getBedsNear(Flower flower, int radius, PlayerColor player) {
@@ -331,10 +331,10 @@ public class MainBoard implements Board {
 	}
 
 	/**
-	 * Aktualisiert die validen Züge des Spielers.
-	 * Hierbei werden sich alle möglichen Zuege nahe dem modifizierten Beet angeguckt.
+	 * Aktualisiert die validen {@link Move}s des Spielers.
+	 * Hierbei werden sich alle möglichen {@link Move}s nahe dem modifizierten Beet angeguckt.
 	 *
-	 * @param bed Das Beet zu welchen die neu gesetzte Blume gehört.
+	 * @param bed Das Beet zu welchen die neu gesetzte {@link Flower} gehört.
 	 */
 	private void updateValidMovesForBed(Collection<Flower> bed) {
 		// Wenn die Größe des Beetes 4 beträgt müssen alle Nachbarn verboten werden.
@@ -393,10 +393,10 @@ public class MainBoard implements Board {
 	}
 
 	/**
-	 * Gibt alle Gräben zurück, die eine Position mit einer gegebenen Blume gemeinsam haben.
+	 * Gibt alle {@link Ditch}es zurück, die eine {@link Position} mit einer gegebenen {@link Flower} gemeinsam haben.
 	 *
-	 * @param flower Blume, für die die Gräben zurückgegeben werden sollen
-	 * @return Alle Gräben, die eine Position mit dieser Blume gemeinsam haben
+	 * @param flower {@link Flower}, für die die {@link Ditch}es zurückgegeben werden sollen
+	 * @return Alle {@link Ditch}es, die eine {@link Position} mit dieser {@link Flower} gemeinsam haben
 	 */
 	private HashSet<Ditch> getAdjacentDitches(Flower flower) {
 		HashSet<Ditch> res = new HashSet<>();
@@ -407,12 +407,12 @@ public class MainBoard implements Board {
 	}
 
 	/**
-	 * Gibt alle für den aktuellen Spieler platzierbare Gräben zurück, die eine Position mit einer gegebenen Blume
-	 * gemeinsam haben.
+	 * Gibt alle für den aktuellen Spieler platzierbare {@link Ditch}es zurück, die eine {@link Position} mit einer
+	 * gegebenen {@link Flower} gemeinsam haben.
 	 *
-	 * @param flower Blume, für die die Gräben zurückgegeben werden sollen
-	 * @return Alle für den aktuellen Spieler platzierbare Gräben, die eine Position mit einer gegebenen Blume
-	 * gemeinsam haben
+	 * @param flower {@link Flower}, für die die {@link Ditch}es zurückgegeben werden sollen
+	 * @return Alle für den aktuellen Spieler platzierbare {@link Ditch}es, die eine {@link Position} mit einer gegebenen
+	 * {@link Flower} gemeinsam haben
 	 */
 	private HashSet<Ditch> getPossibleDitches(Flower flower) {
 		HashSet<Ditch> result = getAdjacentDitches(flower);
@@ -450,9 +450,9 @@ public class MainBoard implements Board {
 	}
 
 	/**
-	 * Erlaubt alle neuen legalen Grabenzüge an einer Blume.
+	 * Erlaubt alle neuen legalen Grabenzüge an einer {@link Flower}.
 	 *
-	 * @param flower Blume, die mit den Gräben verbunden ist.
+	 * @param flower {@link Flower}, die mit den {@link Ditch}es verbunden ist.
 	 */
 	private void generateNewDitches(Flower flower) {
 		HashSet<Ditch> possibleDitches = getPossibleDitches(flower);
@@ -467,7 +467,7 @@ public class MainBoard implements Board {
 	/**
 	 * Berechnet die Punktzahl nachdem ein neuer Garten entstanden ist.
 	 *
-	 * @param flower Blume welche gesetzt wurde.
+	 * @param flower {@link Flower} welche gesetzt wurde.
 	 * @return Um wieviel sich die Punktzahl erhöht hat.
 	 */
 	private int updateScore(Flower flower) {
@@ -478,9 +478,9 @@ public class MainBoard implements Board {
 	}
 
 	/**
-	 * Aktualisiert den Punktestand eines Spielers nach dem Setzen eines Grabens.
+	 * Aktualisiert den Punktestand eines Spielers nach dem Setzen einer {@link Ditch}.
 	 *
-	 * @param ditch Der Graben, der gesetzt wurde
+	 * @param ditch Die {@link Ditch}, die gesetzt wurde
 	 */
 	private void updateScore(Ditch ditch) {
 		// Temporäres entfernen des Grabens
@@ -519,9 +519,9 @@ public class MainBoard implements Board {
 	}
 
 	/**
-	 * Gibt die Kette von verbundenen Beeten zurück, zu der eine Blume gehört.
+	 * Gibt die Kette von verbundenen Beeten zurück, zu der einer {@link Flower} gehört.
 	 *
-	 * @param flower Blume, die zu einer Kette gehört
+	 * @param flower {@link Flower}, die zu einer Kette gehört
 	 * @return Die Kette der verbundenen Beete
 	 */
 	private HashSet<HashSet<Flower>> getBedChain(Flower flower) {
@@ -539,7 +539,7 @@ public class MainBoard implements Board {
 	/**
 	 * Gibt den Wert einer Beetkette zurück.
 	 *
-	 * @param flower Blume, die zur Beetenkette gehört
+	 * @param flower {@link Flower}, die zur Beetenkette gehört
 	 * @return Der Wert
 	 */
 	private int getBedChainScore(Flower flower) {
@@ -554,20 +554,20 @@ public class MainBoard implements Board {
 	}
 
 	/**
-	 * Gibt die Positionen einer Blume zurueck.
+	 * Gibt die {@link Position}s einer {@link Flower} zurück.
 	 *
-	 * @param flower Blume, deren Positionen zurückgegeben werden
-	 * @return Positionen der Blume
+	 * @param flower {@link Flower}, dessen {@link Position}s zurückgegeben werden
+	 * @return {@link Position}s der {@link Flower}
 	 */
 	private Position[] getPositions(Flower flower) {
 		return new Position[]{flower.getFirst(), flower.getSecond(), flower.getThird()};
 	}
 
 	/**
-	 * Gibt die Positionen eines Grabens zurueck.
+	 * Gibt die {@link Position}s einer {@link Ditch} zurück.
 	 *
-	 * @param ditch Graben, dessen Positionen zurückgegeben werden
-	 * @return Position des Grabens
+	 * @param ditch {@link Ditch}, dessen {@link Position}s zurückgegeben werden
+	 * @return Position der {@link Ditch}
 	 */
 	private Position[] getPositions(Ditch ditch) {
 		return new Position[]{ditch.getFirst(), ditch.getSecond()};
@@ -579,7 +579,7 @@ public class MainBoard implements Board {
 	 * @param bed Das Beet
 	 * @return Ob das Beet ein Garten ist.
 	 */
-	public boolean isGarden(Collection<Flower> bed) {
+	private boolean isGarden(Collection<Flower> bed) {
 		if (bed == null) {
 			return false;
 		}
@@ -590,7 +590,7 @@ public class MainBoard implements Board {
 	 * Überprüft, ob ein Beet erlaubt ist.
 	 *
 	 * @param bed Beet, das überprüft werden soll
-	 * @param player Farbe des Spielers, dem das Beet gehört
+	 * @param player {@link PlayerColor} des Spielers, dem das Beet gehört
 	 * @return Ob das Beet erlaubt ist.
 	 */
 	private boolean isLegalBed(Collection<Flower> bed, PlayerColor player) {
@@ -600,10 +600,11 @@ public class MainBoard implements Board {
 	}
 
 	/**
-	 * Gibt die Spielerfarbe eines Grabens zurück. Gibt null zurück, falls der Graben noch nicht gesetzt wurde.
+	 * Gibt die {@link PlayerColor} einer {@link Ditch} zurück. Gibt null zurück, falls die {@link Ditch} noch nicht
+	 * gesetzt wurde.
 	 *
-	 * @param ditch Graben, der überprüft werden soll
-	 * @return Farbe des Grabens
+	 * @param ditch {@link Ditch}, die überprüft werden soll
+	 * @return {@link PlayerColor} der {@link Ditch}
 	 */
 	private PlayerColor getDitchColor(Ditch ditch) {
 		for (Map.Entry<PlayerColor, PlayerData> entry : playerDataSet.entrySet()) {
@@ -615,10 +616,10 @@ public class MainBoard implements Board {
 	}
 
 	/**
-	 * Gibt die Spielerfarbe einer Blume zurück. Gibt null zurück, falls die Blume noch nicht gesetzt wurde.
+	 * Gibt die {@link PlayerColor} einer {@link Flower} zurück. Gibt null zurück, falls die {@link Flower} noch nicht gesetzt wurde.
 	 *
-	 * @param flower Blume, die überprüft werden soll
-	 * @return Farbe der Blume
+	 * @param flower {@link Flower}, die überprüft werden soll
+	 * @return {@link PlayerColor} der {@link Flower}
 	 */
 	private PlayerColor getFlowerColor(Flower flower) {
 		for (Map.Entry<PlayerColor, PlayerData> entry : playerDataSet.entrySet()) {
@@ -630,9 +631,9 @@ public class MainBoard implements Board {
 	}
 
 	/**
-	 * Gibt das Beet zurück, zu dem eine Blume gehört.
+	 * Gibt das Beet zurück, zu dem eine {@link Flower} gehört.
 	 *
-	 * @param flower Blume, die zu einem Beet gehört
+	 * @param flower {@link Flower}, die zu einem Beet gehört
 	 * @return Das Beet oder null, falls die Blume zu keinem Beet gehört
 	 */
 	private HashSet<Flower> getFlowerBed(Flower flower) {
@@ -658,9 +659,9 @@ public class MainBoard implements Board {
 	}
 
 	/**
-	 * Gibt die Blumen zurück, die mit einer gegebenen Blume eine Kante gemeinsam haben.
+	 * Gibt die {@link Flower} zurück, die mit einer gegebenen {@link Flower} eine Kante gemeinsam haben.
 	 *
-	 * @param center Die Blume, dessen Nachbarn zurück gegeben werden sollen.
+	 * @param center Die {@link Flower}, dessen Nachbarn zurück gegeben werden sollen.
 	 * @return Die direkten Nachbarn
 	 */
 	private LinkedList<Flower> getDirectNeighbors(Flower center) {
@@ -703,9 +704,9 @@ public class MainBoard implements Board {
 	}
 
 	/**
-	 * Gibt die Blumen zurück, die mit einer gegebenen Blume eine Ecke gemeinsam haben.
+	 * Gibt die {@link Flower}s zurück, die mit einer gegebenen {@link Flower} eine {@link Position} gemeinsam haben.
 	 *
-	 * @param center Die Blume, dessen Nachbarn zurück gegeben werden sollen.
+	 * @param center Die {@link Flower}, dessen Nachbarn zurück gegeben werden sollen.
 	 * @return Die Nachbarn
 	 */
 	private LinkedList<Flower> getAllNeighbors(Flower center) {
@@ -763,7 +764,7 @@ public class MainBoard implements Board {
 	}
 
 	/**
-	 * Gibt die Blumen zurück, die direkt an einem Beet anliegen.
+	 * Gibt die {@link Flower}s zurück, die direkt an einem Beet anliegen.
 	 *
 	 * @param bed Beet, dessen direkten Nachbarn gesucht werden
 	 * @return Die direkten Nachbarn des Beetes
@@ -781,7 +782,7 @@ public class MainBoard implements Board {
 	}
 
 	/**
-	 * Gibt alle Blumen zurück, die sich mindestens eine Position mit einem Beet teilen.
+	 * Gibt alle {@link Flower}s zurück, die sich mindestens eine {@link Position} mit einem Beet teilen.
 	 *
 	 * @param bed Beet, dessen Nachbarn gesucht werden
 	 * @return Die Nachbarn des Beetes
@@ -799,9 +800,9 @@ public class MainBoard implements Board {
 	}
 
 	/**
-	 * Gibt die Blumen zurück, die mit einen gegebenen Graben eine Kante gemeinsam haben.
+	 * Gibt die {@link Flower}s zurück, die mit einer gegebenen {@link Ditch} eine Kante gemeinsam haben.
 	 *
-	 * @param ditch Der Graben, dessen Nachbarn zurück gegeben werden sollen.
+	 * @param ditch Die {@link Ditch}, dessen Nachbarn zurück gegeben werden sollen.
 	 * @return Die direkten Nachbarn
 	 */
 	private LinkedList<Flower> getDirectNeighbors(Ditch ditch) {
@@ -832,11 +833,11 @@ public class MainBoard implements Board {
 	}
 
 	/**
-	 * Gibt alle Positionen zurück, die von der gegebenen Position genau eine Position entfernt
+	 * Gibt alle {@link Position}s zurück, die von der gegebenen {@link Position} genau eine {@link Position} entfernt
 	 * sind. Das Ergebnis ist im Uhrzeigersinn geordnet und beginnt mit dem unteren linken
 	 * Nachbarn.
 	 *
-	 * @param center Die Position in der Mitte
+	 * @param center Die {@link Position} in der Mitte
 	 * @return Die benachbarten Positionen
 	 */
 	private LinkedList<Position> getPositionsAround(Position center) {
@@ -861,10 +862,10 @@ public class MainBoard implements Board {
 	}
 
 	/**
-	 * Gibt alle Blumen zurück, die an eine gegebene Position angrenzen.
+	 * Gibt alle {@link Flower}s zurück, die an eine gegebene {@link Position} angrenzen.
 	 *
-	 * @param center Position welche sich in jeder Blume befindet
-	 * @return Alle Blumen mit dieser Position
+	 * @param center {@link Position} welche sich in jeder {@link Flower} befindet
+	 * @return Alle {@link Flower}s mit dieser {@link Position}
 	 */
 	private LinkedList<Flower> getFlowersAround(Position center) {
 		LinkedList<Flower> result = new LinkedList<>();
@@ -880,10 +881,10 @@ public class MainBoard implements Board {
 	}
 
 	/**
-	 * Gibt alle Gräben zurück, die von einer gegebenen Position ausgehen.
+	 * Gibt alle {@link Ditch}es zurück, die von einer gegebenen {@link Position} ausgehen.
 	 *
-	 * @param center Position welche sich in jedem Graben befindet
-	 * @return Alle Gräben mit dieser Position
+	 * @param center {@link Position} welche sich in jedem Graben befindet
+	 * @return Alle {@link Ditch}es mit dieser {@link Position}
 	 */
 	private LinkedList<Ditch> getDitchesAround(Position center) {
 		LinkedList<Ditch> result = new LinkedList<>();
@@ -894,7 +895,7 @@ public class MainBoard implements Board {
 	}
 
 	/**
-	 * Gibt alle Beete zurück, die mit einem Beet über Gräben verbunden sind.
+	 * Gibt alle Beete zurück, die mit einem Beet über {@link Ditch}es verbunden sind.
 	 *
 	 * @param bed Beet, welches ueberprüft wird.
 	 * @return Die Menge aller verbundenen Beete.
@@ -924,9 +925,9 @@ public class MainBoard implements Board {
 
 	/**
 	 * Wertet das Spielbrett nach einem Grabenzug aus.
-	 * Hierzu gehören das Aktualisieren der möglichen Gräben und der aktuellen Punktzahl.
+	 * Hierzu gehören das Aktualisieren der möglichen {@link Ditch}es und der aktuellen Punktzahl.
 	 *
-	 * @param ditch der Graben der gesetzt wurde.
+	 * @param ditch die {@link Ditch} die gesetzt wurde.
 	 */
 	private void updateAfterMove(Ditch ditch) {
 		// Setzen von Blumen auf Felder, die an den Graben angrenzen, verbieten
@@ -951,8 +952,8 @@ public class MainBoard implements Board {
 	}
 
 	/**
-	 * Prüft, ob sich eine Position auf diesem Board befindet.
-	 * @return Ob die Position auf dem Board ist
+	 * Prüft, ob sich eine {@link Position} auf diesem Board befindet.
+	 * @return Ob die {@link Position} auf dem Board ist
 	 */
 	private boolean isOnBoard(Position pos) {
 		return pos != null
@@ -961,17 +962,17 @@ public class MainBoard implements Board {
 	}
 
 	/**
-	 * Prüft, ob sich eine Blume auf diesem Board befindet.
-	 * @return Ob die Blume auf dem Board ist
+	 * Prüft, ob sich eine {@link Flower} auf diesem Board befindet.
+	 * @return Ob die {@link Flower} auf dem Board ist
 	 */
 	private boolean isOnBoard(Flower flower) {
 		return flower != null && isOnBoard(flower.getThird());
 	}
 
 	/**
-	 * Gibt einen Viewer auf das Spielbrett zurück.
+	 * Gibt einen {@link Viewer} auf das {@link MainBoard} zurück.
 	 *
-	 * @return Der dazugehörige Viewer.
+	 * @return Der dazugehörige {@link Viewer}.
 	 */
 	@Override
 	public Viewer viewer() {
@@ -979,11 +980,11 @@ public class MainBoard implements Board {
 	}
 
 	/**
-	 * Ein Viewer auf das MainBoard.
+	 * Ein {@link Viewer} auf das {@link MainBoard}.
 	 */
 	private class MainBoardViewer implements Viewer {
 		/**
-		 * {@inheritDoc} Das Ergebnis ist ein unmodifiableSet.
+		 * {@inheritDoc} Das Ergebnis ist ein {@link java.util.Collections.UnmodifiableSet}.
 		 */
 		@Override
 		public Set<Ditch> getDitches(PlayerColor color) {
@@ -991,7 +992,7 @@ public class MainBoard implements Board {
 		}
 
 		/**
-		 * {@inheritDoc} Das Ergebnis ist ein unmodifiableSet.
+		 * {@inheritDoc} Das Ergebnis ist ein {@link java.util.Collections.UnmodifiableSet}.
 		 */
 		@Override
 		public Set<Flower> getFlowers(PlayerColor color) {
@@ -1007,7 +1008,7 @@ public class MainBoard implements Board {
 		}
 
 		/**
-		 * {@inheritDoc} Das Ergebnis ist ein unmodifiableSet.
+		 * {@inheritDoc} Das Ergebnis ist ein {@link java.util.Collections.UnmodifiableSet}.
 		 */
 		@Override
 		public Set<Move> getPossibleMoves() {
@@ -1071,7 +1072,7 @@ public class MainBoard implements Board {
 		}
 
 		/**
-		 * {@inheritDoc} Das Ergebnis ist ein unmodifiableSet.
+		 * {@inheritDoc} Das Ergebnis ist ein {@link java.util.Collections.UnmodifiableSet}.
 		 */
 		@Override
 		public Collection<Move> getPossibleFlowerMoves() {
@@ -1079,7 +1080,7 @@ public class MainBoard implements Board {
 		}
 
 		/**
-		 * {@inheritDoc} Das Ergebnis ist ein unmodifiableSet.
+		 * {@inheritDoc} Das Ergebnis ist ein {@link java.util.Collections.UnmodifiableSet}.
 		 */
 		@Override
 		public Collection<Flower> getPossibleFlowers() {
@@ -1087,7 +1088,7 @@ public class MainBoard implements Board {
 		}
 
 		/**
-		 * {@inheritDoc} Das Ergebnis ist ein unmodifiableSet.
+		 * {@inheritDoc} Das Ergebnis ist ein {@link java.util.Collections.UnmodifiableSet}.
 		 */
 		@Override
 		public Collection<Flower> getFlowersCombinableWith(Flower flower) {
@@ -1095,7 +1096,7 @@ public class MainBoard implements Board {
 		}
 
 		/**
-		 * {@inheritDoc} Das Ergebnis ist eine unmodifiableMap.
+		 * {@inheritDoc} Das Ergebnis ist eine {@link java.util.Collections.UnmodifiableMap}.
 		 */
 		@Override
 		public Map<Flower, HashSet<Flower>> getFlowerMap() {
@@ -1103,7 +1104,7 @@ public class MainBoard implements Board {
 		}
 
 		/**
-		 * {@inheritDoc} Das Ergebnis ist ein unmodifiableSet.
+		 * {@inheritDoc} Das Ergebnis ist ein {@link java.util.Collections.UnmodifiableSet}.
 		 */
 		@Override
 		public Collection<Move> getPossibleMovesContaining(Flower flower) {
@@ -1111,7 +1112,7 @@ public class MainBoard implements Board {
 		}
 
 		/**
-		 * {@inheritDoc} Das Ergebnis ist ein unmodifiableSet.
+		 * {@inheritDoc} Das Ergebnis ist ein {@link java.util.Collections.UnmodifiableSet}.
 		 */
 		@Override
 		public Collection<Move> getPossibleDitchMoves() {

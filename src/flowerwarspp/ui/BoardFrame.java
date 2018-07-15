@@ -16,6 +16,10 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import flowerwarspp.ui.EndPopupFrame;
+import flowerwarspp.util.log.Log;
+import flowerwarspp.util.log.LogLevel;
+import flowerwarspp.util.log.LogModule;
+
 /**
  * Das {@link JFrame}, das das {@link BoardDisplay} enthält.
  */
@@ -54,7 +58,9 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 	 */
 	private BottomToolbarPanel bottomToolbarPanel = new BottomToolbarPanel();
 
-	// TODO: Dokumentation
+	/**
+	 * Das vom Hauptprogramm übergebende {@link SaveGame}, mit welchem das Spiel gespeichert werden kann.
+	 */
 	private SaveGame saveGame;
 
 	/**
@@ -121,6 +127,7 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 	@Override
 	public void actionPerformed(ActionEvent actionEvent) {
 		JFileChooser fc = new JFileChooser();
+		fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
 		fc.setDialogTitle("Spielstand speichern");
 		add(fc);
 		if (fc.showSaveDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
@@ -135,9 +142,9 @@ public class BoardFrame extends JFrame implements Requestable, Output, ChangeLis
 			try {
 				saveGame.save(filename);
 			} catch (Exception e) {
-				e.printStackTrace();
+				Log.log(LogLevel.WARNING, LogModule.UI, "Savegame could not be saved at the given location: "
+						+ filename);
 			}
-			System.out.println(fc.getSelectedFile());
 		}
 	}
 

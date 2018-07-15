@@ -74,8 +74,10 @@ public class AdvancedAI2 extends AbstractAI {
 	public void init(int boardSize, PlayerColor playerColor) throws Exception {
 		super.init(boardSize, playerColor);
 
-		// Berechnen des Startpunkts fürs Clustern. Falls das Spielbrett bereits bespielt worden ist (zum Beispiel nach
-		// dem Laden) wird sofort geclustert.
+		/*
+		 * Berechnen des Startpunkts fürs Clustern. Falls das Spielbrett bereits bespielt worden ist (zum Beispiel nach
+		 * dem Laden) wird sofort geclustert.
+		 */
 		if (! boardViewer.getFlowers(getPlayerColor()).isEmpty())
 			startClusteringAt = 0;
 		else
@@ -95,22 +97,28 @@ public class AdvancedAI2 extends AbstractAI {
 	protected int getMoveScore(Move move) {
 		switch (move.getType()) {
 			case Flower:
-				// Die direkten Nachbarn der ersten Zugblume aus dem Viewer abrufen. Diese werden benötigt, um zu
-				// überprüfen, ob die beiden zu setzenden Blumen nebeneinander liegen.
+				/*
+				 * Die direkten Nachbarn der ersten Zugblume aus dem Viewer abrufen. Diese werden benötigt, um zu
+				 * überprüfen, ob die beiden zu setzenden Blumen nebeneinander liegen.
+				 */
 				final Collection<Flower> firstFlowerNeighbors = boardViewer.getDirectNeighbors(move.getFirstFlower());
 
 				// Die Nachbarwertung für zusammenhängende Beete und Cluster berechnen.
 				final ScoreResults s1 = getNeighborScore(move.getFirstFlower());
 				final ScoreResults s2 = getNeighborScore(move.getSecondFlower());
 
-				// Züge, die Beete oder Gärten schaffen, werden priorisiert, Züge die Cluster bilden haben geringere
-				// Priorität.
+				/*
+				 * Züge, die Beete oder Gärten schaffen, werden priorisiert, Züge die Cluster bilden haben geringere
+				 * Priorität.
+				 */
 				int score = gardenMultiplier * ( s1.gardenScore + 1 ) * ( s2.gardenScore + 1 )
 						+ notOwnedFlowerMultiplier * ( s1.notOwnedFlowerScore + 1 ) * ( s2.notOwnedFlowerScore + 1 )
 						+ clusterMultiplier * ( s1.clusterScore + 1 ) * ( s2.clusterScore + 1 );
 
-				// Falls die beiden zu setzenden Blumen nebeneinander liegen, soll der Score verdoppelt werden.
-				// So werden Züge mit einzeln gesetzten Blumen immer nur dann gemacht, wenn es nicht anders geht.
+				/*
+				 * Falls die beiden zu setzenden Blumen nebeneinander liegen, soll der Score verdoppelt werden.
+				 * So werden Züge mit einzeln gesetzten Blumen immer nur dann gemacht, wenn es nicht anders geht.
+				 */
 				if (firstFlowerNeighbors.contains(move.getSecondFlower())) {
 					score += flowerPairSummand;
 				}
@@ -118,10 +126,12 @@ public class AdvancedAI2 extends AbstractAI {
 				return score;
 
 			case Ditch:
-				// Simulieren des Ditch-Zugs auf einem mit dem Copy-Konstruktor erstellten Spielbrett.
-				// Falls der Ditch-Move die Punktezahl erhöht, wird er sofort ausgewählt.
-				// Andernfalls haben Ditch-Züge eine Bewertung von 0, sodass sie erst ausgeführt werden, wenn keine
-				// Blumen mehr gesetzt werden können.
+				/*
+				 * Simulieren des Ditch-Zugs auf einem mit dem Copy-Konstruktor erstellten Spielbrett.
+				 * Falls der Ditch-Move die Punktezahl erhöht, wird er sofort ausgewählt.
+				 * Andernfalls haben Ditch-Züge eine Bewertung von 0, sodass sie erst ausgeführt werden, wenn keine
+				 * Blumen mehr gesetzt werden können.
+				 */
 				MainBoard sim = new MainBoard((MainBoard) getBoard());
 				sim.make(move);
 
@@ -131,10 +141,12 @@ public class AdvancedAI2 extends AbstractAI {
 					return 0;
 
 			case End:
-				// Falls dieser Spieler weniger Punkte hat als sein Gegner (also durch Beenden des Spiels verlieren
-				// würde) wird der End-Zug nicht ausgeführt (stattdessen werden zufällig Ditches gesetzt, in der
-				// Hoffnung, dass dadurch Gärten über Beete verbunden werden).
-				// Würde dieser Spieler durch Beenden des Spiels jedoch gewinnen, tut er dies sofort.
+				/*
+				 * Falls dieser Spieler weniger Punkte hat als sein Gegner (also durch Beenden des Spiels verlieren
+				 * würde) wird der End-Zug nicht ausgeführt (stattdessen werden zufällig Ditches gesetzt, in der
+				 * Hoffnung, dass dadurch Gärten über Beete verbunden werden).
+				 * Würde dieser Spieler durch Beenden des Spiels jedoch gewinnen, tut er dies sofort.
+				 */
 				if (boardViewer.getPoints(getPlayerColor()) > boardViewer.getPoints(( getPlayerColor() == PlayerColor
 						.Red ) ? PlayerColor.Blue : PlayerColor.Red))
 					return SCORE_END;
@@ -158,11 +170,13 @@ public class AdvancedAI2 extends AbstractAI {
 		// Der Rückgabewert ist ein Objekt der Klasee ScoreResults.
 		ScoreResults result = new ScoreResults();
 
-		// Durch die direkten Nachbarn der betrachteten Blume iterieren und gardenScore immer dann inkrementieren,
-		// wenn einer dieser direkten Nachbarn der eigenen Farbe gehört.
-		// So werden Beete und Gärten gebildet.
-		// Außerdem wird notOwnedFlowerScore immer dann inkrementiert, wenn der betrachtete Nachbar noch keinem
-		// Spieler gehört.
+		/*
+		 * Durch die direkten Nachbarn der betrachteten Blume iterieren und gardenScore immer dann inkrementieren,
+		 * wenn einer dieser direkten Nachbarn der eigenen Farbe gehört.
+		 * So werden Beete und Gärten gebildet.
+		 * Außerdem wird notOwnedFlowerScore immer dann inkrementiert, wenn der betrachtete Nachbar noch keinem
+		 * Spieler gehört.
+		 */
 		for (Flower neighbor : boardViewer.getDirectNeighbors(flower)) {
 			if (boardViewer.getFlowerColor(neighbor) == getPlayerColor())
 				result.gardenScore++;
@@ -170,16 +184,20 @@ public class AdvancedAI2 extends AbstractAI {
 				result.notOwnedFlowerScore++;
 		}
 
-		// Falls ein Zug, welcher ein bestehendes Blumenbeet erweitert, gemacht werden kann, oder falls Beete noch nicht
-		// in Clustern angeordnet werden sollen, wird hier die Methode verlassen.
+		/*
+		 * Falls ein Zug, welcher ein bestehendes Blumenbeet erweitert, gemacht werden kann, oder falls Beete noch nicht
+		 * in Clustern angeordnet werden sollen, wird hier die Methode verlassen.
+		*/
 		if (result.gardenScore > 0 || moveNr <= startClusteringAt) return result;
 
-		// Durch alle Nachbarn der zu betrachtenden Blume iterieren und clusterScore immer dann inkrementieren, wenn
-		// einer der direkten Nachbarn des aktuell betrachteten Nachbars schon diesem Spieler gehört.
-		// Ist bei den Nachbarn der betrachteten Blume flower eine Blume dabei, welche diesem Spieler bereits gehört,
-		// dann wird die Methode sofort verlassen.
-		// Dadurch werden Blumen in der Nähe von bestehenden Beeten gesetzt, sodass sie sich mit Ditches verbinden
-		// lassen.
+		/*
+		 * Durch alle Nachbarn der zu betrachtenden Blume iterieren und clusterScore immer dann inkrementieren, wenn
+		 * einer der direkten Nachbarn des aktuell betrachteten Nachbars schon diesem Spieler gehört.
+		 * Ist bei den Nachbarn der betrachteten Blume flower eine Blume dabei, welche diesem Spieler bereits gehört,
+		 * dann wird die Methode sofort verlassen.
+		 * Dadurch werden Blumen in der Nähe von bestehenden Beeten gesetzt, sodass sie sich mit Ditches verbinden
+		 * lassen.
+		 */
 		for (Flower neighbor : boardViewer.getAllNeighbors(flower)) {
 
 			if (boardViewer.getFlowerColor(neighbor) == getPlayerColor()) {

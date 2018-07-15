@@ -69,7 +69,6 @@ public class Players {
 				player = new AdvancedAI2();
 				break;
 			default:
-				System.err.println("Unbekannter Spielertyp " + type);
 				Log.log(LogLevel.ERROR, LogModule.PLAYER,
 						"Players.createPlayer: Invalid PlayerType passed: " + type);
 				return null;
@@ -107,10 +106,9 @@ public class Players {
 		try {
 			result = (Player) Naming.lookup("rmi://" + url);
 		} catch (Exception e) {
+			Log.log(LogLevel.ERROR, LogModule.PLAYER, "Unable to find the specified player on the network.");
 			throw new NetworkException();
 		}
-
-		Log.log(LogLevel.ERROR, LogModule.PLAYER, "Unable to find the specified player on the network.");
 
 		return result;
 	}

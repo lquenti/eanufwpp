@@ -2,7 +2,7 @@ package flowerwarspp.util.log;
 
 /**
  * Enum für die verschiedenen Log-Level. Die Level sind in aufsteigender Reihenfolge sortiert, so ist zum Beispiel
- * {@link #CRITICAL} der Level mit der höchsten Priorität.
+ * {@link #ERROR} der Level mit der höchsten Priorität.
  */
 public enum LogLevel {
 
@@ -13,6 +13,10 @@ public enum LogLevel {
 	/**
 	 * Log-Level für Daten-Dumps. Falls viele Daten auf einmal geloggt werden sollen, sollte dieser Level benutzt
 	 * werden.
+	 *
+	 * Neue Log-Einträge diesen Levels werden nicht automatisch geschrieben (geflushed), selbst wenn
+	 * {@link Log#flushOnLog} gesetzt ist, damit die Performance beibehalten wird. Als Nachteil wächst so unter
+	 * Umständen der verwendete {@link StringBuffer} an.
 	 */
 	DUMP,
 	/**
@@ -30,9 +34,5 @@ public enum LogLevel {
 	/**
 	 * Log-Level für Fehlermeldungen.
 	 */
-	ERROR,
-	/**
-	 * Log-Level für kritische Fehler, die sofort das Programm beenden.
-	 */
-	CRITICAL
+	ERROR
 }

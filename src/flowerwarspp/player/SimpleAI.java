@@ -28,8 +28,10 @@ public class SimpleAI extends AbstractAI {
 	 */
 	protected int getMoveScore(Move move) {
 
-		// Es werden nur Blumen-Züge bewertet, Ditch-Züge werden genau dann zufällig ausgewählt, wenn es keine möglichen
-		// Blumen-Züge mehr gibt.
+		/*
+		 * Es werden nur Blumen-Züge bewertet, Ditch-Züge werden genau dann zufällig ausgewählt, wenn es keine möglichen
+		 * Blumen-Züge mehr gibt.
+		 */
 		if (move.getType().equals(MoveType.Ditch)) return 0;
 
 		// Der einfache Computer-Spieler gibt niemals auf und beendet niemals das Spiel.
@@ -39,14 +41,18 @@ public class SimpleAI extends AbstractAI {
 		int n2 = 0;
 		int score;
 
-		// Die direkten Nachbarn der ersten Zugblume aus dem Viewer abrufen. Diese werden benötigt, um zu
-		// überprüfen, ob die beiden zu setzenden Blumen nebeneinander liegen und um den Score auf Basis der
-		// Nachbarn zu berechnen.
+		/*
+		 * Die direkten Nachbarn der ersten Zugblume aus dem Viewer abrufen. Diese werden benötigt, um zu
+		 * überprüfen, ob die beiden zu setzenden Blumen nebeneinander liegen und um den Score auf Basis der
+		 * Nachbarn zu berechnen.
+		*/
 		final Collection<Flower> firstFlowerNeighbors = boardViewer.getDirectNeighbors(move.getFirstFlower());
 		final Collection<Flower> secondFlowerNeighbors = boardViewer.getDirectNeighbors(move.getSecondFlower());
 
-		// Iterieren durch alle Nachbarn beider Zug-Blumen. Die Zählvariable wird nur genau dann inkrementiert, wenn
-		// unter den Nachbarn Blumen eigener Farbe existieren.
+		/*
+		 * Iterieren durch alle Nachbarn beider Zug-Blumen. Die Zählvariable wird nur genau dann inkrementiert, wenn
+		 * unter den Nachbarn Blumen eigener Farbe existieren.
+		*/
 		for (Flower neighbor : firstFlowerNeighbors) {
 			if (boardViewer.getFlowerColor(neighbor) == getPlayerColor())
 				n1++;
@@ -60,8 +66,10 @@ public class SimpleAI extends AbstractAI {
 		// Score nach der vorgegebenen Strategie berechnen.
 		score = ( n1 + 1 ) * ( n2 + 1 );
 
-		// Falls die beiden zu setzenden Blumen nebeneinander liegen, soll der Score verdoppelt werden.
-		// So werden Züge mit einzeln gesetzten Blumen immer nur dann gemacht, wenn es nicht anders geht.
+		/*
+		 * Falls die beiden zu setzenden Blumen nebeneinander liegen, soll der Score verdoppelt werden.
+		 * So werden Züge mit einzeln gesetzten Blumen immer nur dann gemacht, wenn es nicht anders geht.
+		 */
 		if (firstFlowerNeighbors.contains(move.getSecondFlower()))
 			score *= 2;
 
