@@ -2,7 +2,7 @@
 
 ## Gruppenname
 
-eanufwpp: **E**in **a**ussagekräftiger **N**ame **u**ngleich **F**lower**W**ars**PP**
+**eanufwpp**: **E**in **a**ussagekräftiger **N**ame **u**ngleich **F**lower**W**ars**PP**
 
 ## Gruppenmitglieder
 
@@ -13,7 +13,7 @@ eanufwpp: **E**in **a**ussagekräftiger **N**ame **u**ngleich **F**lower**W**ars
 
 ## Tutor
 
-David Eipper
+Maximilian David Eipper
 
 ## Anleitung
 
