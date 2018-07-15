@@ -51,8 +51,8 @@ build_pdf:
     - gem install prawn
     - gem install prawn-table
   script:
-    - find . -name 'anleitung.md' -exec sh -c 'kramdown $0 --output pdf > $0.pdf' {} \;
-    - mv anleitung.md.pdf anleitung.pdf
+    - kramdown README.md --output pdf
+    - mv README.md.pdf anleitung.pdf
   artifacts:
     paths:
     - anleitung.pdf
