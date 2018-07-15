@@ -9,11 +9,13 @@ import javax.swing.*;
  */
 public abstract class GameParametersPanel extends JPanel {
 	/**
-	 * Erstellt eine {@link GameParameters}-Instanz,
-	 * aus der ein gültiger Spielzustand geneiert werden kann.
+	 * Konstruiert {@link GameParameters} aus dem aktuellen Status der GUI.
 	 *
 	 * @return
-	 * Eine {@link GameParameters}-Instanz.
+	 * Ein {@link GameParameters}-Objekt, aus dem ein Spiel generiert werden soll.
+	 * 
+	 * @throws Exception
+	 * Falls beim erstellen des {@link GameParameters}-Objekts irgendein Fehler aufgetreten ist.
 	 */
-	public abstract GameParameters createParameters();
+	public abstract GameParameters createParameters() throws Exception;
 }

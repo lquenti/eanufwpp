@@ -94,13 +94,10 @@ public class HostGamePanel extends GameParametersPanel {
 	}
 
 	/**
-	 * Konstruiert {@link GameParameters} aus dem aktuellen Status der GUI.
-	 *
-	 * @return
-	 * Ein {@link GameParameters}-Objekt, aus dem ein Spiel generiert werden soll.
+	 * {@inheritDoc}
 	 */
 	@Override
-	public GameParameters createParameters() {
+	public GameParameters createParameters() throws Exception {
 		int boardSize = boardSizeSpinnerModel.getNumber().intValue();
 		PlayerType redPlayerType = redPlayerDataInput.getPlayerType();
 		PlayerType bluePlayerType = bluePlayerDataInput.getPlayerType();

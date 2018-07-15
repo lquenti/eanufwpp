@@ -73,14 +73,10 @@ public class OfferPlayerPanel extends GameParametersPanel {
 	}
 
 	/**
-	 * Konstruiert ein {@link GameParameters}-Objekt, mit dem ein Spielzustand erstellt werden kann,
-	 * das einen {@link Player} anbietet.
-	 *
-	 * @return
-	 * Das konstruierte {@link GameParameters}-Objekt.
+	 * {@inheritDoc}
 	 */
 	@Override
-	public GameParameters createParameters() {
+	public GameParameters createParameters() throws Exception {
 		PlayerType playerType = playerDataInput.getPlayerType();
 		String playerName = playerNameTextField.getText();
 		int playerPort = Integer.parseInt(playerPortTextField.getText());

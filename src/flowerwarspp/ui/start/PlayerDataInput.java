@@ -2,6 +2,8 @@ package flowerwarspp.ui.start;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.MalformedURLException;
+import java.net.URL;
 import javax.swing.border.EmptyBorder;
 
 import flowerwarspp.preset.Player;
@@ -109,6 +111,8 @@ public class PlayerDataInput extends JPanel implements ActionListener {
 	 *
 	 * @return
 	 * Ein String, der eine URL repräsentiert, mit der ein Nutzer gefunden werden kann.
+	 *
+	 * @throws MalformedURLException falls die URL ungültig ist.
 	 */
 	public String getPlayerUrl() {
 		StringBuilder urlBuilder = new StringBuilder();
@@ -117,6 +121,7 @@ public class PlayerDataInput extends JPanel implements ActionListener {
 		urlBuilder.append(playerPortTextField.getText());
 		urlBuilder.append('/');
 		urlBuilder.append(playerNameTextField.getText());
+
 		return urlBuilder.toString();
 	}
 

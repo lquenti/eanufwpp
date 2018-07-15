@@ -53,12 +53,16 @@ public class GameStartPanel extends JPanel implements ActionListener {
 	 * {@link #startButton} geklickt wurde.
 	 */
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == startButton) {
-			parent.dispose();
-			GameParameters parameters = parametersPanel.createParameters();
-			Thread thread = new Thread(() -> Main.startNewGame(parameters));
-			thread.start();
+	public void actionPerformed(ActionEvent event) {
+		if (event.getSource() == startButton) {
+			try {
+				GameParameters parameters = parametersPanel.createParameters();
+				parent.dispose();
+				Thread thread = new Thread(() -> Main.startNewGame(parameters));
+				thread.start();
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(this, "Die Einstellungen sind ungültig", "Fehler", JOptionPane.ERROR_MESSAGE);
+			}
 		}
 	}
 }
