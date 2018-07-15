@@ -51,7 +51,7 @@ build_pdf:
     - gem install prawn
     - gem install prawn-table
   script:
-    - kramdown README.md --output pdf
+    - kramdown README.md --output pdf > README.md.pdf
     - mv README.md.pdf anleitung.pdf
   artifacts:
     paths:
